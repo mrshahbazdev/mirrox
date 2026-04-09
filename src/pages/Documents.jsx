@@ -32,9 +32,14 @@ const Documents = () => {
     if (!file) return;
     setLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/clients/${currentClientExtended.id}/kyc/submit`, {
-        docType,
-        docName: file.name
+      const formData = new FormData();
+      formData.append('document', file);
+      formData.append('docType', docType);
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/clients/${currentClientExtended.id}/kyc/submit`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       setSuccess(true);
     } catch (err) {

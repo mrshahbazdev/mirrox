@@ -13,6 +13,7 @@ const ClientSchema = new mongoose.Schema({
     status: { type: String, enum: ['unverified', 'pending', 'verified', 'rejected'], default: 'unverified' },
     documentType: String,
     documentName: String,
+    documentUrl: String,
     submittedAt: Date,
     reviewedAt: Date,
     rejectionReason: String

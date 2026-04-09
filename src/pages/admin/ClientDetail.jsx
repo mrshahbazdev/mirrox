@@ -298,9 +298,13 @@ const ClientDetail = ({ onAdminLogout }) => {
                       {client.kyc.docType?.replace('_', ' ') || 'None Provided'}
                    </div>
                    {client.kyc.docName && (
-                     <div style={{ fontSize: '13px', color: '#3291ff', marginTop: '4px' }}>
-                        <i className="fa-regular fa-file-image" style={{ marginRight: '6px' }}></i>
-                        {client.kyc.docName}
+                     <div style={{ fontSize: '13px', color: '#3291ff', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div><i className="fa-regular fa-file-image" style={{ marginRight: '6px' }}></i>{client.kyc.docName}</div>
+                        {client.kyc.documentUrl && (
+                          <a href={client.kyc.documentUrl} target="_blank" rel="noreferrer" style={{ color: '#00cc88', textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <i className="fa-solid fa-external-link-alt" style={{ fontSize: '10px' }}></i> View Document
+                          </a>
+                        )}
                      </div>
                    )}
                 </div>

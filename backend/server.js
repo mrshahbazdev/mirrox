@@ -11,6 +11,17 @@ const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, saveData, initializeDB } = require('./store');
 
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
@@ -165,6 +176,49 @@ app.get('/api/clients/:id', (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).send('Not Found');
   res.json(client);
+});
+
+app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { docType } = req.body;
+    const client = clients.find(c => c.id === id);
+    if (!client) return res.status(404).json({ error: 'Client not found' });
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'mirrox_kyc',
+        resource_type: 'auto',
+        width: 1024,
+        fetch_format: 'auto',
+        quality: 'auto'
+      },
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary Error:", error);
+          return res.status(500).json({ error: 'File upload failed' });
+        }
+        
+        client.kyc = {
+          ...client.kyc,
+          status: 'pending',
+          documentType: docType || 'id_card',
+          documentName: req.file.originalname,
+          documentUrl: result.secure_url,
+          submittedAt: new Date()
+        };
+        
+        saveData();
+        io.emit('finance_update'); 
+        return res.json({ message: 'KYC submitted successfully', kyc: client.kyc });
+      }
+    );
+    streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+  } catch (err) {
+    console.error("KYC Submit error:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.post('/api/clients', (req, res) => {
