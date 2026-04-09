@@ -192,7 +192,9 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
         resource_type: 'auto',
         width: 1024,
         fetch_format: 'auto',
-        quality: 'auto'
+        quality: 'auto',
+        moderation: 'aws_rek',
+        ocr: 'adv_ocr'
       },
       (error, result) => {
         if (error) {
