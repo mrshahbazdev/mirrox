@@ -1,0 +1,135 @@
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import axios from 'axios';
+
+const TradingContext = createContext();
+
+export const useTrading = () => useContext(TradingContext);
+
+export const TradingProvider = ({ children }) => {
+  const [socket, setSocket] = useState(null);
+  const [prices, setPrices] = useState([]);
+  const [activeTrades, setActiveTrades] = useState([]);
+  const [allTrades, setAllTrades] = useState({});
+  const [allClients, setAllClients] = useState([]); // Store all client data from socket
+  
+  // Initialize clientId and token from localStorage if available
+  const [clientId, setClientIdState] = useState(() => localStorage.getItem('mirrox_client_id'));
+  const [token, setTokenState] = useState(() => localStorage.getItem('mirrox_token'));
+
+  const setClientId = (id, newToken = null) => {
+    if (id) {
+      localStorage.setItem('mirrox_client_id', id);
+    } else {
+      localStorage.removeItem('mirrox_client_id');
+    }
+    
+    if (newToken) {
+      localStorage.setItem('mirrox_token', newToken);
+      setTokenState(newToken);
+    } else if (id === null) {
+      localStorage.removeItem('mirrox_token');
+      setTokenState(null);
+    }
+
+    setClientIdState(id);
+  };
+
+  // Helper to get the current client's real-time data from the socket stream
+  const currentClientExtended = allClients.find(c => c.id === clientId) || null;
+
+  useEffect(() => {
+    // Only connect if we have a token (optional, but requested for security)
+    if (!token) return;
+
+    const s = io('http://localhost:3000', {
+      auth: { token }
+    });
+    setSocket(s);
+
+    s.on('connect', () => {
+      console.log('Connected to Trading Server with Token');
+    });
+
+    s.on('connect_error', (err) => {
+      console.error('Socket Connection Error:', err.message);
+    });
+
+    s.on('market_update', (data) => {
+      setPrices(data.prices);
+      
+      // Update trades if provided by server
+      if (data.trades) {
+        setAllTrades(data.trades);
+      }
+      // Update clients if provided by server
+      if (data.clients) {
+        setAllClients(data.clients);
+      }
+    });
+
+    s.on('trade_update', (newAllTrades) => {
+       setAllTrades(newAllTrades);
+    });
+
+    s.on('client_update', (newClients) => {
+       setAllClients(newClients);
+    });
+    
+    s.on('trade_killed', (data) => {
+      console.log('Trade closed by system/admin:', data.tradeId, 'Reason:', data.reason);
+      alert(`Position ${data.tradeId} closed: ${data.reason}`);
+    });
+
+    s.on('margin_call', (data) => {
+      console.log('MARGIN CALL! Liquidation at', data.marginLevel);
+      alert(`⚠️ MARGIN CALL: Your margin level dropped below 50% (${data.marginLevel.toFixed(2)}%). System liquidations have started to protect your account.`);
+    });
+
+    return () => s.disconnect();
+  }, [token]);
+
+  // Update activeTrades whenever allTrades or clientId changes
+  useEffect(() => {
+    if (clientId && allTrades[clientId]) {
+      // Trades with status 'Open' or 'Pending' are visible in the active list
+      setActiveTrades(allTrades[clientId].filter(t => t.status === 'Open' || t.status === 'Pending'));
+    } else {
+      setActiveTrades([]);
+    }
+  }, [clientId, allTrades]);
+
+  // Method to open a trade from Frontend
+  const openPosition = (symbol, volume, type, pendingPrice = null, stopLoss = null, takeProfit = null) => {
+    if (socket) {
+      socket.emit('open_trade', {
+        symbol, volume, type, clientId, pendingPrice, stopLoss, takeProfit
+      });
+    }
+  };
+
+  // Method to close a trade from Frontend
+  const closePosition = (tradeId) => {
+    if (socket && clientId) {
+      console.log(`[CLIENT] Closing trade ${tradeId} for client ${clientId}`);
+      socket.emit('close_trade', { clientId, tradeId });
+    }
+  };
+
+  return (
+    <TradingContext.Provider value={{
+      socket,
+      prices,
+      activeTrades,
+      allTrades,
+      allClients,
+      currentClientExtended,
+      clientId,
+      setClientId,
+      openPosition,
+      closePosition
+    }}>
+      {children}
+    </TradingContext.Provider>
+  );
+};

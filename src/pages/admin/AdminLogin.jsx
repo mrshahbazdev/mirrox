@@ -1,0 +1,240 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const AdminLogin = ({ onAdminLogin }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await axios.post('http://localhost:3000/api/auth/login', { 
+        email: username.includes('@') ? username : 'admin@mirrox.com', // Match the hardcoded email in backend for now
+        password: password 
+      });
+
+      if (res.data.role === 'admin') {
+        onAdminLogin(res.data.token);
+        navigate('/admin/clients');
+      } else {
+        setError('Forbidden: This area requires admin privileges.');
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Authentication Failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="adm-login-wrap">
+      <div className="adm-login-bg">
+        <div className="adm-grid-lines" />
+        <div className="adm-glow-orb orb1" />
+        <div className="adm-glow-orb orb2" />
+      </div>
+
+      <div className="adm-login-card">
+        <div className="adm-login-badge">
+          <i className="fa-solid fa-shield-halved" />
+          <span>ADMIN ACCESS</span>
+        </div>
+
+        <div className="adm-login-logo">
+          <i className="fa-solid fa-cube" />
+          <h1>mirrox</h1>
+          <p>Backend Control Panel</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="adm-login-form">
+          <div className="adm-input-wrap">
+            <i className="fa-solid fa-user adm-inp-icon" />
+            <input
+              type="text"
+              placeholder="Admin Username"
+              value={username}
+              onChange={(e) => { setUsername(e.target.value); setError(''); }}
+              required
+              autoComplete="off"
+            />
+          </div>
+
+          <div className="adm-input-wrap">
+            <i className="fa-solid fa-lock adm-inp-icon" />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(''); }}
+              required
+            />
+          </div>
+
+          {error && (
+            <div className="adm-error-msg">
+              <i className="fa-solid fa-circle-exclamation" />
+              {error}
+            </div>
+          )}
+
+          <button type="submit" className="adm-login-btn" disabled={loading}>
+            {loading ? (
+              <><i className="fa-solid fa-circle-notch fa-spin" /> Authenticating...</>
+            ) : (
+              <><i className="fa-solid fa-shield" /> Enter Dashboard</>
+            )}
+          </button>
+
+          <button
+            type="button"
+            className="adm-demo-btn"
+            onClick={() => { setUsername('admin'); setPassword('admin'); setError(''); }}
+          >
+            <i className="fa-solid fa-wand-magic-sparkles" /> Fill Demo Credentials
+          </button>
+        </form>
+
+        <div className="adm-login-footer">
+          <i className="fa-solid fa-circle-dot" style={{ color: '#00cc88' }} />
+          &nbsp; Secure connection established
+        </div>
+      </div>
+
+      <style>{`
+        .adm-login-wrap {
+          width: 100vw; height: 100vh;
+          display: flex; align-items: center; justify-content: center;
+          background: #060a12;
+          position: fixed; top: 0; left: 0; z-index: 9999;
+          font-family: 'Inter', sans-serif;
+        }
+        .adm-login-bg { position: absolute; inset: 0; overflow: hidden; }
+        .adm-grid-lines {
+          position: absolute; inset: 0;
+          background-image: linear-gradient(rgba(50,145,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(50,145,255,0.04) 1px, transparent 1px);
+          background-size: 60px 60px;
+        }
+        .adm-glow-orb {
+          position: absolute; border-radius: 50%;
+          filter: blur(100px); opacity: 0.15;
+        }
+        .orb1 { width: 600px; height: 600px; background: #3291ff; top: -200px; right: -200px; }
+        .orb2 { width: 400px; height: 400px; background: #a855f7; bottom: -150px; left: -150px; }
+
+        .adm-login-card {
+          position: relative; z-index: 1;
+          width: 420px; padding: 48px 40px;
+          background: rgba(21, 26, 36, 0.85);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(50,145,255,0.15);
+          border-radius: 20px;
+          box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+          animation: adminFadeIn 0.6s ease-out;
+        }
+        @keyframes adminFadeIn {
+          from { opacity: 0; transform: translateY(24px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .adm-login-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 4px 12px; border-radius: 20px;
+          background: rgba(50,145,255,0.1);
+          border: 1px solid rgba(50,145,255,0.25);
+          font-size: 11px; font-weight: 700;
+          color: #3291ff; letter-spacing: 1.5px;
+          text-transform: uppercase; margin-bottom: 28px;
+        }
+
+        .adm-login-logo { text-align: center; margin-bottom: 36px; }
+        .adm-login-logo i {
+          font-size: 40px; color: #3291ff;
+          filter: drop-shadow(0 0 20px rgba(50,145,255,0.5));
+          display: block; margin-bottom: 12px;
+        }
+        .adm-login-logo h1 {
+          font-size: 32px; font-weight: 800;
+          letter-spacing: -1.5px; color: #e0e6ed;
+          font-family: 'Outfit', sans-serif;
+        }
+        .adm-login-logo p { font-size: 13px; color: #64748b; margin-top: 4px; }
+
+        .adm-login-form { display: flex; flex-direction: column; gap: 14px; }
+
+        .adm-input-wrap {
+          position: relative;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid #2a3341;
+          border-radius: 12px;
+          transition: all 0.2s;
+        }
+        .adm-input-wrap:focus-within {
+          border-color: rgba(50,145,255,0.5);
+          background: rgba(50,145,255,0.04);
+          box-shadow: 0 0 0 3px rgba(50,145,255,0.08);
+        }
+        .adm-inp-icon {
+          position: absolute; left: 16px; top: 50%;
+          transform: translateY(-50%);
+          color: #64748b; font-size: 14px;
+        }
+        .adm-input-wrap input {
+          width: 100%; padding: 14px 14px 14px 44px;
+          background: transparent; border: none;
+          color: #e0e6ed; font-size: 14px;
+          font-family: 'Inter', sans-serif; outline: none;
+        }
+        .adm-input-wrap input::placeholder { color: #4a5568; }
+
+        .adm-error-msg {
+          display: flex; align-items: center; gap: 8px;
+          color: #ff4d4d; font-size: 12px; font-weight: 500;
+          background: rgba(255,77,77,0.08);
+          border: 1px solid rgba(255,77,77,0.2);
+          border-radius: 8px; padding: 10px 14px;
+        }
+
+        .adm-login-btn {
+          padding: 14px; border-radius: 12px; border: none;
+          background: linear-gradient(135deg, #3291ff 0%, #1a6fd4 100%);
+          color: #fff; font-size: 15px; font-weight: 700;
+          cursor: pointer; display: flex; align-items: center;
+          justify-content: center; gap: 10px; margin-top: 6px;
+          transition: all 0.25s; font-family: 'Inter', sans-serif;
+          box-shadow: 0 4px 20px rgba(50,145,255,0.3);
+        }
+        .adm-login-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(50,145,255,0.45);
+        }
+        .adm-login-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .adm-demo-btn {
+          padding: 11px; border-radius: 10px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid #2a3341;
+          color: #94a3b8; font-size: 13px; cursor: pointer;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .adm-demo-btn:hover { background: rgba(255,255,255,0.08); color: #e0e6ed; }
+
+        .adm-login-footer {
+          margin-top: 28px; text-align: center;
+          font-size: 12px; color: #64748b;
+          display: flex; align-items: center; justify-content: center;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default AdminLogin;

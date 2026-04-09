@@ -1,0 +1,952 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import AdminLayout from '../../components/admin/AdminLayout';
+import { useTrading } from '../../context/TradingContext';
+
+const statusConfig = {
+  active: { label: 'Active', color: '#00cc88', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.2)' },
+  pending: { label: 'Pending', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.2)' },
+  suspended: { label: 'Suspended', color: '#ff4d4d', bg: 'rgba(255,77,77,0.1)', border: 'rgba(255,77,77,0.2)' },
+};
+
+const ITEMS_PER_PAGE = 5;
+
+const ClientDetail = ({ onAdminLogout }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { allTrades, prices, socket, allClients } = useTrading();
+  const [activeTab, setActiveTab] = useState('trades');
+  const [tradePage, setTradePage] = useState(1);
+
+  const [staticClient, setStaticClient] = useState(null);
+  const [withdrawals, setWithdrawals] = useState([]);
+  const [deposits, setDeposits] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const handleQuickFund = async () => {
+    try {
+      const response = await axios.put(`http://localhost:3000/api/clients/${id}/balance`, { balance: 10000 });
+      setStaticClient(response.data);
+      alert('Account funded with $10,000.00!');
+    } catch (err) {
+      console.error('Failed to fund account', err);
+      alert('Error funding account');
+    }
+  };
+
+  // New Modal states for P/L editing
+  const [showModal, setShowModal] = useState(false);
+  const [modalTrade, setModalTrade] = useState(null);
+  const [modalMode, setModalMode] = useState('none'); // none, profit, loss
+  const [modalMultiplier, setModalMultiplier] = useState('1');
+
+  // New Modal states for Swap editing
+  const [showSwapModal, setShowSwapModal] = useState(false);
+  const [modalSwapTrade, setModalSwapTrade] = useState(null);
+  const [modalSwapValue, setModalSwapValue] = useState('0');
+
+  // The definitive real-time client data comes from the socket
+  const client = allClients.find(c => c.id === id) || staticClient;
+
+  useEffect(() => {
+    const fetchClientData = async () => {
+      try {
+        setLoading(true);
+        const [clientRes, wRes, dRes] = await Promise.all([
+          axios.get(`http://localhost:3000/api/clients/${id}`),
+          axios.get(`http://localhost:3000/api/withdrawals/${id}`),
+          axios.get(`http://localhost:3000/api/deposits/${id}`)
+        ]);
+        setStaticClient(clientRes.data);
+        setWithdrawals(wRes.data);
+        setDeposits(dRes.data);
+      } catch (err) {
+        console.error('Failed fetching client profile', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchClientData();
+  }, [id]);
+
+  const trades = allTrades[id] || [];
+
+  const handleEditPL = (trade) => {
+    console.log('[ADMIN] Opening dynamic bias modal for trade:', trade.id);
+    setModalTrade(trade);
+    setModalMode(trade.bias || 'none');
+    setModalMultiplier(trade.multiplier?.toString() || '1');
+    setShowModal(true);
+  };
+
+  const submitEditPL = () => {
+    if (!socket || !socket.connected) {
+      alert("Socket not connected! Can't submit.");
+      return;
+    }
+    const mult = parseFloat(modalMultiplier);
+    if (isNaN(mult) || mult < 0) {
+      alert("Please enter a valid positive intensity");
+      return;
+    }
+
+    console.log('[ADMIN] Emitting admin_set_bias:', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
+    socket.emit('admin_set_bias', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
+    
+    setShowModal(false);
+    setModalTrade(null);
+  };
+
+  const handleForceClose = (tradeId) => {
+    console.log('[ADMIN] Attempting to force close trade:', tradeId);
+    if (!socket || !socket.connected) {
+      alert("Socket not connected!");
+      return;
+    }
+    if (window.confirm(`Are you sure you want to forcibly close trade ${tradeId}?\nThis will realize the current profit into the user balance.`)) {
+      socket.emit('admin_force_close', { clientId: id, tradeId });
+    }
+  };
+
+  const handleEditSwap = (trade) => {
+    setModalSwapTrade(trade);
+    setModalSwapValue(trade.swap?.toString() || '0');
+    setShowSwapModal(true);
+  };
+
+  const submitEditSwap = () => {
+    if (!socket || !socket.connected) {
+      alert("Socket not connected!");
+      return;
+    }
+    socket.emit('admin_update_swap', { 
+      clientId: id, 
+      tradeId: modalSwapTrade.id, 
+      swap: modalSwapValue 
+    });
+    setShowSwapModal(false);
+    setModalSwapTrade(null);
+  };
+
+  const handleUpdateStatus = async (newStatus) => {
+    try {
+      const res = await axios.put(`http://localhost:3000/api/clients/${id}`, { status: newStatus });
+      setStaticClient(res.data);
+    } catch (err) {
+      console.error('Failed to update status', err);
+    }
+  };
+
+  const handleUpdateTransactionStatus = async (type, txId, newStatus) => {
+    try {
+      const endpoint = type === 'deposit' ? 'deposits' : 'withdrawals';
+      const res = await axios.put(`http://localhost:3000/api/${endpoint}/${txId}/status`, { status: newStatus });
+      
+      // Update local state arrays for immediate UI feedback
+      if (type === 'deposit') {
+        setDeposits(prev => prev.map(d => d.id === txId ? res.data : d));
+      } else {
+        setWithdrawals(prev => prev.map(w => w.id === txId ? res.data : w));
+      }
+      
+      // If approved, the backend updated the client balance, so we should refresh the static client too
+      if (newStatus === 'approved') {
+        const clientRes = await axios.get(`http://localhost:3000/api/clients/${id}`);
+        setStaticClient(clientRes.data);
+      }
+    } catch (err) {
+      console.error(`Failed to update ${type} status`, err);
+      alert('Error updating transaction status');
+    }
+  };
+
+  const handleUpdateKYC = async (kycData) => {
+    try {
+      const res = await axios.put(`http://localhost:3000/api/clients/${id}/kyc`, kycData);
+      setStaticClient(res.data);
+    } catch (err) {
+      console.error('Failed to update KYC', err);
+      alert('Error updating KYC status');
+    }
+  };
+
+  if (loading) {
+    return (
+      <AdminLayout onAdminLogout={onAdminLogout}>
+        <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
+          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
+          <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Loading Client Profile...</p>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (!client) {
+    return (
+      <AdminLayout onAdminLogout={onAdminLogout}>
+        <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
+          <i className="fa-solid fa-circle-exclamation" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
+          <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Client not found</p>
+          <button className="adm-back-btn" onClick={() => navigate('/admin/clients')} style={{ marginTop: 20 }}>
+            ← Back to Clients
+          </button>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  const { accountSummary: acc, tradingMetrics: tm } = client;
+  const tabData = { trades, withdrawals, deposits };
+  const currentData = tabData[activeTab] || [];
+  const totalPages = Math.ceil(currentData.length / ITEMS_PER_PAGE);
+  const paginatedData = currentData.slice((tradePage - 1) * ITEMS_PER_PAGE, tradePage * ITEMS_PER_PAGE);
+
+  const totalWithdrawal = withdrawals
+    .filter(w => w.status === 'approved' || w.status === 'completed')
+    .reduce((sum, w) => sum + parseFloat(w.amount || 0), 0);
+
+  const st = statusConfig[client.status];
+
+  const tradingMetricCards = [
+    { num: '①', label: 'Balance', value: `$${(tm?.balance || 0).toLocaleString()}`, color: '#3291ff' },
+    { num: '②', label: 'Credit Deposit', value: `$${(tm?.creditDeposit || 0).toLocaleString()}`, color: '#a855f7' },
+    { num: '③', label: 'Equity', value: `$${(tm?.equity || 0).toLocaleString()}`, color: '#06b6d4' },
+    { num: '④', label: 'Margin', value: `$${(tm?.marginUsed || 0).toLocaleString()}`, color: '#ef4444' },
+    { num: '⑤', label: 'Free Margin', value: `$${(tm?.freeMargin || 0).toLocaleString()}`, color: '#00cc88' },
+    { num: '⑥', label: 'Margin Level', value: `${tm?.marginLevel?.toFixed(2) || 0}%`, color: '#f59e0b' },
+    { num: '⑦', label: 'Swap', value: `$${(tm?.swap || 0).toFixed(2)}`, color: '#ff4d4d' },
+    { num: '⑧', label: 'Trades', value: tm?.trades || 0, color: '#10b981' },
+    { num: '⑨', label: 'Opened By / Date', value: `${tm?.openedBy || 'System'} \u00b7 ${tm?.openedDate || 'N/A'}`, color: '#94a3b8' },
+  ];
+
+  return (
+    <AdminLayout onAdminLogout={onAdminLogout}>
+      <button className="adm-back-btn" onClick={() => navigate('/admin/clients')}>
+        <i className="fa-solid fa-arrow-left" /> Back to Clients
+      </button>
+
+      <div className="cd-section cd-profile-card">
+        <div className="cd-section-label">Client Profile</div>
+        <div className="cd-profile-grid">
+          <div className="cd-profile-main">
+            <div className="cd-avatar-lg">{client.name.charAt(0)}</div>
+            <div className="cd-profile-info">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <h2 className="cd-client-name" style={{ margin: 0 }}>{client.name}</h2>
+                <span
+                  className="adm-status-badge"
+                  style={{ color: st.color, background: st.bg, border: `1px solid ${st.border}` }}
+                >
+                  <span className="adm-status-dot" style={{ background: st.color }} />
+                  {st.label}
+                </span>
+                
+                <div className="cd-actions-bar" style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
+                  <button className="cd-action-btn fund" onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
+                    <i className="fa-solid fa-coins" /> Fund $10k
+                  </button>
+                  <button className="cd-action-btn edit" onClick={() => {
+                    const val = prompt('Enter manual balance:', tm?.balance || '0');
+                    if (val !== null) {
+                       axios.put(`http://localhost:3000/api/clients/${id}/balance`, { balance: val })
+                        .then(r => setStaticClient(r.data))
+                        .catch(e => alert('Failed to update balance'));
+                    }
+                  }}>
+                    <i className="fa-solid fa-pen-to-square" /> Edit Balance
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="cd-profile-fields">
+            {[
+              { icon: 'fa-id-badge', label: 'UID / User ID', value: client.uid },
+              { icon: 'fa-phone', label: 'Contact No.', value: client.contact },
+              { icon: 'fa-envelope', label: 'Email', value: client.email },
+            ].map((f) => (
+              <div className="cd-field" key={f.label}>
+                <div className="cd-field-icon"><i className={`fa-solid ${f.icon}`} /></div>
+                <div>
+                  <div className="cd-field-label">{f.label}</div>
+                  <div className="cd-field-value">{f.value}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="cd-profile-actions">
+            <button className="cd-act-btn primary"><i className="fa-solid fa-pen-to-square" /> Edit Client</button>
+            {client.status !== 'active' && (
+              <button className="cd-act-btn success" onClick={() => handleUpdateStatus('active')}><i className="fa-solid fa-check" /> Approve</button>
+            )}
+            {client.status !== 'suspended' && (
+              <button className="cd-act-btn danger" onClick={() => handleUpdateStatus('suspended')}><i className="fa-solid fa-ban" /> Suspend</button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="cd-section">
+        <div className="cd-section-label" style={{ color: '#a855f7' }}>KYC Verification</div>
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px' }}>
+           {client.kyc ? (
+             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                   <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Document Type</div>
+                   <div style={{ fontSize: '15px', color: '#e0e6ed', fontWeight: 700, textTransform: 'capitalize' }}>
+                      {client.kyc.docType?.replace('_', ' ') || 'None Provided'}
+                   </div>
+                   {client.kyc.docName && (
+                     <div style={{ fontSize: '13px', color: '#3291ff', marginTop: '4px' }}>
+                        <i className="fa-regular fa-file-image" style={{ marginRight: '6px' }}></i>
+                        {client.kyc.docName}
+                     </div>
+                   )}
+                </div>
+                <div>
+                   <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Status</div>
+                   <span className={`cd-trade-status ${client.kyc.status === 'approved' ? 'approved' : client.kyc.status === 'pending' ? 'pending' : client.kyc.status === 'rejected' ? 'rejected' : 'closed'}`}>
+                      {client.kyc.status}
+                   </span>
+                </div>
+                <div>
+                   <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Account Type</div>
+                   <div style={{ fontSize: '15px', color: client.accountType === 'live' ? '#10b981' : '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
+                      {client.accountType || 'DEMO'}
+                   </div>
+                </div>
+                {(client.kyc.status === 'pending' || client.kyc.status === 'unverified') && (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                     <button 
+                        onClick={() => handleUpdateKYC({ status: 'approved' })}
+                        style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: 'rgba(0,204,136,0.1)', color: '#00cc88', fontWeight: 700, cursor: 'pointer' }}
+                     >
+                        Approve
+                     </button>
+                     <button 
+                        onClick={() => {
+                           const reason = prompt("Enter rejection reason:");
+                           if (reason) {
+                              handleUpdateKYC({ status: 'rejected', rejectionReason: reason });
+                           }
+                        }}
+                        style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: 'rgba(255,77,77,0.1)', color: '#ff4d4d', fontWeight: 700, cursor: 'pointer' }}
+                     >
+                        Reject
+                     </button>
+                  </div>
+                )}
+             </div>
+           ) : (
+             <div style={{ color: '#64748b', fontSize: '14px', textAlign: 'center', padding: '12px' }}>
+                No KYC data available for this legacy client.
+             </div>
+           )}
+        </div>
+      </div>
+
+      <div className="cd-section">
+        <div className="cd-section-label" style={{ color: '#06b6d4' }}>Account Summary</div>
+        <div className="cd-account-grid">
+          {[
+            { label: 'Deposit', value: `$${(acc?.deposit || 0).toLocaleString()}` },
+            { label: 'Total Withdrawal', value: `$${totalWithdrawal.toLocaleString()}` },
+            { label: 'Credit Deposit', value: `$${(acc?.creditDeposit || 0).toLocaleString()}` },
+            { label: 'Equity', value: `$${(acc?.equity || 0).toLocaleString()}` },
+            { label: 'Swap', value: `$${(acc?.swap || 0).toFixed(2)}` },
+            { label: 'Commission', value: `$${(acc?.commission || 0).toFixed(2)}` },
+          ].map((item) => (
+            <div className="cd-acc-card" key={item.label}>
+              <div className="cd-acc-label">{item.label}</div>
+              <div className="cd-acc-value">{item.value}</div>
+            </div>
+          ))}
+        </div>
+        <div className="cd-account-grid cd-account-grid-2">
+          <div className="cd-acc-card">
+            <div className="cd-acc-label">Amount Available to Withdraw</div>
+            <div className="cd-acc-value">${(acc?.availableToWithdraw || 0).toLocaleString()}</div>
+          </div>
+          <div className="cd-acc-card">
+            <div className="cd-acc-label">Leverage</div>
+            <div className="cd-acc-value">{acc?.leverage || '1:100'}</div>
+          </div>
+          <div className="cd-acc-card">
+            <div className="cd-acc-label">Margin Level</div>
+            <div className="cd-acc-value">{acc?.marginLevel || 0}%</div>
+          </div>
+          <div className="cd-acc-card cd-pl-card" style={{
+            background: (acc?.profitLoss || 0) >= 0 ? 'rgba(0,204,136,0.07)' : 'rgba(255,77,77,0.07)',
+            borderColor: (acc?.profitLoss || 0) >= 0 ? 'rgba(0,204,136,0.25)' : 'rgba(255,77,77,0.25)',
+          }}>
+            <div className="cd-acc-label">Profit / Loss</div>
+            <div className="cd-acc-value" style={{ color: (acc?.profitLoss || 0) >= 0 ? '#00cc88' : '#ff4d4d', fontSize: 20 }}>
+              {(acc?.profitLoss || 0) >= 0 ? '+' : ''}{(acc?.profitLoss || 0).toFixed(2)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="cd-section">
+        <div className="cd-section-label" style={{ color: '#3291ff' }}>Trading Metrics</div>
+        <div className="cd-metrics-grid">
+          {tradingMetricCards.map((card) => (
+            <div className="cd-metric-card" key={card.num}>
+              <div className="cd-metric-num" style={{ color: card.color }}>{card.num}</div>
+              <div className="cd-metric-label">{card.label}</div>
+              <div className="cd-metric-value" style={{ color: card.color }}>{card.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="cd-section">
+        <div className="cd-section-label" style={{ color: '#ff4d4d' }}>Trades Module</div>
+
+        <div className="cd-tabs">
+          {[
+            { key: 'trades', label: 'Trades', icon: 'fa-chart-line', count: trades.length },
+            { key: 'withdrawals', label: 'Withdrawals', icon: 'fa-arrow-up-from-bracket', count: withdrawals.length },
+            { key: 'deposits', label: 'Deposits', icon: 'fa-arrow-down-to-bracket', count: deposits.length },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              className={`cd-tab ${activeTab === tab.key ? 'active' : ''}`}
+              onClick={() => { setActiveTab(tab.key); setTradePage(1); }}
+            >
+              <i className={`fa-solid ${tab.icon}`} />
+              {tab.label}
+              <span className="cd-tab-count">{tab.count}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="cd-trade-table-wrap">
+          {activeTab === 'trades' && (
+            <table className="adm-table">
+              <thead>
+                <tr>
+                  <th>Trade ID</th><th>Symbol</th><th>Type</th><th>Lots</th>
+                  <th>Open Price</th><th>Current Price</th><th>Swap</th><th>Profit / Loss</th><th>Closed By</th><th>Status</th><th>Admin Control</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trades.length === 0 ? (
+                  <tr><td colSpan="11" style={{textAlign:'center', padding:'20px', color:'#64748b'}}>No active trades found.</td></tr>
+                ) : (
+                  trades.map((t) => (
+                    <tr className="adm-table-row" key={t.id}>
+                      <td><span className="adm-uid-badge">{t.id}</span></td>
+                      <td style={{ fontWeight: 700, color: '#e0e6ed' }}>{t.symbol}</td>
+                      <td><span className={`cd-type-badge ${t.type === 'BUY' ? 'buy' : 'sell'}`}>{t.type}</span></td>
+                      <td className="adm-mono">{t.lots}</td>
+                      <td className="adm-mono">{t.openPrice}</td>
+                      <td className="adm-mono">{prices.find(p=>p.name===t.symbol)?.price || '...'}</td>
+                      <td className="adm-mono" style={{ color: (t.swap || 0) < 0 ? '#ff4d4d' : '#00cc88' }}>
+                        {(t.swap || 0).toFixed(2)}
+                      </td>
+                      <td className={`adm-mono ${t.profit >= 0 ? 'pos' : 'neg'}`}>
+                        {t.profit >= 0 ? '+' : ''}{t.profit?.toFixed(2)}
+                        {t.forcedPL && <i className="fa-solid fa-lock" style={{ marginLeft: 6, fontSize: 10, color: '#f59e0b' }} title="Profit Locked"></i>}
+                      </td>
+                      <td>
+                        {t.status === 'Closed' ? (
+                          <span className="adm-uid-badge" style={{ fontSize: '10px', background: 'rgba(255,255,255,0.02)' }}>
+                            {t.closedBy || (t.closedBySystem ? 'System' : 'Self')}
+                          </span>
+                        ) : '---'}
+                      </td>
+                      <td><span className={`cd-trade-status ${t.status?.toLowerCase() || 'open'}`}>{t.status || 'Open'}</span></td>
+                      <td>
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          {t.status !== 'Closed' && (
+                            <>
+                              <button onClick={() => handleEditPL(t)} style={{ background: 'rgba(50,145,255,0.2)', border: 'none', color: '#3291ff', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>EDIT P/L</button>
+                              <button onClick={() => handleForceClose(t.id)} style={{ background: 'rgba(239,68,68,0.2)', border: 'none', color: '#ef4444', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>CLOSE</button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => handleEditSwap(t)}
+                            style={{ background: 'rgba(245,158,11,0.2)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}
+                          >
+                            SWAP {t.swapLocked ? '\ud83d\udd12' : ''}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === 'withdrawals' && (
+            <table className="adm-table">
+              <thead>
+                <tr><th>ID</th><th>Amount</th><th>Method</th><th>Date</th><th>Processed By</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {paginatedData.map((w) => (
+                  <tr className="adm-table-row" key={w.id}>
+                    <td><span className="adm-uid-badge">{w.id}</span></td>
+                    <td className="adm-mono" style={{ color: '#ff4d4d', fontWeight: 700 }}>${w.amount.toLocaleString()}</td>
+                    <td style={{ color: '#94a3b8' }}>{w.method}</td>
+                    <td style={{ color: '#64748b', fontSize: 12 }}>{w.date}</td>
+                    <td style={{ color: '#94a3b8' }}>{w.processedBy}</td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className={`cd-trade-status ${w.status}`}>{w.status}</span>
+                        {w.status === 'pending' && (
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <button className="adm-mini-act approve" onClick={() => handleUpdateTransactionStatus('withdrawal', w.id, 'approved')} title="Approve Withdrawal">
+                              <i className="fa-solid fa-check" />
+                            </button>
+                            <button className="adm-mini-act reject" onClick={() => handleUpdateTransactionStatus('withdrawal', w.id, 'rejected')} title="Reject Withdrawal">
+                              <i className="fa-solid fa-xmark" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === 'deposits' && (
+            <table className="adm-table">
+              <thead>
+                <tr><th>ID</th><th>Amount</th><th>Method</th><th>Date</th><th>Reference</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {paginatedData.map((d) => (
+                  <tr className="adm-table-row" key={d.id}>
+                    <td><span className="adm-uid-badge">{d.id}</span></td>
+                    <td className="adm-mono" style={{ color: '#00cc88', fontWeight: 700 }}>${d.amount.toLocaleString()}</td>
+                    <td style={{ color: '#94a3b8' }}>{d.method}</td>
+                    <td style={{ color: '#64748b', fontSize: 12 }}>{d.date}</td>
+                    <td style={{ fontFamily: 'Space Mono, monospace', fontSize: 12, color: '#64748b' }}>{d.ref}</td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className={`cd-trade-status ${d.status}`}>{d.status}</span>
+                        {d.status === 'pending' && (
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <button className="adm-mini-act approve" onClick={() => handleUpdateTransactionStatus('deposit', d.id, 'approved')} title="Approve Deposit">
+                              <i className="fa-solid fa-check" />
+                            </button>
+                            <button className="adm-mini-act reject" onClick={() => handleUpdateTransactionStatus('deposit', d.id, 'rejected')} title="Reject Deposit">
+                              <i className="fa-solid fa-xmark" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="adm-pagination" style={{ marginTop: 16 }}>
+            <span className="adm-page-info">
+              Page {tradePage} of {totalPages} \u00b7 {currentData.length} records
+            </span>
+            <div className="adm-page-btns">
+              <button className="adm-pg-btn" disabled={tradePage === 1} onClick={() => setTradePage(p => p - 1)}>
+                <i className="fa-solid fa-chevron-left" />
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button key={p} className={`adm-pg-btn ${p === tradePage ? 'active' : ''}`} onClick={() => setTradePage(p)}>{p}</button>
+              ))}
+              <button className="adm-pg-btn" disabled={tradePage === totalPages} onClick={() => setTradePage(p => p + 1)}>
+                <i className="fa-solid fa-chevron-right" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <style>{`
+        .adm-back-btn {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 8px 16px; border-radius: 8px; margin-bottom: 20px;
+          background: rgba(50,145,255,0.08); border: 1px solid rgba(50,145,255,0.2);
+          color: #3291ff; font-size: 13px; font-weight: 600; cursor: pointer;
+          transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .adm-back-btn:hover { background: rgba(50,145,255,0.15); }
+
+        .cd-section {
+          background: #0f1520;
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 14px; padding: 24px;
+          margin-bottom: 20px;
+        }
+        .cd-section-label {
+          font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+          text-transform: uppercase; color: #00cc88;
+          margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+        }
+        .cd-section-label::after {
+          content: ''; flex: 1; height: 1px;
+          background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
+        }
+
+        /* Profile Card */
+        .cd-profile-grid {
+          display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: start;
+        }
+        .cd-profile-main { display: flex; align-items: center; gap: 16px; }
+        .cd-avatar-lg {
+          width: 64px; height: 64px; border-radius: 16px;
+          background: linear-gradient(135deg, rgba(50,145,255,0.15), rgba(50,145,255,0.3));
+          border: 2px solid rgba(50,145,255,0.3);
+          color: #3291ff; font-size: 28px; font-weight: 800;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
+        .cd-client-name {
+          font-size: 22px; font-weight: 800; color: #e0e6ed;
+          margin-bottom: 8px; font-family: 'Outfit', sans-serif;
+        }
+        .adm-status-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 4px 10px; border-radius: 20px;
+          font-size: 11px; font-weight: 700;
+        }
+        .adm-status-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+        .cd-profile-fields { display: flex; flex-direction: column; gap: 12px; }
+        .cd-field { display: flex; align-items: center; gap: 12px; }
+        .cd-field-icon {
+          width: 32px; height: 32px; border-radius: 8px;
+          background: rgba(50,145,255,0.1); color: #3291ff; font-size: 13px;
+          display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .cd-field-label { font-size: 11px; color: #64748b; font-weight: 600; }
+        .cd-field-value { font-size: 14px; color: #e0e6ed; font-weight: 600; margin-top: 1px; }
+
+        .cd-profile-actions { display: flex; flex-direction: column; gap: 8px; }
+        .cd-act-btn {
+          padding: 10px 18px; border-radius: 9px;
+          font-size: 13px; font-weight: 700; cursor: pointer;
+          display: flex; align-items: center; gap: 8px; border: 1px solid transparent;
+          transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap;
+        }
+        .cd-act-btn.primary {
+          background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.25); color: #3291ff;
+        }
+        .cd-act-btn.primary:hover { background: #3291ff; color: #fff; }
+        .cd-act-btn.success {
+          background: rgba(0,204,136,0.1); border-color: rgba(0,204,136,0.25); color: #00cc88;
+        }
+        .cd-act-btn.success:hover { background: #00cc88; color: #fff; }
+        .cd-act-btn.danger {
+          background: rgba(255,77,77,0.1); border-color: rgba(255,77,77,0.25); color: #ff4d4d;
+        }
+        .cd-act-btn.danger:hover { background: #ff4d4d; color: #fff; }
+
+        /* Account Summary */
+        .cd-account-grid {
+          display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px;
+        }
+        .cd-account-grid-2 { grid-template-columns: repeat(4, 1fr); }
+        .cd-acc-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 10px; padding: 14px;
+          transition: all 0.2s;
+        }
+        .cd-acc-card:hover { background: rgba(255,255,255,0.05); }
+        .cd-acc-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px; }
+        .cd-acc-value { font-size: 16px; font-weight: 800; color: #e0e6ed; font-family: 'Space Mono', monospace; }
+
+        /* Metrics Grid */
+        .cd-metrics-grid {
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+        }
+        .cd-metric-card {
+          background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 10px; padding: 16px; position: relative;
+          transition: all 0.2s;
+        }
+        .cd-metric-card:hover {
+          background: rgba(255,255,255,0.04); transform: translateY(-2px);
+        }
+        .cd-metric-num {
+          font-size: 20px; position: absolute; top: 12px; right: 14px;
+          font-weight: 800; opacity: 0.5;
+        }
+        .cd-metric-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 8px; }
+        .cd-metric-value {
+          font-size: 18px; font-weight: 800;
+          font-family: 'Space Mono', monospace; letter-spacing: -0.5px;
+        }
+
+        /* Tabs */
+        .cd-tabs {
+          display: flex; gap: 4px;
+          background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 10px; padding: 4px; margin-bottom: 16px; width: fit-content;
+        }
+        .cd-tab {
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 18px; border-radius: 7px;
+          background: none; border: none; cursor: pointer;
+          font-size: 13px; font-weight: 700; color: #64748b;
+          transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .cd-tab:hover { color: #e0e6ed; }
+        .cd-tab.active { background: rgba(50,145,255,0.12); color: #3291ff; border: 1px solid rgba(50,145,255,0.2); }
+        .cd-tab-count {
+          background: rgba(255,255,255,0.07); border-radius: 20px;
+          padding: 1px 7px; font-size: 11px; font-weight: 800; color: #64748b;
+        }
+        .cd-tab.active .cd-tab-count { background: rgba(50,145,255,0.2); color: #3291ff; }
+
+        .cd-trade-table-wrap {
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 10px; overflow: hidden;
+        }
+        .adm-table { width: 100%; border-collapse: collapse; }
+        .adm-table thead tr {
+          background: rgba(50,145,255,0.04);
+          border-bottom: 1px solid rgba(50,145,255,0.08);
+        }
+        .adm-table th {
+          padding: 12px 18px; text-align: left;
+          font-size: 11px; font-weight: 800; color: #64748b;
+          text-transform: uppercase; letter-spacing: 0.8px;
+        }
+        .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
+        .adm-table-row:hover { background: rgba(50,145,255,0.03); }
+        .adm-table-row:last-child { border-bottom: none; }
+        .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
+
+        .adm-uid-badge {
+          padding: 3px 8px; border-radius: 6px;
+          background: rgba(255,255,255,0.04); border: 1px solid #2a3341;
+          font-size: 11px; font-weight: 700; color: #94a3b8;
+          font-family: 'Space Mono', monospace;
+        }
+        .adm-mono { font-family: 'Space Mono', monospace; font-size: 13px; }
+
+        .cd-type-badge {
+          padding: 3px 10px; border-radius: 6px;
+          font-size: 11px; font-weight: 800; letter-spacing: 0.5px;
+        }
+        .cd-type-badge.buy { background: rgba(16,185,129,0.15); color: #10b981; }
+        .cd-type-badge.sell { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+        .cd-trade-status {
+          padding: 3px 10px; border-radius: 20px;
+          font-size: 11px; font-weight: 700; text-transform: capitalize;
+        }
+        .cd-trade-status.open { background: rgba(50,145,255,0.1); color: #3291ff; }
+        .cd-trade-status.closed { background: rgba(100,116,139,0.1); color: #64748b; }
+        .cd-trade-status.approved { background: rgba(0,204,136,0.1); color: #00cc88; }
+        .cd-trade-status.pending { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .cd-trade-status.rejected { background: rgba(255,77,77,0.1); color: #ff4d4d; }
+
+        .adm-mini-act {
+          width: 24px; height: 24px; border-radius: 4px; border: none;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; font-size: 10px; transition: all 0.2s;
+        }
+        .adm-mini-act.approve { background: rgba(0,204,136,0.1); color: #00cc88; }
+        .adm-mini-act.approve:hover { background: #00cc88; color: #fff; }
+        .adm-mini-act.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; }
+        .adm-mini-act.reject:hover { background: #ff4d4d; color: #fff; }
+
+        /* Pagination */
+        .adm-pagination {
+          display: flex; align-items: center; justify-content: space-between;
+        }
+        .adm-page-info { font-size: 12px; color: #64748b; }
+        .adm-page-btns { display: flex; gap: 6px; }
+        .adm-pg-btn {
+          width: 32px; height: 32px; border-radius: 7px;
+          background: #0f1520; border: 1px solid #2a3341;
+          color: #94a3b8; font-size: 12px; font-weight: 600;
+          cursor: pointer; display: flex; align-items: center; justify-content: center;
+          transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .adm-pg-btn:hover:not(:disabled) { border-color: #3291ff; color: #3291ff; }
+        .adm-pg-btn.active { background: #3291ff; border-color: #3291ff; color: #fff; }
+        .adm-pg-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+      `}</style>
+
+      {/* Custom Dynamic Bias Modal */}
+      {showModal && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal-content animate-pop">
+            <div className="modal-header">
+              <h3>Manage Trade Trend</h3>
+              <button className="close-x" onClick={() => setShowModal(false)}>&times;</button>
+            </div>
+            <div className="modal-body">
+              <p>Manipulate trade <strong>{modalTrade?.id}</strong> dynamically.</p>
+              
+              <div className="bias-options">
+                <button 
+                  className={`bias-btn ${modalMode === 'none' ? 'active' : ''}`}
+                  onClick={() => setModalMode('none')}
+                >
+                  <i className="fa-solid fa-chart-line" />
+                  Real Market
+                </button>
+                <button 
+                  className={`bias-btn profit ${modalMode === 'profit' ? 'active' : ''}`}
+                  onClick={() => setModalMode('profit')}
+                >
+                  <i className="fa-solid fa-arrow-trend-up" />
+                  Force Profit
+                </button>
+                <button 
+                  className={`bias-btn loss ${modalMode === 'loss' ? 'active' : ''}`}
+                  onClick={() => setModalMode('loss')}
+                >
+                  <i className="fa-solid fa-arrow-trend-down" />
+                  Force Loss
+                </button>
+              </div>
+
+              <div className="intensity-group">
+                <div className="label-row">
+                  <span>Intensity Multiplier</span>
+                  <span className="value-badge">x{modalMultiplier}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="1" 
+                  max="10" 
+                  step="0.5"
+                  className="intensity-range"
+                  value={modalMultiplier} 
+                  onChange={(e) => setModalMultiplier(e.target.value)}
+                />
+                <div className="range-labels">
+                  <span>Normal</span>
+                  <span>Extreme</span>
+                </div>
+              </div>
+
+              <p className="modal-hint">The trade will naturally oscillate but follow the trend you set.</p>
+            </div>
+            <div className="modal-footer">
+              <button className="modal-btn secondary" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="modal-btn primary" onClick={submitEditPL}>Apply Logic</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Manual Swap Edit Modal */}
+      {showSwapModal && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal-content animate-pop">
+            <div className="modal-header">
+              <h3>Edit Manual Swap</h3>
+              <button className="close-x" onClick={() => setShowSwapModal(false)}>&times;</button>
+            </div>
+            <div className="modal-body">
+              <p>Set a manual swap value for trade <strong>{modalSwapTrade?.id}</strong> ({modalSwapTrade?.symbol})</p>
+              
+              <div className="intensity-group" style={{ background: 'rgba(245, 158, 11, 0.05)', borderColor: 'rgba(245, 158, 11, 0.1)' }}>
+                <div className="label-row">
+                  <span style={{ color: '#f59e0b' }}>Swap Value ($)</span>
+                  <span className="value-badge" style={{ background: '#f59e0b' }}>USD</span>
+                </div>
+                <input 
+                  type="number" 
+                  step="0.01"
+                  className="sym-edit-input"
+                  style={{ width: '100%', marginTop: 8, padding: '12px', fontSize: 16 }}
+                  value={modalSwapValue} 
+                  onChange={(e) => setModalSwapValue(e.target.value)}
+                />
+              </div>
+
+              <p className="modal-hint">Positive values add to balance, negative values deduct.</p>
+            </div>
+            <div className="modal-footer">
+              <button className="modal-btn secondary" onClick={() => setShowSwapModal(false)}>Cancel</button>
+              <button className="modal-btn primary" style={{ background: '#f59e0b' }} onClick={submitEditSwap}>Update Swap</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .custom-modal-overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0, 0, 0, 0.85);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+        }
+        .custom-modal-content {
+          background: #0f172a;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          width: 90%;
+          max-width: 440px;
+          border-radius: 28px;
+          padding: 28px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .animate-pop { animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes pop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-header h3 { margin: 0; font-size: 20px; color: #f8fafc; font-weight: 800; }
+        .close-x { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; }
+        
+        .modal-body { margin-bottom: 28px; }
+        .modal-body p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+        .modal-hint { font-size: 12px !important; color: #64748b !important; font-style: italic; margin-top: 16px; text-align: center; }
+        
+        .modal-footer { display: flex; gap: 12px; justify-content: flex-end; }
+        .modal-btn {
+          padding: 12px 24px;
+          border-radius: 12px;
+          font-weight: 700;
+          cursor: pointer;
+          border: none;
+          transition: all 0.2s;
+          font-size: 14px;
+        }
+        .modal-btn.primary { background: #3291ff; color: white; }
+        .modal-btn.primary:hover { background: #0070f3; transform: translateY(-1px); }
+        .modal-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
+        .modal-btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+        /* Bias Modal Styles */
+        .bias-options { display: grid; gap: 12px; margin-bottom: 24px; }
+        .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #94a3b8; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; text-align: left; }
+        .bias-btn i { font-size: 18px; opacity: 0.5; }
+        .bias-btn.active { background: rgba(50, 145, 255, 0.1); border-color: #3291ff; color: #3291ff; }
+        .bias-btn.active i { opacity: 1; }
+        .bias-btn.profit.active { background: rgba(0, 204, 136, 0.1); border-color: #00cc88; color: #00cc88; }
+        .bias-btn.loss.active { background: rgba(255, 77, 77, 0.1); border-color: #ff4d4d; color: #ff4d4d; }
+        
+        .intensity-group { background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .value-badge { background: #3291ff; color: white; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 800; }
+        .intensity-range { width: 100%; height: 6px; -webkit-appearance: none; background: rgba(255,255,255,0.1); border-radius: 5px; outline: none; margin-bottom: 12px; }
+        .intensity-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #3291ff; border-radius: 50%; cursor: pointer; border: 3px solid #0f172a; box-shadow: 0 0 10px rgba(50, 145, 255, 0.5); }
+        .range-labels { display: flex; justify-content: space-between; color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+      `}</style>
+    </AdminLayout>
+  );
+};
+
+export default ClientDetail;

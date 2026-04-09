@@ -1,0 +1,588 @@
+{
+  "clients": [
+    {
+      "id": "C001",
+      "uid": "MRX-10021",
+      "name": "Ahmad Raza",
+      "email": "ahmad.raza@email.com",
+      "contact": "+92-300-1234567",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 15000,
+        "creditDeposit": 1500,
+        "leverage": "1:200"
+      },
+      "tradingMetrics": {
+        "balance": 15000,
+        "creditDeposit": 1500,
+        "freeMargin": 13980.2,
+        "marginLevel": 482.5,
+        "equity": 16240.5
+      }
+    },
+    {
+      "id": "C002",
+      "uid": "MRX-10022",
+      "name": "Sara Khan",
+      "email": "sara.khan@email.com",
+      "contact": "+92-321-9876543",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 25000,
+        "creditDeposit": 2500,
+        "leverage": "1:100"
+      },
+      "tradingMetrics": {
+        "balance": 25000,
+        "creditDeposit": 2500,
+        "freeMargin": 20100,
+        "marginLevel": 312.8,
+        "equity": 22800
+      }
+    },
+    {
+      "id": "C003",
+      "uid": "MRX-10023",
+      "name": "Usman Ali",
+      "email": "usman.ali@email.com",
+      "contact": "+92-345-5551234",
+      "status": "pending",
+      "accountSummary": {
+        "deposit": 5000,
+        "creditDeposit": 0,
+        "leverage": "1:500"
+      },
+      "tradingMetrics": {
+        "balance": 5000,
+        "creditDeposit": 0,
+        "freeMargin": 4980,
+        "marginLevel": 890.2,
+        "equity": 5340
+      }
+    },
+    {
+      "id": "C004",
+      "uid": "MRX-10024",
+      "name": "Fatima Sheikh",
+      "email": "fatima.sheikh@email.com",
+      "contact": "+92-333-4445566",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 50000,
+        "creditDeposit": 5000,
+        "leverage": "1:200"
+      },
+      "tradingMetrics": {
+        "balance": 50000,
+        "creditDeposit": 5000,
+        "freeMargin": 47800,
+        "marginLevel": 621.3,
+        "equity": 53200
+      }
+    },
+    {
+      "id": "C005",
+      "uid": "MRX-10025",
+      "name": "Bilal Mahmood",
+      "email": "bilal.mahmood@email.com",
+      "contact": "+92-311-7778899",
+      "status": "suspended",
+      "accountSummary": {
+        "deposit": 8000,
+        "creditDeposit": 800,
+        "leverage": "1:100"
+      },
+      "tradingMetrics": {
+        "balance": 8000,
+        "creditDeposit": 800,
+        "freeMargin": 5600,
+        "marginLevel": 145.6,
+        "equity": 7100
+      }
+    },
+    {
+      "id": "C006",
+      "uid": "MRX-10026",
+      "name": "Zara Iqbal",
+      "email": "zara.iqbal@email.com",
+      "contact": "+92-323-1122334",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 12000,
+        "creditDeposit": 1200,
+        "leverage": "1:300"
+      },
+      "tradingMetrics": {
+        "balance": 12000,
+        "creditDeposit": 1200,
+        "freeMargin": 11600,
+        "marginLevel": 540.8,
+        "equity": 13450
+      }
+    },
+    {
+      "id": "C007",
+      "uid": "MRX-10027",
+      "name": "Hassan Nawaz",
+      "email": "hassan.nawaz@email.com",
+      "contact": "+92-302-9998877",
+      "status": "pending",
+      "accountSummary": {
+        "deposit": 3000,
+        "creditDeposit": 0,
+        "leverage": "1:100"
+      },
+      "tradingMetrics": {
+        "balance": 3000,
+        "creditDeposit": 0,
+        "freeMargin": 2970,
+        "marginLevel": 1200.4,
+        "equity": 2980
+      }
+    },
+    {
+      "id": "C008",
+      "uid": "MRX-10028",
+      "name": "Nadia Hussain",
+      "email": "nadia.hussain@email.com",
+      "contact": "+92-315-6655443",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 30000,
+        "creditDeposit": 3000,
+        "leverage": "1:200"
+      },
+      "tradingMetrics": {
+        "balance": 30000,
+        "creditDeposit": 3000,
+        "freeMargin": 28200,
+        "marginLevel": 398.7,
+        "equity": 31800
+      }
+    },
+    {
+      "id": "C009",
+      "uid": "MRX-48742",
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "password123",
+      "contact": "",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 10000,
+        "creditDeposit": 0,
+        "equity": -28302.6648543658,
+        "swap": 0,
+        "spread": 0,
+        "commission": 0,
+        "availableToWithdraw": 0,
+        "leverage": "1:100",
+        "marginLevel": 0,
+        "profitLoss": 0
+      },
+      "tradingMetrics": {
+        "balance": -28302.6648543658,
+        "creditDeposit": 0,
+        "freeMargin": -28302.6648543658,
+        "marginLevel": 0,
+        "equity": -28302.6648543658,
+        "swap": 0,
+        "trades": 0,
+        "openedBy": "Self",
+        "openedDate": "2026-04-01",
+        "marginUsed": 0
+      }
+    },
+    {
+      "id": "C010",
+      "uid": "MRX-78012",
+      "name": "E2E Tester",
+      "email": "e2e@mirrox.com",
+      "password": "password123",
+      "contact": "",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 0,
+        "creditDeposit": 0,
+        "equity": 0,
+        "swap": 0,
+        "spread": 0,
+        "commission": 0,
+        "availableToWithdraw": 0,
+        "leverage": "1:100",
+        "marginLevel": 0,
+        "profitLoss": 0
+      },
+      "tradingMetrics": {
+        "balance": 0,
+        "creditDeposit": 0,
+        "freeMargin": 0,
+        "marginLevel": 0,
+        "equity": 0,
+        "swap": 0,
+        "trades": 0,
+        "openedBy": "Self",
+        "openedDate": "2026-04-01"
+      }
+    },
+    {
+      "id": "C011",
+      "uid": "MRX-86164",
+      "name": " test",
+      "email": "1test@example.com",
+      "password": "11223344",
+      "contact": "",
+      "status": "active",
+      "accountSummary": {
+        "deposit": 10000,
+        "creditDeposit": 0,
+        "equity": 9999.515,
+        "swap": 0,
+        "spread": 0,
+        "commission": 0,
+        "availableToWithdraw": 10000,
+        "leverage": "1:100",
+        "marginLevel": 0,
+        "profitLoss": -0.10999999999999091
+      },
+      "tradingMetrics": {
+        "balance": 10000,
+        "creditDeposit": 0,
+        "freeMargin": 9300.871,
+        "marginLevel": 1431.2747264701334,
+        "equity": 9999.515,
+        "swap": 0,
+        "trades": 0,
+        "openedBy": "Self",
+        "openedDate": "2026-04-03",
+        "marginUsed": 698.6440000000001
+      }
+    }
+  ],
+  "activeTrades": {
+    "C009": [
+      {
+        "id": "T2930",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 0.1,
+        "openPrice": 2306.97,
+        "profit": 15650,
+        "status": "Closed",
+        "openTime": "2026-04-01T07:53:32.930Z",
+        "forcedPL": true,
+        "closePrice": 2318.44,
+        "closeTime": "2026-04-01T08:13:19.140Z"
+      },
+      {
+        "id": "T3966",
+        "symbol": "Euro vs US Dollar",
+        "type": "SELL",
+        "lots": 0.17,
+        "openPrice": 1.09216,
+        "profit": 0.0002482000000000029,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:13:33.966Z",
+        "forcedPL": false,
+        "closePrice": 1.0907,
+        "closeTime": "2026-04-01T08:38:11.638Z"
+      },
+      {
+        "id": "T8933",
+        "symbol": "Euro vs US Dollar",
+        "type": "BUY",
+        "lots": 0.17,
+        "openPrice": 1.09234,
+        "profit": -0.00025329999999999857,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:14:18.933Z",
+        "forcedPL": false,
+        "closePrice": 1.09085,
+        "closeTime": "2026-04-01T08:38:16.542Z"
+      },
+      {
+        "id": "T4296",
+        "symbol": "Euro vs US Dollar",
+        "type": "BUY",
+        "lots": 200,
+        "openPrice": 1.09234,
+        "profit": 0.04599999999999049,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:14:34.296Z",
+        "forcedPL": false,
+        "closePrice": 1.09257,
+        "closeTime": "2026-04-01T08:15:45.085Z"
+      },
+      {
+        "id": "T9289",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 200,
+        "openPrice": 2320.13,
+        "profit": 121.99999999993452,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:38:39.289Z",
+        "forcedPL": false,
+        "closePrice": 2320.74,
+        "closeTime": "2026-04-01T08:38:46.934Z"
+      },
+      {
+        "id": "T6632",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 100,
+        "openPrice": 2319.52,
+        "profit": 51.99999999999818,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:46:36.632Z",
+        "bias": "none",
+        "multiplier": 1,
+        "closePrice": 2320.04,
+        "closeTime": "2026-04-01T08:46:44.239Z"
+      },
+      {
+        "id": "T2060",
+        "symbol": "Gold vs US Dollar",
+        "type": "SELL",
+        "lots": 100.03,
+        "openPrice": 2320.31,
+        "profit": -640.2613482685078,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:48:02.060Z",
+        "bias": "loss",
+        "multiplier": 10,
+        "closePrice": 2319.67,
+        "closeTime": "2026-04-01T08:49:21.792Z"
+      },
+      {
+        "id": "T5954",
+        "symbol": "British Pound vs US Dollar",
+        "type": "BUY",
+        "lots": 100.03,
+        "openPrice": 1.2723,
+        "profit": 0.3597958933701751,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:55:25.954Z",
+        "bias": "profit",
+        "multiplier": 10,
+        "swap": -453.13589999999743,
+        "closePrice": 1.27258,
+        "closeTime": "2026-04-03T06:36:46.525Z",
+        "closedBy": "Self"
+      },
+      {
+        "id": "T8175",
+        "symbol": "Bitcoin vs US Dollar",
+        "type": "BUY",
+        "lots": 100.03,
+        "openPrice": 69931,
+        "profit": -37261.491401990665,
+        "status": "Closed",
+        "openTime": "2026-04-01T08:57:48.176Z",
+        "bias": "loss",
+        "multiplier": 10,
+        "closePrice": 69893.75,
+        "closeTime": "2026-04-01T08:59:11.481Z"
+      },
+      {
+        "id": "T5607",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 0.1,
+        "openPrice": 2332.65,
+        "profit": -0.04900000000002365,
+        "marginUsed": 233.265,
+        "swap": -0.03300000000000002,
+        "status": "Closed",
+        "openTime": "2026-04-03T06:37:25.607Z",
+        "pendingAt": null,
+        "bias": "none",
+        "multiplier": 1,
+        "closePrice": 2332.16,
+        "closeTime": "2026-04-03T06:46:01.113Z",
+        "closedBy": "Admin"
+      },
+      {
+        "id": "T2406",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 0.1,
+        "openPrice": 2333.32,
+        "profit": -0.04900000000002365,
+        "marginUsed": 233.332,
+        "swap": -0.005,
+        "status": "Closed",
+        "openTime": "2026-04-03T06:50:22.406Z",
+        "pendingAt": null,
+        "bias": "none",
+        "multiplier": 1,
+        "closePrice": 2332.83,
+        "closeTime": "2026-04-03T06:50:27.567Z",
+        "closedBy": "Self"
+      }
+    ],
+    "C011": [
+      {
+        "id": "T6261",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 0.1,
+        "openPrice": 2329.03,
+        "profit": -0.07500000000000001,
+        "marginUsed": 232.90300000000002,
+        "swap": -0.3730000000000003,
+        "status": "Open",
+        "openTime": "2026-04-03T06:56:06.261Z",
+        "pendingAt": null,
+        "bias": "none",
+        "multiplier": 1
+      },
+      {
+        "id": "T1709",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 0.1,
+        "openPrice": 2328.63,
+        "profit": -0.034999999999990906,
+        "marginUsed": 232.86300000000003,
+        "swap": -0.002,
+        "status": "Open",
+        "openTime": "2026-04-03T07:02:21.709Z",
+        "pendingAt": null,
+        "bias": "none",
+        "multiplier": 1
+      },
+      {
+        "id": "T3299",
+        "symbol": "Gold vs US Dollar",
+        "type": "BUY",
+        "lots": 0.1,
+        "openPrice": 2328.78,
+        "profit": 0,
+        "marginUsed": 232.87800000000004,
+        "swap": 0,
+        "status": "Open",
+        "openTime": "2026-04-03T07:02:23.299Z",
+        "pendingAt": null,
+        "bias": "none",
+        "multiplier": 1
+      }
+    ]
+  },
+  "deposits": [],
+  "withdrawals": [],
+  "symbolsList": [
+    {
+      "id": "S001",
+      "name": "Gold vs US Dollar",
+      "symbol": "XAUUSD",
+      "price": "2328.28",
+      "spread": 50,
+      "commission": 0,
+      "lotMin": 0.01,
+      "lotStep": 0.01,
+      "lotMax": 100,
+      "commissionType": "spread-only",
+      "precision": 2,
+      "category": "Metals"
+    },
+    {
+      "id": "S002",
+      "name": "Euro vs US Dollar",
+      "symbol": "EURUSD",
+      "price": "1.09013",
+      "spread": 15,
+      "commission": 3.5,
+      "lotMin": 0.01,
+      "lotStep": 0.01,
+      "lotMax": 500,
+      "commissionType": "standard",
+      "precision": 5,
+      "category": "Forex"
+    },
+    {
+      "id": "S003",
+      "name": "Bitcoin vs US Dollar",
+      "symbol": "BTCUSD",
+      "price": "69776.69",
+      "spread": 2500,
+      "commission": 0,
+      "lotMin": 0.01,
+      "lotStep": 0.01,
+      "lotMax": 50,
+      "commissionType": "spread-only",
+      "precision": 2,
+      "category": "Crypto"
+    },
+    {
+      "id": "S004",
+      "name": "British Pound vs US Dollar",
+      "symbol": "GBPUSD",
+      "price": "1.27338",
+      "spread": 14,
+      "commission": 3.5,
+      "lotMin": 0.01,
+      "lotStep": 0.01,
+      "lotMax": 500,
+      "commissionType": "standard",
+      "precision": 5,
+      "category": "Forex"
+    },
+    {
+      "id": "S005",
+      "name": "US Dollar vs Japanese Yen",
+      "symbol": "USDJPY",
+      "price": "151.240",
+      "spread": 9,
+      "commission": 3,
+      "lotMin": 0.01,
+      "lotStep": 0.01,
+      "lotMax": 500,
+      "commissionType": "standard",
+      "precision": 3,
+      "category": "Forex"
+    },
+    {
+      "id": "S006",
+      "name": "Silver vs US Dollar",
+      "symbol": "XAGUSD",
+      "price": "19.08",
+      "spread": 35,
+      "commission": 0,
+      "lotMin": 1,
+      "lotStep": 1,
+      "lotMax": 5000,
+      "commissionType": "spread-only",
+      "precision": 2,
+      "category": "Metals"
+    },
+    {
+      "id": "S007",
+      "name": "Ethereum vs US Dollar",
+      "symbol": "ETHUSD",
+      "price": "3912.08",
+      "spread": 800,
+      "commission": 0,
+      "lotMin": 0.1,
+      "lotStep": 0.1,
+      "lotMax": 100,
+      "commissionType": "spread-only",
+      "precision": 2,
+      "category": "Crypto"
+    },
+    {
+      "id": "S008",
+      "name": "Dow Jones Industrial Average",
+      "symbol": "US30",
+      "price": "39124.50",
+      "spread": 200,
+      "commission": 0,
+      "lotMin": 0.1,
+      "lotStep": 0.1,
+      "lotMax": 200,
+      "commissionType": "spread-only",
+      "precision": 2,
+      "category": "Indices"
+    }
+  ]
+}

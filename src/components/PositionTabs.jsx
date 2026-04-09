@@ -1,0 +1,260 @@
+import React from 'react';
+import { useTrading } from '../context/TradingContext';
+
+const PositionTabs = () => {
+  const { activeTrades, prices, closePosition, currentClientExtended, allTrades, clientId, currentUser } = useTrading();
+  const [activeTab, setActiveTab] = React.useState('open'); 
+  const [showConfirm, setShowConfirm] = React.useState(false);
+  const [closingTrade, setClosingTrade] = React.useState(null);
+  
+  // Robust financial data with fallbacks
+  const financialSource = currentClientExtended || currentUser;
+  const metrics = financialSource?.tradingMetrics || {};
+  
+  const balance = metrics.balance || 0;
+  const equity = metrics.equity || balance;
+  const margin = metrics.marginUsed || 0;
+  const freeMargin = metrics.freeMargin || (equity - margin);
+  const marginLevel = metrics.marginLevel || 0;
+
+  // Health indicator for Margin Level (Image notes: mini = 300)
+  const getMarginLevelColor = () => {
+    if (marginLevel === 0) return '#94a3b8';
+    if (marginLevel < 300) return '#ef4444'; // Red
+    if (marginLevel < 500) return '#f59e0b'; // Orange/Yellow
+    return '#10b981'; // Green
+  };
+
+  // The definitive source for ALL trades for this client
+  const clientTrades = allTrades[clientId] || [];
+  const openTrades = clientTrades.filter(t => t.status === 'Open');
+  const pendingTrades = clientTrades.filter(t => t.status === 'Pending');
+  const closedTrades = clientTrades.filter(t => t.status === 'Closed');
+
+  const displayTrades = (activeTab === 'open' 
+    ? openTrades 
+    : (activeTab === 'pending' ? pendingTrades : closedTrades)).sort((a, b) => b.id - a.id);
+
+  const handleOpenConfirm = (trade) => {
+    setClosingTrade(trade);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmClose = () => {
+    if (closingTrade) {
+      closePosition(closingTrade.id);
+      setShowConfirm(false);
+      setClosingTrade(null);
+    }
+  };
+
+  return (
+    <div className="card positions-card">
+      <div className="tabs-header">
+        <div className={`tab-item ${activeTab === 'open' ? 'active' : ''}`} onClick={() => setActiveTab('open')}>
+          Open Positions ({openTrades.length})
+        </div>
+        <div className={`tab-item ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>
+          Pending Orders ({pendingTrades.length})
+        </div>
+        <div className={`tab-item ${activeTab === 'closed' ? 'active' : ''}`} onClick={() => setActiveTab('closed')}>
+          Closed Positions ({closedTrades.length})
+        </div>
+        <div className="tab-item">Finance</div>
+      </div>
+
+      <div className="table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Type</th>
+              <th>Volume</th>
+              <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
+              {activeTab === 'open' && <th>Current Price</th>}
+              {activeTab === 'closed' && <th>Close Price</th>}
+              {activeTab !== 'pending' && <th>Profit / Swap</th>}
+              {activeTab === 'closed' && <th>Comment</th>}
+              {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
+            </tr>
+          </thead>
+          <tbody>
+             {displayTrades.map(trade => {
+                const profit = trade.profit || 0;
+                const swap = trade.swap || 0;
+                const total = profit + swap;
+                const isClosed = trade.status === 'Closed';
+                return (
+                  <tr key={trade.id}>
+                    <td style={{ fontWeight: 600 }}>{trade.symbol}</td>
+                    <td style={{ color: trade.type === 'BUY' ? '#10b981' : '#ef4444' }}>{trade.type}</td>
+                    <td>{trade.lots}</td>
+                    <td>{(trade.openPrice || 0).toFixed(2)}</td>
+                    
+                    {activeTab === 'open' && (
+                       <td>{prices.find(p=>p.name===trade.symbol)?.price || '...'}</td>
+                    )}
+
+                    {activeTab === 'closed' && (
+                       <td>{trade.closePrice?.toFixed(2) || '...'}</td>
+                    )}
+
+                    {activeTab !== 'pending' && (
+                       <td style={{ color: total >= 0 ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>
+                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span>
+                              {total >= 0 ? '+' : ''}{total.toFixed(2)} USD
+                              {trade.swapLocked && <span title="Swap manually set by admin" style={{ marginLeft: 4, fontSize: '10px' }}>🔒</span>}
+                            </span>
+                            {/* Always show swap breakdown on closed trades; only show if non-zero on open */}
+                            {(isClosed || swap !== 0) && (
+                              <small style={{ opacity: 0.6, fontSize: '10px', color: swap < 0 ? '#ef4444' : '#10b981' }}>
+                                Swap: {swap >= 0 ? '+' : ''}{swap.toFixed(2)}
+                              </small>
+                            )}
+                            {isClosed && (
+                              <small style={{ opacity: 0.5, fontSize: '10px' }}>
+                                P/L: {profit >= 0 ? '+' : ''}{profit.toFixed(2)}
+                              </small>
+                            )}
+                         </div>
+                       </td>
+                    )}
+
+                    {activeTab === 'closed' && (
+                       <td style={{ fontSize: '11px', color: '#94a3b8 italic' }}>
+                          {trade.closedBy ? `by ${trade.closedBy}` : '---'}
+                          {trade.comment && <div style={{ fontSize: '9px', opacity: 0.7 }}>{trade.comment}</div>}
+                       </td>
+                    )}
+
+                    {activeTab !== 'closed' && (
+                      <td style={{ textAlign: 'right' }}>
+                         <button 
+                           className="close-trade-btn"
+                           onClick={() => handleOpenConfirm(trade)}
+                         >
+                           {activeTab === 'pending' ? 'Cancel' : 'Close'}
+                         </button>
+                      </td>
+                    )}
+                  </tr>
+                  );
+               })}
+            </tbody>
+        </table>
+        
+        {displayTrades.length === 0 && (
+          <div className="empty-state">
+             <i className="fa-solid fa-book-open"></i>
+             <p className="empty-title">
+               {activeTab === 'open' ? "You don't have any open positions." : "No trade history available yet."}
+             </p>
+             <p className="empty-subtitle">Start trading and here you'll see your activity.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="positions-footer glass">
+         <div className="stat-item">Balance: <strong>{balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> <small>USD</small></div>
+         <div className="stat-item">Credit: <strong>{(financialSource?.accountSummary?.creditDeposit || 0).toLocaleString()}</strong> <small>USD</small></div>
+         <div className="stat-item">Equity: <strong>{equity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> <small>USD</small></div>
+         <div className="stat-item">Margin: <strong>{margin.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></div>
+         <div className="stat-item">Free Margin: <strong>{freeMargin.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></div>
+         <div className="stat-item">
+            Margin Level: <strong style={{ color: getMarginLevelColor() }}>
+              {marginLevel > 0 ? `${marginLevel.toFixed(2)}%` : '0.00%'}
+            </strong>
+         </div>
+      </div>
+
+      {/* Custom Global Confirmation Modal */}
+      {showConfirm && (
+        <div className="confirm-modal-overlay">
+          <div className="confirm-modal-content animate-pop">
+            <div className="modal-header-simple">
+              <i className="fa-solid fa-circle-exclamation" style={{ color: '#ef4444', fontSize: '24px' }}></i>
+              <h3>Close Position?</h3>
+            </div>
+            <div className="modal-body-simple">
+              <p>Are you sure you want to close <strong>{closingTrade?.symbol}</strong> ({closingTrade?.type}) at market price?</p>
+              <div className="confirm-profit-preview">
+                <span className="label">Estimated Result</span>
+                <span className={`value ${(closingTrade?.profit || 0) >= 0 ? 'up' : 'down'}`}>
+                  {(closingTrade?.profit || 0) >= 0 ? '+' : ''}{(closingTrade?.profit || 0).toFixed(2)} USD
+                </span>
+              </div>
+            </div>
+            <div className="modal-footer-simple">
+              <button className="confirm-btn secondary" onClick={() => setShowConfirm(false)}>Cancel</button>
+              <button className="confirm-btn danger" onClick={handleConfirmClose}>Close Position</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .close-trade-btn {
+          background: rgba(239, 68, 68, 0.1);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.2);
+          padding: 4px 12px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .close-trade-btn:hover { background: #ef4444; color: white; }
+
+        /* Confirm Modal Styles */
+        .confirm-modal-overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0, 0, 0, 0.88);
+          backdrop-filter: blur(12px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+        }
+        .confirm-modal-content {
+          background: #0f172a;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          width: 90%;
+          max-width: 380px;
+          border-radius: 28px;
+          padding: 32px;
+          text-align: center;
+          box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.7);
+        }
+        .modal-header-simple h3 { margin: 16px 0 8px; font-size: 20px; color: white; font-weight: 800; }
+        .modal-body-simple p { color: #94a3b8; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+        
+        .confirm-profit-preview {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 16px;
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin-bottom: 32px;
+          border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        .confirm-profit-preview .label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 800; }
+        .confirm-profit-preview .value { font-size: 20px; font-weight: 800; }
+        .confirm-profit-preview .value.up { color: #10b981; }
+        .confirm-profit-preview .value.down { color: #ef4444; }
+
+        .modal-footer-simple { display: flex; gap: 12px; }
+        .confirm-btn { flex: 1; padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; transition: all 0.2s; }
+        .confirm-btn.danger { background: #ef4444; color: white; }
+        .confirm-btn.danger:hover { background: #dc2626; transform: translateY(-2px); }
+        .confirm-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
+        .confirm-btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
+      `}</style>
+    </div>
+  );
+};
+
+export default PositionTabs;
