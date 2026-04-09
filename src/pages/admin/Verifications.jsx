@@ -136,7 +136,15 @@ const Verifications = ({ onAdminLogout }) => {
                   </div>
                   <div className="kyc-doc-info">
                     <div className="doc-label">Document Submitted</div>
-                    <div className="doc-type"><i className="fa-solid fa-file-lines" /> {client.kyc.docType}</div>
+                    <div className="doc-type" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <i className="fa-solid fa-file-lines" /> 
+                      {client.kyc.docType || 'ID Document'}
+                      {client.kyc.documentUrl && (
+                        <a href={client.kyc.documentUrl} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#3291ff', fontSize: 11, textDecoration: 'none', background: 'rgba(50,145,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                          <i className="fa-solid fa-external-link-alt" /> View Image
+                        </a>
+                      )}
+                    </div>
                   </div>
                   <div className="kyc-doc-info">
                     <div className="doc-label">Date</div>
