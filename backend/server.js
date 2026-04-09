@@ -193,11 +193,6 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
         width: 1024,
         fetch_format: 'auto',
         quality: 'auto',
-        moderation: 'ai_vision_moderation',
-        moderation_questions: [
-            "Is this image completely unrelated to an official ID card, passport, or government identity document?",
-            "Does the document appear to be fake, highly edited, a cartoon, or a picture taken of a digital screen?"
-        ],
         notification_url: (process.env.BACKEND_URL || "https://mirrox-backend-production.up.railway.app") + "/api/webhooks/cloudinary"
       },
       async (error, result) => {
