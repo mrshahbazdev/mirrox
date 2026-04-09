@@ -192,7 +192,13 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
         resource_type: 'auto',
         width: 1024,
         fetch_format: 'auto',
-        quality: 'auto'
+        quality: 'auto',
+        moderation: 'ai_vision_moderation',
+        moderation_questions: [
+            "Is this image completely unrelated to an official ID card, passport, or government identity document?",
+            "Does the document appear to be fake, highly edited, a cartoon, or a picture taken of a digital screen?"
+        ],
+        notification_url: (process.env.BACKEND_URL || "https://mirrox-backend-production.up.railway.app") + "/api/webhooks/cloudinary"
       },
       async (error, result) => {
         if (error) {
@@ -200,38 +206,14 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
           return res.status(500).json({ error: 'File upload failed' });
         }
         
-        let initialStatus = 'pending';
-        let rejectReason = null;
-
-        try {
-          if (cloudinary.api.ai_vision_moderation) {
-            console.log("Triggering Cloudinary AI Vision Moderation...");
-            const aiCheck = await cloudinary.api.ai_vision_moderation(result.public_id, {
-              rejection_questions: [
-                "Is this image completely unrelated to an official ID card, passport, or government identity document?",
-                "Does the document appear to be fake, highly edited, a cartoon, or a picture taken of a digital screen?"
-              ]
-            });
-            // If any answer is yes, AI will flag it as rejected
-            if (aiCheck?.moderation?.status === 'rejected' || aiCheck?.status === 'rejected') {
-               initialStatus = 'rejected';
-               rejectReason = "Auto-Rejected by AI Vision: Image does not look like a valid, physical Identity Document.";
-               // optionally delete the image from cloudinary to save quota automatically!
-               await cloudinary.uploader.destroy(result.public_id);
-            }
-          }
-        } catch (aiErr) {
-          console.error("AI Vision ignored or not configured properly:", aiErr.message);
-        }
-
         client.kyc = {
           ...client.kyc,
-          status: initialStatus,
+          status: 'pending',
           documentType: docType || 'id_card',
           documentName: req.file.originalname,
-          documentUrl: initialStatus === 'rejected' ? null : result.secure_url,
-          cloudinaryPublicId: initialStatus === 'rejected' ? null : result.public_id,
-          rejectionReason: rejectReason,
+          documentUrl: result.secure_url,
+          cloudinaryPublicId: result.public_id,
+          rejectionReason: null,
           submittedAt: new Date()
         };
         
@@ -585,6 +567,44 @@ app.delete('/api/symbols/:id', (req, res) => {
   symbolsList.splice(index, 1);
   saveData();
   res.json({ message: 'Symbol delisted successfuly' });
+});
+
+// Cloudinary Webhook Listener
+app.post('/api/webhooks/cloudinary', async (req, res) => {
+  console.log("Webhook received from Cloudinary: ", req.body);
+  
+  if (req.body.notification_type === 'moderation' && req.body.moderation_kind === 'ai_vision') {
+     const { public_id, moderation_status } = req.body;
+     
+     // Find the client with this file
+     const client = clients.find(c => c.kyc && c.kyc.cloudinaryPublicId === public_id);
+     
+     if (client && client.kyc.status === 'pending') {
+        if (moderation_status === 'rejected') {
+            client.kyc.status = 'rejected';
+            client.kyc.rejectionReason = "Auto-Rejected by AI Vision: Image failed security prompts (e.g. invalid document, fake, selfie, etc.)";
+            // delete from cloudinary to save quota!
+            try {
+               await cloudinary.uploader.destroy(public_id);
+               client.kyc.documentUrl = null;
+               client.kyc.cloudinaryPublicId = null;
+            } catch(delErr) {
+               console.error("Webhook: Failed to delete rejected image", delErr);
+            }
+        } else if (moderation_status === 'approved') {
+            // we can auto-approve or leave pending for admin
+            // it's safer to leave for Admin final sanity check, but if we wanted full automation:
+            // client.kyc.status = 'approved';
+            // client.accountType = 'live'; 
+        }
+        
+        saveData();
+        io.emit('finance_update'); // trigger realtime dashboard update
+     }
+  }
+  
+  // Acknowledge receipt to Cloudinary so they don't resend
+  res.status(200).send("OK");
 });
 
 app.get('/api/trades/:clientId', (req, res) => {
