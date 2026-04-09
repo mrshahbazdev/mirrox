@@ -14,6 +14,7 @@ const ClientSchema = new mongoose.Schema({
     documentType: String,
     documentName: String,
     documentUrl: String,
+    cloudinaryPublicId: String,
     submittedAt: Date,
     reviewedAt: Date,
     rejectionReason: String

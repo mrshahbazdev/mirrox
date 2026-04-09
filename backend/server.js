@@ -206,6 +206,7 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
           documentType: docType || 'id_card',
           documentName: req.file.originalname,
           documentUrl: result.secure_url,
+          cloudinaryPublicId: result.public_id,
           submittedAt: new Date()
         };
         
@@ -264,6 +265,56 @@ app.delete('/api/clients/:id', (req, res) => {
   const removed = clients.splice(index, 1);
   saveData();
   res.json(removed[0]);
+});
+
+app.put('/api/clients/:id/kyc', async (req, res) => {
+  try {
+    const client = clients.find(c => c.id === req.params.id);
+    if (!client) return res.status(404).send('Not Found');
+    
+    // Check if rejection requires Cloudinary deletion
+    if (req.body.status === 'rejected' && client.kyc?.cloudinaryPublicId) {
+      await cloudinary.uploader.destroy(client.kyc.cloudinaryPublicId);
+      client.kyc.documentUrl = null;
+      client.kyc.cloudinaryPublicId = null;
+    }
+    
+    client.kyc = { ...client.kyc, ...req.body };
+    saveData();
+    io.emit('finance_update');
+    res.json(client);
+  } catch(err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.put('/api/clients/:id/kyc/review', async (req, res) => {
+  try {
+    const { action, rejectionReason } = req.body;
+    const client = clients.find(c => c.id === req.params.id);
+    if (!client) return res.status(404).json({ error: 'Client not found' });
+    
+    if (action === 'reject') {
+      if (client.kyc?.cloudinaryPublicId) {
+        await cloudinary.uploader.destroy(client.kyc.cloudinaryPublicId);
+        client.kyc.documentUrl = null;
+        client.kyc.cloudinaryPublicId = null;
+      }
+      client.kyc.status = 'rejected';
+      client.kyc.rejectionReason = rejectionReason;
+    } else if (action === 'approve') {
+      client.kyc.status = 'approved';
+      client.kyc.rejectionReason = null;
+      client.accountType = 'live'; // Convert to real account automatically
+    }
+    
+    client.kyc.reviewedAt = new Date();
+    saveData();
+    io.emit('finance_update');
+    res.json({ message: 'Success', kyc: client.kyc });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error parsing review' });
+  }
 });
 
 // Balance route moved up to prevent clash
