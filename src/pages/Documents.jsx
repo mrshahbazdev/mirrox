@@ -36,6 +36,10 @@ const Documents = () => {
       formData.append('document', file);
       formData.append('docType', docType);
 
+      if (!currentClientExtended?.id) {
+        throw new Error("Client session not fully initialized. Please try again in a moment.");
+      }
+
       await axios.post(`${import.meta.env.VITE_API_URL}/api/clients/${currentClientExtended.id}/kyc/submit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
