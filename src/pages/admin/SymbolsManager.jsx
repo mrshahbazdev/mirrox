@@ -24,7 +24,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
   useEffect(() => {
     const fetchSymbols = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/symbols');
+        const res = await axios.get(import.meta.env.VITE_API_URL + '/api/symbols');
         setSymbols(res.data);
       } catch (err) {
         console.error('Failed to load symbols', err);
@@ -70,7 +70,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
 
   const handleAddSymbol = async () => {
     try {
-       const res = await axios.post('http://localhost:3000/api/symbols', newSym);
+       const res = await axios.post(import.meta.env.VITE_API_URL + '/api/symbols', newSym);
        setSymbols([...symbols, res.data]);
        setShowAddModal(false);
        setNewSym({ symbol: '', name: '', category: 'Forex', spread: 10, commission: 5 });
@@ -84,7 +84,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
   const deleteSymbol = async (id) => {
     if (!window.confirm('Delist this symbol? All current trades for this pair will remain but no new ones can be opened.')) return;
     try {
-       await axios.delete(`http://localhost:3000/api/symbols/${id}`);
+       await axios.delete(\`${import.meta.env.VITE_API_URL}/api/symbols/${id}`);
        setSymbols(prev => prev.filter(s => s.id !== id));
        showToast('Symbol delisted.');
     } catch (err) {
@@ -104,7 +104,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
          swapRate: +editData.swapRate
       };
       
-      const res = await axios.put(`http://localhost:3000/api/symbols/${id}`, payload);
+      const res = await axios.put(\`${import.meta.env.VITE_API_URL}/api/symbols/${id}`, payload);
       
       setSymbols((prev) => prev.map((s) => s.id === id ? res.data : s));
       setEditingId(null);

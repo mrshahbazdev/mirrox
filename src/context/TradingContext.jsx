@@ -42,7 +42,7 @@ export const TradingProvider = ({ children }) => {
     // Only connect if we have a token (optional, but requested for security)
     if (!token) return;
 
-    const s = io('http://localhost:3000', {
+    const s = io(import.meta.env.VITE_API_URL + '', {
       auth: { token }
     });
     setSocket(s);

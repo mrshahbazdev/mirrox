@@ -36,7 +36,7 @@ const ClientsList = ({ onAdminLogout }) => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/clients');
+        const res = await axios.get(import.meta.env.VITE_API_URL + '/api/clients');
         setStaticClients(res.data);
       } catch (err) {
         showToast('Failed to load clients', 'warn');
@@ -63,7 +63,7 @@ const ClientsList = ({ onAdminLogout }) => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/api/clients/${id}`, { status: 'active' });
+      await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: 'active' });
       setStaticClients((prev) => prev.map((c) => (c.id === id ? { ...c, status: 'active' } : c)));
       showToast('Client approved successfully');
     } catch (err) {
@@ -73,7 +73,7 @@ const ClientsList = ({ onAdminLogout }) => {
 
   const handleSuspend = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/api/clients/${id}`, { status: 'suspended' });
+      await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: 'suspended' });
       setStaticClients((prev) => prev.map((c) => (c.id === id ? { ...c, status: 'suspended' } : c)));
       showToast('Client suspended', 'warn');
     } catch (err) {

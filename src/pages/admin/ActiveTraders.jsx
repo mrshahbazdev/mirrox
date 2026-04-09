@@ -12,7 +12,7 @@ const ActiveTraders = ({ onAdminLogout }) => {
     let interval;
     const fetchActiveTraders = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/active-traders');
+        const res = await axios.get(import.meta.env.VITE_API_URL + '/api/active-traders');
         setData(res.data);
       } catch (err) {
         console.error('Failed to load active traders', err);

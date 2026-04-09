@@ -32,7 +32,7 @@ const Documents = () => {
     if (!file) return;
     setLoading(true);
     try {
-      await axios.post(`http://localhost:3000/api/clients/${currentClientExtended.id}/kyc/submit`, {
+      await axios.post(\`${import.meta.env.VITE_API_URL}/api/clients/${currentClientExtended.id}/kyc/submit`, {
         docType,
         docName: file.name
       });

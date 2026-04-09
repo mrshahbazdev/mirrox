@@ -16,7 +16,7 @@ const Register = ({ onRegister }) => {
     setError('');
     
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/register', formData);
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', formData);
       
       // Automatically log the user in
       setClientId(res.data.client.id, res.data.token);

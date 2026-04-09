@@ -18,8 +18,8 @@ const Finances = () => {
     if (!currentClientExtended?.id) return;
     try {
       const [dRes, wRes] = await Promise.all([
-        axios.get(`http://localhost:3000/api/deposits/${currentClientExtended.id}`),
-        axios.get(`http://localhost:3000/api/withdrawals/${currentClientExtended.id}`)
+        axios.get(\`${import.meta.env.VITE_API_URL}/api/deposits/${currentClientExtended.id}`),
+        axios.get(\`${import.meta.env.VITE_API_URL}/api/withdrawals/${currentClientExtended.id}`)
       ]);
       setDeposits(dRes.data);
       setWithdrawals(wRes.data);
@@ -46,7 +46,7 @@ const Finances = () => {
     if (!amount || parseFloat(amount) <= 0) return;
     setIsSubmitting(true);
     try {
-      const res = await axios.post('http://localhost:3000/api/deposits', {
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/deposits', {
         clientId: currentClientExtended.id,
         amount: parseFloat(amount),
         method,
@@ -74,7 +74,7 @@ const Finances = () => {
     }
     setIsSubmitting(true);
     try {
-      const res = await axios.post('http://localhost:3000/api/withdrawals', {
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/withdrawals', {
         clientId: currentClientExtended.id,
         amount: parseFloat(amount),
         method,

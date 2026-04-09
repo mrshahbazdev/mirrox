@@ -27,10 +27,10 @@ const Reports = ({ onAdminLogout }) => {
   const fetchData = React.useCallback(async () => {
     try {
         const [clientsRes, depsRes, widsRes, tradesRes] = await Promise.all([
-          axios.get('http://localhost:3000/api/clients'),
-          axios.get('http://localhost:3000/api/deposits'),
-          axios.get('http://localhost:3000/api/withdrawals'),
-          axios.get('http://localhost:3000/api/active-traders') // For trade presence
+          axios.get(import.meta.env.VITE_API_URL + '/api/clients'),
+          axios.get(import.meta.env.VITE_API_URL + '/api/deposits'),
+          axios.get(import.meta.env.VITE_API_URL + '/api/withdrawals'),
+          axios.get(import.meta.env.VITE_API_URL + '/api/active-traders') // For trade presence
         ]);
         const clientsData = clientsRes.data;
 
@@ -40,7 +40,7 @@ const Reports = ({ onAdminLogout }) => {
         const trds = [];
         for (const c of clientsData) {
           try {
-             const tRes = await axios.get(`http://localhost:3000/api/trades/${c.id}`);
+             const tRes = await axios.get(\`${import.meta.env.VITE_API_URL}/api/trades/${c.id}`);
              trds.push(...tRes.data.map(t => ({ ...t, clientName: c.name, clientId: c.id })));
           } catch(e) {}
         }
@@ -71,7 +71,7 @@ const Reports = ({ onAdminLogout }) => {
 
   const handleFinanceAction = async (type, id, action) => {
     try {
-      await axios.put(`http://localhost:3000/api/${type}/${id}/status`, { status: action });
+      await axios.put(\`${import.meta.env.VITE_API_URL}/api/${type}/${id}/status`, { status: action });
       fetchData();
     } catch (err) {
       alert(`Failed to ${action} ${type}`);

@@ -19,7 +19,7 @@ const Verifications = ({ onAdminLogout }) => {
 
   const fetchClients = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/clients');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/clients');
       setClients(res.data);
     } catch (err) {
       console.error('Failed to fetch clients:', err);
@@ -37,7 +37,7 @@ const Verifications = ({ onAdminLogout }) => {
     if (action === 'reject' && reason === null) return; // User cancelled
 
     try {
-      await axios.put(`http://localhost:3000/api/clients/${clientId}/kyc/review`, {
+      await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${clientId}/kyc/review`, {
         action,
         rejectionReason: reason
       });

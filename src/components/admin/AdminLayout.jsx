@@ -19,10 +19,10 @@ const AdminLayout = ({ children, onAdminLogout }) => {
   const fetchAdminStats = useCallback(async () => {
     try {
       const [clientRes, activeRes, depRes, withRes] = await Promise.all([
-        axios.get('http://localhost:3000/api/clients'),
-        axios.get('http://localhost:3000/api/active-traders'),
-        axios.get('http://localhost:3000/api/deposits'),
-        axios.get('http://localhost:3000/api/withdrawals')
+        axios.get(import.meta.env.VITE_API_URL + '/api/clients'),
+        axios.get(import.meta.env.VITE_API_URL + '/api/active-traders'),
+        axios.get(import.meta.env.VITE_API_URL + '/api/deposits'),
+        axios.get(import.meta.env.VITE_API_URL + '/api/withdrawals')
       ]);
       
       const count = clientRes.data.filter(c => c.kyc && c.kyc.status === 'pending').length;

@@ -16,7 +16,7 @@ const Login = ({ onLogin }) => {
     setError('');
     
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', { email, password });
       
       if (res.data.role === 'admin') {
          setError('Admin needs to login via /admin/login');
