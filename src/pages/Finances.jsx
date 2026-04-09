@@ -18,8 +18,8 @@ const Finances = () => {
     if (!currentClientExtended?.id) return;
     try {
       const [dRes, wRes] = await Promise.all([
-        axios.get(\`${import.meta.env.VITE_API_URL}/api/deposits/${currentClientExtended.id}`),
-        axios.get(\`${import.meta.env.VITE_API_URL}/api/withdrawals/${currentClientExtended.id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/deposits/${currentClientExtended.id}`),
+        axios.get(`${import.meta.env.VITE_API_URL}/api/withdrawals/${currentClientExtended.id}`)
       ]);
       setDeposits(dRes.data);
       setWithdrawals(wRes.data);

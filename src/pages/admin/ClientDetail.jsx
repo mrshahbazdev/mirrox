@@ -26,7 +26,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const handleQuickFund = async () => {
     try {
-      const response = await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: 10000 });
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: 10000 });
       setStaticClient(response.data);
       alert('Account funded with $10,000.00!');
     } catch (err) {
@@ -54,9 +54,9 @@ const ClientDetail = ({ onAdminLogout }) => {
       try {
         setLoading(true);
         const [clientRes, wRes, dRes] = await Promise.all([
-          axios.get(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`),
-          axios.get(\`${import.meta.env.VITE_API_URL}/api/withdrawals/${id}`),
-          axios.get(\`${import.meta.env.VITE_API_URL}/api/deposits/${id}`)
+          axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/withdrawals/${id}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/deposits/${id}`)
         ]);
         setStaticClient(clientRes.data);
         setWithdrawals(wRes.data);
@@ -131,7 +131,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const handleUpdateStatus = async (newStatus) => {
     try {
-      const res = await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: newStatus });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: newStatus });
       setStaticClient(res.data);
     } catch (err) {
       console.error('Failed to update status', err);
@@ -141,7 +141,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   const handleUpdateTransactionStatus = async (type, txId, newStatus) => {
     try {
       const endpoint = type === 'deposit' ? 'deposits' : 'withdrawals';
-      const res = await axios.put(\`${import.meta.env.VITE_API_URL}/api/${endpoint}/${txId}/status`, { status: newStatus });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/${endpoint}/${txId}/status`, { status: newStatus });
       
       // Update local state arrays for immediate UI feedback
       if (type === 'deposit') {
@@ -152,7 +152,7 @@ const ClientDetail = ({ onAdminLogout }) => {
       
       // If approved, the backend updated the client balance, so we should refresh the static client too
       if (newStatus === 'approved') {
-        const clientRes = await axios.get(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+        const clientRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
         setStaticClient(clientRes.data);
       }
     } catch (err) {
@@ -163,7 +163,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const handleUpdateKYC = async (kycData) => {
     try {
-      const res = await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}/kyc`, kycData);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/kyc`, kycData);
       setStaticClient(res.data);
     } catch (err) {
       console.error('Failed to update KYC', err);
@@ -249,7 +249,7 @@ const ClientDetail = ({ onAdminLogout }) => {
                   <button className="cd-action-btn edit" onClick={() => {
                     const val = prompt('Enter manual balance:', tm?.balance || '0');
                     if (val !== null) {
-                       axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: val })
+                       axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: val })
                         .then(r => setStaticClient(r.data))
                         .catch(e => alert('Failed to update balance'));
                     }

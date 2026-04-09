@@ -11,7 +11,7 @@ const Analytics = () => {
     const fetchStats = async () => {
       if (!currentClientExtended?.id) return;
       try {
-        const res = await axios.get(\`${import.meta.env.VITE_API_URL}/api/clients/${currentClientExtended.id}/analytics`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${currentClientExtended.id}/analytics`);
         setStats(res.data);
       } catch (err) {
         console.error('Failed to fetch analytics', err);

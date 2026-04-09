@@ -84,7 +84,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
   const deleteSymbol = async (id) => {
     if (!window.confirm('Delist this symbol? All current trades for this pair will remain but no new ones can be opened.')) return;
     try {
-       await axios.delete(\`${import.meta.env.VITE_API_URL}/api/symbols/${id}`);
+       await axios.delete(`${import.meta.env.VITE_API_URL}/api/symbols/${id}`);
        setSymbols(prev => prev.filter(s => s.id !== id));
        showToast('Symbol delisted.');
     } catch (err) {
@@ -104,7 +104,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
          swapRate: +editData.swapRate
       };
       
-      const res = await axios.put(\`${import.meta.env.VITE_API_URL}/api/symbols/${id}`, payload);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/symbols/${id}`, payload);
       
       setSymbols((prev) => prev.map((s) => s.id === id ? res.data : s));
       setEditingId(null);

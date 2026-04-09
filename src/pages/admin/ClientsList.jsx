@@ -63,7 +63,7 @@ const ClientsList = ({ onAdminLogout }) => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: 'active' });
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: 'active' });
       setStaticClients((prev) => prev.map((c) => (c.id === id ? { ...c, status: 'active' } : c)));
       showToast('Client approved successfully');
     } catch (err) {
@@ -73,7 +73,7 @@ const ClientsList = ({ onAdminLogout }) => {
 
   const handleSuspend = async (id) => {
     try {
-      await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: 'suspended' });
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: 'suspended' });
       setStaticClients((prev) => prev.map((c) => (c.id === id ? { ...c, status: 'suspended' } : c)));
       showToast('Client suspended', 'warn');
     } catch (err) {

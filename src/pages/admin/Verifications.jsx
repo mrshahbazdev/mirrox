@@ -37,7 +37,7 @@ const Verifications = ({ onAdminLogout }) => {
     if (action === 'reject' && reason === null) return; // User cancelled
 
     try {
-      await axios.put(\`${import.meta.env.VITE_API_URL}/api/clients/${clientId}/kyc/review`, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${clientId}/kyc/review`, {
         action,
         rejectionReason: reason
       });
