@@ -56,7 +56,7 @@ const Help = () => {
 
         <h3 style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 20px 0', fontFamily: 'Outfit, sans-serif' }}>Frequently Asked Questions</h3>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} className="animate-fade" style={{ animationDelay: '0.2s' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', animationDelay: '0.2s' }} className="animate-fade">
           <div className="card glass" style={{ padding: '24px', borderRadius: '16px' }}>
             <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: '#e0e6ed' }}>How long do withdrawals take to process?</h4>
             <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
