@@ -201,14 +201,42 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
           return res.status(500).json({ error: 'File upload failed' });
         }
         
+        let finalStatus = 'pending';
+        let rejectReason = null;
+
+        // Perform Synchronous AI Vision Check via REST API
+        try {
+           const aiUrl = `https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v2/analysis/${process.env.CLOUDINARY_CLOUD_NAME}/analyze/ai_vision_moderation`;
+           const response = await axios.post(aiUrl, {
+              source: { uri: result.secure_url },
+              rejection_questions: [
+                "Is this image completely unrelated to an official ID card, passport, or government identity document?",
+                "Does the document appear to be fake, highly edited, a cartoon, or a picture taken of a digital screen?"
+              ]
+           });
+           
+           if (response.data && response.data.data && response.data.data.analysis) {
+               const answers = response.data.data.analysis.responses;
+               // If any response value is "yes", AI flagged it!
+               const isRejected = answers.some(ans => ans.value && ans.value.toLowerCase() === 'yes');
+               if (isRejected) {
+                   finalStatus = 'rejected';
+                   rejectReason = "Auto-Rejected by AI Vision: Image does not meet strict ID requirements or appears artificial.";
+                   await cloudinary.uploader.destroy(result.public_id).catch(() => {});
+               }
+           }
+        } catch (aiErr) {
+           console.error("AI Vision validation failed or ignored:", aiErr?.response?.data || aiErr.message);
+        }
+
         client.kyc = {
           ...client.kyc,
-          status: 'pending',
+          status: finalStatus,
           documentType: docType || 'id_card',
           documentName: req.file.originalname,
-          documentUrl: result.secure_url,
-          cloudinaryPublicId: result.public_id,
-          rejectionReason: null,
+          documentUrl: finalStatus === 'rejected' ? null : result.secure_url,
+          cloudinaryPublicId: finalStatus === 'rejected' ? null : result.public_id,
+          rejectionReason: rejectReason,
           submittedAt: new Date()
         };
         
