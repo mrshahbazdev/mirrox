@@ -12,9 +12,18 @@ const Header = ({ currentUser }) => {
   const floatingPL = realTimeClient?.accountSummary?.profitLoss || activeTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
   const totalEquity = realTimeClient?.tradingMetrics?.equity || 0;
   const balance = realTimeClient?.tradingMetrics?.balance || 0;
+  const freeMargin = realTimeClient?.tradingMetrics?.freeMargin || 0;
+  const marginLevel = realTimeClient?.tradingMetrics?.marginLevel || 0;
 
   const notifications = realTimeClient?.notifications || [];
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  const getMarginLevelColor = (level) => {
+    if (level === 0) return '#94a3b8';
+    if (level < 100) return '#ff4d4d';
+    if (level < 300) return '#f59e0b';
+    return '#00cc88';
+  };
 
   const markAsRead = async (notifId) => {
      try {
@@ -53,6 +62,18 @@ const Header = ({ currentUser }) => {
             <span className="pill-label">Equity</span>
             <span className={`pill-value ${floatingPL >= 0 ? "up" : "down"}`}>
               ${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </span>
+          </div>
+
+          <div className="stat-pill free-margin-pill">
+            <span className="pill-label">Free Margin</span>
+            <span className="pill-value">${freeMargin.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+
+          <div className="stat-pill margin-level-pill">
+            <span className="pill-label">Margin Level</span>
+            <span className="pill-value" style={{ color: getMarginLevelColor(marginLevel) }}>
+              {marginLevel > 0 ? `${marginLevel.toFixed(2)}%` : '0.00%'}
             </span>
           </div>
 
@@ -112,10 +133,10 @@ const Header = ({ currentUser }) => {
       </div>
 
       <style>{`
-        .header-stats { display: flex; align-items: center; gap: 16px; }
-        .stat-pill { display: flex; flex-direction: column; align-items: flex-end; min-width: 100px; }
-        .pill-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        .pill-value { font-size: 14px; font-weight: 800; color: white; }
+        .header-stats { display: flex; align-items: center; gap: 12px; }
+        .stat-pill { display: flex; flex-direction: column; align-items: flex-end; min-width: 80px; }
+        .pill-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; opacity: 0.8; }
+        .pill-value { font-size: 13px; font-weight: 800; color: white; white-space: nowrap; }
         .pill-value.up { color: #00cc88; }
         .pill-value.down { color: #ff4d4d; }
         
