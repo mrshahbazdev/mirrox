@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
+import { useModal } from '../context/ModalContext';
 
 const PositionTabs = () => {
   const { activeTrades, prices, closePosition, currentClientExtended, allTrades, clientId, currentUser } = useTrading();
+  const { showAlert } = useModal();
   const [activeTab, setActiveTab] = useState('open'); 
   const [showConfirm, setShowConfirm] = useState(false);
   const [closingTrade, setClosingTrade] = useState(null);
@@ -87,7 +89,7 @@ const PositionTabs = () => {
       setShowModify(false);
       setModifyingTrade(null);
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to modify trade');
+      showAlert(err.response?.data?.error || 'Failed to modify trade', 'Adjustment Error', 'error');
     } finally {
       setIsModifying(false);
     }

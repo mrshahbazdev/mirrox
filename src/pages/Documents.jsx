@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
+import { useModal } from '../context/ModalContext';
 
 const KYCBox = ({ title, desc, category, options, clientData }) => {
+  const { showAlert } = useModal();
   const [docType, setDocType] = useState(options[0].value);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
       setSuccess(true);
     } catch (err) {
       console.error(`Failed to submit ${category} KYC`, err);
-      alert('Error submitting documents.');
+      showAlert('Error submitting documents. Please try again or contact support.', 'Upload Failed', 'error');
     } finally {
       setLoading(false);
     }

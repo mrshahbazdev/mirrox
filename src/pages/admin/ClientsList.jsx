@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { useTrading } from '../../context/TradingContext';
+import { useModal } from '../../context/ModalContext';
 
 const statusConfig = {
   active: { label: 'Active', color: '#00cc88', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.25)' },
@@ -15,6 +16,7 @@ const PAGE_SIZE = 8;
 const ClientsList = ({ onAdminLogout }) => {
   const navigate = useNavigate();
   const { allClients } = useTrading();
+  const { showConfirm, showAlert } = useModal();
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [page, setPage] = useState(1);
@@ -119,14 +121,19 @@ const ClientsList = ({ onAdminLogout }) => {
   };
 
   const handleDeleteUser = async (id) => {
-    if (!window.confirm('Are you absolutely sure you want to PERMANENTLY delete this user? This action cannot be undone.')) return;
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
-      setStaticClients((prev) => prev.filter((c) => c.id !== id));
-      showToast('Client deleted successfully', 'warn');
-    } catch (err) {
-      showToast('Failed to delete client', 'warn');
-    }
+    showConfirm(
+      'Are you absolutely sure you want to PERMANENTLY delete this user? This action cannot be undone.',
+      'Delete User Permanently',
+      async () => {
+        try {
+          await axios.delete(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+          setStaticClients((prev) => prev.filter((c) => c.id !== id));
+          showToast('Client deleted successfully', 'warn');
+        } catch (err) {
+          showToast('Failed to delete client', 'warn');
+        }
+      }
+    );
   };
 
   const handleExportCSV = () => {

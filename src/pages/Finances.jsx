@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
+import { useModal } from '../context/ModalContext';
 
 const Finances = () => {
   const { currentClientExtended, socket } = useTrading();
+  const { showAlert } = useModal();
   const [deposits, setDeposits] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,11 +67,11 @@ const Finances = () => {
       setDeposits([res.data, ...deposits]);
       setAmount('');
       setTxHash('');
-      alert('Deposit request submitted! Please wait for administrative approval.');
+      showAlert('Deposit request submitted! Please wait for administrative approval.', 'Request Received', 'success');
       setActiveTab('history');
     } catch (err) {
       console.error('Deposit failed', err);
-      alert('Failed to submit deposit.');
+      showAlert('Failed to submit deposit.', 'Submission Error', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -77,15 +79,15 @@ const Finances = () => {
 
   const handleSetupPin = async (e) => {
     e.preventDefault();
-    if (newPin.length !== 4) return alert('PIN must be exactly 4 digits');
+    if (newPin.length !== 4) return showAlert('PIN must be exactly 4 digits', 'Entry Error', 'warning');
     setIsSubmitting(true);
     try {
       await axios.post(import.meta.env.VITE_API_URL + '/api/auth/pin', { pin: newPin });
-      alert('Withdrawal PIN secured successfully!');
+      showAlert('Withdrawal PIN secured successfully!', 'Success', 'success');
       setShowSetupPin(false);
       // Optional: trigger reload of client context if needed
     } catch(err) {
-      alert(err.response?.data?.error || 'Failed to setup PIN');
+      showAlert(err.response?.data?.error || 'Failed to setup PIN', 'Error', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -95,11 +97,11 @@ const Finances = () => {
     e.preventDefault();
     if (!amount || parseFloat(amount) <= 0) return;
     if (parseFloat(amount) > (currentClientExtended?.tradingMetrics?.balance || 0)) {
-      alert('Insufficient balance.');
+      showAlert('Insufficient balance.', 'Wait!', 'warning');
       return;
     }
     if (!withdrawalPin || withdrawalPin.length !== 4) {
-      alert('Please enter your 4-digit Withdrawal PIN.');
+      showAlert('Please enter your 4-digit Withdrawal PIN.', 'Missing Input', 'warning');
       return;
     }
 
@@ -115,14 +117,14 @@ const Finances = () => {
       setWithdrawals([res.data, ...withdrawals]);
       setAmount('');
       setWithdrawalPin('');
-      alert('Withdrawal request submitted! It will be processed after approval.');
+      showAlert('Withdrawal request submitted! It will be processed after approval.', 'Request Successful', 'success');
       setActiveTab('history');
     } catch (err) {
       if (err.response?.status === 400 && err.response?.data?.error?.includes('set up a Withdrawal PIN')) {
         setShowSetupPin(true);
       } else {
         console.error('Withdrawal failed', err);
-        alert(err.response?.data?.error || 'Failed to submit withdrawal. Incorrect PIN?');
+        showAlert(err.response?.data?.error || 'Failed to submit withdrawal. Incorrect PIN?', 'Error', 'error');
       }
     } finally {
       setIsSubmitting(false);

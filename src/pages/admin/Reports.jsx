@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { useTrading } from '../../context/TradingContext';
+import { useModal } from '../../context/ModalContext';
 
 const MINI_CHART_BARS = [40, 60, 45, 75, 55, 80, 65, 90, 70, 95, 72, 88];
 
@@ -20,6 +21,7 @@ const MiniBar = ({ value, max, color }) => (
 
 const Reports = ({ onAdminLogout }) => {
   const { socket } = useTrading();
+  const { showAlert } = useModal();
   const [activeTab, setActiveTab] = useState('overview');
   const [data, setData] = useState({ clients: [], deposits: [], withdrawals: [], allTrades: [] });
   const [loading, setLoading] = useState(true);
@@ -74,7 +76,7 @@ const Reports = ({ onAdminLogout }) => {
       await axios.put(`${import.meta.env.VITE_API_URL}/api/${type}/${id}/status`, { status: action });
       fetchData();
     } catch (err) {
-      alert(`Failed to ${action} ${type}`);
+      showAlert(`Failed to ${action} ${type}`, 'Process Error', 'error');
     }
   };
 

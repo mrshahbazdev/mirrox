@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { TradingProvider } from './context/TradingContext.jsx'
+import { ModalProvider } from './context/ModalContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <TradingProvider>
-      <App />
-    </TradingProvider>
+    <ModalProvider>
+      <TradingProvider>
+        <App />
+      </TradingProvider>
+    </ModalProvider>
   </StrictMode>,
 )

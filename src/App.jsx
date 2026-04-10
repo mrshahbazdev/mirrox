@@ -21,6 +21,7 @@ import Finances from './pages/Finances';
 import Affiliate from './pages/Affiliate';
 import Help from './pages/Help';
 import NotFound from './pages/NotFound';
+import GlobalModal from './components/GlobalModal';
 import { useTrading } from './context/TradingContext';
 
 // Client auth wrapper
@@ -45,6 +46,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <GlobalModal />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Welcome />} />

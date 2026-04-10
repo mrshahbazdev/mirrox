@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
+import { useModal } from '../context/ModalContext';
 
 const Login = ({ onLogin }) => {
   const { setClientId } = useTrading();
+  const { showAlert } = useModal();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -57,7 +59,7 @@ const Login = ({ onLogin }) => {
     setError('');
     try {
       const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/reset-password', { token: resetToken, newPassword: password });
-      alert('Password Reset Successful. You can now log in.');
+      showAlert('Password Reset Successful. You can now log in.', 'Success', 'success');
       setResetMode(false);
       setHasToken(false);
       setPassword('');

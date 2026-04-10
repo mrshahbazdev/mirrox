@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminLayout from '../../components/admin/AdminLayout';
+import { useModal } from '../../context/ModalContext';
 
 const Verifications = ({ onAdminLogout }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const { showPrompt } = useModal();
   
   // Filtering & Pagination
   const [filterTab, setFilterTab] = useState('pending'); // 'pending', 'approved', 'rejected', 'all'
@@ -32,9 +34,18 @@ const Verifications = ({ onAdminLogout }) => {
     fetchClients();
   }, []);
 
-  const handleReview = async (clientId, action, category) => {
-    const reason = action === 'reject' ? window.prompt(`Enter reason for rejecting ${category.toUpperCase()}:`) : null;
-    if (action === 'reject' && reason === null) return; // User cancelled
+  const handleReview = async (clientId, action, category, reason = null) => {
+    if (action === 'reject' && !reason) {
+      showPrompt(
+        `Enter reason for rejecting ${category.toUpperCase()}:`,
+        `Reject ${category.toUpperCase()}`,
+        (val) => {
+          if (val) handleReview(clientId, action, category, val);
+        },
+        "Reason for rejection..."
+      );
+      return;
+    }
 
     try {
       await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${clientId}/kyc/review`, {

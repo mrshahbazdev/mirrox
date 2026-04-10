@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import axios from 'axios';
+import { useModal } from './ModalContext';
 
 // Global Axios Interceptor for JWT Authentication
 axios.interceptors.request.use((config) => {
@@ -23,6 +24,7 @@ export const TradingProvider = ({ children }) => {
   const [activeTrades, setActiveTrades] = useState([]);
   const [allTrades, setAllTrades] = useState({});
   const [allClients, setAllClients] = useState([]); // Store all client data from socket
+  const { showAlert } = useModal();
   
   // Initialize clientId and token from localStorage if available
   const [clientId, setClientIdState] = useState(() => localStorage.getItem('mirrox_client_id'));
@@ -89,12 +91,12 @@ export const TradingProvider = ({ children }) => {
     
     s.on('trade_killed', (data) => {
       console.log('Trade closed by system/admin:', data.tradeId, 'Reason:', data.reason);
-      alert(`Position ${data.tradeId} closed: ${data.reason}`);
+      showAlert(`Position ${data.tradeId} closed: ${data.reason}`, 'Position Closed', 'info');
     });
 
     s.on('margin_call', (data) => {
       console.log('MARGIN CALL! Liquidation at', data.marginLevel);
-      alert(`⚠️ MARGIN CALL: Your margin level dropped below 50% (${data.marginLevel.toFixed(2)}%). System liquidations have started to protect your account.`);
+      showAlert(`⚠️ MARGIN CALL: Your margin level dropped below 50% (${data.marginLevel.toFixed(2)}%). System liquidations have started to protect your account.`, 'Margin Call', 'error');
     });
 
     return () => s.disconnect();

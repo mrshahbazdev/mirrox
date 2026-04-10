@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminLayout from '../../components/admin/AdminLayout';
+import { useModal } from '../../context/ModalContext';
 
 const categoryColors = {
   Forex: { color: '#3291ff', bg: 'rgba(50,145,255,0.1)' },
@@ -12,6 +13,7 @@ const categoryColors = {
 const SymbolsManager = ({ onAdminLogout }) => {
   const [symbols, setSymbols] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showConfirm } = useModal();
   const [showAddModal, setShowAddModal] = useState(false);
   const [newSym, setNewSym] = useState({
     symbol: '',
@@ -82,15 +84,20 @@ const SymbolsManager = ({ onAdminLogout }) => {
   };
 
   const deleteSymbol = async (id) => {
-    if (!window.confirm('Delist this symbol? All current trades for this pair will remain but no new ones can be opened.')) return;
-    try {
-       await axios.delete(`${import.meta.env.VITE_API_URL}/api/symbols/${id}`);
-       setSymbols(prev => prev.filter(s => s.id !== id));
-       showToast('Symbol delisted.');
-    } catch (err) {
-       console.error('Delete failed', err);
-       showToast('Failed to delist.');
-    }
+    showConfirm(
+      'Delist this symbol? All current trades for this pair will remain but no new ones can be opened.',
+      'Delist Instrument',
+      async () => {
+        try {
+           await axios.delete(`${import.meta.env.VITE_API_URL}/api/symbols/${id}`);
+           setSymbols(prev => prev.filter(s => s.id !== id));
+           showToast('Symbol delisted.');
+        } catch (err) {
+           console.error('Delete failed', err);
+           showToast('Failed to delist.');
+        }
+      }
+    );
   };
 
   const saveEdit = async (id) => {

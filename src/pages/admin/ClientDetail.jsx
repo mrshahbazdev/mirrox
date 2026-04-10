@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { useTrading } from '../../context/TradingContext';
+import { useModal } from '../../context/ModalContext';
 
 const statusConfig = {
   active: { label: 'Active', color: '#00cc88', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.2)' },
@@ -16,6 +17,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { allTrades, prices, socket, allClients } = useTrading();
+  const { showAlert, showConfirm, showPrompt } = useModal();
   const [activeTab, setActiveTab] = useState('trades');
   const [tradePage, setTradePage] = useState(1);
 
@@ -82,12 +84,12 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const submitEditPL = () => {
     if (!socket || !socket.connected) {
-      alert("Socket not connected! Can't submit.");
+      showAlert("Socket not connected! Can't submit.", 'Connection Error', 'error');
       return;
     }
     const mult = parseFloat(modalMultiplier);
     if (isNaN(mult) || mult < 0) {
-      alert("Please enter a valid positive intensity");
+      showAlert("Please enter a valid positive intensity", 'Validation Error', 'warning');
       return;
     }
 
@@ -101,12 +103,16 @@ const ClientDetail = ({ onAdminLogout }) => {
   const handleForceClose = (tradeId) => {
     console.log('[ADMIN] Attempting to force close trade:', tradeId);
     if (!socket || !socket.connected) {
-      alert("Socket not connected!");
+      showAlert("Socket not connected!", 'Connection Error', 'error');
       return;
     }
-    if (window.confirm(`Are you sure you want to forcibly close trade ${tradeId}?\nThis will realize the current profit into the user balance.`)) {
-      socket.emit('admin_force_close', { clientId: id, tradeId });
-    }
+    showConfirm(
+      `Are you sure you want to forcibly close trade ${tradeId}?\nThis will realize the current profit into the user balance.`,
+      'Force Close Trade',
+      () => {
+        socket.emit('admin_force_close', { clientId: id, tradeId });
+      }
+    );
   };
 
   const handleEditSwap = (trade) => {
@@ -117,7 +123,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const submitEditSwap = () => {
     if (!socket || !socket.connected) {
-      alert("Socket not connected!");
+      showAlert("Socket not connected!", 'Connection Error', 'error');
       return;
     }
     socket.emit('admin_update_swap', { 
@@ -157,7 +163,7 @@ const ClientDetail = ({ onAdminLogout }) => {
       }
     } catch (err) {
       console.error(`Failed to update ${type} status`, err);
-      alert('Error updating transaction status');
+      showAlert('Error updating transaction status', 'Server Error', 'error');
     }
   };
 
@@ -167,7 +173,7 @@ const ClientDetail = ({ onAdminLogout }) => {
       setStaticClient(res.data);
     } catch (err) {
       console.error('Failed to update KYC', err);
-      alert('Error updating KYC status');
+      showAlert('Error updating KYC status', 'Update Failed', 'error');
     }
   };
 
@@ -178,7 +184,7 @@ const ClientDetail = ({ onAdminLogout }) => {
       setStaticClient(res.data);
       setShowEditModal(false);
     } catch (err) {
-      alert('Failed to update profile');
+      showAlert('Failed to update profile', 'Update Failed', 'error');
     } finally {
       setEditing(false);
     }
@@ -201,7 +207,7 @@ const ClientDetail = ({ onAdminLogout }) => {
         setAdjustData({ amount: '', type: 'increase', note: '' });
       }
     } catch (err) {
-      alert('Failed to update balance. Please check the backend logs.');
+      showAlert('Failed to update balance. Please check the backend logs.', 'Transaction Error', 'error');
     } finally {
       setProcessing(false);
     }
@@ -217,8 +223,9 @@ const ClientDetail = ({ onAdminLogout }) => {
       });
       const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
       setStaticClient(updated.data);
+      showAlert('Account funded with $10,000.00!', 'Funding Success', 'success');
     } catch (err) {
-      alert('Quick funding failed');
+      showAlert('Quick funding failed', 'Funding Error', 'error');
     } finally {
       setProcessing(false);
     }
@@ -378,10 +385,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                      </button>
                      <button 
                         onClick={() => {
-                           const reason = prompt("Enter rejection reason:");
-                           if (reason) {
-                              handleUpdateKYC({ status: 'rejected', rejectionReason: reason });
-                           }
+                           showPrompt("Enter rejection reason:", "Reject KYC", (reason) => {
+                             if (reason) handleUpdateKYC({ status: 'rejected', rejectionReason: reason });
+                           }, "Reason for rejection...");
                         }}
                         style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: 'rgba(255,77,77,0.1)', color: '#ff4d4d', fontWeight: 700, cursor: 'pointer' }}
                      >
