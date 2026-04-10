@@ -435,7 +435,6 @@ const ClientsList = ({ onAdminLogout }) => {
               </div>
             </div>
           </div>
-        </div>
       )}
 
       {/* Edit User Modal */}
