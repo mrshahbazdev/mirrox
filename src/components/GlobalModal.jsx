@@ -2,7 +2,7 @@ import React from 'react';
 import { useModal } from '../context/ModalContext';
 
 const GlobalModal = () => {
-  const { modal, closeModal } = useModal();
+  const { modal, closeModal, setModal } = useModal();
   const { isOpen, type, title, message, status, onConfirm, onCancel, placeholder, inputValue } = modal;
 
   if (!isOpen) return null;
@@ -48,15 +48,12 @@ const GlobalModal = () => {
                   type="text" 
                   autoFocus
                   placeholder={placeholder || 'Type here...'}
-                  value={modal.inputValue}
+                  value={modal.inputValue || ''}
                   onChange={(e) => {
-                    // We update the context state directly for prompt input
-                    const val = e.target.value;
-                    // Not ideal to use setModal here, but simplest for this centralized logic
-                    // In a more complex app, we'd use a local state in this component
+                    setModal(prev => ({ ...prev, inputValue: e.target.value }));
                   }} 
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') onConfirm(document.getElementById('glb-prompt-input').value);
+                    if (e.key === 'Enter') onConfirm(modal.inputValue);
                   }}
                   id="glb-prompt-input"
                   className="glb-prompt-input"
@@ -76,7 +73,7 @@ const GlobalModal = () => {
               style={{ background: getStatusColor() }}
               onClick={() => {
                 if (type === 'prompt') {
-                  onConfirm(document.getElementById('glb-prompt-input').value);
+                  onConfirm(modal.inputValue);
                 } else {
                   onConfirm();
                 }
