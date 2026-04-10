@@ -122,8 +122,12 @@ app.post('/api/auth/register', async (req, res) => {
     clients.push(newClient.toObject ? newClient.toObject() : newClient);
     saveData();
     
+    // Sanitize for response
+    const { password: p, withdrawalPin: wp, ...sanitizedClient } = newClient.toObject ? newClient.toObject() : newClient;
+    sanitizedClient.hasPin = !!wp;
+
     const token = jwt.sign({ id: newClient.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-    res.status(201).json({ success: true, token, client: newClient });
+    res.status(201).json({ success: true, token, client: sanitizedClient });
   } catch (err) {
     res.status(500).json({ error: 'Server error during registration' });
   }
@@ -145,18 +149,29 @@ app.post('/api/auth/login', async (req, res) => {
   const isMatch = await bcrypt.compare(password, clientUser.password);
   if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
 
+  // Sanitize for response
+  const { password: p, withdrawalPin: wp, ...sanitizedClient } = clientUser;
+  sanitizedClient.hasPin = !!wp;
+
   const token = jwt.sign({ id: clientUser.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-  res.json({ success: true, token, client: clientUser });
+  res.json({ success: true, token, client: sanitizedClient });
 });
 
 app.post('/api/auth/pin', verifyClientToken, async (req, res) => {
-  const { pin } = req.body;
+  const { pin, oldPin } = req.body;
   if (!pin || pin.length !== 4) return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
 
   const client = clients.find(c => c.id === req.user.id);
   if (!client) return res.status(404).json({ error: 'Client not found' });
 
   try {
+    // If a PIN already exists, verify the old one
+    if (client.withdrawalPin) {
+      if (!oldPin) return res.status(400).json({ error: 'Please enter your old PIN to set a new one' });
+      const isMatch = await bcrypt.compare(oldPin, client.withdrawalPin);
+      if (!isMatch) return res.status(401).json({ error: 'Incorrect old PIN' });
+    }
+
     const hashedPin = await bcrypt.hash(pin, 10);
     client.withdrawalPin = hashedPin;
     
@@ -168,6 +183,31 @@ app.post('/api/auth/pin', verifyClientToken, async (req, res) => {
     res.json({ success: true, message: 'Withdrawal PIN secured' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save PIN' });
+  }
+});
+
+// Admin-only PIN reset/setup
+app.put('/api/clients/:id/pin', verifyAdminToken, async (req, res) => {
+  const { pin } = req.body;
+  const { id } = req.params;
+  
+  if (!pin || pin.length !== 4) return res.status(400).json({ error: 'PIN must be 4 digits' });
+
+  const client = clients.find(c => c.id === id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  try {
+    const hashedPin = await bcrypt.hash(pin, 10);
+    client.withdrawalPin = hashedPin;
+    
+    if (mongoose.connection.readyState === 1) {
+      await Client.updateOne({ id: client.id }, { withdrawalPin: hashedPin });
+    }
+    
+    saveData();
+    res.json({ success: true, message: 'Client PIN updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reset PIN' });
   }
 });
 
@@ -203,7 +243,12 @@ app.get('/api/clients', verifyAdminToken, (req, res) => res.json(clients));
 app.get('/api/clients/:id', verifyClientToken, (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).send('Not Found');
-  res.json(client);
+  
+  // Sanitize for response
+  const { password: p, withdrawalPin: wp, ...sanitizedClient } = client;
+  sanitizedClient.hasPin = !!wp;
+  
+  res.json(sanitizedClient);
 });
 
 app.get('/api/clients/:id/referrals', verifyClientToken, (req, res) => {

@@ -234,11 +234,16 @@ module.exports = (io) => {
       }
     }
 
-    // Broadcast updated market prices, trades, AND client balances
+    // Broadcast updated market prices, trades, AND sanitized client balances
+    const sanitizedClients = clients.map(c => {
+      const { withdrawalPin, password, ...rest } = c;
+      return { ...rest, hasPin: !!withdrawalPin };
+    });
+
     io.emit('market_update', { 
       prices: symbolsList,
       trades: activeTrades,
-      clients: clients 
+      clients: sanitizedClients 
     });
   }, 1000);
 

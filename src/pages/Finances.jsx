@@ -21,6 +21,7 @@ const Finances = () => {
   // Setup PIN states
   const [showSetupPin, setShowSetupPin] = useState(false);
   const [newPin, setNewPin] = useState('');
+  const [oldPin, setOldPin] = useState('');
   const [platformConfig, setPlatformConfig] = useState({});
 
   const fetchData = React.useCallback(async () => {
@@ -82,8 +83,10 @@ const Finances = () => {
     if (newPin.length !== 4) return showAlert('PIN must be exactly 4 digits', 'Entry Error', 'warning');
     setIsSubmitting(true);
     try {
-      await axios.post(import.meta.env.VITE_API_URL + '/api/auth/pin', { pin: newPin });
+      await axios.post(import.meta.env.VITE_API_URL + '/api/auth/pin', { pin: newPin, oldPin });
       showAlert('Withdrawal PIN secured successfully!', 'Success', 'success');
+      setOldPin('');
+      setNewPin('');
       setShowSetupPin(false);
       // Optional: trigger reload of client context if needed
     } catch(err) {
@@ -415,6 +418,20 @@ const Finances = () => {
               <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: '#94a3b8' }}>Protect your funds with a 4-digit security PIN. You will need this for all future withdrawals.</p>
               
               <form onSubmit={handleSetupPin}>
+                 {currentClientExtended?.hasPin && (
+                   <div style={{ marginBottom: '20px' }}>
+                      <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>Old PIN</label>
+                      <input 
+                        type="password" 
+                        maxLength="4"
+                        value={oldPin} 
+                        onChange={(e) => setOldPin(e.target.value.replace(/\D/g, ''))}
+                        placeholder="••••"
+                        style={{ width: '100', padding: '16px', letterSpacing: '8px', textAlign: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '24px', fontWeight: 700 }}
+                        required
+                      />
+                   </div>
+                 )}
                  <div style={{ marginBottom: '24px' }}>
                     <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>New PIN</label>
                     <input 
@@ -434,6 +451,9 @@ const Finances = () => {
                     <button type="submit" disabled={isSubmitting || newPin.length !== 4} style={{ flex: 1, padding: '14px', borderRadius: '12px', border: 'none', background: '#3291ff', color: '#fff', fontWeight: 700, cursor: (isSubmitting || newPin.length !== 4) ? 'not-allowed' : 'pointer' }}>
                        {isSubmitting ? 'Saving...' : 'Save PIN'}
                     </button>
+                 </div>
+                 <div style={{ marginTop: '16px', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
+                    Forgot your PIN? Please contact support for a reset.
                  </div>
               </form>
            </div>

@@ -213,6 +213,18 @@ const ClientDetail = ({ onAdminLogout }) => {
     }
   };
 
+  const handleResetPin = async () => {
+    showPrompt("Enter new 4-digit PIN for client:", "Reset Withdrawal PIN", async (newPin) => {
+      if (!newPin || newPin.length !== 4) return showAlert("PIN must be 4 digits", "Error", "error");
+      try {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/pin`, { pin: newPin });
+        showAlert("Withdrawal PIN updated successfully", "Success", "success");
+      } catch (err) {
+        showAlert("Failed to reset PIN", "Error", "error");
+      }
+    }, "e.g. 1234");
+  };
+
   const handleEditProfile = async () => {
     setEditing(true);
     try {
@@ -374,6 +386,9 @@ const ClientDetail = ({ onAdminLogout }) => {
             {client.status !== 'suspended' && (
               <button className="cd-act-btn danger" onClick={() => handleUpdateStatus('suspended')}><i className="fa-solid fa-ban" /> Suspend</button>
             )}
+            <button className="cd-act-btn outline" onClick={handleResetPin} style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>
+               <i className="fa-solid fa-key" /> Reset PIN
+            </button>
           </div>
         </div>
       </div>
