@@ -141,8 +141,16 @@ const Reports = ({ onAdminLogout }) => {
     .slice(0, 5);
 
   const recentTrades = allTrades.slice(0, 8);
-  const pendingWithdrawals = allWithdrawals.filter(w => w.status === 'pending');
-  const pendingDeposits = allDeposits.filter(d => d.status === 'pending');
+  
+  const pendingWithdrawals = allWithdrawals.filter(w => w.status === 'pending').map(w => ({
+    ...w,
+    clientName: mockClients.find(c => c.id === w.clientId)?.name || 'Unknown'
+  }));
+
+  const pendingDeposits = allDeposits.filter(d => d.status === 'pending').map(d => ({
+    ...d,
+    clientName: mockClients.find(c => c.id === d.clientId)?.name || 'Unknown'
+  }));
 
   return (
     <AdminLayout onAdminLogout={onAdminLogout}>
