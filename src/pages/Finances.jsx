@@ -59,7 +59,6 @@ const Finances = () => {
         clientId: currentClientExtended.id,
         amount: parseFloat(amount),
         method,
-        method,
         status: 'pending',
         ref: txHash || ('REF' + Math.random().toString(36).substring(7).toUpperCase())
       });
