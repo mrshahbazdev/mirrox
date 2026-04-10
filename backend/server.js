@@ -25,8 +25,16 @@ cloudinary.config({
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const app = express();
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  credentials: true
+}));
 app.use(express.json());
+
+// Root route for health check
+app.get('/', (req, res) => res.send('Mirrox Backend is alive and running!'));
 
 const server = http.createServer(app);
 const io = new Server(server, {
