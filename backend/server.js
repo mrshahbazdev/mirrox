@@ -336,6 +336,61 @@ app.get('/api/trades/:clientId/history', verifyClientToken, async (req, res) => 
     res.json(historical);
 });
 
+// --- MONITORING & ANALYTICS ---
+app.get('/api/active-traders', verifyAdminToken, (req, res) => {
+  const activeClients = [];
+  Object.keys(activeTrades).forEach(clientId => {
+    const trades = activeTrades[clientId] || [];
+    const openTrades = trades.filter(t => t.status === 'Open');
+    if (openTrades.length > 0) {
+      const client = clients.find(c => c.id === clientId);
+      if (client) {
+        let floatingPL = 0; let totalLots = 0;
+        openTrades.forEach(t => { floatingPL += parseFloat(t.profit || 0); totalLots += parseFloat(t.lots || 0); });
+        activeClients.push({
+          id: client.id, name: client.name, uid: client.uid,
+          balance: client.tradingMetrics?.balance || 0,
+          equity: (client.tradingMetrics?.balance || 0) + floatingPL,
+          openTradeCount: openTrades.length,
+          totalLots: totalLots.toFixed(2),
+          floatingPL: floatingPL.toFixed(2)
+        });
+      }
+    }
+  });
+  res.json({ count: activeClients.length, clients: activeClients });
+});
+
+app.get('/api/clients/:id/analytics', verifyClientToken, (req, res) => {
+  const { id } = req.params;
+  const clientTrades = (activeTrades[id] || []).concat(); // In memory + could fetch historical if needed
+  const client = clients.find(c => c.id === id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  const closedTrades = clientTrades.filter(t => t.status === 'Closed');
+  const totalClosed = closedTrades.length;
+  const winTrades = closedTrades.filter(t => t.profit > 0);
+  const lossTrades = closedTrades.filter(t => t.profit < 0);
+  const winRate = totalClosed > 0 ? (winTrades.length / totalClosed) * 100 : 0;
+  const totalProfit = winTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
+  const totalLoss = Math.abs(lossTrades.reduce((sum, t) => sum + (t.profit || 0), 0));
+  const profitFactor = totalLoss > 0 ? (totalProfit / totalLoss) : (totalProfit > 0 ? totalProfit : 0);
+  const netPL = (client.accountSummary?.profitLoss || 0);
+  const totalDep = (client.accountSummary?.deposit || 10000);
+  const roi = (netPL / totalDep) * 100;
+
+  res.json({
+    totalTrades: clientTrades.length,
+    closedTrades: totalClosed,
+    winRate: winRate,
+    profitFactor: profitFactor.toFixed(2),
+    roi: roi.toFixed(2),
+    buyPercent: 50, // Simplified for now
+    sellPercent: 50
+  });
+});
+
+
 // Setup WebSockets
 setupSockets(io);
 
