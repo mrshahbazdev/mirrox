@@ -229,6 +229,21 @@ app.put('/api/clients/:id', verifyAdminToken, (req, res) => {
   res.json(clients[index]);
 });
 
+app.delete('/api/clients/:id', verifyAdminToken, (req, res) => {
+  const index = clients.findIndex(c => c.id === req.params.id);
+  if (index === -1) return res.status(404).json({ error: 'Client not found' });
+
+  // Remove from MongoDB if online
+  if (mongoose.connection.readyState === 1) {
+    Client.deleteOne({ id: req.params.id }).catch(err => console.warn('DB Delete failed:', err.message));
+  }
+
+  const removed = clients.splice(index, 1);
+  saveData();
+  res.json({ success: true, message: 'Client deleted successfully', client: removed[0] });
+});
+
+
 // --- KYC APIS ---
 app.post('/api/clients/:id/kyc/submit', verifyClientToken, upload.single('document'), async (req, res) => {
   const { id } = req.params;

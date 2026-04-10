@@ -22,9 +22,11 @@ const ClientsList = ({ onAdminLogout }) => {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [showBalanceModal, setShowBalanceModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
   const [adjustData, setAdjustData] = useState({ amount: '', type: 'increase', note: '' });
-  const [adjusting, setAdjusting] = useState(false);
+  const [editData, setEditData] = useState({ name: '', email: '', contact: '' });
+  const [processing, setProcessing] = useState(false);
 
   // Merge static API clients with real-time socket data
   const clients = staticClients.map(sc => {
@@ -87,7 +89,7 @@ const ClientsList = ({ onAdminLogout }) => {
 
   const handleAdjustBalance = async () => {
     if (!selectedClient || !adjustData.amount) return;
-    setAdjusting(true);
+    setProcessing(true);
     try {
       const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${selectedClient.id}/balance`, adjustData);
       setStaticClients((prev) => prev.map((c) => (c.id === selectedClient.id ? { ...c, accountSummary: { ...c.accountSummary, deposit: res.data.deposit }, tradingMetrics: { ...c.tradingMetrics, balance: res.data.balance } } : c)));
@@ -97,7 +99,33 @@ const ClientsList = ({ onAdminLogout }) => {
     } catch (err) {
       showToast('Failed to adjust balance', 'warn');
     } finally {
-      setAdjusting(false);
+      setProcessing(false);
+    }
+  };
+
+  const handleEditUser = async () => {
+    if (!selectedClient) return;
+    setProcessing(true);
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${selectedClient.id}`, editData);
+      setStaticClients((prev) => prev.map((c) => (c.id === selectedClient.id ? { ...c, ...res.data } : c)));
+      showToast('Client updated successfully');
+      setShowEditModal(false);
+    } catch (err) {
+      showToast('Failed to update client', 'warn');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleDeleteUser = async (id) => {
+    if (!window.confirm('Are you absolutely sure you want to PERMANENTLY delete this user? This action cannot be undone.')) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+      setStaticClients((prev) => prev.filter((c) => c.id !== id));
+      showToast('Client deleted successfully', 'warn');
+    } catch (err) {
+      showToast('Failed to delete client', 'warn');
     }
   };
 
@@ -269,6 +297,13 @@ const ClientsList = ({ onAdminLogout }) => {
                         </button>
                         <button
                           className="adm-act-btn view"
+                          onClick={() => { setSelectedClient(client); setEditData({ name: client.name, email: client.email, contact: client.contact }); setShowEditModal(true); }}
+                          title="Edit User"
+                        >
+                          <i className="fa-solid fa-pen-to-square" />
+                        </button>
+                        <button
+                          className="adm-act-btn view"
                           onClick={() => navigate(`/admin/client/${client.id}`)}
                           title="View Client"
                         >
@@ -283,15 +318,13 @@ const ClientsList = ({ onAdminLogout }) => {
                             <i className="fa-solid fa-check" />
                           </button>
                         )}
-                        {client.status !== 'suspended' && (
-                          <button
-                            className="adm-act-btn reject"
-                            onClick={() => handleSuspend(client.id)}
-                            title="Suspend"
-                          >
-                            <i className="fa-solid fa-ban" />
-                          </button>
-                        )}
+                        <button
+                          className="adm-act-btn reject"
+                          onClick={() => handleDeleteUser(client.id)}
+                          title="Delete User"
+                        >
+                          <i className="fa-solid fa-trash" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -385,19 +418,75 @@ const ClientsList = ({ onAdminLogout }) => {
                 />
               </div>
             </div>
-            <div className="adm-modal-footer">
-              <button 
-                className="adm-btn-cancel" 
-                onClick={() => setShowBalanceModal(false)}
-              >
-                Cancel
+              <div className="adm-modal-footer">
+                <button 
+                  className="adm-btn-cancel" 
+                  onClick={() => setShowBalanceModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="adm-btn-confirm" 
+                  onClick={handleAdjustBalance}
+                  disabled={processing || !adjustData.amount}
+                >
+                  {processing ? 'Processing...' : 'Confirm Adjustment'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditModal && (
+        <div className="adm-modal-overlay">
+          <div className="adm-modal" style={{ maxWidth: '450px' }}>
+            <div className="adm-modal-header">
+              <h3><i className="fa-solid fa-user-pen" /> Edit User Profile</h3>
+              <button className="adm-modal-close" onClick={() => setShowEditModal(false)}>
+                <i className="fa-solid fa-xmark" />
               </button>
+            </div>
+            <div className="adm-modal-body">
+              <div className="adm-input-group">
+                <label>Full Name</label>
+                <input 
+                  type="text" 
+                  className="adm-input"
+                  value={editData.name}
+                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                />
+              </div>
+
+              <div className="adm-input-group">
+                <label>Email Address</label>
+                <input 
+                  type="email" 
+                  className="adm-input"
+                  value={editData.email}
+                  onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                />
+              </div>
+
+              <div className="adm-input-group">
+                <label>Contact Number</label>
+                <input 
+                  type="text" 
+                  className="adm-input"
+                  value={editData.contact}
+                  onChange={(e) => setEditData({ ...editData, contact: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="adm-modal-footer">
+              <button className="adm-btn-cancel" onClick={() => setShowEditModal(false)}>Cancel</button>
               <button 
                 className="adm-btn-confirm" 
-                onClick={handleAdjustBalance}
-                disabled={adjusting || !adjustData.amount}
+                onClick={handleEditUser}
+                disabled={processing || !editData.name || !editData.email}
               >
-                {adjusting ? 'Processing...' : 'Confirm Adjustment'}
+                {processing ? 'Updating...' : 'Save Changes'}
               </button>
             </div>
           </div>
