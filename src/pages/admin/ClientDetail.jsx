@@ -24,16 +24,6 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [deposits, setDeposits] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const handleQuickFund = async () => {
-    try {
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: 10000 });
-      setStaticClient(response.data);
-      alert('Account funded with $10,000.00!');
-    } catch (err) {
-      console.error('Failed to fund account', err);
-      alert('Error funding account');
-    }
-  };
 
   // New Modal states for P/L editing
   const [showModal, setShowModal] = useState(false);
