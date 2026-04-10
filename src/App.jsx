@@ -18,6 +18,7 @@ import Welcome from './pages/Welcome';
 import Register from './pages/Register';
 import Finances from './pages/Finances';
 import Help from './pages/Help';
+import NotFound from './pages/NotFound';
 import { useTrading } from './context/TradingContext';
 
 // Client auth wrapper
@@ -143,6 +144,9 @@ function App() {
           }
         />
         <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        
+        {/* Global 404 Route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
