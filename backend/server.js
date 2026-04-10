@@ -287,6 +287,14 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
 app.get('/api/deposits', verifyAdminToken, (req, res) => res.json(deposits));
 app.get('/api/withdrawals', verifyAdminToken, (req, res) => res.json(withdrawals));
 
+app.get('/api/deposits/:clientId', verifyClientToken, (req, res) => {
+  res.json(deposits.filter(d => d.clientId === req.params.clientId));
+});
+
+app.get('/api/withdrawals/:clientId', verifyClientToken, (req, res) => {
+  res.json(withdrawals.filter(w => w.clientId === req.params.clientId));
+});
+
 app.post('/api/deposits', verifyClientToken, (req, res) => {
   const newDep = { id: 'D' + Date.now().slice(-6), status: 'pending', ...req.body, date: new Date() };
   deposits.push(newDep);
