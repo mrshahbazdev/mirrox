@@ -13,10 +13,12 @@ import SymbolsManager from './pages/admin/SymbolsManager';
 import Reports from './pages/admin/Reports';
 import Verifications from './pages/admin/Verifications';
 import ActiveTraders from './pages/admin/ActiveTraders';
+import Settings from './pages/admin/Settings';
 import axios from 'axios';
 import Welcome from './pages/Welcome';
 import Register from './pages/Register';
 import Finances from './pages/Finances';
+import Affiliate from './pages/Affiliate';
 import Help from './pages/Help';
 import NotFound from './pages/NotFound';
 import { useTrading } from './context/TradingContext';
@@ -78,6 +80,7 @@ function App() {
           <Route path="explore" element={<Explore />} />
           <Route path="documents" element={<Documents />} />
           <Route path="finances" element={<Finances />} />
+          <Route path="affiliate" element={<Affiliate />} />
           <Route path="help" element={<Help />} />
           <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
         </Route>
@@ -143,7 +146,14 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route
+          path="/admin/settings"
+          element={
+            <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
+              <Settings onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+            </AdminRoute>
+          }
+        />
         
         {/* Global 404 Route */}
         <Route path="*" element={<NotFound />} />

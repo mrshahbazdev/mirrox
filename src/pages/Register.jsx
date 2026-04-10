@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTrading } from '../context/TradingContext';
 
 const Register = ({ onRegister }) => {
   const navigate = useNavigate();
   const { setClientId } = useTrading();
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({ name: '', email: '', password: '', contact: '' });
+  const [refCode, setRefCode] = useState(searchParams.get('ref') || '');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +18,7 @@ const Register = ({ onRegister }) => {
     setError('');
     
     try {
-      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', formData);
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', { ...formData, ref: refCode });
       
       // Automatically log the user in
       setClientId(res.data.client.id, res.data.token);
@@ -85,6 +87,17 @@ const Register = ({ onRegister }) => {
               placeholder="Contact Number (Optional)"
               value={formData.contact}
               onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-field">
+            <i className="fa-solid fa-user-plus field-icon"></i>
+            <input 
+              type="text" 
+              placeholder="Referral Code (Optional)"
+              value={refCode}
+              onChange={(e) => setRefCode(e.target.value)}
+              style={{ opacity: refCode ? 0.8 : 1 }}
             />
           </div>
           

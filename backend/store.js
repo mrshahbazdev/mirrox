@@ -4,6 +4,7 @@ const SymbolModel = require('./models/Symbol');
 const Trade = require('./models/Trade');
 const Transaction = require('./models/Transaction');
 const Admin = require('./models/Admin');
+const Config = require('./models/Config');
 const bcrypt = require('bcryptjs');
 
 // Initial Data Structure (Sync with src/data/adminMockData.js)
@@ -95,6 +96,7 @@ let activeTrades = {};
 let deposits = [];
 let withdrawals = [];
 let admins = [];
+const configs = {};
 
 const defaultSymbols = [
   { id: 'S001', name: 'Gold vs US Dollar', symbol: 'XAUUSD', price: '2315.42', spread: 50, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 2, category: 'Metals', iconClassName: 'fa-cubes-stacked', quoteCurrency: 'USD', swapRate: 0.02 },
@@ -156,6 +158,15 @@ const saveData = () => {
         }));
         await Transaction.bulkWrite(txBulk);
       }
+
+      // 5. Save Configs
+      const configKeys = Object.keys(configs);
+      if (configKeys.length > 0) {
+         const configBulk = configKeys.map(k => ({
+            updateOne: { filter: { key: k }, update: { $set: { key: k, value: configs[k] } }, upsert: true }
+         }));
+         await Config.bulkWrite(configBulk);
+      }
       console.log('✅ Background Sync: In-memory data persisted to MongoDB.');
     } catch (e) {
       console.error('Mongo SaveData Error:', e);
@@ -183,6 +194,21 @@ const initializeDB = async () => {
     if (sCount === 0) {
       console.log('Seeding MongoDB with default Symbols...');
       await SymbolModel.insertMany(defaultSymbols);
+    }
+
+    const confCount = await Config.countDocuments();
+    if (confCount === 0) {
+       console.log('Seeding MongoDB with default Configs...');
+       await Config.insertMany([
+          { key: 'usdt_address', value: 'TXXXXXXXXXXXXXXXXXXXXXX_SEED', description: 'USDT TRC20 Wallet' },
+          { key: 'bank_name', value: 'Global Merchant Bank', description: 'Company Bank Name' },
+          { key: 'bank_iban', value: 'PK00BANK00001234567890', description: 'Company Bank IBAN' },
+          { key: 'account_name', value: 'Mirrox Corporate', description: 'Bank Account Holder Name' },
+          { key: 'min_deposit', value: 100 },
+          { key: 'min_withdrawal', value: 50 },
+          { key: 'referral_bonus', value: 25 },
+          { key: 'platform_name', value: 'Mirrox' }
+       ]);
     }
 
     // 2. Load into memory to preserve socket engine speed
@@ -214,6 +240,12 @@ const initializeDB = async () => {
       else withdrawals.push(tx);
     });
 
+    const dbConfigs = await Config.find().lean();
+    Object.keys(configs).forEach(k => delete configs[k]);
+    dbConfigs.forEach(c => {
+       configs[c.key] = c.value;
+    });
+
     console.log('✅ Memory Cache successfully loaded from MongoDB.');
   } catch (err) {
     console.error('Database Initialization failed. Initializing with hardcoded defaults...', err.message);
@@ -234,6 +266,7 @@ module.exports = {
   deposits,
   withdrawals,
   admins,
+  configs,
   saveData,
   initializeDB
 };

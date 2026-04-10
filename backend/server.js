@@ -10,11 +10,12 @@ const Admin = require('./models/Admin');
 const Trade = require('./models/Trade');
 const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
-const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, saveData, initializeDB } = require('./store');
+const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
+const axios = require('axios');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -43,8 +44,6 @@ mongoose.connect(process.env.MONGO_URI)
   })
   .catch(err => console.warn('⚠️ MongoDB Connection Error:', err.message));
 
-// Disable buffering so that queries fail fast if DB is offline, 
-// allowing our 'Hybrid Persistence' logic in store.js to take over instantly.
 mongoose.set('bufferCommands', false);
 
 // --- SECURITY MIDDLEWARES ---
@@ -54,7 +53,7 @@ const verifyClientToken = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, decoded) => {
     if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
-    req.user = decoded; // { id, role }
+    req.user = decoded;
     next();
   });
 };
@@ -73,185 +72,103 @@ const verifyAdminToken = (req, res, next) => {
 
 // --- AUTH APIS ---
 app.post('/api/auth/register', async (req, res) => {
-  const { name, email, contact, password } = req.body;
-  console.log(`[AUTH] Register request for: ${email}. DB State: ${mongoose.connection.readyState}`);
-  
+  const { name, email, contact, password, ref } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: 'Missing fields' });
 
   try {
-    let existing = null;
-    if (mongoose.connection.readyState === 1) {
-      console.log('[AUTH] DB is Online. Checking for existing user in MongoDB...');
-      existing = await Client.findOne({ email });
-    } else {
-      console.log('[AUTH] DB is Offline/Connecting. Checking in-memory cache...');
-      existing = clients.find(c => c.email === email);
-    }
-    
-    if (existing) {
-      console.log('[AUTH] User already exists.');
-      return res.status(400).json({ error: 'Email already exists' });
-    }
+    const existing = clients.find(c => c.email === email);
+    if (existing) return res.status(400).json({ error: 'Email already exists' });
 
-    console.log('[AUTH] Creating new user profile...');
     const hashedPassword = await bcrypt.hash(password, 10);
+    const generatedRefCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
     const newClient = new Client({
       id: 'C' + Date.now().toString().slice(-4),
       uid: 'MRX-' + Math.floor(10000 + Math.random() * 90000),
-      name,
-      email,
-      password: hashedPassword,
-      contact: contact || '',
+      name, email, password: hashedPassword, contact: contact || '',
       status: 'active',
-      accountSummary: {
-        deposit: 10000,
-        creditDeposit: 0,
-        leverage: '1:100'
-      },
-      tradingMetrics: {
-        balance: 10000,
-        creditDeposit: 0,
-        freeMargin: 10000,
-        equity: 10000
-      }
+      refCode: generatedRefCode,
+      referredBy: ref || null,
+      accountSummary: { deposit: 10000, creditDeposit: 0, leverage: '1:100' },
+      tradingMetrics: { balance: 10000, creditDeposit: 0, freeMargin: 10000, equity: 10000 }
     });
 
-    console.log('[AUTH] User profile created. Syncing to persistence engine...');
-    if (mongoose.connection.readyState === 1) {
-      try {
-        await newClient.save();
-      } catch (saveErr) {
-        console.warn('⚠️ Register save to DB failed, keeping in memory only.', saveErr.message);
-      }
+    if (ref) {
+       const referrer = clients.find(c => c.refCode === ref);
+       if (referrer) {
+          const bonus = configs['referral_bonus'] || 25;
+          if (!referrer.affiliateStats) referrer.affiliateStats = { totalInvites: 0, totalEarnings: 0 };
+          referrer.affiliateStats.totalInvites += 1;
+          referrer.affiliateStats.totalEarnings += parseFloat(bonus);
+          
+          if (!referrer.notifications) referrer.notifications = [];
+          referrer.notifications.push({
+             id: 'N' + Date.now().toString().slice(-6),
+             message: `Congratulations! A new user joined via your link. You earned $${bonus}.`,
+             date: new Date(), read: false, type: 'success'
+          });
+       }
     }
-    
+
+    if (mongoose.connection.readyState === 1) await newClient.save();
     clients.push(newClient.toObject ? newClient.toObject() : newClient);
-    saveData(); // Trigger sync attempt
+    saveData();
     
     const token = jwt.sign({ id: newClient.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-
-    res.status(201).json({ success: true, message: 'Registration successful', token, client: newClient });
+    res.status(201).json({ success: true, token, client: newClient });
   } catch (err) {
-    console.error('CRITICAL Registration Error:', err);
-    res.status(500).json({ error: 'Server error during registration', details: err.message });
+    res.status(500).json({ error: 'Server error during registration' });
   }
 });
 
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Missing fields' });
-  
-  try {
-    let adminUser = null;
-    let clientUser = null;
-
-    if (mongoose.connection.readyState === 1) {
-      adminUser = await Admin.findOne({ email });
-      if (!adminUser) {
-        clientUser = await Client.findOne({ email });
-      }
-    } else {
-      adminUser = admins.find(a => a.email === email);
-      if (!adminUser) {
-        clientUser = clients.find(c => c.email === email);
-      }
-    }
-
-    if (adminUser) {
-      const isMatch = await bcrypt.compare(password, adminUser.password);
-      if (!isMatch) return res.status(401).json({ error: 'Invalid admin credentials' });
-      const token = jwt.sign({ id: adminUser._id, role: adminUser.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-      return res.json({ role: adminUser.role, token });
-    }
-
-    if (!clientUser) return res.status(401).json({ error: 'Invalid credentials' });
-
-    const isMatch = await bcrypt.compare(password, clientUser.password);
-    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
-
-    const token = jwt.sign({ id: clientUser.id || clientUser._id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-    res.json({ success: true, token, client: clientUser });
-  } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ error: 'Server error during login' });
-  }
-});
-
-// Temporary memory store for reset tokens (in prod, use Redis or MongoDB)
-const passwordResetTokens = {};
-
-app.post('/api/auth/forgot-password', async (req, res) => {
-  const { email } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email required' });
-
-  const client = clients.find(c => c.email === email);
-  if (!client) {
-    // Return standard success to prevent email enumeration
-    return res.json({ success: true, message: 'If an account exists, a reset link was generated.' });
+  const adminUser = admins.find(a => a.email === email);
+  if (adminUser) {
+    const isMatch = await bcrypt.compare(password, adminUser.password);
+    if (!isMatch) return res.status(401).json({ error: 'Invalid admin credentials' });
+    const token = jwt.sign({ id: adminUser._id, role: adminUser.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+    return res.json({ role: adminUser.role, token });
   }
 
-  const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-  passwordResetTokens[token] = email;
+  const clientUser = clients.find(c => c.email === email);
+  if (!clientUser) return res.status(401).json({ error: 'Invalid credentials' });
 
-  // Since Email notifications are skipped, we print it to the server securely for Admin to retrieve!
-  console.log(`\n======================================`);
-  console.log(`🔐 PASSWORD RESET REQUESTED for: ${email}`);
-  console.log(`🔑 Reset Token: ${token}`);
-  console.log(`⚠️ Share this token with the user to reset via frontend.`);
-  console.log(`======================================\n`);
+  const isMatch = await bcrypt.compare(password, clientUser.password);
+  if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
 
-  res.json({ success: true, message: 'If an account exists, a reset link was generated.' });
-});
-
-app.post('/api/auth/reset-password', async (req, res) => {
-  const { token, newPassword } = req.body;
-  if (!token || !newPassword) return res.status(400).json({ error: 'Missing fields' });
-
-  const email = passwordResetTokens[token];
-  if (!email) return res.status(400).json({ error: 'Invalid or Expired Token' });
-
-  try {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update in MongoDB
-    if (mongoose.connection.readyState === 1) {
-      await Client.updateOne({ email }, { password: hashedPassword });
-    }
-
-    // Update in Memory
-    const client = clients.find(c => c.email === email);
-    if (client) {
-      client.password = hashedPassword;
-      saveData();
-    }
-
-    delete passwordResetTokens[token];
-    res.json({ success: true, message: 'Password reset successful. You can now login.' });
-  } catch (err) {
-    console.error('Reset error:', err);
-    res.status(500).json({ error: 'Failed to reset password' });
-  }
+  const token = jwt.sign({ id: clientUser.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+  res.json({ success: true, token, client: clientUser });
 });
 
 // --- SYMBOLS APIS ---
-app.get('/api/symbols', (req, res) => {
-  res.json(symbolsList);
+app.get('/api/symbols', (req, res) => res.json(symbolsList));
+
+app.post('/api/symbols', verifyAdminToken, (req, res) => {
+  const newSym = { id: Date.now(), ...req.body, price: req.body.price || '1.00' };
+  symbolsList.push(newSym);
+  saveData();
+  res.status(201).json(newSym);
 });
 
 app.put('/api/symbols/:id', verifyAdminToken, (req, res) => {
-  const index = symbolsList.findIndex(s => s.id === req.params.id);
+  const index = symbolsList.findIndex(s => s.id == req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
-  
   symbolsList[index] = { ...symbolsList[index], ...req.body };
   saveData();
   res.json(symbolsList[index]);
 });
 
-// --- CLIENT APIS ---
-app.get('/api/clients', verifyAdminToken, (req, res) => {
-  res.json(clients);
+app.delete('/api/symbols/:id', verifyAdminToken, (req, res) => {
+  const index = symbolsList.findIndex(s => s.id == req.params.id);
+  if (index === -1) return res.status(404).json({ error: 'Symbol not found' });
+  symbolsList.splice(index, 1);
+  saveData();
+  res.json({ message: 'Deleted' });
 });
+
+// --- CLIENT APIS ---
+app.get('/api/clients', verifyAdminToken, (req, res) => res.json(clients));
 
 app.get('/api/clients/:id', verifyClientToken, (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
@@ -259,568 +176,160 @@ app.get('/api/clients/:id', verifyClientToken, (req, res) => {
   res.json(client);
 });
 
-app.post('/api/clients/:id/kyc/submit', verifyClientToken, upload.single('document'), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { docType } = req.body;
-    const client = clients.find(c => c.id === id);
-    if (!client) return res.status(404).json({ error: 'Client not found' });
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder: 'mirrox_kyc',
-        resource_type: 'auto',
-        width: 1024,
-        fetch_format: 'auto',
-        quality: 'auto',
-        notification_url: (process.env.BACKEND_URL || "https://mirrox-backend-production.up.railway.app") + "/api/webhooks/cloudinary"
-      },
-      async (error, result) => {
-        if (error) {
-          console.error("Cloudinary Error:", error);
-          return res.status(500).json({ error: 'File upload failed' });
-        }
-        
-        let finalStatus = 'pending';
-        let rejectReason = null;
-
-        // Perform Synchronous AI Vision Check via REST API
-        try {
-           const aiUrl = `https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v2/analysis/${process.env.CLOUDINARY_CLOUD_NAME}/analyze/ai_vision_moderation`;
-           const response = await axios.post(aiUrl, {
-              source: { uri: result.secure_url },
-              rejection_questions: [
-                "Is this image completely unrelated to an official ID card, passport, or government identity document?",
-                "Does the document appear to be fake, highly edited, a cartoon, or a picture taken of a digital screen?"
-              ]
-           });
-           
-           if (response.data && response.data.data && response.data.data.analysis) {
-               const answers = response.data.data.analysis.responses;
-               // If any response value is "yes", AI flagged it!
-               const isRejected = answers.some(ans => ans.value && ans.value.toLowerCase() === 'yes');
-               if (isRejected) {
-                   finalStatus = 'rejected';
-                   rejectReason = "Auto-Rejected by AI Vision: Image does not meet strict ID requirements or appears artificial.";
-                   await cloudinary.uploader.destroy(result.public_id).catch(() => {});
-               }
-           }
-        } catch (aiErr) {
-           console.error("AI Vision validation failed or ignored:", aiErr?.response?.data || aiErr.message);
-        }
-
-        client.kyc = {
-          ...client.kyc,
-          status: finalStatus,
-          documentType: docType || 'id_card',
-          documentName: req.file.originalname,
-          documentUrl: finalStatus === 'rejected' ? null : result.secure_url,
-          cloudinaryPublicId: finalStatus === 'rejected' ? null : result.public_id,
-          rejectionReason: rejectReason,
-          submittedAt: new Date()
-        };
-        
-        saveData();
-        io.emit('finance_update'); 
-        return res.json({ message: 'KYC submitted successfully', kyc: client.kyc });
-      }
-    );
-    streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
-  } catch (err) {
-    console.error("KYC Submit error:", err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.post('/api/clients', verifyAdminToken, (req, res) => {
-  const newClient = {
-    id: 'C' + (clients.length + 1).toString().padStart(3, '0'),
-    uid: 'MRX-' + Math.floor(10000 + Math.random() * 90000),
-    ...req.body,
-    status: req.body.status || 'pending'
-  };
-  clients.push(newClient);
-  saveData();
-  res.status(201).json(newClient);
+app.get('/api/clients/:id/referrals', verifyClientToken, (req, res) => {
+  const referrals = clients.filter(c => c.referredBy === clients.find(me => me.id === req.params.id)?.refCode);
+  res.json(referrals);
 });
 
 app.put('/api/clients/:id/balance', verifyAdminToken, (req, res) => {
-  const index = clients.findIndex(c => c.id === req.params.id);
-  if (index === -1) return res.status(404).send('Not Found');
-  
-  const newBalance = parseFloat(req.body.balance);
-  if (isNaN(newBalance)) return res.status(400).send('Invalid Balance');
+  const { id } = req.params;
+  const { amount, type, note } = req.body; // type: 'increase' | 'decrease'
+  const client = clients.find(c => c.id === id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
 
-  clients[index].tradingMetrics.balance = newBalance;
-  clients[index].accountSummary.deposit = newBalance; 
-  clients[index].tradingMetrics.equity = newBalance + (clients[index].accountSummary.profitLoss || 0);
+  const adj = parseFloat(amount);
+  if (isNaN(adj)) return res.status(400).json({ error: 'Invalid amount' });
+
+  const multiplier = type === 'decrease' ? -1 : 1;
+  const finalAdj = adj * multiplier;
+
+  client.accountSummary.deposit += finalAdj;
+  client.tradingMetrics.balance += finalAdj;
   
+  // Update Equity too (Balance + Floating P/L)
+  if (client.tradingMetrics.equity !== undefined) {
+    client.tradingMetrics.equity += finalAdj;
+  }
+
+  if (!client.notifications) client.notifications = [];
+  client.notifications.push({
+    id: 'N' + Date.now().toString().slice(-6),
+    message: `Administrative Balance Adjustment: ${type === 'increase' ? '+' : '-'}$${adj}. ${note || ''}`,
+    date: new Date(), read: false, type: type === 'increase' ? 'success' : 'alert'
+  });
+
   saveData();
-  res.json(clients[index]);
+  io.emit('finance_update'); // Sync dashboard for the user
+  res.json({ success: true, balance: client.tradingMetrics.balance, deposit: client.accountSummary.deposit });
 });
 
 app.put('/api/clients/:id', verifyAdminToken, (req, res) => {
   const index = clients.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
-  
   clients[index] = { ...clients[index], ...req.body };
   saveData();
   res.json(clients[index]);
 });
 
-app.delete('/api/clients/:id', verifyAdminToken, (req, res) => {
-  const index = clients.findIndex(c => c.id === req.params.id);
-  if (index === -1) return res.status(404).send('Not Found');
-  
-  const removed = clients.splice(index, 1);
-  saveData();
-  res.json(removed[0]);
-});
+// --- KYC APIS ---
+app.post('/api/clients/:id/kyc/submit', verifyClientToken, upload.single('document'), async (req, res) => {
+  const { id } = req.params;
+  const { docCategory } = req.body;
+  const client = clients.find(c => c.id === id);
+  if (!client || !req.file) return res.status(400).json({ error: 'Invalid request' });
 
-app.put('/api/clients/:id/kyc', verifyAdminToken, async (req, res) => {
-  try {
-    const client = clients.find(c => c.id === req.params.id);
-    if (!client) return res.status(404).send('Not Found');
-    
-    // Check if rejection requires Cloudinary deletion
-    if (req.body.status === 'rejected' && client.kyc?.cloudinaryPublicId) {
-      await cloudinary.uploader.destroy(client.kyc.cloudinaryPublicId);
-      client.kyc.documentUrl = null;
-      client.kyc.cloudinaryPublicId = null;
-    }
-    
-    client.kyc = { ...client.kyc, ...req.body };
-    saveData();
-    io.emit('finance_update');
-    res.json(client);
-  } catch(err) {
-    res.status(500).json({ error: 'Server error' });
-  }
+  const uploadStream = cloudinary.uploader.upload_stream({ folder: 'mirrox_kyc' }, async (error, result) => {
+      if (error) return res.status(500).json({ error: 'Upload failed' });
+      const cat = docCategory === 'por' ? 'por' : 'poi';
+      if (!client.kyc) client.kyc = { poi: {}, por: {} };
+      client.kyc[cat] = { status: 'pending', url: result.secure_url, publicId: result.public_id, submittedAt: new Date() };
+      client.kyc.status = 'pending';
+      saveData();
+      res.json({ message: 'Submitted', kyc: client.kyc });
+  });
+  streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
 });
 
 app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
-  try {
-    const { action, rejectionReason } = req.body;
-    const client = clients.find(c => c.id === req.params.id);
-    if (!client) return res.status(404).json({ error: 'Client not found' });
-    
-    if (action === 'reject') {
-      if (client.kyc?.cloudinaryPublicId) {
-        await cloudinary.uploader.destroy(client.kyc.cloudinaryPublicId);
-        client.kyc.documentUrl = null;
-        client.kyc.cloudinaryPublicId = null;
-      }
-      client.kyc.status = 'rejected';
-      client.kyc.rejectionReason = rejectionReason;
-    } else if (action === 'approve') {
-      client.kyc.status = 'approved';
-      client.kyc.rejectionReason = null;
-      client.accountType = 'live'; // Convert to real account automatically
-    }
-    
-    client.kyc.reviewedAt = new Date();
-    saveData();
-    io.emit('finance_update');
-    res.json({ message: 'Success', kyc: client.kyc });
-  } catch (err) {
-    res.status(500).json({ error: 'Server error parsing review' });
+  const { action, rejectionReason, category } = req.body;
+  const client = clients.find(c => c.id === req.params.id);
+  if (!client) return res.status(404).json({ error: 'Not found' });
+
+  const cat = category === 'por' ? 'por' : 'poi';
+  client.kyc[cat].status = action === 'approve' ? 'approved' : 'rejected';
+  client.kyc[cat].rejectionReason = action === 'reject' ? rejectionReason : null;
+  client.kyc.reviewedAt = new Date();
+
+  if (client.kyc.poi?.status === 'approved' && client.kyc.por?.status === 'approved') {
+     client.kyc.status = 'verified';
+     client.accountType = 'live';
+  } else if (client.kyc.poi?.status === 'rejected' || client.kyc.por?.status === 'rejected') {
+     client.kyc.status = 'rejected';
   }
+  saveData();
+  res.json({ message: 'Reviewed', kyc: client.kyc });
 });
 
-// Balance route moved up to prevent clash
+// --- DEPOSITS & WITHDRAWALS ---
+app.get('/api/deposits', verifyAdminToken, (req, res) => res.json(deposits));
+app.get('/api/withdrawals', verifyAdminToken, (req, res) => res.json(withdrawals));
 
 app.post('/api/deposits', verifyClientToken, (req, res) => {
-  const newDeposit = {
-    id: 'D' + Date.now().toString().slice(-6),
-    date: new Date().toISOString().split('T')[0],
-    type: 'deposit',
-    ...req.body,
-    status: 'pending' // Force pending for all new requests
-  };
-  deposits.push(newDeposit);
-  
-  // Real-time Balance sync if approved immediately (rare, but possible)
-  if (newDeposit.status === 'approved') {
-    const client = clients.find(c => c.id === req.body.clientId);
-    if (client) {
-      client.accountSummary.deposit += parseFloat(newDeposit.amount);
-      client.tradingMetrics.balance += parseFloat(newDeposit.amount);
-    }
-  }
-  
+  const newDep = { id: 'D' + Date.now().slice(-6), status: 'pending', ...req.body, date: new Date() };
+  deposits.push(newDep);
   saveData();
-  io.emit('finance_update'); // Notification for Admin & User UI refresh
-  res.status(201).json(newDeposit);
+  io.emit('finance_update');
+  res.status(201).json(newDep);
 });
 
-// Update Deposit Status (Approval/Rejection)
 app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const deposit = deposits.find(d => d.id === id);
-  if (!deposit) return res.status(404).json({ error: 'Deposit not found' });
-
-  // Only sync balance if transitions to 'approved' for the first time
-  if (status === 'approved' && deposit.status !== 'approved') {
-     const client = clients.find(c => c.id === deposit.clientId);
+  const dep = deposits.find(d => d.id === req.params.id);
+  if (!dep) return res.status(404).json({ error: 'Not found' });
+  if (req.body.status === 'approved' && dep.status !== 'approved') {
+     const client = clients.find(c => c.id === dep.clientId);
      if (client) {
-       client.accountSummary.deposit += parseFloat(deposit.amount || 0);
-       client.tradingMetrics.balance += parseFloat(deposit.amount || 0);
+       client.accountSummary.deposit += parseFloat(dep.amount);
+       client.tradingMetrics.balance += parseFloat(dep.amount);
      }
   }
-  
-  deposit.status = status;
+  dep.status = req.body.status;
   saveData();
-  io.emit('finance_update'); // Admin approved/rejected it, UI should reflect
-  res.json(deposit);
+  io.emit('finance_update');
+  res.json(dep);
 });
 
-// Update Withdrawal Status (Approval/Rejection)
+app.post('/api/withdrawals', verifyClientToken, async (req, res) => {
+  const { amount, clientId } = req.body;
+  const client = clients.find(c => c.id === clientId);
+  if (!client || client.tradingMetrics.balance < amount) return res.status(400).json({ error: 'Insufficient balance' });
+
+  const newWit = { id: 'W' + Date.now().slice(-6), status: 'pending', ...req.body, date: new Date() };
+  client.tradingMetrics.balance -= parseFloat(amount);
+  withdrawals.push(newWit);
+  saveData();
+  io.emit('finance_update');
+  res.status(201).json(newWit);
+});
+
 app.put('/api/withdrawals/:id/status', verifyAdminToken, (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const withdrawal = withdrawals.find(w => w.id === id);
-  if (!withdrawal) return res.status(404).json({ error: 'Withdrawal not found' });
-
-  // If Admin REJECTS a previously pending/approved withdrawal, refund the held amount
-  if (status === 'rejected' && withdrawal.status !== 'rejected') {
-     const client = clients.find(c => c.id === withdrawal.clientId);
-     if (client) {
-       client.tradingMetrics.balance += parseFloat(withdrawal.amount || 0);
-     }
+  const wit = withdrawals.find(w => w.id === req.params.id);
+  if (req.body.status === 'rejected' && wit.status !== 'rejected') {
+     const client = clients.find(c => c.id === wit.clientId);
+     if (client) client.tradingMetrics.balance += parseFloat(wit.amount);
   }
-  
-  // If Admin APPROVES after it was previously REJECTED (rare, but just in case), deduct again
-  if (status === 'approved' && withdrawal.status === 'rejected') {
-     const client = clients.find(c => c.id === withdrawal.clientId);
-     if (client) {
-       client.tradingMetrics.balance -= parseFloat(withdrawal.amount || 0);
-     }
-  }
-  
-  withdrawal.status = status;
+  wit.status = req.body.status;
   saveData();
   io.emit('finance_update');
-  res.json(withdrawal);
+  res.json(wit);
 });
 
-// Update client KYC (Administrative)
-app.put('/api/clients/:id/kyc', (req, res) => {
-  const { id } = req.params;
-  const kycData = req.body; 
-  const client = clients.find(c => c.id === id);
-  if (!client) return res.status(404).json({ error: 'Client not found' });
-
-  client.kyc = { ...client.kyc, ...kycData };
+// --- CONFIG APIS ---
+app.get('/api/config', (req, res) => res.json(configs));
+app.put('/api/config', verifyAdminToken, (req, res) => {
+  Object.assign(configs, req.body);
   saveData();
-  res.json(client);
+  res.json({ message: 'Updated', configs });
 });
 
-// Submit client KYC (Client-side)
-app.post('/api/clients/:id/kyc/submit', (req, res) => {
-  const { id } = req.params;
-  const { docType, docName } = req.body;
-  const client = clients.find(c => c.id === id);
-  if (!client) return res.status(404).json({ error: 'Client not found' });
-
-  client.kyc = {
-    status: 'pending',
-    docType,
-    docName,
-    submittedAt: new Date().toISOString()
-  };
-  saveData();
-  res.json(client);
-});
-
-// Admin ONLY: Get All Deposits & Withdrawals
-app.get('/api/deposits', verifyAdminToken, (req, res) => {
-  const enhanced = deposits.map(d => {
-    const client = clients.find(c => c.id === d.clientId);
-    return { ...d, clientName: client ? client.name : 'Unknown' };
-  });
-  res.json(enhanced);
-});
-
-app.get('/api/withdrawals', verifyAdminToken, (req, res) => {
-  const enhanced = withdrawals.map(w => {
-    const client = clients.find(c => c.id === w.clientId);
-    return { ...w, clientName: client ? client.name : 'Unknown' };
-  });
-  res.json(enhanced);
-});
-
-app.get('/api/deposits/:clientId', verifyClientToken, (req, res) => {
-  const userDeposits = deposits.filter(d => d.clientId === req.params.clientId);
-  res.json(userDeposits);
-});
-
-app.get('/api/withdrawals/:clientId', verifyClientToken, (req, res) => {
-  const userWithdrawals = withdrawals.filter(w => w.clientId === req.params.clientId);
-  res.json(userWithdrawals);
-});
-
-app.post('/api/withdrawals', verifyClientToken, (req, res) => {
-  const newWithdrawal = {
-    id: 'W' + Date.now().toString().slice(-6),
-    date: new Date().toISOString().split('T')[0],
-    type: 'withdrawal',
-    ...req.body,
-    status: 'pending' // Force pending
-  };
-  withdrawals.push(newWithdrawal);
-
-  // Immediately hold/deduct the funds from user balance
-  const client = clients.find(c => c.id === req.body.clientId);
-  if (client) {
-    client.tradingMetrics.balance -= parseFloat(req.body.amount || 0);
-  }
-
-  saveData();
-  io.emit('finance_update');
-  res.status(201).json(newWithdrawal);
-});
-
-app.put('/api/withdrawals/:id', verifyAdminToken, (req, res) => {
-  const index = withdrawals.findIndex(w => w.id === req.params.id);
-  if (index === -1) return res.status(404).send('Not Found');
-  
-  withdrawals[index] = { ...withdrawals[index], ...req.body };
-  saveData();
-  res.json(withdrawals[index]);
-});
-
-// --- KYC APIS ---
-// User submits KYC documents (simulated)
-app.post('/api/clients/:id/kyc/submit_simulated', verifyClientToken, (req, res) => {
-  const client = clients.find(c => c.id === req.params.id);
-  if (!client) return res.status(404).json({ error: 'Client not found' });
-
-  const { docType, docName } = req.body;
-  if (!docType || !docName) return res.status(400).json({ error: 'docType and docName are required' });
-
-  if (!client.kyc) client.kyc = {};
-  client.kyc.status = 'pending';
-  client.kyc.docType = docType;
-  client.kyc.docName = docName;
-  client.kyc.submittedAt = new Date().toISOString();
-  client.kyc.rejectionReason = null;
-
-  saveData();
-  res.json({ message: 'KYC submitted for review', kyc: client.kyc });
-});
-
-// Admin reviews KYC — approve or reject
-app.put('/api/clients/:id/kyc/review_simulated', verifyAdminToken, (req, res) => {
-  const client = clients.find(c => c.id === req.params.id);
-  if (!client) return res.status(404).json({ error: 'Client not found' });
-
-  const { action, rejectionReason } = req.body; // action: 'approve' | 'reject'
-  if (!['approve', 'reject'].includes(action)) return res.status(400).json({ error: 'Invalid action' });
-
-  if (!client.kyc) client.kyc = {};
-  client.kyc.status = action === 'approve' ? 'approved' : 'rejected';
-  client.kyc.reviewedAt = new Date().toISOString();
-  client.kyc.rejectionReason = action === 'reject' ? (rejectionReason || 'Document not accepted') : null;
-
-  // Upgrade to live account on approval
-  if (action === 'approve') {
-    client.accountType = 'live';
-  }
-
-  saveData();
-  res.json({ message: `KYC ${action}d`, kyc: client.kyc, accountType: client.accountType });
-});
-
-// --- MARKET APIS ---
-app.get('/api/symbols', (req, res) => {
-  res.json(symbolsList);
-});
-
-// Admin creates a new symbol
-app.post('/api/symbols', verifyAdminToken, (req, res) => {
-  const { symbol, name, category, spread, commission, lotMin, lotStep, lotMax, swapRate, precision, commissionType } = req.body;
-  if (!symbol || !category) return res.status(400).json({ error: 'Symbol and category are required' });
-
-  const newSym = {
-    id: Date.now(),
-    symbol,
-    name: name || symbol,
-    category,
-    price: (category === 'Crypto' ? 60000 : category === 'Metals' ? 2300 : 1.12345).toString(),
-    spread: +spread || 10,
-    commission: +commission || 5,
-    lotMin: +lotMin || 0.01,
-    lotStep: +lotStep || 0.01,
-    lotMax: +lotMax || 100,
-    swapRate: +swapRate || 0,
-    precision: +precision || (category === 'Crypto' ? 2 : category === 'Metals' ? 2 : 5),
-    commissionType: commissionType || 'standard'
-  };
-
-  symbolsList.push(newSym);
-  saveData();
-  res.status(201).json(newSym);
-});
-
-// Admin deletes a symbol (delists)
-app.delete('/api/symbols/:id', verifyAdminToken, (req, res) => {
-  const id = parseInt(req.params.id);
-  const index = symbolsList.findIndex(s => s.id === id);
-  if (index === -1) return res.status(404).json({ error: 'Symbol not found' });
-
-  symbolsList.splice(index, 1);
-  saveData();
-  res.json({ message: 'Symbol delisted successfuly' });
-});
-
-// Cloudinary Webhook Listener
-app.post('/api/webhooks/cloudinary', async (req, res) => {
-  console.log("Webhook received from Cloudinary: ", req.body);
-  
-  if (req.body.notification_type === 'moderation' && req.body.moderation_kind === 'ai_vision') {
-     const { public_id, moderation_status } = req.body;
-     
-     // Find the client with this file
-     const client = clients.find(c => c.kyc && c.kyc.cloudinaryPublicId === public_id);
-     
-     if (client && client.kyc.status === 'pending') {
-        if (moderation_status === 'rejected') {
-            client.kyc.status = 'rejected';
-            client.kyc.rejectionReason = "Auto-Rejected by AI Vision: Image failed security prompts (e.g. invalid document, fake, selfie, etc.)";
-            // delete from cloudinary to save quota!
-            try {
-               await cloudinary.uploader.destroy(public_id);
-               client.kyc.documentUrl = null;
-               client.kyc.cloudinaryPublicId = null;
-            } catch(delErr) {
-               console.error("Webhook: Failed to delete rejected image", delErr);
-            }
-        } else if (moderation_status === 'approved') {
-            // we can auto-approve or leave pending for admin
-            // it's safer to leave for Admin final sanity check, but if we wanted full automation:
-            // client.kyc.status = 'approved';
-            // client.accountType = 'live'; 
-        }
-        
-        saveData();
-        io.emit('finance_update'); // trigger realtime dashboard update
-     }
-  }
-  
-  // Acknowledge receipt to Cloudinary so they don't resend
-  res.status(200).send("OK");
-});
-
-app.get('/api/trades/:clientId', verifyClientToken, (req, res) => {
-  const trades = activeTrades[req.params.clientId] || [];
-  res.json(trades);
-});
-
-// Securely fetch closed historical trades from Database to avoid memory bloat
+// --- TRADES APIS ---
+app.get('/api/trades/:clientId', verifyClientToken, (req, res) => res.json(activeTrades[req.params.clientId] || []));
 app.get('/api/trades/:clientId/history', verifyClientToken, async (req, res) => {
-  try {
-    const historical = await Trade.find({ 
-      clientId: req.params.clientId, 
-      status: 'Closed' 
-    }).sort({ closeTime: -1 }).limit(100);
+    const historical = await Trade.find({ clientId: req.params.clientId, status: 'Closed' }).sort({ closeTime: -1 }).limit(100);
     res.json(historical);
-  } catch(err) {
-    res.status(500).json({ error: 'Failed to fetch history' });
-  }
-});
-
-// Admin Monitoring: Active Traders
-app.get('/api/active-traders', verifyAdminToken, (req, res) => {
-  const activeClients = [];
-  
-  // Iterate through all tracked trades per client ID
-  Object.keys(activeTrades).forEach(clientId => {
-    const trades = activeTrades[clientId] || [];
-    const openTrades = trades.filter(t => t.status === 'Open');
-    
-    if (openTrades.length > 0) {
-      // Find the client details
-      const client = clients.find(c => c.id === clientId);
-      if (client) {
-        
-        // Calculate aggregations
-        let floatingPL = 0;
-        let totalLots = 0;
-        openTrades.forEach(t => {
-           floatingPL += parseFloat(t.profit || 0);
-           totalLots += parseFloat(t.lots || 0);
-        });
-
-        activeClients.push({
-          id: client.id,
-          name: client.name,
-          uid: client.uid,
-          balance: client.tradingMetrics?.balance || 0,
-          equity: (client.tradingMetrics?.balance || 0) + floatingPL,
-          openTradeCount: openTrades.length,
-          totalLots: totalLots.toFixed(2),
-          floatingPL: floatingPL.toFixed(2)
-        });
-      }
-    }
-  });
-
-  res.json({ count: activeClients.length, clients: activeClients });
-});
-
-// Calculate Analytics for a Client
-app.get('/api/clients/:id/analytics', verifyClientToken, (req, res) => {
-  const { id } = req.params;
-  const clientTrades = activeTrades[id] || [];
-  const client = clients.find(c => c.id === id);
-  if (!client) return res.status(404).json({ error: 'Client not found' });
-
-  const closedTrades = clientTrades.filter(t => t.status === 'Closed');
-  
-  const totalClosed = closedTrades.length;
-  const winTrades = closedTrades.filter(t => t.profit > 0);
-  const lossTrades = closedTrades.filter(t => t.profit < 0);
-
-  const winRate = totalClosed > 0 ? (winTrades.length / totalClosed) * 100 : 0;
-  
-  const totalProfit = winTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
-  const totalLoss = Math.abs(lossTrades.reduce((sum, t) => sum + (t.profit || 0), 0));
-  
-  const profitFactor = totalLoss > 0 ? (totalProfit / totalLoss) : (totalProfit > 0 ? totalProfit : 0);
-  const avgWin = winTrades.length > 0 ? totalProfit / winTrades.length : 0;
-  const avgLoss = lossTrades.length > 0 ? totalLoss / lossTrades.length : 0;
-
-  const buyTrades = clientTrades.filter(t => t.type === 'BUY').length;
-  const sellTrades = clientTrades.filter(t => t.type === 'SELL').length;
-  const totalBuySell = buyTrades + sellTrades;
-
-  // ROI based on Net P/L vs Initial / Total Deposit
-  const netPL = (client.accountSummary?.profitLoss || 0);
-  const totalDep = (client.accountSummary?.deposit || 10000); // fallback to demo default
-  const roi = (netPL / totalDep) * 100;
-
-  res.json({
-    totalTrades: clientTrades.length,
-    closedTrades: totalClosed,
-    winRate: winRate,
-    profitFactor: profitFactor.toFixed(2),
-    avgWin: avgWin.toFixed(2),
-    avgLoss: avgLoss.toFixed(2),
-    buyPercent: totalBuySell > 0 ? (buyTrades / totalBuySell) * 100 : 50,
-    sellPercent: totalBuySell > 0 ? (sellTrades / totalBuySell) * 100 : 50,
-    buyCount: buyTrades,
-    sellCount: sellTrades,
-    roi: roi.toFixed(2)
-  });
 });
 
 // Setup WebSockets
 setupSockets(io);
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Backend Server running on port ${PORT}`);
-});
-
+server.listen(PORT, '0.0.0.0', () => console.log(`Backend Server running on port ${PORT}`));

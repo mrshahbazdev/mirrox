@@ -58,6 +58,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     { icon: 'fa-solid fa-address-card', path: '/admin/verifications', label: 'Verifications', badge: pendingKycCount, badgeColor: '#ff4d4d' },
     { icon: 'fa-solid fa-coins', path: '/admin/symbols', label: 'Symbols' },
     { icon: 'fa-solid fa-chart-pie', path: '/admin/reports', label: 'Reports', badge: pendingFinanceCount, badgeColor: '#f59e0b' },
+    { icon: 'fa-solid fa-gears', path: '/admin/settings', label: 'Settings' },
   ];
 
   return (

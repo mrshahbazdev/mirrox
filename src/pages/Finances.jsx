@@ -13,17 +13,25 @@ const Finances = () => {
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState('bank_transfer');
   const [txHash, setTxHash] = useState('');
+  const [withdrawalPin, setWithdrawalPin] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Setup PIN states
+  const [showSetupPin, setShowSetupPin] = useState(false);
+  const [newPin, setNewPin] = useState('');
+  const [platformConfig, setPlatformConfig] = useState({});
 
   const fetchData = React.useCallback(async () => {
     if (!currentClientExtended?.id) return;
     try {
-      const [dRes, wRes] = await Promise.all([
+      const [dRes, wRes, cRes] = await Promise.all([
         axios.get(`${import.meta.env.VITE_API_URL}/api/deposits/${currentClientExtended.id}`),
-        axios.get(`${import.meta.env.VITE_API_URL}/api/withdrawals/${currentClientExtended.id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/withdrawals/${currentClientExtended.id}`),
+        axios.get(`${import.meta.env.VITE_API_URL}/api/config`)
       ]);
       setDeposits(dRes.data);
       setWithdrawals(wRes.data);
+      setPlatformConfig(cRes.data);
     } catch (err) {
       console.error('Failed to fetch financial data', err);
     } finally {
@@ -68,6 +76,22 @@ const Finances = () => {
     }
   };
 
+  const handleSetupPin = async (e) => {
+    e.preventDefault();
+    if (newPin.length !== 4) return alert('PIN must be exactly 4 digits');
+    setIsSubmitting(true);
+    try {
+      await axios.post(import.meta.env.VITE_API_URL + '/api/auth/pin', { pin: newPin });
+      alert('Withdrawal PIN secured successfully!');
+      setShowSetupPin(false);
+      // Optional: trigger reload of client context if needed
+    } catch(err) {
+      alert(err.response?.data?.error || 'Failed to setup PIN');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleWithdrawal = async (e) => {
     e.preventDefault();
     if (!amount || parseFloat(amount) <= 0) return;
@@ -75,21 +99,32 @@ const Finances = () => {
       alert('Insufficient balance.');
       return;
     }
+    if (!withdrawalPin || withdrawalPin.length !== 4) {
+      alert('Please enter your 4-digit Withdrawal PIN.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const res = await axios.post(import.meta.env.VITE_API_URL + '/api/withdrawals', {
         clientId: currentClientExtended.id,
         amount: parseFloat(amount),
         method,
+        pin: withdrawalPin,
         status: 'pending'
       });
       setWithdrawals([res.data, ...withdrawals]);
       setAmount('');
+      setWithdrawalPin('');
       alert('Withdrawal request submitted! It will be processed after approval.');
       setActiveTab('history');
     } catch (err) {
-      console.error('Withdrawal failed', err);
-      alert('Failed to submit withdrawal.');
+      if (err.response?.status === 400 && err.response?.data?.error?.includes('set up a Withdrawal PIN')) {
+        setShowSetupPin(true);
+      } else {
+        console.error('Withdrawal failed', err);
+        alert(err.response?.data?.error || 'Failed to submit withdrawal. Incorrect PIN?');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -191,21 +226,21 @@ const Finances = () => {
                       <div>
                         <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Network: <strong style={{color: '#fff'}}>Tron (TRC20)</strong></div>
                         <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>Send USDT to the address below:</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#000', padding: '12px', borderRadius: '8px' }}>
-                           <code style={{ color: '#00cc88', fontFamily: 'Space Mono', fontSize: '13px', wordBreak: 'break-all' }}>
-                             {import.meta.env.VITE_CRYPTO_WALLET || 'TXXXXXXXXXXXXXXXXXXXXXX_HARDCODED'}
-                           </code>
-                           <button type="button" onClick={() => navigator.clipboard.writeText(import.meta.env.VITE_CRYPTO_WALLET || 'TXXXXXXXXXXXXXXXXXXXXXX_HARDCODED')} style={{ background: 'transparent', border: 'none', color: '#3291ff', cursor: 'pointer' }}><i className="fa-regular fa-copy"></i></button>
-                        </div>
+                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#000', padding: '12px', borderRadius: '8px' }}>
+                            <code style={{ color: '#00cc88', fontFamily: 'Space Mono', fontSize: '13px', wordBreak: 'break-all' }}>
+                              {platformConfig.usdt_address || 'Loading...'}
+                            </code>
+                            <button type="button" onClick={() => navigator.clipboard.writeText(platformConfig.usdt_address)} style={{ background: 'transparent', border: 'none', color: '#3291ff', cursor: 'pointer' }}><i className="fa-regular fa-copy"></i></button>
+                         </div>
                       </div>
                     ) : (
                       <div>
-                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Bank Name: <strong style={{color: '#fff'}}>Global Merchant Bank</strong></div>
-                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Account Name: <strong style={{color: '#fff'}}>Mirrox Corporate</strong></div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Bank Name: <strong style={{color: '#fff'}}>{platformConfig.bank_name || 'Loading...'}</strong></div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Account Name: <strong style={{color: '#fff'}}>{platformConfig.account_name || 'Loading...'}</strong></div>
                         <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>IBAN / Account No:</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#000', padding: '12px', borderRadius: '8px' }}>
                            <code style={{ color: '#3291ff', fontFamily: 'Space Mono', fontSize: '13px', wordBreak: 'break-all' }}>
-                             {import.meta.env.VITE_BANK_IBAN || 'PK00BANK00001234567890'}
+                             {platformConfig.bank_iban || 'Loading...'}
                            </code>
                         </div>
                       </div>
@@ -257,6 +292,23 @@ const Finances = () => {
                     style={{ width: '100%', padding: '16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '18px', fontWeight: 700 }}
                     required
                   />
+               </div>
+               <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>Security PIN</label>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                     <input 
+                       type="password" 
+                       maxLength="4"
+                       value={withdrawalPin} 
+                       onChange={(e) => setWithdrawalPin(e.target.value.replace(/\D/g, ''))} // only numbers
+                       placeholder="4 Digits"
+                       style={{ flex: 1, padding: '16px', letterSpacing: '4px', textAlign: 'center', background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '12px', color: '#fff', fontSize: '18px', fontWeight: 700 }}
+                       required
+                     />
+                     <button type="button" onClick={() => setShowSetupPin(true)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', padding: '0 20px', borderRadius: '12px', cursor: 'pointer' }}>
+                        Setup / Change
+                     </button>
+                  </div>
                </div>
                <button 
                   type="submit" 
@@ -346,6 +398,39 @@ const Finances = () => {
            </div>
         </div>
       </div>
+      
+      {/* PIN SETUP MODAL */}
+      {showSetupPin && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+           <div className="card glass" style={{ width: '400px', padding: '32px', borderRadius: '24px', animation: 'scaleIn 0.3s ease' }}>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '20px', fontWeight: 800 }}>Setup Withdrawal PIN</h3>
+              <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: '#94a3b8' }}>Protect your funds with a 4-digit security PIN. You will need this for all future withdrawals.</p>
+              
+              <form onSubmit={handleSetupPin}>
+                 <div style={{ marginBottom: '24px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>New PIN</label>
+                    <input 
+                      type="password" 
+                      maxLength="4"
+                      value={newPin} 
+                      onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                      placeholder="••••"
+                      style={{ width: '100%', padding: '16px', letterSpacing: '8px', textAlign: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '24px', fontWeight: 700 }}
+                      required
+                      autoFocus
+                    />
+                 </div>
+                 
+                 <div style={{ display: 'flex', gap: '12px' }}>
+                    <button type="button" disabled={isSubmitting} onClick={() => setShowSetupPin(false)} style={{ flex: 1, padding: '14px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>Cancel</button>
+                    <button type="submit" disabled={isSubmitting || newPin.length !== 4} style={{ flex: 1, padding: '14px', borderRadius: '12px', border: 'none', background: '#3291ff', color: '#fff', fontWeight: 700, cursor: (isSubmitting || newPin.length !== 4) ? 'not-allowed' : 'pointer' }}>
+                       {isSubmitting ? 'Saving...' : 'Save PIN'}
+                    </button>
+                 </div>
+              </form>
+           </div>
+        </div>
+      )}
     </div>
   );
 };

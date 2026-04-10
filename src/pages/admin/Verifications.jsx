@@ -19,7 +19,7 @@ const Verifications = ({ onAdminLogout }) => {
 
   const fetchClients = async () => {
     try {
-      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/clients');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/clients', { headers: { Authorization: `Bearer ${localStorage.getItem('mirrox_admin_token')}` }});
       setClients(res.data);
     } catch (err) {
       console.error('Failed to fetch clients:', err);
@@ -32,34 +32,49 @@ const Verifications = ({ onAdminLogout }) => {
     fetchClients();
   }, []);
 
-  const handleReview = async (clientId, action) => {
-    const reason = action === 'reject' ? window.prompt('Enter reason for rejection:') : null;
+  const handleReview = async (clientId, action, category) => {
+    const reason = action === 'reject' ? window.prompt(`Enter reason for rejecting ${category.toUpperCase()}:`) : null;
     if (action === 'reject' && reason === null) return; // User cancelled
 
     try {
       await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${clientId}/kyc/review`, {
         action,
-        rejectionReason: reason
-      });
-      showToast(`KYC successfully ${action}ed!`);
+        rejectionReason: reason,
+        category
+      }, { headers: { Authorization: `Bearer ${localStorage.getItem('mirrox_admin_token')}` }});
+      showToast(`${category.toUpperCase()} successfully ${action}ed!`);
       fetchClients(); // Refresh list
     } catch (err) {
       showToast('Error updating KYC status', 'error');
     }
   };
 
-  // Filter clients based on KYC status
-  const filteredClients = clients.filter(c => {
-    if (filterTab === 'all') return c.kyc?.status; // only those who applied at least once
-    if (filterTab === 'pending') return c.kyc?.status === 'pending';
-    if (filterTab === 'approved') return c.kyc?.status === 'approved';
-    if (filterTab === 'rejected') return c.kyc?.status === 'rejected';
-    return false;
+  // Flatten the documents into a request pipeline
+  let allRequests = [];
+  clients.forEach(c => {
+    if (c.kyc?.poi?.status && c.kyc.poi.status !== 'none') {
+        allRequests.push({ client: c, type: 'Proof of Identity', category: 'poi', data: c.kyc.poi });
+    }
+    if (c.kyc?.por?.status && c.kyc.por.status !== 'none') {
+        allRequests.push({ client: c, type: 'Proof of Residence', category: 'por', data: c.kyc.por });
+    }
+    // Backward compatibility for legacy clients before split
+    if (c.kyc?.documentUrl && (!c.kyc?.poi || c.kyc.poi.status === 'none')) {
+        allRequests.push({ 
+            client: c, type: 'Legacy Document', category: 'poi', 
+            data: { url: c.kyc.documentUrl, status: c.kyc.status, submittedAt: c.kyc.submittedAt, rejectionReason: c.kyc.rejectionReason } 
+        });
+    }
   });
 
+  const filteredRequests = allRequests.filter(req => {
+    if (filterTab === 'all') return true;
+    return req.data.status === filterTab;
+  }).sort((a,b) => new Date(b.data.submittedAt || 0) - new Date(a.data.submittedAt || 0));
+
   // Calculate Pagination
-  const totalPages = Math.ceil(filteredClients.length / ITEMS_PER_PAGE) || 1;
-  const paginatedClients = filteredClients.slice(
+  const totalPages = Math.ceil(filteredRequests.length / ITEMS_PER_PAGE) || 1;
+  const paginatedRequests = filteredRequests.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -95,10 +110,10 @@ const Verifications = ({ onAdminLogout }) => {
           <h2 className="adm-page-title">
             <i className="fa-solid fa-address-card" /> Verification Center
           </h2>
-          <p className="adm-page-sub">Review and verify client KYC documents to activate live accounts</p>
+          <p className="adm-page-sub">Review POI and POR documents to activate live accounts</p>
         </div>
         <div className="adm-stat-pill">
-          <span className="dot pulse" /> {clients.filter(c => c.kyc?.status === 'pending').length} Pending
+          <span className="dot pulse" /> {allRequests.filter(r => r.data.status === 'pending').length} Pending
         </div>
       </div>
 
@@ -111,36 +126,36 @@ const Verifications = ({ onAdminLogout }) => {
             onClick={() => setFilterTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            {tab === 'pending' && <span className="kyc-badge">{clients.filter(c => c.kyc?.status === 'pending').length}</span>}
+            {tab === 'pending' && <span className="kyc-badge">{allRequests.filter(r => r.data.status === 'pending').length}</span>}
           </button>
         ))}
       </div>
 
       {/* Main List Area */}
       <div className="kyc-container">
-        {filteredClients.length === 0 ? (
+        {filteredRequests.length === 0 ? (
           <div className="kyc-empty">
             <i className="fa-solid fa-folder-open empty-icon" />
-            <p>No KYC applications found for '{filterTab}' status.</p>
+            <p>No document submissions found for '{filterTab}'.</p>
           </div>
         ) : (
           <div className="kyc-list">
-            {paginatedClients.map(client => (
-              <div className="kyc-card" key={client.id}>
+            {paginatedRequests.map((req, idx) => (
+              <div className="kyc-card" key={req.client.id + req.category + idx}>
                 {/* Client Info Left */}
                 <div className="kyc-card-left">
-                  <div className="kyc-avatar">{client.name.charAt(0)}</div>
+                  <div className="kyc-avatar">{req.client.name.charAt(0)}</div>
                   <div className="kyc-user-info">
-                    <h4>{client.name}</h4>
-                    <span className="kyc-uid">{client.uid}</span>
+                    <h4>{req.client.name}</h4>
+                    <span className="kyc-uid">{req.client.uid}</span>
                   </div>
                   <div className="kyc-doc-info">
-                    <div className="doc-label">Document Submitted</div>
+                    <div className="doc-label">Document Type</div>
                     <div className="doc-type" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <i className="fa-solid fa-file-lines" /> 
-                      {client.kyc.docType || 'ID Document'}
-                      {client.kyc.documentUrl && (
-                        <a href={client.kyc.documentUrl} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#3291ff', fontSize: 11, textDecoration: 'none', background: 'rgba(50,145,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                      <i className="fa-solid fa-file-lines" style={{ color: req.category === 'poi' ? '#3291ff' : '#f59e0b' }} /> 
+                      <strong style={{ color: '#fff' }}>{req.type}</strong>
+                      {req.data.url && (
+                        <a href={req.data.url} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#3291ff', fontSize: 11, textDecoration: 'none', background: 'rgba(50,145,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
                           <i className="fa-solid fa-external-link-alt" /> View Image
                         </a>
                       )}
@@ -148,30 +163,30 @@ const Verifications = ({ onAdminLogout }) => {
                   </div>
                   <div className="kyc-doc-info">
                     <div className="doc-label">Date</div>
-                    <div className="doc-date">{new Date(client.kyc.submittedAt).toLocaleDateString()}</div>
+                    <div className="doc-date">{new Date(req.data.submittedAt).toLocaleDateString()}</div>
                   </div>
                 </div>
 
                 {/* Status / Actions Right */}
                 <div className="kyc-card-right">
-                  <span className={`kyc-status-badge ${client.kyc.status}`}>
-                    {client.kyc.status}
+                  <span className={`kyc-status-badge ${req.data.status}`}>
+                    {req.data.status}
                   </span>
                   
-                  {client.kyc.status === 'pending' && (
+                  {req.data.status === 'pending' && (
                     <div className="kyc-actions">
-                      <button className="kyc-btn approve" onClick={() => handleReview(client.id, 'approve')}>
+                      <button className="kyc-btn approve" onClick={() => handleReview(req.client.id, 'approve', req.category)}>
                         <i className="fa-solid fa-check" /> Approve
                       </button>
-                      <button className="kyc-btn reject" onClick={() => handleReview(client.id, 'reject')}>
+                      <button className="kyc-btn reject" onClick={() => handleReview(req.client.id, 'reject', req.category)}>
                         <i className="fa-solid fa-xmark" /> Reject
                       </button>
                     </div>
                   )}
 
-                  {client.kyc.status === 'rejected' && (
+                  {req.data.status === 'rejected' && (
                     <div className="kyc-reason">
-                      <i className="fa-solid fa-circle-info" /> {client.kyc.rejectionReason}
+                      <i className="fa-solid fa-circle-info" /> {req.data.rejectionReason}
                     </div>
                   )}
                 </div>
@@ -249,76 +264,70 @@ const Verifications = ({ onAdminLogout }) => {
         }
 
         .kyc-container {
-          background: #0f1520; border: 1px solid #2a3341;
-          border-radius: 14px; min-height: 400px;
+          background: #0f1520; border: 1px solid #1e293b;
+          border-radius: 16px; padding: 24px; min-height: 400px;
         }
         
         .kyc-empty {
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          height: 400px; color: #64748b; font-size: 14px; font-weight: 600;
+          display: flex; flexDirection: column; align-items: center; justify-content: center;
+          height: 300px; color: #64748b; font-size: 14px; font-weight: 600; text-align: center;
         }
-        .empty-icon { font-size: 48px; color: #1c222d; margin-bottom: 16px; }
+        .empty-icon { font-size: 48px; opacity: 0.5; margin-bottom: 16px; }
 
-        .kyc-list { display: flex; flex-direction: column; }
-        
+        .kyc-list { display: flex; flex-direction: column; gap: 16px; }
         .kyc-card {
           display: flex; justify-content: space-between; align-items: center;
-          padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.04);
-          transition: background 0.2s;
+          padding: 20px; background: #1e293b; border-radius: 12px;
+          border: 1px solid rgba(255,255,255,0.05);
+          transition: transform 0.2s, box-shadow 0.2s;
         }
-        .kyc-card:last-child { border-bottom: none; }
-        .kyc-card:hover { background: rgba(50,145,255,0.02); }
+        .kyc-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
 
-        .kyc-card-left { display: flex; align-items: center; gap: 32px; }
+        .kyc-card-left { display: flex; align-items: center; gap: 24px; flex: 1; }
         .kyc-avatar {
-          width: 48px; height: 48px; border-radius: 12px;
-          background: rgba(50,145,255,0.1); border: 1px solid rgba(50,145,255,0.2);
-          display: flex; align-items: center; justify-content: center;
-          color: #3291ff; font-size: 18px; font-weight: 800; text-transform: uppercase;
+          width: 48px; height: 48px; border-radius: 10px; background: rgba(50,145,255,0.1);
+          color: #3291ff; display: flex; align-items: center; justify-content: center;
+          font-size: 20px; font-weight: 800;
         }
-        .kyc-user-info h4 { margin: 0 0 4px 0; font-size: 15px; color: #e0e6ed; font-weight: 700; }
-        .kyc-uid { font-size: 12px; color: #64748b; font-family: 'Space Mono', monospace; }
-        
-        .kyc-doc-info { display: flex; flex-direction: column; gap: 4px; padding-left: 32px; border-left: 1px solid rgba(255,255,255,0.05); }
-        .doc-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-        .doc-type { font-size: 13px; color: #e0e6ed; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .doc-date { font-size: 13px; color: #94a3b8; font-family: 'Space Mono', monospace; }
+        .kyc-user-info h4 { margin: 0 0 4px 0; color: #e0e6ed; font-size: 15px; }
+        .kyc-uid { font-size: 12px; color: #94a3b8; font-family: monospace; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; }
 
-        .kyc-card-right { display: flex; align-items: center; gap: 20px; }
-        
+        .kyc-doc-info { display: flex; flex-direction: column; gap: 4px; min-width: 140px; }
+        .doc-label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; }
+        .doc-type { font-size: 13px; color: #e0e6ed; font-weight: 600; }
+        .doc-date { font-size: 13px; color: #94a3b8; }
+
+        .kyc-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         .kyc-status-badge {
-          padding: 6px 14px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+          padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
         }
         .kyc-status-badge.pending { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
-        .kyc-status-badge.approved { background: rgba(0,204,136,0.1); color: #00cc88; border: 1px solid rgba(0,204,136,0.2); }
-        .kyc-status-badge.rejected { background: rgba(255,77,77,0.1); color: #ff4d4d; border: 1px solid rgba(255,77,77,0.2); }
+        .kyc-status-badge.approved { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .kyc-status-badge.rejected { background: rgba(2ef,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
 
         .kyc-actions { display: flex; gap: 8px; }
         .kyc-btn {
-          display: flex; align-items: center; gap: 6px; padding: 8px 16px;
-          border-radius: 8px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s;
+          border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700;
+          cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;
         }
-        .kyc-btn.approve { background: rgba(0,204,136,0.15); color: #00cc88; }
-        .kyc-btn.approve:hover { background: #00cc88; color: #fff; }
-        .kyc-btn.reject { background: rgba(255,77,77,0.15); color: #ff4d4d; }
-        .kyc-btn.reject:hover { background: #ff4d4d; color: #fff; }
+        .kyc-btn.approve { background: #10b981; color: #fff; }
+        .kyc-btn.approve:hover { background: #0d9668; }
+        .kyc-btn.reject { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
+        .kyc-btn.reject:hover { background: rgba(239,68,68,0.1); }
 
-        .kyc-reason { color: #ff4d4d; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .kyc-reason { font-size: 12px; color: #ef4444; background: rgba(239,68,68,0.1); padding: 6px 12px; border-radius: 6px; max-width: 250px; text-align: right; }
 
         .kyc-pagination {
-          display: flex; align-items: center; justify-content: center; gap: 16px;
-          margin-top: 24px; padding: 16px; background: #0f1520;
-          border: 1px solid #2a3341; border-radius: 12px;
+          display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 24px;
         }
         .kyc-pagination button {
-          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-          color: #e0e6ed; padding: 8px 16px; border-radius: 8px;
-          font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-          display: flex; align-items: center; gap: 8px;
+          background: #1e293b; border: 1px solid #2a3341; color: #e0e6ed;
+          padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+          display: flex; align-items: center; gap: 8px; transition: all 0.2s;
         }
-        .kyc-pagination button:hover:not(:disabled) { background: #3291ff; border-color: #3291ff; color: #fff; }
-        .kyc-pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
-        .page-indicator { color: #94a3b8; font-size: 13px; font-weight: 700; }
+        .kyc-pagination button:hover:not(:disabled) { background: #2a3341; border-color: #3291ff; color: #3291ff; }
+        .kyc-pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .page-indicator { color: #94a3b8; font-size: 13px; font-weight: 600; }
       `}</style>
     </AdminLayout>
   );

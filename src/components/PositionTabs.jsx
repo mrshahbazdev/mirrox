@@ -12,6 +12,13 @@ const PositionTabs = () => {
   const [historyTrades, setHistoryTrades] = useState([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
+  // Trade Modification State
+  const [showModify, setShowModify] = useState(false);
+  const [modifyingTrade, setModifyingTrade] = useState(null);
+  const [newSL, setNewSL] = useState('');
+  const [newTP, setNewTP] = useState('');
+  const [isModifying, setIsModifying] = useState(false);
+
   useEffect(() => {
     if (activeTab === 'closed' && clientId) {
       setIsLoadingHistory(true);
@@ -58,6 +65,31 @@ const PositionTabs = () => {
       closePosition(closingTrade.id);
       setShowConfirm(false);
       setClosingTrade(null);
+    }
+  };
+
+  const handleOpenModify = (trade) => {
+    setModifyingTrade(trade);
+    setNewSL(trade.stopLoss || '');
+    setNewTP(trade.takeProfit || '');
+    setShowModify(true);
+  };
+
+  const submitModifyTrade = async () => {
+    if (!modifyingTrade) return;
+    setIsModifying(true);
+    try {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/trades/${modifyingTrade.id}`, {
+        clientId,
+        stopLoss: newSL,
+        takeProfit: newTP
+      });
+      setShowModify(false);
+      setModifyingTrade(null);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to modify trade');
+    } finally {
+      setIsModifying(false);
     }
   };
 
@@ -143,6 +175,15 @@ const PositionTabs = () => {
 
                     {activeTab !== 'closed' && (
                       <td style={{ textAlign: 'right' }}>
+                         {activeTab !== 'pending' && (
+                           <button 
+                             className="close-trade-btn" style={{ background: 'transparent', color: '#10b981', marginRight: '8px' }}
+                             onClick={() => handleOpenModify(trade)}
+                             title="Modify TP/SL"
+                           >
+                             <i className="fa-solid fa-pen"></i>
+                           </button>
+                         )}
                          <button 
                            className="close-trade-btn"
                            onClick={() => handleOpenConfirm(trade)}
@@ -207,6 +248,53 @@ const PositionTabs = () => {
             <div className="modal-footer-simple">
               <button className="confirm-btn secondary" onClick={() => setShowConfirm(false)}>Cancel</button>
               <button className="confirm-btn danger" onClick={handleConfirmClose}>Close Position</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modify Trade Modal */}
+      {showModify && (
+        <div className="confirm-modal-overlay">
+          <div className="confirm-modal-content animate-pop" style={{ maxWidth: '400px' }}>
+            <div className="modal-header-simple">
+              <i className="fa-solid fa-pen-to-square" style={{ color: '#10b981', fontSize: '24px' }}></i>
+              <h3>Modify Order</h3>
+            </div>
+            <div className="modal-body-simple">
+              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#94a3b8' }}>
+                Modify Stop Loss and Take Profit for <strong>{modifyingTrade?.symbol}</strong> ({modifyingTrade?.type})
+              </p>
+              
+              <div style={{ marginBottom: '16px', textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px', textTransform: 'uppercase' }}>Stop Loss Price</label>
+                <input 
+                  type="number" 
+                  step="0.00001"
+                  value={newSL} 
+                  onChange={e => setNewSL(e.target.value)}
+                  placeholder="0.00"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '16px' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '16px', textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px', textTransform: 'uppercase' }}>Take Profit Price</label>
+                <input 
+                  type="number" 
+                  step="0.00001"
+                  value={newTP} 
+                  onChange={e => setNewTP(e.target.value)}
+                  placeholder="0.00"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '16px' }}
+                />
+              </div>
+            </div>
+            <div className="modal-footer-simple">
+              <button className="confirm-btn secondary" onClick={() => setShowModify(false)}>Cancel</button>
+              <button className="confirm-btn" style={{ background: '#10b981' }} onClick={submitModifyTrade} disabled={isModifying}>
+                {isModifying ? 'Saving...' : 'Save Settings'}
+              </button>
             </div>
           </div>
         </div>

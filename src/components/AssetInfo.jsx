@@ -249,7 +249,7 @@ const AssetInfo = ({ symbol, onTrade }) => {
                  </button>
               </div>
 
-              <div className="input-row-group" style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
+              <div className="input-row-group">
                  <div className="lot-input-wrapper" style={{ flex: 1, marginBottom: 0 }}>
                     <span className="lot-label">Volume (Lots)</span>
                     <div className="lot-control">
@@ -276,14 +276,13 @@ const AssetInfo = ({ symbol, onTrade }) => {
                            value={atPrice} 
                            onChange={(e) => setAtPrice(e.target.value)}
                            step="0.0001"
-                           style={{ border: 'none' }}
-                         />
+                        />
                       </div>
                    </div>
                  )}
               </div>
 
-              <div className="input-row-group" style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
+              <div className="input-row-group">
                  <div className="lot-input-wrapper" style={{ flex: 1, marginBottom: 0 }}>
                     <span className="lot-label">Take Profit (TP)</span>
                     <div className="lot-control">

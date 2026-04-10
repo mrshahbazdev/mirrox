@@ -21,6 +21,10 @@ const ClientsList = ({ onAdminLogout }) => {
   const [staticClients, setStaticClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [adjustData, setAdjustData] = useState({ amount: '', type: 'increase', note: '' });
+  const [adjusting, setAdjusting] = useState(false);
 
   // Merge static API clients with real-time socket data
   const clients = staticClients.map(sc => {
@@ -78,6 +82,22 @@ const ClientsList = ({ onAdminLogout }) => {
       showToast('Client suspended', 'warn');
     } catch (err) {
       showToast('Failed to suspend client', 'warn');
+    }
+  };
+
+  const handleAdjustBalance = async () => {
+    if (!selectedClient || !adjustData.amount) return;
+    setAdjusting(true);
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${selectedClient.id}/balance`, adjustData);
+      setStaticClients((prev) => prev.map((c) => (c.id === selectedClient.id ? { ...c, accountSummary: { ...c.accountSummary, deposit: res.data.deposit }, tradingMetrics: { ...c.tradingMetrics, balance: res.data.balance } } : c)));
+      showToast(`Balance ${adjustData.type === 'increase' ? 'increased' : 'decreased'} successfully`);
+      setShowBalanceModal(false);
+      setAdjustData({ amount: '', type: 'increase', note: '' });
+    } catch (err) {
+      showToast('Failed to adjust balance', 'warn');
+    } finally {
+      setAdjusting(false);
     }
   };
 
@@ -241,6 +261,14 @@ const ClientsList = ({ onAdminLogout }) => {
                       <div className="adm-action-btns">
                         <button
                           className="adm-act-btn view"
+                          onClick={() => { setSelectedClient(client); setShowBalanceModal(true); }}
+                          title="Adjust Balance"
+                          style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.2)' }}
+                        >
+                          <i className="fa-solid fa-wallet" />
+                        </button>
+                        <button
+                          className="adm-act-btn view"
                           onClick={() => navigate(`/admin/client/${client.id}`)}
                           title="View Client"
                         >
@@ -308,7 +336,102 @@ const ClientsList = ({ onAdminLogout }) => {
         </div>
       )}
 
+      {/* Balance Adjustment Modal */}
+      {showBalanceModal && (
+        <div className="adm-modal-overlay">
+          <div className="adm-modal" style={{ maxWidth: '400px' }}>
+            <div className="adm-modal-header">
+              <h3><i className="fa-solid fa-wallet" /> Adjust Balance</h3>
+              <button className="adm-modal-close" onClick={() => setShowBalanceModal(false)}>
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+            <div className="adm-modal-body">
+              <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '20px' }}>
+                You are adjusting the balance for <strong>{selectedClient?.name}</strong>.
+              </p>
+              
+              <div className="adm-input-group">
+                <label>Operation Type</label>
+                <select 
+                  value={adjustData.type} 
+                  onChange={(e) => setAdjustData({ ...adjustData, type: e.target.value })}
+                  className="adm-select"
+                >
+                  <option value="increase">Increase Balance (+)</option>
+                  <option value="decrease">Decrease Balance (-)</option>
+                </select>
+              </div>
+
+              <div className="adm-input-group">
+                <label>Amount (USD)</label>
+                <input 
+                  type="number" 
+                  placeholder="0.00" 
+                  className="adm-input"
+                  value={adjustData.amount}
+                  onChange={(e) => setAdjustData({ ...adjustData, amount: e.target.value })}
+                />
+              </div>
+
+              <div className="adm-input-group">
+                <label>Note (Optional)</label>
+                <input 
+                  type="text" 
+                  placeholder="Reason for adjustment..." 
+                  className="adm-input"
+                  value={adjustData.note}
+                  onChange={(e) => setAdjustData({ ...adjustData, note: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="adm-modal-footer">
+              <button 
+                className="adm-btn-cancel" 
+                onClick={() => setShowBalanceModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="adm-btn-confirm" 
+                onClick={handleAdjustBalance}
+                disabled={adjusting || !adjustData.amount}
+              >
+                {adjusting ? 'Processing...' : 'Confirm Adjustment'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
+        .adm-modal-overlay {
+          position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+          display: flex; align-items: center; justify-content: center; z-index: 10000;
+        }
+        .adm-modal {
+          background: #0f1520; border: 1px solid #2a3341;
+          border-radius: 16px; width: 90%; box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+          overflow: hidden; animation: modalPop 0.3s ease;
+        }
+        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .adm-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .adm-modal-header h3 { font-size: 16px; font-weight: 700; color: #e0e6ed; }
+        .adm-modal-close { background: none; border: none; color: #64748b; cursor: pointer; font-size: 18px; }
+        .adm-modal-body { padding: 24px; }
+        .adm-input-group { margin-bottom: 16px; }
+        .adm-input-group label { display: block; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 8px; }
+        .adm-select, .adm-input {
+          width: 100%; padding: 12px; background: rgba(0,0,0,0.2);
+          border: 1px solid #2a3341; border-radius: 10px; color: #fff;
+          font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .adm-input:focus { border-color: #3291ff; }
+        .adm-modal-footer { padding: 20px 24px; background: rgba(0,0,0,0.1); display: flex; gap: 12px; }
+        .adm-btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid #2a3341; border-radius: 10px; color: #64748b; font-weight: 700; cursor: pointer; }
+        .adm-btn-confirm { flex: 2; padding: 12px; background: #3291ff; border: none; border-radius: 10px; color: #fff; font-weight: 700; cursor: pointer; }
+        .adm-btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
         .adm-toast {
           position: fixed; top: 24px; right: 24px; z-index: 9999;
           padding: 12px 20px; border-radius: 10px;
