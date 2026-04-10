@@ -683,8 +683,3 @@ const ClientDetail = ({ onAdminLogout }) => {
 };
 
 export default ClientDetail;
-    </AdminLayout>
-  );
-};
-
-export default ClientDetail;
