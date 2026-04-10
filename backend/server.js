@@ -149,6 +149,28 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ success: true, token, client: clientUser });
 });
 
+app.post('/api/auth/pin', verifyClientToken, async (req, res) => {
+  const { pin } = req.body;
+  if (!pin || pin.length !== 4) return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
+
+  const client = clients.find(c => c.id === req.user.id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  try {
+    const hashedPin = await bcrypt.hash(pin, 10);
+    client.withdrawalPin = hashedPin;
+    
+    if (mongoose.connection.readyState === 1) {
+      await Client.updateOne({ id: client.id }, { withdrawalPin: hashedPin });
+    }
+    
+    saveData();
+    res.json({ success: true, message: 'Withdrawal PIN secured' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save PIN' });
+  }
+});
+
 // --- SYMBOLS APIS ---
 app.get('/api/symbols', (req, res) => res.json(symbolsList));
 
@@ -346,11 +368,25 @@ app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
 });
 
 app.post('/api/withdrawals', verifyClientToken, async (req, res) => {
-  const { amount, clientId } = req.body;
+  const { amount, clientId, pin } = req.body;
   const client = clients.find(c => c.id === clientId);
-  if (!client || client.tradingMetrics.balance < amount) return res.status(400).json({ error: 'Insufficient balance' });
+  if (!client) return res.status(404).json({ error: 'Client not found' });
 
-  const newWit = { id: 'W' + Date.now().slice(-6), status: 'pending', ...req.body, date: new Date() };
+  // 1. Check if PIN is set up
+  if (!client.withdrawalPin) {
+    return res.status(400).json({ error: 'Please set up a Withdrawal PIN first.' });
+  }
+
+  // 2. Validate PIN
+  const isMatch = await bcrypt.compare(pin, client.withdrawalPin);
+  if (!isMatch) return res.status(401).json({ error: 'Incorrect Withdrawal PIN' });
+
+  // 3. Check Balance
+  if (client.tradingMetrics.balance < amount) {
+    return res.status(400).json({ error: 'Insufficient balance' });
+  }
+
+  const newWit = { id: 'W' + Date.now().toString().slice(-6), status: 'pending', ...req.body, date: new Date() };
   client.tradingMetrics.balance -= parseFloat(amount);
   withdrawals.push(newWit);
   saveData();
