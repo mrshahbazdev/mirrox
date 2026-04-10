@@ -148,7 +148,8 @@ const Welcome = () => {
 
       <style>{`
         .landing-wrapper {
-          min-height: 100vh;
+          height: 100vh;
+          overflow-y: auto;
           background: #0a0e17;
           color: #e0e6ed;
           font-family: 'Inter', sans-serif;

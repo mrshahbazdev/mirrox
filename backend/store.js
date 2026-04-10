@@ -215,6 +215,18 @@ const initializeDB = async () => {
     const dbClients = await Client.find().lean();
     clients.length = 0; 
     clients.push(...dbClients);
+    
+    // Backfill missing referral codes for existing clients
+    let needsSave = false;
+    for (const client of clients) {
+      if (!client.refCode) {
+        client.refCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+        needsSave = true;
+        // Also update the database record for this client specifically
+        await Client.updateOne({ id: client.id }, { $set: { refCode: client.refCode } });
+      }
+    }
+    if (needsSave) console.log('🔄 Backfilled missing referral codes for existing clients.');
 
     const dbAdmins = await Admin.find().lean();
     admins.length = 0;

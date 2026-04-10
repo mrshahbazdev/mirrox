@@ -73,7 +73,13 @@ const Explore = () => {
   }, [prices]);
 
   return (
-    <div className="explore-container redesign animate-fade">
+    <div className="explore-container redesign animate-fade" style={{ 
+      gridColumn: '1 / -1', 
+      height: '100%', 
+      overflowY: 'auto',
+      padding: '24px',
+      width: '100%'
+    }}>
       {/* Top Panel: Upcoming Events */}
       <div className="upcoming-events-panel" style={{ background: 'rgba(50,145,255,0.02)', border: '1px solid rgba(50,145,255,0.05)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
         <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>

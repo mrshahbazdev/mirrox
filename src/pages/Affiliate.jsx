@@ -43,7 +43,17 @@ const Affiliate = () => {
   const stats = currentClientExtended?.affiliateStats || { totalInvites: 0, totalEarnings: 0 };
 
   return (
-    <div style={{ padding: '32px 24px', maxWidth: '1100px', margin: '0 auto', color: '#e0e6ed' }}>
+    <div style={{ 
+      gridColumn: '1 / -1', 
+      height: '100%', 
+      overflowY: 'auto',
+      padding: '32px 24px', 
+      maxWidth: '100%', 
+      width: '100%',
+      margin: '0 auto', 
+      color: '#e0e6ed' 
+    }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
       <header style={{ marginBottom: '32px' }}>
          <h2 style={{ fontSize: '28px', fontWeight: 800, margin: 0 }}>Affiliate Partnership</h2>
          <p style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>Grow the Mirrox network and earn rewards for every referral.</p>
@@ -131,6 +141,7 @@ const Affiliate = () => {
                </tbody>
             </table>
          </div>
+      </div>
       </div>
     </div>
   );
