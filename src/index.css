@@ -708,6 +708,67 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+/* Analytics Responsive Fixes */
+@media (max-width: 768px) {
+  .analytics-container {
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .performance-card {
+    padding: 24px;
+    min-height: auto;
+  }
+
+  .perf-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .roi-badge {
+    gap: 16px;
+  }
+
+  .roi-badge i {
+    width: 60px;
+    height: 60px;
+    font-size: 32px;
+  }
+
+  .roi-text h3 {
+    font-size: 24px;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .metric-card-premium {
+    padding: 24px;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .roi-badge {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .perf-chart-placeholder {
+    height: 150px;
+  }
+  
+  .progress-ring-container {
+    width: 110px;
+    height: 110px;
+  }
+}
+
 /* Analytics View - Final UI Polish Update */
 .analytics-container {
   grid-column: 1 / -1; 
