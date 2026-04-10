@@ -46,6 +46,11 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [modalSwapTrade, setModalSwapTrade] = useState(null);
   const [modalSwapValue, setModalSwapValue] = useState('0');
 
+  // Edit Profile Modal
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editData, setEditData] = useState({ name: '', email: '', contact: '' });
+  const [editing, setEditing] = useState(false);
+
   // The definitive real-time client data comes from the socket
   const client = allClients.find(c => c.id === id) || staticClient;
 
@@ -171,6 +176,19 @@ const ClientDetail = ({ onAdminLogout }) => {
     }
   };
 
+  const handleEditProfile = async () => {
+    setEditing(true);
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, editData);
+      setStaticClient(res.data);
+      setShowEditModal(false);
+    } catch (err) {
+      alert('Failed to update profile');
+    } finally {
+      setEditing(false);
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout onAdminLogout={onAdminLogout}>
@@ -243,10 +261,10 @@ const ClientDetail = ({ onAdminLogout }) => {
                 </span>
                 
                 <div className="cd-actions-bar" style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-                  <button className="cd-action-btn fund" onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
+                  <button className="adm-act-btn fund" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', borderColor: 'rgba(16,185,129,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
                     <i className="fa-solid fa-coins" /> Fund $10k
                   </button>
-                  <button className="cd-action-btn edit" onClick={() => {
+                  <button className="adm-act-btn edit" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => {
                     const val = prompt('Enter manual balance:', tm?.balance || '0');
                     if (val !== null) {
                        axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: val })
@@ -276,7 +294,9 @@ const ClientDetail = ({ onAdminLogout }) => {
             ))}
           </div>
           <div className="cd-profile-actions">
-            <button className="cd-act-btn primary"><i className="fa-solid fa-pen-to-square" /> Edit Client</button>
+            <button className="cd-act-btn primary" onClick={() => { setEditData({ name: client.name, email: client.email, contact: client.contact }); setShowEditModal(true); }}>
+              <i className="fa-solid fa-pen-to-square" /> Edit Client
+            </button>
             {client.status !== 'active' && (
               <button className="cd-act-btn success" onClick={() => handleUpdateStatus('active')}><i className="fa-solid fa-check" /> Approve</button>
             )}
@@ -585,370 +605,84 @@ const ClientDetail = ({ onAdminLogout }) => {
         }
         .adm-back-btn:hover { background: rgba(50,145,255,0.15); }
 
-        .cd-section {
-          background: #0f1520;
-          border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; padding: 24px;
-          margin-bottom: 20px;
-        }
-        .cd-section-label {
-          font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
-          text-transform: uppercase; color: #00cc88;
-          margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
-        }
-        .cd-section-label::after {
-          content: ''; flex: 1; height: 1px;
-          background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
-        }
+        .cd-section { background: #0f1520; border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+        .cd-section-label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00cc88; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+        .cd-section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent); }
 
-        /* Profile Card */
-        .cd-profile-grid {
-          display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: start;
-        }
+        .cd-profile-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: start; }
         .cd-profile-main { display: flex; align-items: center; gap: 16px; }
-        .cd-avatar-lg {
-          width: 64px; height: 64px; border-radius: 16px;
-          background: linear-gradient(135deg, rgba(50,145,255,0.15), rgba(50,145,255,0.3));
-          border: 2px solid rgba(50,145,255,0.3);
-          color: #3291ff; font-size: 28px; font-weight: 800;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-        }
-        .cd-client-name {
-          font-size: 22px; font-weight: 800; color: #e0e6ed;
-          margin-bottom: 8px; font-family: 'Outfit', sans-serif;
-        }
-        .adm-status-badge {
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 4px 10px; border-radius: 20px;
-          font-size: 11px; font-weight: 700;
-        }
+        .cd-avatar-lg { width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(50,145,255,0.15), rgba(50,145,255,0.3)); border: 2px solid rgba(50,145,255,0.3); color: #3291ff; font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .cd-client-name { font-size: 22px; font-weight: 800; color: #e0e6ed; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
+        .adm-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
         .adm-status-dot { width: 6px; height: 6px; border-radius: 50%; }
 
         .cd-profile-fields { display: flex; flex-direction: column; gap: 12px; }
         .cd-field { display: flex; align-items: center; gap: 12px; }
-        .cd-field-icon {
-          width: 32px; height: 32px; border-radius: 8px;
-          background: rgba(50,145,255,0.1); color: #3291ff; font-size: 13px;
-          display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
+        .cd-field-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(50,145,255,0.1); color: #3291ff; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .cd-field-label { font-size: 11px; color: #64748b; font-weight: 600; }
         .cd-field-value { font-size: 14px; color: #e0e6ed; font-weight: 600; margin-top: 1px; }
 
         .cd-profile-actions { display: flex; flex-direction: column; gap: 8px; }
-        .cd-act-btn {
-          padding: 10px 18px; border-radius: 9px;
-          font-size: 13px; font-weight: 700; cursor: pointer;
-          display: flex; align-items: center; gap: 8px; border: 1px solid transparent;
-          transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap;
-        }
-        .cd-act-btn.primary {
-          background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.25); color: #3291ff;
-        }
+        .cd-act-btn { padding: 10px 18px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid transparent; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
+        .cd-act-btn.primary { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.25); color: #3291ff; }
         .cd-act-btn.primary:hover { background: #3291ff; color: #fff; }
-        .cd-act-btn.success {
-          background: rgba(0,204,136,0.1); border-color: rgba(0,204,136,0.25); color: #00cc88;
-        }
+        .cd-act-btn.success { background: rgba(0,204,136,0.1); border-color: rgba(0,204,136,0.25); color: #00cc88; }
         .cd-act-btn.success:hover { background: #00cc88; color: #fff; }
-        .cd-act-btn.danger {
-          background: rgba(255,77,77,0.1); border-color: rgba(255,77,77,0.25); color: #ff4d4d;
-        }
+        .cd-act-btn.danger { background: rgba(255,77,77,0.1); border-color: rgba(255,77,77,0.25); color: #ff4d4d; }
         .cd-act-btn.danger:hover { background: #ff4d4d; color: #fff; }
 
-        /* Account Summary */
-        .cd-account-grid {
-          display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px;
-        }
+        .cd-account-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px; }
         .cd-account-grid-2 { grid-template-columns: repeat(4, 1fr); }
-        .cd-acc-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 10px; padding: 14px;
-          transition: all 0.2s;
-        }
-        .cd-acc-card:hover { background: rgba(255,255,255,0.05); }
+        .cd-acc-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; transition: all 0.2s; }
         .cd-acc-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px; }
         .cd-acc-value { font-size: 16px; font-weight: 800; color: #e0e6ed; font-family: 'Space Mono', monospace; }
 
-        /* Metrics Grid */
-        .cd-metrics-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-        }
-        .cd-metric-card {
-          background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 10px; padding: 16px; position: relative;
-          transition: all 0.2s;
-        }
-        .cd-metric-card:hover {
-          background: rgba(255,255,255,0.04); transform: translateY(-2px);
-        }
-        .cd-metric-num {
-          font-size: 20px; position: absolute; top: 12px; right: 14px;
-          font-weight: 800; opacity: 0.5;
-        }
+        .cd-metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .cd-metric-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 16px; position: relative; transition: all 0.2s; }
+        .cd-metric-num { font-size: 20px; position: absolute; top: 12px; right: 14px; font-weight: 800; opacity: 0.5; }
         .cd-metric-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 8px; }
-        .cd-metric-value {
-          font-size: 18px; font-weight: 800;
-          font-family: 'Space Mono', monospace; letter-spacing: -0.5px;
-        }
+        .cd-metric-value { font-size: 18px; font-weight: 800; font-family: 'Space Mono', monospace; letter-spacing: -0.5px; }
 
-        /* Tabs */
-        .cd-tabs {
-          display: flex; gap: 4px;
-          background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 10px; padding: 4px; margin-bottom: 16px; width: fit-content;
-        }
-        .cd-tab {
-          display: flex; align-items: center; gap: 8px;
-          padding: 8px 18px; border-radius: 7px;
-          background: none; border: none; cursor: pointer;
-          font-size: 13px; font-weight: 700; color: #64748b;
-          transition: all 0.2s; font-family: 'Inter', sans-serif;
-        }
-        .cd-tab:hover { color: #e0e6ed; }
+        .cd-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 4px; margin-bottom: 16px; width: fit-content; }
+        .cd-tab { display: flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 7px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 700; color: #64748b; transition: all 0.2s; font-family: 'Inter', sans-serif; }
         .cd-tab.active { background: rgba(50,145,255,0.12); color: #3291ff; border: 1px solid rgba(50,145,255,0.2); }
-        .cd-tab-count {
-          background: rgba(255,255,255,0.07); border-radius: 20px;
-          padding: 1px 7px; font-size: 11px; font-weight: 800; color: #64748b;
-        }
-        .cd-tab.active .cd-tab-count { background: rgba(50,145,255,0.2); color: #3291ff; }
 
-        .cd-trade-table-wrap {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 10px; overflow: hidden;
-        }
+        .cd-trade-table-wrap { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
         .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr {
-          background: rgba(50,145,255,0.04);
-          border-bottom: 1px solid rgba(50,145,255,0.08);
-        }
-        .adm-table th {
-          padding: 12px 18px; text-align: left;
-          font-size: 11px; font-weight: 800; color: #64748b;
-          text-transform: uppercase; letter-spacing: 0.8px;
-        }
+        .adm-table th { padding: 12px 18px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; }
         .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(50,145,255,0.03); }
-        .adm-table-row:last-child { border-bottom: none; }
         .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
 
-        .adm-uid-badge {
-          padding: 3px 8px; border-radius: 6px;
-          background: rgba(255,255,255,0.04); border: 1px solid #2a3341;
-          font-size: 11px; font-weight: 700; color: #94a3b8;
-          font-family: 'Space Mono', monospace;
-        }
-        .adm-mono { font-family: 'Space Mono', monospace; font-size: 13px; }
+        .cd-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .cd-modal { background: #0f1520; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 90%; max-width: 450px; box-shadow: 0 40px 80px rgba(0,0,0,0.5); overflow: hidden; animation: pop 0.3s; }
+        @keyframes pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .cd-modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .cd-modal-header h3 { margin: 0; font-size: 18px; color: #fff; }
+        .cd-modal-close { background: none; border: none; color: #64748b; cursor: pointer; font-size: 20px; }
+        .cd-modal-body { padding: 24px; }
+        .cd-modal-footer { padding: 20px 24px; background: rgba(0,0,0,0.2); display: flex; gap: 12px; }
+        .cd-modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+        .cd-modal-btn.cancel { background: rgba(255,255,255,0.05); color: #94a3b8; }
+        .cd-modal-btn.confirm { background: #3291ff; color: #fff; }
 
-        .cd-type-badge {
-          padding: 3px 10px; border-radius: 6px;
-          font-size: 11px; font-weight: 800; letter-spacing: 0.5px;
-        }
-        .cd-type-badge.buy { background: rgba(16,185,129,0.15); color: #10b981; }
-        .cd-type-badge.sell { background: rgba(239,68,68,0.15); color: #ef4444; }
-
-        .cd-trade-status {
-          padding: 3px 10px; border-radius: 20px;
-          font-size: 11px; font-weight: 700; text-transform: capitalize;
-        }
-        .cd-trade-status.open { background: rgba(50,145,255,0.1); color: #3291ff; }
-        .cd-trade-status.closed { background: rgba(100,116,139,0.1); color: #64748b; }
-        .cd-trade-status.approved { background: rgba(0,204,136,0.1); color: #00cc88; }
-        .cd-trade-status.pending { background: rgba(245,158,11,0.1); color: #f59e0b; }
-        .cd-trade-status.rejected { background: rgba(255,77,77,0.1); color: #ff4d4d; }
-
-        .adm-mini-act {
-          width: 24px; height: 24px; border-radius: 4px; border: none;
-          display: flex; align-items: center; justify-content: center;
-          cursor: pointer; font-size: 10px; transition: all 0.2s;
-        }
-        .adm-mini-act.approve { background: rgba(0,204,136,0.1); color: #00cc88; }
-        .adm-mini-act.approve:hover { background: #00cc88; color: #fff; }
-        .adm-mini-act.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; }
-        .adm-mini-act.reject:hover { background: #ff4d4d; color: #fff; }
-
-        /* Pagination */
-        .adm-pagination {
-          display: flex; align-items: center; justify-content: space-between;
-        }
-        .adm-page-info { font-size: 12px; color: #64748b; }
-        .adm-page-btns { display: flex; gap: 6px; }
-        .adm-pg-btn {
-          width: 32px; height: 32px; border-radius: 7px;
-          background: #0f1520; border: 1px solid #2a3341;
-          color: #94a3b8; font-size: 12px; font-weight: 600;
-          cursor: pointer; display: flex; align-items: center; justify-content: center;
-          transition: all 0.2s; font-family: 'Inter', sans-serif;
-        }
-        .adm-pg-btn:hover:not(:disabled) { border-color: #3291ff; color: #3291ff; }
-        .adm-pg-btn.active { background: #3291ff; border-color: #3291ff; color: #fff; }
-        .adm-pg-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-      `}</style>
-
-      {/* Custom Dynamic Bias Modal */}
-      {showModal && (
-        <div className="custom-modal-overlay">
-          <div className="custom-modal-content animate-pop">
-            <div className="modal-header">
-              <h3>Manage Trade Trend</h3>
-              <button className="close-x" onClick={() => setShowModal(false)}>&times;</button>
-            </div>
-            <div className="modal-body">
-              <p>Manipulate trade <strong>{modalTrade?.id}</strong> dynamically.</p>
-              
-              <div className="bias-options">
-                <button 
-                  className={`bias-btn ${modalMode === 'none' ? 'active' : ''}`}
-                  onClick={() => setModalMode('none')}
-                >
-                  <i className="fa-solid fa-chart-line" />
-                  Real Market
-                </button>
-                <button 
-                  className={`bias-btn profit ${modalMode === 'profit' ? 'active' : ''}`}
-                  onClick={() => setModalMode('profit')}
-                >
-                  <i className="fa-solid fa-arrow-trend-up" />
-                  Force Profit
-                </button>
-                <button 
-                  className={`bias-btn loss ${modalMode === 'loss' ? 'active' : ''}`}
-                  onClick={() => setModalMode('loss')}
-                >
-                  <i className="fa-solid fa-arrow-trend-down" />
-                  Force Loss
-                </button>
-              </div>
-
-              <div className="intensity-group">
-                <div className="label-row">
-                  <span>Intensity Multiplier</span>
-                  <span className="value-badge">x{modalMultiplier}</span>
-                </div>
-                <input 
-                  type="range" 
-                  min="1" 
-                  max="10" 
-                  step="0.5"
-                  className="intensity-range"
-                  value={modalMultiplier} 
-                  onChange={(e) => setModalMultiplier(e.target.value)}
-                />
-                <div className="range-labels">
-                  <span>Normal</span>
-                  <span>Extreme</span>
-                </div>
-              </div>
-
-              <p className="modal-hint">The trade will naturally oscillate but follow the trend you set.</p>
-            </div>
-            <div className="modal-footer">
-              <button className="modal-btn secondary" onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="modal-btn primary" onClick={submitEditPL}>Apply Logic</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Manual Swap Edit Modal */}
-      {showSwapModal && (
-        <div className="custom-modal-overlay">
-          <div className="custom-modal-content animate-pop">
-            <div className="modal-header">
-              <h3>Edit Manual Swap</h3>
-              <button className="close-x" onClick={() => setShowSwapModal(false)}>&times;</button>
-            </div>
-            <div className="modal-body">
-              <p>Set a manual swap value for trade <strong>{modalSwapTrade?.id}</strong> ({modalSwapTrade?.symbol})</p>
-              
-              <div className="intensity-group" style={{ background: 'rgba(245, 158, 11, 0.05)', borderColor: 'rgba(245, 158, 11, 0.1)' }}>
-                <div className="label-row">
-                  <span style={{ color: '#f59e0b' }}>Swap Value ($)</span>
-                  <span className="value-badge" style={{ background: '#f59e0b' }}>USD</span>
-                </div>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  className="sym-edit-input"
-                  style={{ width: '100%', marginTop: 8, padding: '12px', fontSize: 16 }}
-                  value={modalSwapValue} 
-                  onChange={(e) => setModalSwapValue(e.target.value)}
-                />
-              </div>
-
-              <p className="modal-hint">Positive values add to balance, negative values deduct.</p>
-            </div>
-            <div className="modal-footer">
-              <button className="modal-btn secondary" onClick={() => setShowSwapModal(false)}>Cancel</button>
-              <button className="modal-btn primary" style={{ background: '#f59e0b' }} onClick={submitEditSwap}>Update Swap</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        .custom-modal-overlay {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0, 0, 0, 0.85);
-          backdrop-filter: blur(8px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-        }
-        .custom-modal-content {
-          background: #0f172a;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          width: 90%;
-          max-width: 440px;
-          border-radius: 28px;
-          padding: 28px;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        .animate-pop { animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        @keyframes pop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10001; }
+        .custom-modal-content { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 440px; border-radius: 28px; padding: 28px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .modal-header h3 { margin: 0; font-size: 20px; color: #f8fafc; font-weight: 800; }
         .close-x { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; }
-        
-        .modal-body { margin-bottom: 28px; }
-        .modal-body p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
-        .modal-hint { font-size: 12px !important; color: #64748b !important; font-style: italic; margin-top: 16px; text-align: center; }
-        
         .modal-footer { display: flex; gap: 12px; justify-content: flex-end; }
-        .modal-btn {
-          padding: 12px 24px;
-          border-radius: 12px;
-          font-weight: 700;
-          cursor: pointer;
-          border: none;
-          transition: all 0.2s;
-          font-size: 14px;
-        }
+        .modal-btn { padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
         .modal-btn.primary { background: #3291ff; color: white; }
-        .modal-btn.primary:hover { background: #0070f3; transform: translateY(-1px); }
         .modal-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
-        .modal-btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
-
-        /* Bias Modal Styles */
         .bias-options { display: grid; gap: 12px; margin-bottom: 24px; }
-        .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #94a3b8; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; text-align: left; }
-        .bias-btn i { font-size: 18px; opacity: 0.5; }
+        .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #94a3b8; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; cursor: pointer; }
         .bias-btn.active { background: rgba(50, 145, 255, 0.1); border-color: #3291ff; color: #3291ff; }
-        .bias-btn.active i { opacity: 1; }
-        .bias-btn.profit.active { background: rgba(0, 204, 136, 0.1); border-color: #00cc88; color: #00cc88; }
-        .bias-btn.loss.active { background: rgba(255, 77, 77, 0.1); border-color: #ff4d4d; color: #ff4d4d; }
-        
         .intensity-group { background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .value-badge { background: #3291ff; color: white; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 800; }
-        .intensity-range { width: 100%; height: 6px; -webkit-appearance: none; background: rgba(255,255,255,0.1); border-radius: 5px; outline: none; margin-bottom: 12px; }
-        .intensity-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #3291ff; border-radius: 50%; cursor: pointer; border: 3px solid #0f172a; box-shadow: 0 0 10px rgba(50, 145, 255, 0.5); }
-        .range-labels { display: flex; justify-content: space-between; color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; }
       `}</style>
+    </AdminLayout>
+  );
+};
+
+export default ClientDetail;
     </AdminLayout>
   );
 };
