@@ -46,6 +46,30 @@ mongoose.connect(process.env.MONGO_URI)
 // allowing our 'Hybrid Persistence' logic in store.js to take over instantly.
 mongoose.set('bufferCommands', false);
 
+// --- SECURITY MIDDLEWARES ---
+const verifyClientToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access Denied: No Token Provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, decoded) => {
+    if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
+    req.user = decoded; // { id, role }
+    next();
+  });
+};
+
+const verifyAdminToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access Denied: No Admin Token' });
+
+  jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, decoded) => {
+    if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
+    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Requires Admin Privileges' });
+    req.user = decoded;
+    next();
+  });
+};
+
 // --- AUTH APIS ---
 app.post('/api/auth/register', async (req, res) => {
   const { name, email, contact, password } = req.body;
@@ -158,7 +182,7 @@ app.get('/api/symbols', (req, res) => {
   res.json(symbolsList);
 });
 
-app.put('/api/symbols/:id', (req, res) => {
+app.put('/api/symbols/:id', verifyAdminToken, (req, res) => {
   const index = symbolsList.findIndex(s => s.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
   
@@ -168,17 +192,17 @@ app.put('/api/symbols/:id', (req, res) => {
 });
 
 // --- CLIENT APIS ---
-app.get('/api/clients', (req, res) => {
+app.get('/api/clients', verifyAdminToken, (req, res) => {
   res.json(clients);
 });
 
-app.get('/api/clients/:id', (req, res) => {
+app.get('/api/clients/:id', verifyClientToken, (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).send('Not Found');
   res.json(client);
 });
 
-app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, res) => {
+app.post('/api/clients/:id/kyc/submit', verifyClientToken, upload.single('document'), async (req, res) => {
   try {
     const { id } = req.params;
     const { docType } = req.body;
@@ -252,7 +276,7 @@ app.post('/api/clients/:id/kyc/submit', upload.single('document'), async (req, r
   }
 });
 
-app.post('/api/clients', (req, res) => {
+app.post('/api/clients', verifyAdminToken, (req, res) => {
   const newClient = {
     id: 'C' + (clients.length + 1).toString().padStart(3, '0'),
     uid: 'MRX-' + Math.floor(10000 + Math.random() * 90000),
@@ -264,7 +288,7 @@ app.post('/api/clients', (req, res) => {
   res.status(201).json(newClient);
 });
 
-app.put('/api/clients/:id/balance', (req, res) => {
+app.put('/api/clients/:id/balance', verifyAdminToken, (req, res) => {
   const index = clients.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
   
@@ -279,7 +303,7 @@ app.put('/api/clients/:id/balance', (req, res) => {
   res.json(clients[index]);
 });
 
-app.put('/api/clients/:id', (req, res) => {
+app.put('/api/clients/:id', verifyAdminToken, (req, res) => {
   const index = clients.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
   
@@ -288,7 +312,7 @@ app.put('/api/clients/:id', (req, res) => {
   res.json(clients[index]);
 });
 
-app.delete('/api/clients/:id', (req, res) => {
+app.delete('/api/clients/:id', verifyAdminToken, (req, res) => {
   const index = clients.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
   
@@ -297,7 +321,7 @@ app.delete('/api/clients/:id', (req, res) => {
   res.json(removed[0]);
 });
 
-app.put('/api/clients/:id/kyc', async (req, res) => {
+app.put('/api/clients/:id/kyc', verifyAdminToken, async (req, res) => {
   try {
     const client = clients.find(c => c.id === req.params.id);
     if (!client) return res.status(404).send('Not Found');
@@ -318,7 +342,7 @@ app.put('/api/clients/:id/kyc', async (req, res) => {
   }
 });
 
-app.put('/api/clients/:id/kyc/review', async (req, res) => {
+app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
   try {
     const { action, rejectionReason } = req.body;
     const client = clients.find(c => c.id === req.params.id);
@@ -349,12 +373,13 @@ app.put('/api/clients/:id/kyc/review', async (req, res) => {
 
 // Balance route moved up to prevent clash
 
-app.post('/api/deposits', (req, res) => {
+app.post('/api/deposits', verifyClientToken, (req, res) => {
   const newDeposit = {
     id: 'D' + Date.now().toString().slice(-6),
     date: new Date().toISOString().split('T')[0],
     type: 'deposit',
-    ...req.body
+    ...req.body,
+    status: 'pending' // Force pending for all new requests
   };
   deposits.push(newDeposit);
   
@@ -373,7 +398,7 @@ app.post('/api/deposits', (req, res) => {
 });
 
 // Update Deposit Status (Approval/Rejection)
-app.put('/api/deposits/:id/status', (req, res) => {
+app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   const deposit = deposits.find(d => d.id === id);
@@ -395,7 +420,7 @@ app.put('/api/deposits/:id/status', (req, res) => {
 });
 
 // Update Withdrawal Status (Approval/Rejection)
-app.put('/api/withdrawals/:id/status', (req, res) => {
+app.put('/api/withdrawals/:id/status', verifyAdminToken, (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   const withdrawal = withdrawals.find(w => w.id === id);
@@ -453,7 +478,7 @@ app.post('/api/clients/:id/kyc/submit', (req, res) => {
 });
 
 // Admin ONLY: Get All Deposits & Withdrawals
-app.get('/api/deposits', (req, res) => {
+app.get('/api/deposits', verifyAdminToken, (req, res) => {
   const enhanced = deposits.map(d => {
     const client = clients.find(c => c.id === d.clientId);
     return { ...d, clientName: client ? client.name : 'Unknown' };
@@ -461,7 +486,7 @@ app.get('/api/deposits', (req, res) => {
   res.json(enhanced);
 });
 
-app.get('/api/withdrawals', (req, res) => {
+app.get('/api/withdrawals', verifyAdminToken, (req, res) => {
   const enhanced = withdrawals.map(w => {
     const client = clients.find(c => c.id === w.clientId);
     return { ...w, clientName: client ? client.name : 'Unknown' };
@@ -469,22 +494,23 @@ app.get('/api/withdrawals', (req, res) => {
   res.json(enhanced);
 });
 
-app.get('/api/deposits/:clientId', (req, res) => {
+app.get('/api/deposits/:clientId', verifyClientToken, (req, res) => {
   const userDeposits = deposits.filter(d => d.clientId === req.params.clientId);
   res.json(userDeposits);
 });
 
-app.get('/api/withdrawals/:clientId', (req, res) => {
+app.get('/api/withdrawals/:clientId', verifyClientToken, (req, res) => {
   const userWithdrawals = withdrawals.filter(w => w.clientId === req.params.clientId);
   res.json(userWithdrawals);
 });
 
-app.post('/api/withdrawals', (req, res) => {
+app.post('/api/withdrawals', verifyClientToken, (req, res) => {
   const newWithdrawal = {
     id: 'W' + Date.now().toString().slice(-6),
     date: new Date().toISOString().split('T')[0],
     type: 'withdrawal',
-    ...req.body
+    ...req.body,
+    status: 'pending' // Force pending
   };
   withdrawals.push(newWithdrawal);
 
@@ -499,7 +525,7 @@ app.post('/api/withdrawals', (req, res) => {
   res.status(201).json(newWithdrawal);
 });
 
-app.put('/api/withdrawals/:id', (req, res) => {
+app.put('/api/withdrawals/:id', verifyAdminToken, (req, res) => {
   const index = withdrawals.findIndex(w => w.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
   
@@ -509,8 +535,8 @@ app.put('/api/withdrawals/:id', (req, res) => {
 });
 
 // --- KYC APIS ---
-// User submits KYC documents (simulated — stores metadata, no real file upload)
-app.post('/api/clients/:id/kyc/submit', (req, res) => {
+// User submits KYC documents (simulated)
+app.post('/api/clients/:id/kyc/submit_simulated', verifyClientToken, (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).json({ error: 'Client not found' });
 
@@ -529,7 +555,7 @@ app.post('/api/clients/:id/kyc/submit', (req, res) => {
 });
 
 // Admin reviews KYC — approve or reject
-app.put('/api/clients/:id/kyc/review', (req, res) => {
+app.put('/api/clients/:id/kyc/review_simulated', verifyAdminToken, (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).json({ error: 'Client not found' });
 
@@ -556,7 +582,7 @@ app.get('/api/symbols', (req, res) => {
 });
 
 // Admin creates a new symbol
-app.post('/api/symbols', (req, res) => {
+app.post('/api/symbols', verifyAdminToken, (req, res) => {
   const { symbol, name, category, spread, commission, lotMin, lotStep, lotMax, swapRate, precision, commissionType } = req.body;
   if (!symbol || !category) return res.status(400).json({ error: 'Symbol and category are required' });
 
@@ -582,7 +608,7 @@ app.post('/api/symbols', (req, res) => {
 });
 
 // Admin deletes a symbol (delists)
-app.delete('/api/symbols/:id', (req, res) => {
+app.delete('/api/symbols/:id', verifyAdminToken, (req, res) => {
   const id = parseInt(req.params.id);
   const index = symbolsList.findIndex(s => s.id === id);
   if (index === -1) return res.status(404).json({ error: 'Symbol not found' });
@@ -630,13 +656,13 @@ app.post('/api/webhooks/cloudinary', async (req, res) => {
   res.status(200).send("OK");
 });
 
-app.get('/api/trades/:clientId', (req, res) => {
+app.get('/api/trades/:clientId', verifyClientToken, (req, res) => {
   const trades = activeTrades[req.params.clientId] || [];
   res.json(trades);
 });
 
 // Admin Monitoring: Active Traders
-app.get('/api/active-traders', (req, res) => {
+app.get('/api/active-traders', verifyAdminToken, (req, res) => {
   const activeClients = [];
   
   // Iterate through all tracked trades per client ID
@@ -675,7 +701,7 @@ app.get('/api/active-traders', (req, res) => {
 });
 
 // Calculate Analytics for a Client
-app.get('/api/clients/:id/analytics', (req, res) => {
+app.get('/api/clients/:id/analytics', verifyClientToken, (req, res) => {
   const { id } = req.params;
   const clientTrades = activeTrades[id] || [];
   const client = clients.find(c => c.id === id);

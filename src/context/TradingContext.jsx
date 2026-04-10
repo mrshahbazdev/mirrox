@@ -2,6 +2,17 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
+// Global Axios Interceptor for JWT Authentication
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('mirrox_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 const TradingContext = createContext();
 
 export const useTrading = () => useContext(TradingContext);
