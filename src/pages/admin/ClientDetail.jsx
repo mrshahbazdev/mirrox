@@ -368,6 +368,12 @@ const ClientDetail = ({ onAdminLogout }) => {
                    <span className={`cd-trade-status ${client.kyc.status === 'approved' ? 'approved' : client.kyc.status === 'pending' ? 'pending' : client.kyc.status === 'rejected' ? 'rejected' : 'closed'}`}>
                       {client.kyc.status}
                    </span>
+                   {client.kyc.status === 'rejected' && client.kyc.overallRejectionReason && (
+                     <div style={{ fontSize: '11px', color: '#ff4d4d', marginTop: '6px', maxWidth: '200px', background: 'rgba(255,77,77,0.05)', padding: '6px', borderRadius: '6px' }}>
+                        <i className="fa-solid fa-circle-info" style={{ marginRight: '5px' }}></i>
+                        {client.kyc.overallRejectionReason}
+                     </div>
+                   )}
                 </div>
                 <div>
                    <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Account Type</div>

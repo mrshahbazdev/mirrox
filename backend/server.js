@@ -283,6 +283,27 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
   res.json({ message: 'Reviewed', kyc: client.kyc });
 });
 
+app.put('/api/clients/:id/kyc', verifyAdminToken, async (req, res) => {
+  const { status, rejectionReason } = req.body;
+  const client = clients.find(c => c.id === req.params.id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  if (!client.kyc) client.kyc = { status: 'unverified' };
+  
+  client.kyc.status = status;
+  if (status === 'rejected') {
+    client.kyc.overallRejectionReason = rejectionReason;
+  } else if (status === 'approved') {
+    client.kyc.overallRejectionReason = null;
+    client.accountType = 'live';
+  }
+  
+  client.kyc.reviewedAt = new Date();
+  
+  saveData();
+  res.json(client);
+});
+
 // --- DEPOSITS & WITHDRAWALS ---
 app.get('/api/deposits', verifyAdminToken, (req, res) => res.json(deposits));
 app.get('/api/withdrawals', verifyAdminToken, (req, res) => res.json(withdrawals));
