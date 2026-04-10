@@ -51,6 +51,11 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [editData, setEditData] = useState({ name: '', email: '', contact: '' });
   const [editing, setEditing] = useState(false);
 
+  // Balance Modal
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
+  const [adjustData, setAdjustData] = useState({ amount: '', type: 'increase', note: '' });
+  const [processing, setProcessing] = useState(false);
+
   // The definitive real-time client data comes from the socket
   const client = allClients.find(c => c.id === id) || staticClient;
 
@@ -189,6 +194,46 @@ const ClientDetail = ({ onAdminLogout }) => {
     }
   };
 
+  const handleAdjustBalance = async () => {
+    if (!adjustData.amount) return;
+    setProcessing(true);
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, {
+        amount: adjustData.amount,
+        type: adjustData.type,
+        note: adjustData.note || 'Manual Adjustment'
+      });
+      if (res.data.success) {
+        // Refresh client data to reflect new balance
+        const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+        setStaticClient(updated.data);
+        setShowBalanceModal(false);
+        setAdjustData({ amount: '', type: 'increase', note: '' });
+      }
+    } catch (err) {
+      alert('Failed to update balance. Please check the backend logs.');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleQuickFund = async () => {
+    setProcessing(true);
+    try {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, {
+        amount: 10000,
+        type: 'increase',
+        note: 'Quick Demo Funding'
+      });
+      const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+      setStaticClient(updated.data);
+    } catch (err) {
+      alert('Quick funding failed');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout onAdminLogout={onAdminLogout}>
@@ -261,17 +306,10 @@ const ClientDetail = ({ onAdminLogout }) => {
                 </span>
                 
                 <div className="cd-actions-bar" style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-                  <button className="adm-act-btn fund" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', borderColor: 'rgba(16,185,129,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
-                    <i className="fa-solid fa-coins" /> Fund $10k
+                  <button className="adm-act-btn fund" disabled={processing} style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', borderColor: 'rgba(16,185,129,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
+                    <i className="fa-solid fa-coins" /> {processing ? '...' : 'Fund $10k'}
                   </button>
-                  <button className="adm-act-btn edit" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => {
-                    const val = prompt('Enter manual balance:', tm?.balance || '0');
-                    if (val !== null) {
-                       axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/balance`, { balance: val })
-                        .then(r => setStaticClient(r.data))
-                        .catch(e => alert('Failed to update balance'));
-                    }
-                  }}>
+                  <button className="adm-act-btn edit" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => setShowBalanceModal(true)}>
                     <i className="fa-solid fa-pen-to-square" /> Edit Balance
                   </button>
                 </div>
@@ -677,7 +715,140 @@ const ClientDetail = ({ onAdminLogout }) => {
         .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #94a3b8; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; cursor: pointer; }
         .bias-btn.active { background: rgba(50, 145, 255, 0.1); border-color: #3291ff; color: #3291ff; }
         .intensity-group { background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+
+        .cd-select {
+          width: 100%; padding: 12px; background: rgba(0,0,0,0.2);
+          border: 1px solid #2a3341; borderRadius: 10px; color: #fff;
+          font-family: 'Inter', sans-serif; appearance: none;
+        }
+
+        .toggle-group { display: flex; gap: 8px; margin-bottom: 20px; }
+        .t-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #2a3341; background: rgba(255,255,255,0.03); color: #64748b; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .t-btn.active { color: #fff; }
+        .t-btn.increase.active { background: rgba(0,204,136,0.1); border-color: #00cc88; color: #00cc88; }
+        .t-btn.decrease.active { background: rgba(255,77,77,0.1); border-color: #ff4d4d; color: #ff4d4d; }
       `}</style>
+
+      {/* Balance Adjustment Modal */}
+      {showBalanceModal && (
+        <div className="cd-modal-overlay">
+          <div className="cd-modal" style={{ maxWidth: '400px' }}>
+            <div className="cd-modal-header">
+              <h3><i className="fa-solid fa-wallet" /> Adjust Balance</h3>
+              <button className="cd-modal-close" onClick={() => setShowBalanceModal(false)}>
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+            <div className="cd-modal-body">
+              <div className="toggle-group">
+                <button 
+                  className={`t-btn increase ${adjustData.type === 'increase' ? 'active' : ''}`}
+                  onClick={() => setAdjustData({ ...adjustData, type: 'increase' })}
+                >
+                  <i className="fa-solid fa-plus" /> Deposit
+                </button>
+                <button 
+                  className={`t-btn decrease ${adjustData.type === 'decrease' ? 'active' : ''}`}
+                  onClick={() => setAdjustData({ ...adjustData, type: 'decrease' })}
+                >
+                  <i className="fa-solid fa-minus" /> Deduct
+                </button>
+              </div>
+
+              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Amount (USD)</label>
+                <input 
+                  type="number" 
+                  className="adm-input"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                  value={adjustData.amount}
+                  onChange={(e) => setAdjustData({ ...adjustData, amount: e.target.value })}
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Notes</label>
+                <input 
+                  type="text" 
+                  className="adm-input"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                  value={adjustData.note}
+                  onChange={(e) => setAdjustData({ ...adjustData, note: e.target.value })}
+                  placeholder="Reason for adjustment"
+                />
+              </div>
+            </div>
+            <div className="cd-modal-footer">
+              <button className="cd-modal-btn cancel" onClick={() => setShowBalanceModal(false)}>Cancel</button>
+              <button 
+                className="cd-modal-btn confirm" 
+                onClick={handleAdjustBalance}
+                disabled={processing || !adjustData.amount}
+              >
+                {processing ? 'Processing...' : 'Confirm'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Profile Modal */}
+      {showEditModal && (
+        <div className="cd-modal-overlay">
+          <div className="cd-modal" style={{ maxWidth: '450px' }}>
+            <div className="cd-modal-header">
+              <h3><i className="fa-solid fa-user-pen" /> Edit Client Profile</h3>
+              <button className="cd-modal-close" onClick={() => setShowEditModal(false)}>
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+            <div className="cd-modal-body">
+              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Full Name</label>
+                <input 
+                  type="text" 
+                  className="adm-input"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                  value={editData.name}
+                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                />
+              </div>
+              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Email Address</label>
+                <input 
+                  type="email" 
+                  className="adm-input"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                  value={editData.email}
+                  onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                />
+              </div>
+              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Contact Number</label>
+                <input 
+                  type="text" 
+                  className="adm-input"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                  value={editData.contact}
+                  onChange={(e) => setEditData({ ...editData, contact: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="cd-modal-footer">
+              <button className="cd-modal-btn cancel" onClick={() => setShowEditModal(false)}>Cancel</button>
+              <button 
+                className="cd-modal-btn confirm" 
+                onClick={handleEditProfile}
+                disabled={editing || !editData.name || !editData.email}
+              >
+                {editing ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </AdminLayout>
   );
 };
