@@ -708,6 +708,37 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+/* Dashboard Component Responsive Fixes */
+@media (max-width: 600px) {
+  .asset-info-card {
+    padding: 12px;
+    height: auto;
+    min-height: 400px;
+  }
+  
+  .tabs-header {
+    gap: 12px;
+    padding: 0 8px;
+  }
+
+  .symbol-row {
+    padding: 12px;
+    grid-template-columns: 24px 1fr 80px;
+  }
+
+  .sym-name {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .symbol-row {
+    grid-template-columns: 1fr 80px;
+  }
+  .sym-icon { display: none; }
+  .price-block { font-size: 12px; }
+}
+
 /* Analytics Responsive Fixes */
 @media (max-width: 768px) {
   .analytics-container {

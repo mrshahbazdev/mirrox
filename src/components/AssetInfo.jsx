@@ -470,6 +470,21 @@ const AssetInfo = ({ symbol, onTrade }) => {
                font-weight: 700;
                font-family: 'Outfit', sans-serif;
             }
+
+            @media (max-width: 600px) {
+               .trading-execution-panel { padding: 12px; }
+               .lot-btn { width: 40px; height: 40px; }
+               .lot-input { font-size: 14px; }
+               .exec-btn { padding: 12px; }
+            }
+
+            @media (max-width: 480px) {
+               .exec-buttons { flex-direction: column; }
+               .input-row-group { flex-direction: column; gap: 0; }
+               .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 14px 20px; }
+               .exec-side { font-size: 12px; }
+               .exec-symbol { font-size: 16px; }
+            }
          `}</style>
       </div>
     </div>
