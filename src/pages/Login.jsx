@@ -7,8 +7,12 @@ const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [hasToken, setHasToken] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,17 +35,108 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  const handleResetRequest = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setResetMessage('');
+    try {
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/forgot-password', { email });
+      setResetMessage(res.data.message);
+      setHasToken(true);
+    } catch(err) {
+      setError(err.response?.data?.error || 'Failed to request reset');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApplyReset = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/reset-password', { token: resetToken, newPassword: password });
+      alert('Password Reset Successful. You can now log in.');
+      setResetMode(false);
+      setHasToken(false);
+      setPassword('');
+    } catch(err) {
+      setError(err.response?.data?.error || 'Failed to reset password. Token may be invalid.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-card glass animate-fade">
         <div className="logo-area">
           <i className="fa-solid fa-cube main-logo"></i>
           <h1>mirrox</h1>
-          <p>The Future of Trade, Simplified.</p>
+          <p>{resetMode ? 'Recover your account.' : 'The Future of Trade, Simplified.'}</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="input-field">
+        {resetMode ? (
+          (!hasToken ? (
+            <form onSubmit={handleResetRequest} className="login-form animate-fade">
+              <div className="input-field">
+                <i className="fa-solid fa-envelope field-icon"></i>
+                <input 
+                  type="email" 
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError('');
+                  }}
+                  required
+                />
+              </div>
+              {error && <div className="error-text animate-fade">{error}</div>}
+              {resetMessage && <div style={{color: '#00cc88', fontSize: '13px', margin: '8px 0'}} className="animate-fade">{resetMessage}</div>}
+              
+              <button type="submit" className="btn-primary login-cta" disabled={loading}>
+                {loading ? 'Processing...' : 'Send Reset Link'}
+              </button>
+              <button type="button" className="btn-secondary" style={{marginTop: '12px'}} onClick={() => { setResetMode(false); setHasToken(false); }}>
+                Back to Login
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleApplyReset} className="login-form animate-fade">
+              <div className="input-field">
+                <i className="fa-solid fa-key field-icon"></i>
+                <input 
+                  type="text" 
+                  placeholder="Paste Reset Token..."
+                  value={resetToken}
+                  onChange={(e) => { setResetToken(e.target.value); setError(''); }}
+                  required
+                />
+              </div>
+              <div className="input-field">
+                <i className="fa-solid fa-lock field-icon"></i>
+                <input 
+                  type="password" 
+                  placeholder="New Password"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                  required
+                />
+              </div>
+              {error && <div className="error-text animate-fade">{error}</div>}
+              <button type="submit" className="btn-primary login-cta" disabled={loading}>
+                {loading ? 'Validating...' : 'Set New Password'}
+              </button>
+              <button type="button" className="btn-secondary" style={{marginTop: '12px'}} onClick={() => { setResetMode(false); setHasToken(false); }}>
+                Cancel
+              </button>
+            </form>
+          ))
+        ) : (
+          <form onSubmit={handleSubmit} className="login-form animate-fade">
+            <div className="input-field">
             <i className="fa-solid fa-envelope field-icon"></i>
             <input 
               type="email" 
@@ -75,7 +170,7 @@ const Login = ({ onLogin }) => {
               <input type="checkbox" />
               <span>Keep me signed in</span>
             </label>
-            <a href="#">Forgot password?</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setResetMode(true); }}>Forgot password?</a>
           </div>
 
           <button type="submit" className="btn-primary login-cta" disabled={loading}>
@@ -95,6 +190,7 @@ const Login = ({ onLogin }) => {
             Use Demo Admin (Fails here)
           </button>
         </form>
+        )}
 
         <div className="social-login">
           <span className="divider-text">Or continue with</span>

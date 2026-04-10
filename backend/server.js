@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Client = require('./models/Client');
 const Admin = require('./models/Admin');
+const Trade = require('./models/Trade');
 const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, saveData, initializeDB } = require('./store');
@@ -174,6 +175,62 @@ app.post('/api/auth/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Server error during login' });
+  }
+});
+
+// Temporary memory store for reset tokens (in prod, use Redis or MongoDB)
+const passwordResetTokens = {};
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+
+  const client = clients.find(c => c.email === email);
+  if (!client) {
+    // Return standard success to prevent email enumeration
+    return res.json({ success: true, message: 'If an account exists, a reset link was generated.' });
+  }
+
+  const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+  passwordResetTokens[token] = email;
+
+  // Since Email notifications are skipped, we print it to the server securely for Admin to retrieve!
+  console.log(`\n======================================`);
+  console.log(`🔐 PASSWORD RESET REQUESTED for: ${email}`);
+  console.log(`🔑 Reset Token: ${token}`);
+  console.log(`⚠️ Share this token with the user to reset via frontend.`);
+  console.log(`======================================\n`);
+
+  res.json({ success: true, message: 'If an account exists, a reset link was generated.' });
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) return res.status(400).json({ error: 'Missing fields' });
+
+  const email = passwordResetTokens[token];
+  if (!email) return res.status(400).json({ error: 'Invalid or Expired Token' });
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update in MongoDB
+    if (mongoose.connection.readyState === 1) {
+      await Client.updateOne({ email }, { password: hashedPassword });
+    }
+
+    // Update in Memory
+    const client = clients.find(c => c.email === email);
+    if (client) {
+      client.password = hashedPassword;
+      saveData();
+    }
+
+    delete passwordResetTokens[token];
+    res.json({ success: true, message: 'Password reset successful. You can now login.' });
+  } catch (err) {
+    console.error('Reset error:', err);
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 
@@ -659,6 +716,19 @@ app.post('/api/webhooks/cloudinary', async (req, res) => {
 app.get('/api/trades/:clientId', verifyClientToken, (req, res) => {
   const trades = activeTrades[req.params.clientId] || [];
   res.json(trades);
+});
+
+// Securely fetch closed historical trades from Database to avoid memory bloat
+app.get('/api/trades/:clientId/history', verifyClientToken, async (req, res) => {
+  try {
+    const historical = await Trade.find({ 
+      clientId: req.params.clientId, 
+      status: 'Closed' 
+    }).sort({ closeTime: -1 }).limit(100);
+    res.json(historical);
+  } catch(err) {
+    res.status(500).json({ error: 'Failed to fetch history' });
+  }
 });
 
 // Admin Monitoring: Active Traders

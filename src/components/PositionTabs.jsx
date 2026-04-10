@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 
 const PositionTabs = () => {
   const { activeTrades, prices, closePosition, currentClientExtended, allTrades, clientId, currentUser } = useTrading();
-  const [activeTab, setActiveTab] = React.useState('open'); 
-  const [showConfirm, setShowConfirm] = React.useState(false);
-  const [closingTrade, setClosingTrade] = React.useState(null);
+  const [activeTab, setActiveTab] = useState('open'); 
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [closingTrade, setClosingTrade] = useState(null);
+  
+  // Dedicated state for fetching historical closed trades from DB
+  const [historyTrades, setHistoryTrades] = useState([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === 'closed' && clientId) {
+      setIsLoadingHistory(true);
+      axios.get(`${import.meta.env.VITE_API_URL}/api/trades/${clientId}/history`)
+        .then(res => setHistoryTrades(res.data))
+        .catch(err => console.error('Failed to load history', err))
+        .finally(() => setIsLoadingHistory(false));
+    }
+  }, [activeTab, clientId]);
   
   // Robust financial data with fallbacks
   const financialSource = currentClientExtended || currentUser;
@@ -29,11 +44,9 @@ const PositionTabs = () => {
   const clientTrades = allTrades[clientId] || [];
   const openTrades = clientTrades.filter(t => t.status === 'Open');
   const pendingTrades = clientTrades.filter(t => t.status === 'Pending');
-  const closedTrades = clientTrades.filter(t => t.status === 'Closed');
 
-  const displayTrades = (activeTab === 'open' 
-    ? openTrades 
-    : (activeTab === 'pending' ? pendingTrades : closedTrades)).sort((a, b) => b.id - a.id);
+  const displayTrades = (activeTab === 'open' ? openTrades : (activeTab === 'pending' ? pendingTrades : historyTrades))
+    .sort((a, b) => (new Date(b.closeTime || b.openTime || 0)) - (new Date(a.closeTime || a.openTime || 0)));
 
   const handleOpenConfirm = (trade) => {
     setClosingTrade(trade);
@@ -58,7 +71,7 @@ const PositionTabs = () => {
           Pending Orders ({pendingTrades.length})
         </div>
         <div className={`tab-item ${activeTab === 'closed' ? 'active' : ''}`} onClick={() => setActiveTab('closed')}>
-          Closed Positions ({closedTrades.length})
+          Closed History
         </div>
         <div className="tab-item">Finance</div>
       </div>
@@ -144,7 +157,13 @@ const PositionTabs = () => {
             </tbody>
         </table>
         
-        {displayTrades.length === 0 && (
+        {activeTab === 'closed' && isLoadingHistory && (
+           <div style={{ padding: '20px', textAlign: 'center', color: '#64748b' }}>
+              <i className="fa-solid fa-spinner fa-spin"></i> Loading historical trades...
+           </div>
+        )}
+
+        {!isLoadingHistory && displayTrades.length === 0 && (
           <div className="empty-state">
              <i className="fa-solid fa-book-open"></i>
              <p className="empty-title">

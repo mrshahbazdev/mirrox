@@ -141,6 +141,11 @@ const saveData = () => {
           updateOne: { filter: { id: t.id }, update: { $set: t }, upsert: true }
         }));
         await Trade.bulkWrite(tradeBulk);
+
+        // Memory Purge: Remove Closed trades from RAM after successful sync
+        Object.keys(activeTrades).forEach(clientId => {
+          activeTrades[clientId] = activeTrades[clientId].filter(t => t.status !== 'Closed');
+        });
       }
 
       // 4. Save Transactions
@@ -193,7 +198,8 @@ const initializeDB = async () => {
     symbolsList.length = 0;
     symbolsList.push(...dbSymbols);
 
-    const dbTrades = await Trade.find().lean();
+    // Load only Open/Pending trades into hot memory. Closed trades stay in MongoDB.
+    const dbTrades = await Trade.find({ status: { $ne: 'Closed' } }).lean();
     Object.keys(activeTrades).forEach(k => delete activeTrades[k]);
     dbTrades.forEach(t => {
       if (!activeTrades[t.clientId]) activeTrades[t.clientId] = [];

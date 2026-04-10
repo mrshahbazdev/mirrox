@@ -12,6 +12,7 @@ const Finances = () => {
   // Form states
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState('bank_transfer');
+  const [txHash, setTxHash] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchData = React.useCallback(async () => {
@@ -50,11 +51,13 @@ const Finances = () => {
         clientId: currentClientExtended.id,
         amount: parseFloat(amount),
         method,
+        method,
         status: 'pending',
-        ref: 'REF' + Math.random().toString(36).substring(7).toUpperCase()
+        ref: txHash || ('REF' + Math.random().toString(36).substring(7).toUpperCase())
       });
       setDeposits([res.data, ...deposits]);
       setAmount('');
+      setTxHash('');
       alert('Deposit request submitted! Please wait for administrative approval.');
       setActiveTab('history');
     } catch (err) {
@@ -166,18 +169,62 @@ const Finances = () => {
                     required
                   />
                </div>
-               <div style={{ marginBottom: '32px' }}>
+                <div style={{ marginBottom: '32px' }}>
                   <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>Payment Method</label>
                   <select 
                     value={method} 
                     onChange={(e) => setMethod(e.target.value)}
-                    style={{ width: '100%', padding: '16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '15px' }}
+                    style={{ width: '100%', padding: '16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '15px', marginBottom: '16px' }}
                   >
-                    <option value="bank_transfer">Bank Transfer (SWIFT/SEPA)</option>
-                    <option value="crypto">Crypto (USDT/BTC)</option>
-                    <option value="credit_card">Credit/Debit Card</option>
+                    <option value="crypto">Cryptocurrency (USDT TRC20)</option>
+                    <option value="bank_transfer">Bank Transfer / IBAN</option>
                   </select>
-               </div>
+
+                  {/* Payment Instructions Box */}
+                  <div style={{ background: 'rgba(50, 145, 255, 0.05)', border: '1px dashed rgba(50, 145, 255, 0.4)', borderRadius: '12px', padding: '16px' }}>
+                    <p style={{ margin: '0 0 12px 0', fontSize: '13px', color: '#e0e6ed', fontWeight: 600 }}>
+                      <i className="fa-solid fa-circle-info" style={{ color: '#3291ff', marginRight: '8px' }}></i>
+                      Transfer Instructions
+                    </p>
+                    
+                    {method === 'crypto' ? (
+                      <div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Network: <strong style={{color: '#fff'}}>Tron (TRC20)</strong></div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>Send USDT to the address below:</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#000', padding: '12px', borderRadius: '8px' }}>
+                           <code style={{ color: '#00cc88', fontFamily: 'Space Mono', fontSize: '13px', wordBreak: 'break-all' }}>
+                             {import.meta.env.VITE_CRYPTO_WALLET || 'TXXXXXXXXXXXXXXXXXXXXXX_HARDCODED'}
+                           </code>
+                           <button type="button" onClick={() => navigator.clipboard.writeText(import.meta.env.VITE_CRYPTO_WALLET || 'TXXXXXXXXXXXXXXXXXXXXXX_HARDCODED')} style={{ background: 'transparent', border: 'none', color: '#3291ff', cursor: 'pointer' }}><i className="fa-regular fa-copy"></i></button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Bank Name: <strong style={{color: '#fff'}}>Global Merchant Bank</strong></div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Account Name: <strong style={{color: '#fff'}}>Mirrox Corporate</strong></div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>IBAN / Account No:</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#000', padding: '12px', borderRadius: '8px' }}>
+                           <code style={{ color: '#3291ff', fontFamily: 'Space Mono', fontSize: '13px', wordBreak: 'break-all' }}>
+                             {import.meta.env.VITE_BANK_IBAN || 'PK00BANK00001234567890'}
+                           </code>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '24px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>Transaction Hash / Reference No.</label>
+                  <input 
+                    type="text" 
+                    value={txHash} 
+                    onChange={(e) => setTxHash(e.target.value)}
+                    placeholder={method === 'crypto' ? "Paste TxID (e.g. abc123def456...)" : "Bank Reference / Cheque No."}
+                    style={{ width: '100%', padding: '14px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '14px' }}
+                    required
+                  />
+                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#64748b' }}>Provide the confirmation number so Admin can verify your transfer.</p>
+                </div>
                <button 
                   type="submit" 
                   disabled={isSubmitting}

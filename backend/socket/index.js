@@ -1,5 +1,44 @@
 const { activeTrades, symbolsList, saveData, clients } = require('../store');
 const jwt = require('jsonwebtoken');
+const WebSocket = require('ws');
+
+// Set up Live Binance Feed for Crypto Markets
+let binanceWs = null;
+const connectBinance = () => {
+  binanceWs = new WebSocket('wss://stream.binance.com:9443/ws/!ticker@arr');
+  
+  binanceWs.on('message', (data) => {
+    try {
+      const tickers = JSON.parse(data);
+      tickers.forEach(t => {
+        const symbol = t.s; // e.g. BTCUSDT
+        const price = t.c;  // Last price
+        
+        const mappedSymbol = symbolsList.find(sym => 
+          sym.category === 'Crypto' && 
+          symbol.includes(sym.symbol.replace('USD', 'USDT'))
+        );
+        
+        if (mappedSymbol) {
+          mappedSymbol.price = parseFloat(price).toFixed(mappedSymbol.precision);
+        }
+      });
+    } catch(err) {
+      // ignore parse errors
+    }
+  });
+
+  binanceWs.on('close', () => {
+    console.log('Binance WS closed, reconnecting in 5s...');
+    setTimeout(connectBinance, 5000);
+  });
+  
+  binanceWs.on('error', (err) => {
+    console.error('Binance WS Error:', err.message);
+  });
+};
+
+connectBinance();
 
 module.exports = (io) => {
   // Middleware to verify JWT token
@@ -63,17 +102,25 @@ module.exports = (io) => {
     client.accountSummary.swap = totalSwap; // <-- expose for account summary panel
   };
 
-  // Price Ticker Generator
+  // Price Ticker Generator for Non-Crypto Symbols (GBM)
   setInterval(() => {
     symbolsList.forEach(s => {
-      // Different volatility for different categories
-      let volatility = 0.0001; 
-      if (s.category === 'Crypto') volatility = 10;
-      if (s.category === 'Metals') volatility = 0.5;
-      if (s.name === 'US30') volatility = 5;
+      // Crypto is powered purely by Binance Real-Time Live Feed. Do not mutate.
+      if (s.category === 'Crypto') return; 
 
-      const change = (Math.random() - 0.5) * volatility;
-      s.price = (parseFloat(s.price) + change).toFixed(s.precision);
+      // Geometric Brownian Motion (GBM) for Realistic Forex/Metals Modeling
+      const dt = 1 / 86400; 
+      const mu = 0.00005; // Base drift
+      const sigma = s.category === 'Metals' ? 0.02 : 0.005; // Metals more volatile than Forex
+      const currentPrice = parseFloat(s.price);
+
+      // Box-Muller transform for normal distribution
+      const u1 = Math.max(Math.random(), 0.0001);
+      const u2 = Math.max(Math.random(), 0.0001);
+      const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+      
+      const change = currentPrice * (mu * dt + sigma * Math.sqrt(dt) * z0);
+      s.price = (currentPrice + change).toFixed(s.precision);
     });
 
     // Automatically calculate floating PNL for active trades based on new prices
