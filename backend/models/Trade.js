@@ -14,6 +14,7 @@ const TradeSchema = new mongoose.Schema({
   marginUsed: { type: Number, default: 0 },
   swap: { type: Number, default: 0 },
   swapLocked: { type: Boolean, default: false },
+  selectedPrice: { type: Number },
   status: { type: String, enum: ['Open', 'Closed', 'Pending'], default: 'Open' },
   openTime: { type: Date },
   pendingAt: { type: Date },

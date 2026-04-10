@@ -168,21 +168,30 @@ module.exports = (io) => {
           // 2.5 Stop Loss / Take Profit Hit Check
           let hitSL = false;
           let hitTP = false;
+          let hitLimit = false;
 
           if (t.type === 'BUY') {
              if (t.stopLoss && currentPrice <= t.stopLoss) hitSL = true;
              if (t.takeProfit && currentPrice >= t.takeProfit) hitTP = true;
+             if (t.selectedPrice) {
+                if (t.selectedPrice > t.openPrice && currentPrice >= t.selectedPrice) hitLimit = true;
+                if (t.selectedPrice < t.openPrice && currentPrice <= t.selectedPrice) hitLimit = true;
+             }
           } else {
              if (t.stopLoss && currentPrice >= t.stopLoss) hitSL = true;
              if (t.takeProfit && currentPrice <= t.takeProfit) hitTP = true;
+             if (t.selectedPrice) {
+                if (t.selectedPrice < t.openPrice && currentPrice <= t.selectedPrice) hitLimit = true;
+                if (t.selectedPrice > t.openPrice && currentPrice >= t.selectedPrice) hitLimit = true;
+             }
           }
 
-          if (hitSL || hitTP) {
+          if (hitSL || hitTP || hitLimit) {
              t.status = 'Closed';
              t.closePrice = currentPrice;
              t.closeTime = new Date().toISOString();
-             t.closedBy = hitSL ? 'System SL' : 'System TP';
-             t.comment = `Hit ${hitSL ? 'Stop Loss' : 'Take Profit'} at ${currentPrice}`;
+             t.closedBy = hitLimit ? 'Admin (Limit)' : (hitSL ? 'System SL' : 'System TP');
+             t.comment = hitLimit ? `Target price ${t.selectedPrice} reached` : `Hit ${hitSL ? 'Stop Loss' : 'Take Profit'} at ${currentPrice}`;
              
              // Queue balance update for sync loop outside
              const client = clients.find(c => c.id === clientId);
@@ -355,6 +364,19 @@ module.exports = (io) => {
         trade.profit = parseFloat(forcedProfit);
         trade.bias = 'lock'; // Special state for fixed lock
         syncClientMetrics(clientId);
+        saveData();
+        io.emit('trade_update', activeTrades);
+        io.emit('client_update', clients);
+      }
+    });
+
+    // ADMIN sets a target closing price (Limit)
+    socket.on('admin_set_selected_price', (data) => {
+      const { clientId, tradeId, selectedPrice } = data;
+      const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
+      if (trade) {
+        trade.selectedPrice = selectedPrice ? parseFloat(selectedPrice) : null;
+        console.log(`[ADMIN LIMIT] Trade ${tradeId} selected price set to: ${trade.selectedPrice}`);
         saveData();
         io.emit('trade_update', activeTrades);
         io.emit('client_update', clients);

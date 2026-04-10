@@ -39,12 +39,6 @@ const Header = ({ currentUser }) => {
           <NavLink to="/dashboard" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
             Trade
           </NavLink>
-          <NavLink to="/analytics" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
-            Analytics
-          </NavLink>
-          <NavLink to="/explore" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
-            Explore
-          </NavLink>
         </nav>
       </div>
 

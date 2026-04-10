@@ -380,6 +380,25 @@ app.get('/api/trades/:clientId/history', verifyClientToken, async (req, res) => 
     res.json(historical);
 });
 
+app.put('/api/trades/:id', verifyClientToken, (req, res) => {
+  const { clientId, stopLoss, takeProfit } = req.body;
+  const { id } = req.params;
+
+  const trades = activeTrades[clientId];
+  if (!trades) return res.status(404).json({ error: 'Client trades not found' });
+
+  const trade = trades.find(t => t.id === id);
+  if (!trade) return res.status(404).json({ error: 'Trade not found' });
+
+  // Update parameters
+  trade.stopLoss = stopLoss === '' ? null : parseFloat(stopLoss);
+  trade.takeProfit = takeProfit === '' ? null : parseFloat(takeProfit);
+
+  saveData();
+  console.log(`[REAL-TIME ADJ] Trade ${id} updated: SL=${trade.stopLoss}, TP=${trade.takeProfit}`);
+  res.json(trade);
+});
+
 // --- MONITORING & ANALYTICS ---
 app.get('/api/active-traders', verifyAdminToken, (req, res) => {
   const activeClients = [];

@@ -48,6 +48,11 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [adjustData, setAdjustData] = useState({ amount: '', type: 'increase', note: '' });
   const [processing, setProcessing] = useState(false);
 
+  // New Modal states for Limit (Selected Price)
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [modalLimitTrade, setModalLimitTrade] = useState(null);
+  const [modalLimitValue, setModalLimitValue] = useState('');
+
   // The definitive real-time client data comes from the socket
   const client = allClients.find(c => c.id === id) || staticClient;
 
@@ -133,6 +138,26 @@ const ClientDetail = ({ onAdminLogout }) => {
     });
     setShowSwapModal(false);
     setModalSwapTrade(null);
+  };
+
+  const handleEditLimit = (trade) => {
+    setModalLimitTrade(trade);
+    setModalLimitValue(trade.selectedPrice?.toString() || '');
+    setShowLimitModal(true);
+  };
+
+  const submitEditLimit = () => {
+    if (!socket || !socket.connected) {
+      showAlert("Socket not connected!", "Connection Error", "error");
+      return;
+    }
+    socket.emit('admin_set_selected_price', {
+      clientId: id,
+      tradeId: modalLimitTrade.id,
+      selectedPrice: modalLimitValue
+    });
+    setShowLimitModal(false);
+    setModalLimitTrade(null);
   };
 
   const handleUpdateStatus = async (newStatus) => {
@@ -492,12 +517,12 @@ const ClientDetail = ({ onAdminLogout }) => {
               <thead>
                 <tr>
                   <th>Trade ID</th><th>Symbol</th><th>Type</th><th>Lots</th>
-                  <th>Open Price</th><th>Current Price</th><th>Swap</th><th>Profit / Loss</th><th>Closed By</th><th>Status</th><th>Admin Control</th>
+                  <th>Open Price</th><th>Current Price</th><th>Selected Price</th><th>Swap</th><th>Profit / Loss</th><th>Closed By</th><th>Status</th><th>Admin Control</th>
                 </tr>
               </thead>
               <tbody>
                 {trades.length === 0 ? (
-                  <tr><td colSpan="11" style={{textAlign:'center', padding:'20px', color:'#64748b'}}>No active trades found.</td></tr>
+                  <tr><td colSpan="12" style={{textAlign:'center', padding:'20px', color:'#64748b'}}>No active trades found.</td></tr>
                 ) : (
                   trades.map((t) => (
                     <tr className="adm-table-row" key={t.id}>
@@ -507,6 +532,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                       <td className="adm-mono">{t.lots}</td>
                       <td className="adm-mono">{t.openPrice}</td>
                       <td className="adm-mono">{prices.find(p=>p.name===t.symbol)?.price || '...'}</td>
+                      <td className="adm-mono" style={{ color: t.selectedPrice ? '#3291ff' : '#64748b' }}>
+                        {t.selectedPrice ? t.selectedPrice.toFixed(prices.find(p=>p.name===t.symbol)?.precision || 2) : '---'}
+                      </td>
                       <td className="adm-mono" style={{ color: (t.swap || 0) < 0 ? '#ff4d4d' : '#00cc88' }}>
                         {(t.swap || 0).toFixed(2)}
                       </td>
@@ -528,6 +556,7 @@ const ClientDetail = ({ onAdminLogout }) => {
                             <>
                               <button onClick={() => handleEditPL(t)} style={{ background: 'rgba(50,145,255,0.2)', border: 'none', color: '#3291ff', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>EDIT P/L</button>
                               <button onClick={() => handleForceClose(t.id)} style={{ background: 'rgba(239,68,68,0.2)', border: 'none', color: '#ef4444', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>CLOSE</button>
+                              <button onClick={() => handleEditLimit(t)} style={{ background: 'rgba(50,145,255,0.1)', border: '1px solid rgba(50,145,255,0.2)', color: '#3291ff', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>SEL PRICE</button>
                             </>
                           )}
                           <button
@@ -634,6 +663,51 @@ const ClientDetail = ({ onAdminLogout }) => {
           </div>
         )}
       </div>
+
+      {/* Limit / Selected Price Modal */}
+      {showLimitModal && (
+        <div className="cd-modal-overlay">
+          <div className="cd-modal" style={{ maxWidth: '400px' }}>
+            <div className="cd-modal-header">
+              <h3><i className="fa-solid fa-crosshairs" /> Set Limit Price</h3>
+              <button className="cd-modal-close" onClick={() => setShowLimitModal(false)}>
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+            <div className="cd-modal-body">
+              <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '20px', lineHeight: '1.5' }}>
+                Set a target market price. The trade will automatically close when this price is reached. 
+                Leave empty to clear the limit.
+              </p>
+              
+              <div className="adm-input-group">
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  Target Market Price ({modalLimitTrade?.symbol})
+                </label>
+                <input 
+                  type="number" 
+                  step="0.00001"
+                  className="adm-input"
+                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                  value={modalLimitValue}
+                  onChange={(e) => setModalLimitValue(e.target.value)}
+                  placeholder="e.g. 1.09450"
+                  autoFocus
+                />
+              </div>
+            </div>
+            <div className="cd-modal-footer">
+              <button className="cd-modal-btn cancel" onClick={() => setShowLimitModal(false)}>Cancel</button>
+              <button 
+                className="cd-modal-btn confirm" 
+                onClick={submitEditLimit}
+              >
+                Save Target
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         .adm-back-btn {
