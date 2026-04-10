@@ -171,8 +171,17 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const handleUpdateTransactionStatus = async (type, txId, newStatus) => {
     try {
+      let reason = null;
+      if (newStatus === 'rejected') {
+        reason = await showPrompt(`Please enter a reason for rejecting this ${type}:`, `Reject ${type.charAt(0).toUpperCase() + type.slice(1)}`);
+        if (reason === null) return; // Cancelled
+      }
+
       const endpoint = type === 'deposit' ? 'deposits' : 'withdrawals';
-      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/${endpoint}/${txId}/status`, { status: newStatus });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/${endpoint}/${txId}/status`, { 
+        status: newStatus,
+        reason: reason
+      });
       
       // Update local state arrays for immediate UI feedback
       if (type === 'deposit') {
@@ -181,6 +190,8 @@ const ClientDetail = ({ onAdminLogout }) => {
         setWithdrawals(prev => prev.map(w => w.id === txId ? res.data : w));
       }
       
+      showAlert(`${type.charAt(0).toUpperCase() + type.slice(1)} ${newStatus} successfully`, 'Success', 'success');
+
       // If approved, the backend updated the client balance, so we should refresh the static client too
       if (newStatus === 'approved') {
         const clientRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);

@@ -348,13 +348,20 @@ const Finances = () => {
                                 <td style={{ padding: '12px', fontSize: '13px', color: '#94a3b8', textTransform: 'capitalize' }}>{tx.method.replace('_', ' ')}</td>
                                 <td style={{ padding: '12px', fontSize: '12px', color: '#64748b' }}>{tx.date}</td>
                                 <td style={{ padding: '12px' }}>
-                                   <span style={{ 
-                                      padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 800,
-                                      background: tx.status === 'approved' ? 'rgba(0,204,136,0.1)' : tx.status === 'pending' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)',
-                                      color: tx.status === 'approved' ? '#00cc88' : tx.status === 'pending' ? '#f59e0b' : '#ef4444'
-                                   }}>
-                                      {tx.status}
-                                   </span>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                       <span style={{ 
+                                          padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, width: 'fit-content',
+                                          background: tx.status === 'approved' ? 'rgba(0,204,136,0.1)' : tx.status === 'pending' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)',
+                                          color: tx.status === 'approved' ? '#00cc88' : tx.status === 'pending' ? '#f59e0b' : '#ef4444'
+                                       }}>
+                                          {tx.status}
+                                       </span>
+                                       {tx.status === 'rejected' && tx.reason && (
+                                          <span style={{ fontSize: '10px', color: '#ff4d4d', fontStyle: 'italic' }}>
+                                             Note: {tx.reason}
+                                          </span>
+                                       )}
+                                    </div>
                                 </td>
                              </tr>
                            ))

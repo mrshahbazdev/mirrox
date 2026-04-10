@@ -327,6 +327,7 @@ app.post('/api/deposits', verifyClientToken, (req, res) => {
 app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
   const dep = deposits.find(d => d.id === req.params.id);
   if (!dep) return res.status(404).json({ error: 'Not found' });
+  
   if (req.body.status === 'approved' && dep.status !== 'approved') {
      const client = clients.find(c => c.id === dep.clientId);
      if (client) {
@@ -334,7 +335,11 @@ app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
        client.tradingMetrics.balance += parseFloat(dep.amount);
      }
   }
+
   dep.status = req.body.status;
+  dep.processedBy = req.user.name || req.user.email;
+  dep.reason = req.body.reason || null;
+  
   saveData();
   io.emit('finance_update');
   res.json(dep);
@@ -355,11 +360,17 @@ app.post('/api/withdrawals', verifyClientToken, async (req, res) => {
 
 app.put('/api/withdrawals/:id/status', verifyAdminToken, (req, res) => {
   const wit = withdrawals.find(w => w.id === req.params.id);
+  if (!wit) return res.status(404).json({ error: 'Not found' });
+
   if (req.body.status === 'rejected' && wit.status !== 'rejected') {
      const client = clients.find(c => c.id === wit.clientId);
      if (client) client.tradingMetrics.balance += parseFloat(wit.amount);
   }
+
   wit.status = req.body.status;
+  wit.processedBy = req.user.name || req.user.email;
+  wit.reason = req.body.reason || null;
+
   saveData();
   io.emit('finance_update');
   res.json(wit);
