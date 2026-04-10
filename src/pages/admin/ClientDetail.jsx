@@ -357,6 +357,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                   <button className="adm-act-btn edit" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => setShowBalanceModal(true)}>
                     <i className="fa-solid fa-pen-to-square" /> Edit Balance
                   </button>
+                  <button className="adm-act-btn pin" style={{ background: 'rgba(168,85,247,0.1)', color: '#a855f7', borderColor: 'rgba(168,85,247,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleResetPin}>
+                    <i className="fa-solid fa-key" /> Reset PIN
+                  </button>
                 </div>
               </div>
             </div>
@@ -386,9 +389,6 @@ const ClientDetail = ({ onAdminLogout }) => {
             {client.status !== 'suspended' && (
               <button className="cd-act-btn danger" onClick={() => handleUpdateStatus('suspended')}><i className="fa-solid fa-ban" /> Suspend</button>
             )}
-            <button className="cd-act-btn outline" onClick={handleResetPin} style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>
-               <i className="fa-solid fa-key" /> Reset PIN
-            </button>
           </div>
         </div>
       </div>
