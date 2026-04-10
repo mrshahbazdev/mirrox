@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 const Sidebar = ({ currentUser, onLogout }) => {
   const navItems = [
     { icon: 'fa-solid fa-chart-line', path: '/app/dashboard', label: 'Trading Accounts' },
+    { icon: 'fa-solid fa-chart-pie', path: '/app/analytics', label: 'Analytics' },
+    { icon: 'fa-solid fa-compass', path: '/app/explore', label: 'Explore Markets' },
     { icon: 'fa-solid fa-wallet', path: '/app/finances', label: 'Finances' },
     { icon: 'fa-solid fa-file-lines', path: '/app/documents', label: 'Documents' },
     { icon: 'fa-solid fa-handshake', path: '/app/affiliate', label: 'Affiliate Program' },

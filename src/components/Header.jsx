@@ -48,6 +48,12 @@ const Header = ({ currentUser }) => {
           <NavLink to="/dashboard" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
             Trade
           </NavLink>
+          <NavLink to="/app/analytics" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
+            Analytics
+          </NavLink>
+          <NavLink to="/app/explore" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
+            Explore
+          </NavLink>
         </nav>
       </div>
 
@@ -84,11 +90,9 @@ const Header = ({ currentUser }) => {
           </div>
         </div>
 
-        <div className="divider-v"></div>
+
 
         <div className="header-tools">
-          <i className="fa-solid fa-cloud" title="Connection status"></i>
-          
           <div style={{ position: 'relative' }}>
              <div onClick={() => setShowNotifs(!showNotifs)} style={{ cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}>
                 <i className="fa-solid fa-bell" title="Notifications"></i>
@@ -128,7 +132,6 @@ const Header = ({ currentUser }) => {
           <div className="avatar">
             {realTimeClient?.name ? realTimeClient.name.charAt(0).toUpperCase() : <i className="fa-solid fa-user" style={{ fontSize: '14px', color: 'var(--text-dim)' }}></i>}
           </div>
-          <i className="fa-solid fa-bars" style={{ color: 'var(--text-muted)' }}></i>
         </div>
       </div>
 
