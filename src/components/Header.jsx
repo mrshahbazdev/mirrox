@@ -169,6 +169,29 @@ const Header = ({ currentUser }) => {
         
         .notif-content { flex: 1; }
         .unread-dot { width: 8px; height: 8px; background: #3291ff; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 8px #3291ff; }
+
+        @media (max-width: 900px) {
+           .header-center { display: none; }
+        }
+
+        @media (max-width: 768px) {
+           .header-stats { gap: 8px; }
+           .stat-pill { min-width: auto; }
+           .mirrox-logo { display: none; }
+        }
+
+        @media (max-width: 600px) {
+           .header { padding: 0 12px; height: 60px; }
+           .pill-label { display: none; }
+           .pill-value { font-size: 11px; }
+           .account-selector span:last-of-type { display: none; }
+           .account-selector { padding: 6px 10px; gap: 4px; }
+        }
+
+        @media (max-width: 480px) {
+           .free-margin-pill, .margin-level-pill { display: none; }
+           .header-stats { gap: 12px; }
+        }
       `}</style>
     </header>
   );
