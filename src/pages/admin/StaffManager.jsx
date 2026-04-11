@@ -10,10 +10,19 @@ const StaffManager = ({ onAdminLogout }) => {
   const [activeTab, setActiveTab] = useState('list'); // list, logs, system
   const [maintenance, setMaintenance] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState('');
-  const [selectedAdmin, setSelectedAdmin] = useState(null); // For session/IP viewing
-  const [newIp, setNewIp] = useState('');
+  const API = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem('mirrox_admin_token');
+  const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+  const socket = window.socket; 
 
-  const socket = window.socket; // Handle socket globally or locally
+  const [newAdmin, setNewAdmin] = useState({
+    name: '', email: '', password: '', role: 'admin', team: 'General',
+    permissions: { manageClients: true, manageFinance: true, manageTrading: true, manageSupport: true, manageSettings: false, manageStaff: false }
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -65,13 +74,34 @@ const StaffManager = ({ onAdminLogout }) => {
     } catch (err) { alert('Failed to update whitelist'); }
   };
 
-  const removeIp = async (adminId, ip) => {
-    const admin = admins.find(a => a._id === adminId);
-    const ips = admin.allowedIPs.filter(i => i !== ip);
+  const handleCreate = async (e) => {
+    e.preventDefault();
     try {
-      await axios.put(`${API}/api/admins/${adminId}/allowed-ips`, { ips }, authHeader);
+      await axios.post(`${API}/api/admins`, newAdmin, authHeader);
+      setShowAddModal(false);
+      setNewAdmin({
+        name: '', email: '', password: '', role: 'admin', team: 'General',
+        permissions: { manageClients: true, manageFinance: true, manageTrading: true, manageSupport: true, manageSettings: false, manageStaff: false }
+      });
       fetchData();
-    } catch (err) { alert('Failed to update whitelist'); }
+    } catch (err) { alert(err.response?.data?.error || 'Failed to create admin'); }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure? This will PERMANENTLY revoke all access for this official.')) return;
+    try {
+      await axios.delete(`${API}/api/admins/${id}`, authHeader);
+      fetchData();
+    } catch (err) { alert('Failed to delete admin'); }
+  };
+
+  const togglePermission = async (adminId, key, currentVal) => {
+    const admin = admins.find(a => a._id === adminId);
+    const newPerms = { ...admin.permissions, [key]: !currentVal };
+    try {
+      await axios.put(`${API}/api/admins/${adminId}/permissions`, newPerms, authHeader);
+      fetchData();
+    } catch (err) { alert('Failed to update permissions'); }
   };
 
   if (loading) return <AdminLayout onAdminLogout={onAdminLogout}><div className="adm-loader">Accessing Command Center...</div></AdminLayout>;

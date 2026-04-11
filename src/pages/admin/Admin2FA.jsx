@@ -17,13 +17,33 @@ const Admin2FA = ({ onAdminLogout }) => {
   useEffect(() => {
     const fetchAdminStatus = async () => {
         try {
-            const res = await axios.get(`${API}/api/admins`, authHeader);
-            // Find current admin profile (assuming token and email etc)
-            // For now just allow setup always
-        } catch(err) {}
+            const res = await axios.get(`${API}/api/admins/me`, authHeader);
+            setConfig(res.data);
+            if (res.data.twoFactorEnabled) {
+                setSuccess(true);
+            }
+        } catch(err) {
+            console.error('Failed to fetch admin security status', err);
+        }
     };
     fetchAdminStatus();
   }, []);
+
+  const handleDisable = async () => {
+    if (!window.confirm('WARNING: Disabling 2FA will lower your account security. Proceed?')) return;
+    setLoading(true);
+    try {
+        await axios.post(`${API}/api/admins/2fa/disable`, {}, authHeader);
+        setSuccess(false);
+        setSetupData(null);
+        setConfig({ ...config, twoFactorEnabled: false });
+        alert('2FA has been disabled.');
+    } catch (err) {
+        alert('Failed to disable 2FA');
+    } finally {
+        setLoading(false);
+    }
+  };
 
   const startSetup = async () => {
     setLoading(true);
@@ -79,9 +99,12 @@ const Admin2FA = ({ onAdminLogout }) => {
         ) : success ? (
           <div className="setup-success">
              <i className="fa-solid fa-circle-check" />
-             <h3>2FA Is Now Active!</h3>
-             <p>Your account is now secured with two-factor authentication. Please do not delete the Mirrox account from your authenticator app.</p>
-             <button className="setup-start-btn" onClick={() => window.location.reload()}>Finish Setup</button>
+             <h3>Sovereign Protection Active</h3>
+             <p>Your admin account is currently secured with two-factor authentication. You will be prompted for a 6-digit code during every login attempt from an unauthorized device.</p>
+             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button className="setup-start-btn" style={{ background: '#1a2230' }} onClick={() => window.location.reload()}>Refresh Status</button>
+                <button className="setup-start-btn" style={{ background: '#ef4444' }} onClick={handleDisable}>Disable 2FA</button>
+             </div>
           </div>
         ) : (
           <div className="setup-wizard">
