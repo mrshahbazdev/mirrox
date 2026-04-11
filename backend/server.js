@@ -643,6 +643,7 @@ app.put('/api/support/tickets/:ticketId/read-admin', verifyAdminToken, async (re
       { unreadByAdmin: 0, 'messages.$[elem].read': true },
       { arrayFilters: [{ 'elem.senderRole': 'user' }] }
     );
+    io.to(`ticket:${req.params.ticketId}`).emit('chat:messages_read', { ticketId: req.params.ticketId, readBy: 'admin' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to mark read' });
@@ -654,8 +655,10 @@ app.put('/api/support/tickets/:ticketId/read-client', verifyClientToken, async (
   try {
     await SupportTicket.updateOne(
       { id: req.params.ticketId },
-      { unreadByClient: 0 }
+      { unreadByClient: 0, 'messages.$[elem].read': true },
+      { arrayFilters: [{ 'elem.senderRole': 'admin' }] }
     );
+    io.to(`ticket:${req.params.ticketId}`).emit('chat:messages_read', { ticketId: req.params.ticketId, readBy: 'user' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to mark read' });

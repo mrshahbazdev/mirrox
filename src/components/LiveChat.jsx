@@ -47,6 +47,32 @@ export default function LiveChat({ currentUser }) {
 
   useEffect(() => { isOpenRef.current = isOpen; }, [isOpen]);
 
+  const playDing = useCallback(() => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } catch(e){}
+  }, []);
+
+  useEffect(() => {
+    if (unreadCount > 0) {
+      const orig = document.title;
+      const interval = setInterval(() => {
+        document.title = document.title === orig ? `💬 (${unreadCount}) Message` : orig;
+      }, 1500);
+      return () => { clearInterval(interval); document.title = orig; };
+    }
+  }, [unreadCount]);
+
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
@@ -101,6 +127,10 @@ export default function LiveChat({ currentUser }) {
         setMessages(prev => [...prev, data.message]);
         if (!isOpenRef.current) {
           setUnreadCount(c => c + 1);
+          playDing();
+        } else {
+          // If open, notify admin that we read it immediately
+          axios.put(`${API}/api/support/tickets/${ticket.id}/read-client`).catch(() => {});
         }
       }
     };
@@ -113,12 +143,18 @@ export default function LiveChat({ currentUser }) {
     const onClosed = () => setChatStatus('closed');
     const onReopened = () => setChatStatus('open');
     const onBlocked = () => setChatStatus('blocked');
+    const onRead = ({ readBy }) => {
+      if (readBy === 'admin') {
+        setMessages(prev => prev.map(m => m.senderRole === 'user' ? { ...m, read: true } : m));
+      }
+    };
 
     socket.on('chat:message', onMessage);
     socket.on('chat:typing', onTyping);
     socket.on('chat:ticket_closed', onClosed);
     socket.on('chat:ticket_reopened', onReopened);
     socket.on('chat:ticket_blocked', onBlocked);
+    socket.on('chat:messages_read', onRead);
 
     return () => {
       socket.off('chat:message', onMessage);
@@ -126,8 +162,9 @@ export default function LiveChat({ currentUser }) {
       socket.off('chat:ticket_closed', onClosed);
       socket.off('chat:ticket_reopened', onReopened);
       socket.off('chat:ticket_blocked', onBlocked);
+      socket.off('chat:messages_read', onRead);
     };
-  }, [socket, ticket]);
+  }, [socket, ticket, playDing]);
 
   // Mark read when opened
   useEffect(() => {
@@ -251,6 +288,18 @@ export default function LiveChat({ currentUser }) {
   const supportName = systemConfig.support_name || 'Mirrox Support';
   const supportIcon = systemConfig.support_icon || 'fa-solid fa-headset';
 
+  const downloadTranscript = () => {
+    if (!messages.length) return;
+    const text = messages.map(m => `[${formatTime(m.timestamp)}] ${m.senderRole === 'user' ? 'You' : supportName}: ${m.text}`).join('\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Support_Chat_${ticket?.id || 'Transcript'}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       {/* Floating Bubble */}
@@ -293,7 +342,10 @@ export default function LiveChat({ currentUser }) {
             </div>
           </div>
           <div className="chat-header-actions">
-            {ticket && <span className="chat-ticket-id">{ticket.id}</span>}
+            {ticket && <span className="chat-ticket-id" style={{ marginRight: '8px' }}>{ticket.id}</span>}
+            <button className="chat-minimize-btn" title="Download Chat History" onClick={downloadTranscript}>
+              <i className="fa-solid fa-download" />
+            </button>
             <button className="chat-minimize-btn" onClick={() => setIsOpen(false)}>
               <i className="fa-solid fa-chevron-down" />
             </button>

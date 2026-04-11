@@ -145,6 +145,14 @@ export default function SupportChat({ onAdminLogout }) {
       setSelectedTicket(prev => prev?.id === ticketId ? { ...prev, status: 'blocked' } : prev);
     });
 
+    s.on('chat:messages_read', ({ ticketId, readBy }) => {
+      if (readBy === 'user') {
+        if (selectedTicketRef.current?.id === ticketId) {
+          setMessages(prev => prev.map(m => m.senderRole === 'admin' ? { ...m, read: true } : m));
+        }
+      }
+    });
+
     // Online visitors
     s.on('visitors:update', (visitors) => {
       setOnlineVisitors(visitors);
