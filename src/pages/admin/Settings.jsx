@@ -159,6 +159,33 @@ const Settings = ({ onAdminLogout }) => {
             </div>
           </div>
 
+          <div className="settings-section">
+            <h3 className="section-title"><i className="fa-solid fa-headset" /> Support Chat Customization</h3>
+            <div className="setting-grid">
+              <div className="setting-card">
+                <label className="setting-label">Support Display Name</label>
+                <input 
+                  type="text" 
+                  className="setting-input"
+                  value={configs.support_name || ''} 
+                  onChange={(e) => handleChange('support_name', e.target.value)}
+                  placeholder="Mirrox Support"
+                />
+              </div>
+              <div className="setting-card">
+                <label className="setting-label">Support Icon (FontAwesome)</label>
+                <input 
+                  type="text" 
+                  className="setting-input"
+                  value={configs.support_icon || ''} 
+                  onChange={(e) => handleChange('support_icon', e.target.value)}
+                  placeholder="fa-solid fa-headset"
+                />
+                <p className="setting-help">Example: fa-solid fa-headset, fa-solid fa-robot</p>
+              </div>
+            </div>
+          </div>
+
           <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'flex-end' }}>
              <button type="submit" className="save-settings-btn" disabled={saving}>
                 {saving ? (

@@ -15,8 +15,13 @@ const Header = ({ currentUser }) => {
   const freeMargin = realTimeClient?.tradingMetrics?.freeMargin || 0;
   const marginLevel = realTimeClient?.tradingMetrics?.marginLevel || 0;
 
-  const notifications = realTimeClient?.notifications || [];
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const [localNotifications, setLocalNotifications] = useState([]);
+
+  useEffect(() => {
+    setLocalNotifications(realTimeClient?.notifications || []);
+  }, [realTimeClient?.notifications]);
+
+  const unreadCount = localNotifications.filter(n => !n.read).length;
 
   const getMarginLevelColor = (level) => {
     if (level === 0) return '#94a3b8';
@@ -28,7 +33,7 @@ const Header = ({ currentUser }) => {
   const markAsRead = async (notifId) => {
      try {
         await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${realTimeClient.id}/notifications/${notifId}/read`);
-        // The contextual auto-fetch or socket update will clear it shortly.
+        setLocalNotifications(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
      } catch (err) {
         console.error('Failed to mark notification as read', err);
      }
@@ -106,12 +111,12 @@ const Header = ({ currentUser }) => {
                      <button onClick={() => setShowNotifs(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}><i className="fa-solid fa-xmark"></i></button>
                   </div>
                   <div className="notif-body">
-                     {notifications.length === 0 ? (
+                     {localNotifications.length === 0 ? (
                         <div style={{ padding: '24px', textAlign: 'center', color: '#64748b', fontSize: '12px' }}>
                            No new notifications
                         </div>
                      ) : (
-                        [...notifications].reverse().map(n => (
+                        [...localNotifications].reverse().map(n => (
                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`} onClick={() => !n.read && markAsRead(n.id)}>
                               <div className={`notif-icon ${n.type}`}><i className={n.type === 'success' ? 'fa-solid fa-check' : n.type === 'alert' ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-info'}></i></div>
                               <div className="notif-content">

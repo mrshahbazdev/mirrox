@@ -582,6 +582,18 @@ module.exports = (io) => {
       }
     });
 
+    // Admin blocks a ticket
+    socket.on('chat:block_ticket', async ({ ticketId }) => {
+      try {
+        await SupportTicket.findOneAndUpdate({ id: ticketId }, { status: 'blocked' });
+        io.to(`ticket:${ticketId}`).emit('chat:ticket_blocked', { ticketId });
+        io.emit('chat:ticket_update', { ticketId, status: 'blocked' });
+        console.log(`[CHAT] Ticket ${ticketId} blocked by admin.`);
+      } catch (err) {
+        console.error('[CHAT] Block ticket error:', err.message);
+      }
+    });
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
       // Auto-remove from online visitors on disconnect

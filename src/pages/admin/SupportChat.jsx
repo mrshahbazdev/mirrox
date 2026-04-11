@@ -136,6 +136,11 @@ export default function SupportChat({ onAdminLogout }) {
       setSelectedTicket(prev => prev?.id === ticketId ? { ...prev, status: 'open' } : prev);
     });
 
+    s.on('chat:ticket_blocked', ({ ticketId }) => {
+      setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: 'blocked' } : t));
+      setSelectedTicket(prev => prev?.id === ticketId ? { ...prev, status: 'blocked' } : prev);
+    });
+
     // Online visitors
     s.on('visitors:update', (visitors) => {
       setOnlineVisitors(visitors);
@@ -234,6 +239,15 @@ export default function SupportChat({ onAdminLogout }) {
     if (socket) socket.emit('chat:reopen_ticket', { ticketId: selectedTicket.id });
     setSelectedTicket(prev => ({ ...prev, status: 'open' }));
     setTickets(prev => prev.map(t => t.id === selectedTicket.id ? { ...t, status: 'open' } : t));
+  };
+
+  const blockTicket = () => {
+    if (!selectedTicket) return;
+    if (window.confirm("Are you sure you want to block this user from support chat?")) {
+      if (socket) socket.emit('chat:block_ticket', { ticketId: selectedTicket.id });
+      setSelectedTicket(prev => ({ ...prev, status: 'blocked' }));
+      setTickets(prev => prev.map(t => t.id === selectedTicket.id ? { ...t, status: 'blocked' } : t));
+    }
   };
 
   const filteredTickets = tickets.filter(t => {
@@ -394,15 +408,20 @@ export default function SupportChat({ onAdminLogout }) {
               <div className="support-convo-actions">
                 <span className={`convo-status-badge ${selectedTicket.status}`}>
                   <span className={`ticket-status-dot ${selectedTicket.status}`} />
-                  {selectedTicket.status === 'open' ? 'Open' : 'Closed'}
+                  {selectedTicket.status === 'open' ? 'Open' : selectedTicket.status === 'blocked' ? 'Blocked' : 'Closed'}
                 </span>
                 {selectedTicket.status === 'open' ? (
-                  <button className="btn-close-ticket" onClick={closeTicket}>
-                    <i className="fa-solid fa-circle-xmark" /> Close Chat
-                  </button>
+                  <>
+                    <button className="btn-close-ticket" onClick={closeTicket}>
+                      <i className="fa-solid fa-circle-xmark" /> Close
+                    </button>
+                    <button className="btn-close-ticket" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }} onClick={blockTicket}>
+                      <i className="fa-solid fa-ban" /> Block User
+                    </button>
+                  </>
                 ) : (
                   <button className="btn-reopen-ticket" onClick={reopenTicket}>
-                    <i className="fa-solid fa-rotate-left" /> Reopen
+                    <i className="fa-solid fa-rotate-left" /> Unblock & Reopen
                   </button>
                 )}
               </div>
@@ -526,7 +545,11 @@ export default function SupportChat({ onAdminLogout }) {
               </div>
             ) : (
               <div className="support-closed-input-placeholder">
-                <i className="fa-solid fa-lock" /> This ticket is closed.
+                {selectedTicket.status === 'blocked' ? (
+                  <><i className="fa-solid fa-ban" style={{ color: '#ef4444' }} /> User is blocked from chat.</>
+                ) : (
+                  <><i className="fa-solid fa-lock" /> This ticket is closed.</>
+                )}
                 <button className="btn-reopen-ticket inline" onClick={reopenTicket}>Reopen to Reply</button>
               </div>
             )}

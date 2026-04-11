@@ -39,6 +39,7 @@ export default function LiveChat({ currentUser }) {
   const [showEmoji, setShowEmoji] = useState(false);
   const [chatStatus, setChatStatus] = useState('open');
   const [connecting, setConnecting] = useState(false);
+  const [systemConfig, setSystemConfig] = useState({});
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -51,6 +52,10 @@ export default function LiveChat({ currentUser }) {
   }, []);
 
   useEffect(() => { scrollToBottom(); }, [messages, adminTyping]);
+
+  useEffect(() => {
+    axios.get(`${API}/api/config`).then(r => setSystemConfig(r.data)).catch(() => {});
+  }, []);
 
   // Load existing ticket on mount
   useEffect(() => {
@@ -107,17 +112,20 @@ export default function LiveChat({ currentUser }) {
 
     const onClosed = () => setChatStatus('closed');
     const onReopened = () => setChatStatus('open');
+    const onBlocked = () => setChatStatus('blocked');
 
     socket.on('chat:message', onMessage);
     socket.on('chat:typing', onTyping);
     socket.on('chat:ticket_closed', onClosed);
     socket.on('chat:ticket_reopened', onReopened);
+    socket.on('chat:ticket_blocked', onBlocked);
 
     return () => {
       socket.off('chat:message', onMessage);
       socket.off('chat:typing', onTyping);
       socket.off('chat:ticket_closed', onClosed);
       socket.off('chat:ticket_reopened', onReopened);
+      socket.off('chat:ticket_blocked', onBlocked);
     };
   }, [socket, ticket]);
 
@@ -150,7 +158,7 @@ export default function LiveChat({ currentUser }) {
 
   const sendMessage = (text) => {
     const msg = text || input.trim();
-    if (!msg || !ticket || chatStatus === 'closed') return;
+    if (!msg || !ticket || chatStatus === 'closed' || chatStatus === 'blocked') return;
     setInput('');
     setShowEmoji(false);
 
@@ -189,6 +197,21 @@ export default function LiveChat({ currentUser }) {
     }
   };
 
+  const addEmoji = (emoji) => {
+    const val = input + emoji;
+    setInput(val);
+    if (socket && ticket) {
+      socket.emit('chat:typing_text', { ticketId: ticket.id, text: val });
+      socket.emit('chat:typing', { ticketId: ticket.id, isTyping: true });
+      clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = setTimeout(() => {
+        socket.emit('chat:typing', { ticketId: ticket.id, isTyping: false });
+        socket.emit('chat:typing_text', { ticketId: ticket.id, text: '' });
+      }, 3000);
+    }
+    inputRef.current?.focus();
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -202,6 +225,9 @@ export default function LiveChat({ currentUser }) {
     groups[date].push(msg);
     return groups;
   }, {});
+
+  const supportName = systemConfig.support_name || 'Mirrox Support';
+  const supportIcon = systemConfig.support_icon || 'fa-solid fa-headset';
 
   return (
     <>
@@ -225,15 +251,17 @@ export default function LiveChat({ currentUser }) {
           <div className="chat-header-info">
             <div className="chat-avatar-wrap">
               <div className="chat-avatar support-avatar">
-                <i className="fa-solid fa-headset" />
+                <i className={supportIcon} />
               </div>
               <span className="chat-online-dot" />
             </div>
             <div>
-              <div className="chat-header-name">Mirrox Support</div>
+              <div className="chat-header-name">{supportName}</div>
               <div className="chat-header-sub">
                 {chatStatus === 'closed' ? (
                   <span style={{ color: '#ff4d4d' }}>Chat Closed</span>
+                ) : chatStatus === 'blocked' ? (
+                  <span style={{ color: '#ff4d4d' }}>Chat Blocked</span>
                 ) : adminTyping ? (
                   <span style={{ color: 'var(--success)' }}>Typing...</span>
                 ) : (
@@ -262,9 +290,9 @@ export default function LiveChat({ currentUser }) {
           {!connecting && messages.length === 0 && (
             <div className="chat-welcome">
               <div className="chat-welcome-icon">
-                <i className="fa-solid fa-headset" />
+                <i className={supportIcon} />
               </div>
-              <h4>Welcome to Mirrox Support</h4>
+              <h4>Welcome to {supportName}</h4>
               <p>Our team is ready to help you. Ask us anything!</p>
               <div className="quick-replies">
                 {QUICK_REPLIES.map((qr, i) => (
@@ -285,7 +313,7 @@ export default function LiveChat({ currentUser }) {
                   <div key={i} className={`chat-msg-row ${isUser ? 'user' : 'admin'}`}>
                     {!isUser && (
                       <div className="chat-msg-avatar">
-                        <i className="fa-solid fa-headset" />
+                        <i className={supportIcon} />
                       </div>
                     )}
                     <div className="chat-msg-bubble-wrap">
@@ -310,7 +338,7 @@ export default function LiveChat({ currentUser }) {
           {adminTyping && (
             <div className="chat-msg-row admin">
               <div className="chat-msg-avatar">
-                <i className="fa-solid fa-headset" />
+                <i className={supportIcon} />
               </div>
               <div className="chat-typing-indicator">
                 <span /><span /><span />
@@ -327,6 +355,11 @@ export default function LiveChat({ currentUser }) {
             <i className="fa-solid fa-lock" /> This chat has been closed by support.
           </div>
         )}
+        {chatStatus === 'blocked' && (
+          <div className="chat-closed-banner" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+            <i className="fa-solid fa-ban" /> You have been blocked from support chat.
+          </div>
+        )}
 
         {/* Input Area */}
         {chatStatus === 'open' && (
@@ -334,15 +367,15 @@ export default function LiveChat({ currentUser }) {
             {showEmoji && (
               <div className="chat-emoji-picker">
                 {EMOJIS.map(emoji => (
-                  <button key={emoji} className="chat-emoji-btn"
-                    onClick={() => setInput(prev => prev + emoji)}>
+                  <button key={emoji} type="button" className="chat-emoji-btn"
+                    onClick={() => addEmoji(emoji)}>
                     {emoji}
                   </button>
                 ))}
               </div>
             )}
             <div className="chat-input-row">
-              <button className="chat-tool-btn" onClick={() => setShowEmoji(s => !s)}>
+              <button type="button" className="chat-tool-btn" onClick={() => setShowEmoji(s => !s)}>
                 <i className="fa-regular fa-face-smile" />
               </button>
               <textarea
