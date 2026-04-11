@@ -303,7 +303,7 @@ module.exports = (io) => {
     socket.on('open_trade', (data) => {
       const { symbol, volume, type, pendingPrice, stopLoss, takeProfit } = data;
       const clientId = socket.decoded.id; // Enforce ID from Token
-      const symData = symbolsList.find(s => s.name === symbol);
+      const symData = symbolsList.find(s => s.symbol === symbol);
       const client = clients.find(c => c.id === clientId);
       
       if (!symData || !client) return;
