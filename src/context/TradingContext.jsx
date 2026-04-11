@@ -91,7 +91,7 @@ export const TradingProvider = ({ children }) => {
     
     s.on('trade_killed', (data) => {
       console.log('Trade closed by system/admin:', data.tradeId, 'Reason:', data.reason);
-      showAlert(`Position ${data.tradeId} closed: ${data.reason}`, 'Position Closed', 'info');
+      // showAlert(`Position ${data.tradeId} closed: ${data.reason}`, 'Position Closed', 'info');
     });
 
     s.on('margin_call', (data) => {

@@ -131,7 +131,6 @@ const PositionTabs = () => {
               {(activeTab === 'open' || activeTab === 'closed') && <th>Close Price</th>}
               {activeTab !== 'pending' && <th>Profit / Loss</th>}
               {activeTab !== 'pending' && <th>Swap</th>}
-              {activeTab === 'closed' && <th>Comment</th>}
               {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
             </tr>
           </thead>
@@ -189,12 +188,6 @@ const PositionTabs = () => {
                        </>
                     )}
 
-                    {activeTab === 'closed' && (
-                       <td style={{ fontSize: '11px', color: '#94a3b8 italic' }}>
-                          {trade.closedBy ? `by ${trade.closedBy}` : '---'}
-                          {trade.comment && <div style={{ fontSize: '9px', opacity: 0.7 }}>{trade.comment}</div>}
-                       </td>
-                    )}
 
                     {activeTab !== 'closed' && (
                       <td style={{ textAlign: 'right' }}>
