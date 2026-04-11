@@ -1445,11 +1445,23 @@ body {
   color: #fff;
   border-bottom-right-radius: 4px;
 }
-.chat-msg-bubble.admin {
-  background: var(--bg-card-alt);
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  border-bottom-left-radius: 4px;
+.chat-msg-bubble.admin { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+
+.chat-msg-bubble img,
+.support-msg-bubble-wrap img {
+  max-width: 300px;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+  display: block;
+  cursor: zoom-in;
+  transition: transform 0.2s;
+}
+.chat-msg-bubble img:hover,
+.support-msg-bubble-wrap img:hover {
+  transform: scale(1.02);
 }
 
 .chat-msg-meta {

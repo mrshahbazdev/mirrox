@@ -4,7 +4,8 @@ const MessageSchema = new mongoose.Schema({
   senderId:   { type: String, required: true },
   senderRole: { type: String, enum: ['user', 'admin'], required: true },
   senderName: { type: String },
-  text:       { type: String, required: true },
+  text:       { type: String, required: false },
+  attachment: { type: String },
   timestamp:  { type: Date, default: Date.now },
   read:       { type: Boolean, default: false }
 });

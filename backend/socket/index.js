@@ -487,8 +487,8 @@ module.exports = (io) => {
     });
 
     // Send a chat message
-    socket.on('chat:message', async ({ ticketId, text }) => {
-      if (!ticketId || !text?.trim()) return;
+    socket.on('chat:message', async ({ ticketId, text, attachment }) => {
+      if (!ticketId || (!text?.trim() && !attachment)) return;
 
       try {
         const role = socket.decoded.role;
@@ -505,7 +505,8 @@ module.exports = (io) => {
           senderId,
           senderRole: role,
           senderName,
-          text: text.trim(),
+          text: (text || '').trim(),
+          attachment: attachment || null,
           timestamp: new Date(),
           read: false
         };
