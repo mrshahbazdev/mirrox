@@ -132,7 +132,9 @@ export default function LiveChat({ currentUser }) {
           playDing();
         } else {
           // If open, notify admin that we read it immediately
-          axios.put(`${API}/api/support/tickets/${ticket.id}/read-client`).catch(() => {});
+          const token = localStorage.getItem('mirrox_token');
+          const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
+          axios.put(`${API}/api/support/tickets/${ticket.id}/read-client`, {}, clientHeader).catch(() => {});
         }
       }
     };
@@ -264,15 +266,21 @@ export default function LiveChat({ currentUser }) {
 
   const submitRating = async (stars) => {
     try {
-      const res = await axios.put(`${API}/api/support/tickets/${ticket.id}/rate`, { rating: stars }, authHeader);
+      const token = localStorage.getItem('mirrox_token');
+      const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await axios.put(`${API}/api/support/tickets/${ticket.id}/rate`, { rating: stars }, clientHeader);
       setTicket(res.data);
-    } catch (e) { }
+    } catch (e) {
+       console.error('Failed to submit rating', e);
+    }
   };
 
   const selectCategory = async (cat) => {
     if (!ticket) return;
     try {
-      await axios.put(`${API}/api/support/tickets/${ticket.id}/category`, { category: cat });
+      const token = localStorage.getItem('mirrox_token');
+      const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.put(`${API}/api/support/tickets/${ticket.id}/category`, { category: cat }, clientHeader);
       setTicket(prev => ({ ...prev, category: cat }));
       sendMessage(`I need help with: ${cat}`);
     } catch (e) {}
