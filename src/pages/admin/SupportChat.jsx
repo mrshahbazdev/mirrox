@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import EmojiPicker, { Theme } from 'emoji-picker-react';
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -61,6 +62,7 @@ export default function SupportChat({ onAdminLogout }) {
   const [showVisitors, setShowVisitors] = useState(false);
   const [newMsgTicketIds, setNewMsgTicketIds] = useState(new Set()); // for sidebar notification
   const [showBlockModal, setShowBlockModal] = useState(false);
+  const [showEmoji, setShowEmoji] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -255,6 +257,11 @@ export default function SupportChat({ onAdminLogout }) {
         socket.emit('chat:typing', { ticketId: selectedTicket.id, isTyping: false });
       }, 1500);
     }
+  };
+
+  const onAdminEmojiClick = (emojiData) => {
+    setInput(prev => prev + emojiData.emoji);
+    inputRef.current?.focus();
   };
 
   const handleKeyDown = (e) => {
@@ -602,11 +609,29 @@ export default function SupportChat({ onAdminLogout }) {
                   </button>
                   <button
                     className="chat-tool-btn"
+                    onClick={() => setShowEmoji(!showEmoji)}
+                    title="Emojis"
+                  >
+                    <i className="fa-regular fa-face-smile" />
+                  </button>
+                  <button
+                    className="chat-tool-btn"
                     onClick={() => setShowQuickReplies(s => !s)}
                     title="Quick Responses"
                   >
                     <i className="fa-solid fa-bolt" />
                   </button>
+                  {showEmoji && (
+                    <div className="support-emoji-container">
+                      <EmojiPicker 
+                        theme={Theme.DARK}
+                        onEmojiClick={onAdminEmojiClick}
+                        width={300}
+                        height={400}
+                        skinTonesDisabled
+                      />
+                    </div>
+                  )}
                   <textarea
                     ref={inputRef}
                     className="chat-input"

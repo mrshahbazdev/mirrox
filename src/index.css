@@ -1564,6 +1564,30 @@ body {
 }
 .chat-qr-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--bg-hover); }
 
+/* Emoji Picker V2 (Library) */
+.chat-emoji-container {
+  width: 100%;
+  background: #1a202c;
+  border-bottom: 1px solid var(--border);
+  animation: slideUp 0.2s ease;
+}
+
+.support-emoji-container {
+  position: absolute;
+  bottom: 80px;
+  left: 24px;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: zoomIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
 /* Emoji Picker */
 .chat-emoji-picker {
   display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0;

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { useTrading } from '../context/TradingContext';
 
 const API = import.meta.env.VITE_API_URL;
@@ -11,7 +13,7 @@ const QUICK_REPLIES = [
   "I have a trading question",
 ];
 
-const EMOJIS = ['👋', '😊', '🙏', '👍', '❓', '💰', '📈', '✅'];
+// Legacy EMOJIS array removed in favor of emoji-picker-react library
 
 function formatTime(ts) {
   const d = new Date(ts);
@@ -292,8 +294,8 @@ export default function LiveChat({ currentUser }) {
     }
   };
 
-  const addEmoji = (emoji) => {
-    const val = input + emoji;
+  const onEmojiClick = (emojiData) => {
+    const val = input + emojiData.emoji;
     setInput(val);
     if (socket && ticket) {
       socket.emit('chat:typing_text', { ticketId: ticket.id, text: val });
@@ -511,13 +513,15 @@ export default function LiveChat({ currentUser }) {
         {chatStatus === 'open' && (
           <div className="chat-input-area">
             {showEmoji && (
-              <div className="chat-emoji-picker">
-                {EMOJIS.map(emoji => (
-                  <button key={emoji} type="button" className="chat-emoji-btn"
-                    onClick={() => addEmoji(emoji)}>
-                    {emoji}
-                  </button>
-                ))}
+              <div className="chat-emoji-container">
+                <EmojiPicker 
+                  theme={Theme.DARK}
+                  onEmojiClick={onEmojiClick}
+                  width="100%"
+                  height={320}
+                  skinTonesDisabled
+                  searchPlaceHolder="Search emojis..."
+                />
               </div>
             )}
             {/* Quick Replies Tray inside chat */}
