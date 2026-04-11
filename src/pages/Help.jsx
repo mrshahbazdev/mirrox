@@ -25,7 +25,7 @@ const Help = () => {
           </p>
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '24px', marginBottom: '40px' }}>
+        <div className="help-cards-grid">
           
           {/* Card 1 */}
           <div className="card glass animate-fade" style={{ background: 'linear-gradient(145deg, rgba(50,145,255,0.1), rgba(0,0,0,0.2))', border: '1px solid rgba(50,145,255,0.2)', padding: '32px', borderRadius: '20px' }}>

@@ -1205,6 +1205,20 @@ body {
 .time-slot { font-size: 11px; font-weight: 700; color: var(--text-main); }
 .market-closed { color: var(--text-dim); font-size: 11px; font-weight: 600; font-style: italic; }
 
+/* Help Page - Support Cards Grid */
+.help-cards-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 600px) {
+  .help-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
