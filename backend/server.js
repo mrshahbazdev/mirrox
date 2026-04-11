@@ -13,11 +13,7 @@ const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
 const AdminActivity = require('./models/AdminActivity');
-let otplib = require('otplib');
-const authenticator = otplib.authenticator || otplib.default?.authenticator;
-if (!authenticator) {
-    console.error('❌ Critical Error: otplib authenticator COULD NOT be initialized. Check package version.');
-}
+const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 
 const multer = require('multer');
@@ -281,7 +277,11 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
       const admin = await Admin.findById(id);
       if (!admin || !admin.twoFactorSecret) return res.status(400).json({ error: '2FA not setup' });
       
-      const isValid = authenticator.check(code, admin.twoFactorSecret);
+      const isValid = speakeasy.totp.verify({
+          secret: admin.twoFactorSecret,
+          encoding: 'base32',
+          token: code
+      });
       if (!isValid) return res.status(401).json({ error: 'Invalid 2FA code' });
 
       // Find the session we created in the first step (it was saved to DB but not signed into token yet)
@@ -408,23 +408,22 @@ app.get('/api/admins/activities', verifyAdminToken, verifyAdminPermission('manag
   app.post('/api/admins/2fa/setup', verifyAdminToken, async (req, res) => {
     try {
         const admin = await Admin.findById(req.user.id);
-        if (!admin) return res.status(404).json({ error: 'Admin record not found in database.' });
+        if (!admin) return res.status(404).json({ error: 'Admin record not found' });
         
-        // Ensure email is valid for QR generation
         const adminEmail = admin.email || 'admin@mirrox.com';
+        const secret = speakeasy.generateSecret({
+            length: 20,
+            name: `Mirrox (${adminEmail})`,
+            issuer: 'Mirrox'
+        });
         
-        const secret = authenticator.generateSecret();
-        const otpauth = authenticator.keyuri(adminEmail, 'Mirrox', secret);
-        
-        try {
-            const qr = await QRCode.toDataURL(otpauth);
-            res.json({ secret, qr });
-        } catch (qrErr) {
-            console.error('QR Generation Error:', qrErr);
-            return res.status(500).json({ error: 'QR Code generation failed', details: qrErr.message });
-        }
+        const qr = await QRCode.toDataURL(secret.otpauth_url);
+        res.json({ 
+            secret: secret.base32, 
+            qr 
+        });
     } catch(err) { 
-        console.error('2FA Setup Master Error:', err);
+        console.error('2FA Setup Error:', err);
         res.status(500).json({ error: 'Sovereign 2FA Setup failed', details: err.message }); 
     }
 });
@@ -432,7 +431,11 @@ app.get('/api/admins/activities', verifyAdminToken, verifyAdminPermission('manag
 app.post('/api/admins/2fa/enable', verifyAdminToken, async (req, res) => {
     const { secret, code } = req.body;
     try {
-        const isValid = authenticator.check(code, secret);
+        const isValid = speakeasy.totp.verify({
+            secret: secret,
+            encoding: 'base32',
+            token: code
+        });
         if (!isValid) return res.status(400).json({ error: 'Invalid verification code' });
         
         await Admin.findByIdAndUpdate(req.user.id, {
