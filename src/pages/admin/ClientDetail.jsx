@@ -29,7 +29,9 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [withdrawals, setWithdrawals] = useState([]);
   const [deposits, setDeposits] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [otherAdmins, setOtherAdmins] = useState([]);
+  const [historyTrades, setHistoryTrades] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [allAdmins, setAllAdmins] = useState([]);
 
   useEffect(() => {
     const socket = window.socket;
@@ -96,6 +98,24 @@ const ClientDetail = ({ onAdminLogout }) => {
     };
     fetchClientData();
   }, [id]);
+
+  // Fetch History Trades when History tab is selected
+  useEffect(() => {
+    if (activeTab === 'history' && id) {
+      const fetchHistory = async () => {
+        try {
+          setLoadingHistory(true);
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/trades/${id}/history`, authHeader);
+          setHistoryTrades(res.data);
+        } catch (err) {
+          console.error('Failed to fetch trade history', err);
+        } finally {
+          setLoadingHistory(false);
+        }
+      };
+      fetchHistory();
+    }
+  }, [activeTab, id]);
 
   const trades = allTrades[id] || [];
 
@@ -351,7 +371,29 @@ const ClientDetail = ({ onAdminLogout }) => {
   }
 
   const { accountSummary: acc, tradingMetrics: tm } = client;
-  const tabData = { trades, withdrawals, deposits };
+
+  // Optimized Trades List with Merged History
+  const tradesList = (() => {
+    const activeForClient = allTrades[id] || [];
+    if (activeTab === 'trades') {
+      return activeForClient.filter(t => t.status !== 'Closed');
+    }
+    if (activeTab === 'history') {
+      const closedFromMemory = activeForClient.filter(t => t.status === 'Closed');
+      const combined = [...closedFromMemory, ...historyTrades];
+      // Deduplicate by ID
+      return Array.from(new Map(combined.map(item => [item.id, item])).values())
+        .sort((a, b) => (new Date(b.closeTime || 0)) - (new Date(a.closeTime || 0)));
+    }
+    return [];
+  })();
+
+  const tabData = { 
+    trades: tradesList, 
+    history: tradesList,
+    withdrawals, 
+    deposits 
+  };
   const currentData = tabData[activeTab] || [];
   const totalPages = Math.ceil(currentData.length / ITEMS_PER_PAGE);
   const paginatedData = currentData.slice((tradePage - 1) * ITEMS_PER_PAGE, tradePage * ITEMS_PER_PAGE);
@@ -604,7 +646,8 @@ const ClientDetail = ({ onAdminLogout }) => {
 
         <div className="cd-tabs">
           {[
-            { key: 'trades', label: 'Trades', icon: 'fa-chart-line', count: trades.length },
+            { key: 'trades', label: 'Trades', icon: 'fa-chart-line', count: (allTrades[id] || []).filter(t => t.status !== 'Closed').length },
+            { key: 'history', label: 'History', icon: 'fa-clock-rotate-left', count: (allTrades[id] || []).filter(t => t.status === 'Closed').length + historyTrades.length },
             { key: 'withdrawals', label: 'Withdrawals', icon: 'fa-arrow-up-from-bracket', count: withdrawals.length },
             { key: 'deposits', label: 'Deposits', icon: 'fa-arrow-down-to-bracket', count: deposits.length },
           ].map((tab) => (
@@ -621,7 +664,7 @@ const ClientDetail = ({ onAdminLogout }) => {
         </div>
 
         <div className="cd-trade-table-wrap">
-          {activeTab === 'trades' && (
+          {(activeTab === 'trades' || activeTab === 'history') && (
             <table className="adm-table">
               <thead>
                 <tr>
