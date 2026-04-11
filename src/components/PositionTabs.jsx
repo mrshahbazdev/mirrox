@@ -54,8 +54,17 @@ const PositionTabs = () => {
   const openTrades = clientTrades.filter(t => t.status === 'Open');
   const pendingTrades = clientTrades.filter(t => t.status === 'Pending');
 
-  const displayTrades = (activeTab === 'open' ? openTrades : (activeTab === 'pending' ? pendingTrades : historyTrades))
-    .sort((a, b) => (new Date(b.closeTime || b.openTime || 0)) - (new Date(a.closeTime || a.openTime || 0)));
+  const displayTrades = (() => {
+    if (activeTab === 'open') return openTrades;
+    if (activeTab === 'pending') return pendingTrades;
+    
+    // Merge In-memory closed trades (pre-sync) with historical DB result
+    const closedFromMemory = clientTrades.filter(t => t.status === 'Closed');
+    const combinedHistory = [...closedFromMemory, ...historyTrades];
+    
+    // Deduplicate by ID to prevent double-showing during the 1s sync window
+    return Array.from(new Map(combinedHistory.map(item => [item.id, item])).values());
+  })().sort((a, b) => (new Date(b.closeTime || b.openTime || 0)) - (new Date(a.closeTime || a.openTime || 0)));
 
   const handleOpenConfirm = (trade) => {
     setClosingTrade(trade);

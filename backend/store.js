@@ -171,7 +171,7 @@ const saveData = () => {
     } catch (e) {
       console.error('Mongo SaveData Error:', e);
     }
-  }, 3000); // Wait 3 seconds of inactivity before writing, or writes every 3s
+  }, 1000); // Reduced from 3s to 1s for better data consistency
 };
 
 const initializeDB = async () => {
