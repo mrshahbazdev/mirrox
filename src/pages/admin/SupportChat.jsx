@@ -49,7 +49,23 @@ export default function SupportChat({ onAdminLogout }) {
   const [socket, setSocket] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [otherPresence, setOtherPresence] = useState([]);
+
+  useEffect(() => {
+    const socket = window.socket;
+    if (socket) {
+      socket.emit('admin:presence', { page: window.location.pathname });
+      socket.on('admin:presence_update', (list) => {
+        const others = list.filter(a => a.page === window.location.pathname && a.socketId !== socket.id);
+        setOtherPresence(others);
+      });
+    }
+    fetchTickets();
+    return () => {
+      if (socket) socket.off('admin:presence_update');
+    };
+  }, []);
+
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [userTyping, setUserTyping] = useState(false);
@@ -669,13 +685,25 @@ export default function SupportChat({ onAdminLogout }) {
             {selectedTicket.status === 'open' ? (
               <div className="support-input-area">
                 {showQuickReplies && (
-                  <div className="quick-responses-panel">
-                    <div className="qr-header"><i className="fa-solid fa-bolt" /> Quick Responses</div>
-                    {QUICK_RESPONSES.map((qr, i) => (
-                      <button key={i} className="qr-item" onClick={() => sendMessage(qr)}>
-                        {qr}
-                      </button>
-                    ))}
+                  <div className="adm-page-header">
+                    <div>
+                      <h2 className="adm-page-title"><i className="fa-solid fa-headset" /> Support Intelligence</h2>
+                      <p className="adm-page-sub">Real-time resolution desk & live customer signals</p>
+                    </div>
+                    
+                    {/* Admin Presence Indicator */}
+                    {otherPresence.length > 0 && (
+                      <div className="presence-indicator" style={{ background: 'rgba(50,145,255,0.05)', padding: '6px 14px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                         <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b' }}>ONLINE STAFF:</span>
+                         <div className="presence-avatars" style={{ display: 'flex', gap: '4px' }}>
+                            {otherPresence.map(adm => (
+                               <div key={adm.id} className="presence-badge" style={{ width: '24px', height: '24px', background: '#3291ff', color: '#fff', borderRadius: '50%', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                                  {adm.name.charAt(0)}
+                               </div>
+                            ))}
+                         </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="support-input-row">

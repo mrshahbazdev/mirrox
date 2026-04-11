@@ -613,8 +613,72 @@ module.exports = (io) => {
       }
     });
 
+    // ─── SOVEREIGN ADMIN CONTROL ─────────────────────────────────────────────
+    const adminOnline = new Map(); // adminId -> { name, role, page, socketId }
+
+    if (socket.decoded.role !== 'user') {
+      const adminId = socket.decoded.id;
+      
+      socket.on('admin:presence', async ({ page }) => {
+        const admin = await Admin.findById(adminId);
+        if (!admin) return;
+
+        adminOnline.set(adminId, {
+          id: adminId,
+          name: admin.name,
+          role: admin.role,
+          page: page,
+          socketId: socket.id
+        });
+
+        // Broadcast to all admins who is where
+        io.emit('admin:presence_update', Array.from(adminOnline.values()));
+      });
+
+      socket.on('admin:broadcast', ({ message, type }) => {
+        if (socket.decoded.role !== 'super') return; // Only super can broadcast
+        io.emit('admin:global_alert', { 
+          message, 
+          type: type || 'info', 
+          sender: adminOnline.get(adminId)?.name || 'System'
+        });
+      });
+
+      socket.on('admin:kick', ({ targetAdminId, sessionId }) => {
+        if (socket.decoded.role !== 'super') return;
+        io.emit('admin:force_logout', { adminId: targetAdminId, sessionId });
+      });
+
+      // Auto-Assign logic for new tickets
+      socket.on('chat:auto_assign', async ({ ticketId }) => {
+          try {
+              const ticket = await SupportTicket.findOne({ id: ticketId });
+              if (ticket && !ticket.assignedAdminId) {
+                  // Find least busy online support member
+                  const candidates = Array.from(adminOnline.values())
+                    .filter(a => a.role === 'support' || a.role === 'admin');
+                  
+                  if (candidates.length > 0) {
+                      const selected = candidates[0]; // Simple logic for now
+                      ticket.assignedAdminId = selected.id;
+                      ticket.assignedAdminName = selected.name;
+                      await ticket.save();
+                      io.emit('chat:ticket_update', { ticketId, assignedTo: selected.name });
+                  }
+              }
+          } catch(err) {}
+      });
+    }
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
+      
+      const adminId = socket.decoded.id;
+      if (adminOnline.has(adminId)) {
+        adminOnline.delete(adminId);
+        io.emit('admin:presence_update', Array.from(adminOnline.values()));
+      }
+
       // Auto-remove from online visitors on disconnect
       if (socket.decoded?.role === 'user') {
         const clientId = socket.decoded.id;

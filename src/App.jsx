@@ -46,7 +46,52 @@ const AdminRoute = ({ children, isAdminLoggedIn }) => {
 
 function App() {
   const { clientId, setClientId, currentClientExtended } = useTrading();
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => !!localStorage.getItem('mirrox_admin_token'));
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(!!localStorage.getItem('mirrox_admin_token'));
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [checkingMaintenance, setCheckingMaintenance] = useState(true);
+
+  // Maintenance Check
+  React.useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/config/public`);
+        setMaintenanceMode(res.data.maintenance_mode);
+      } catch (err) { console.error('Maintenance check failed'); }
+      finally { setCheckingMaintenance(false); }
+    };
+    checkStatus();
+    // Poll every 1 min for real-time toggle
+    const interval = setInterval(checkStatus, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const MaintenanceScreen = () => (
+    <div className="maintenance-wrap" style={{ 
+      height: '100vh', width: '100%', background: '#080c14', 
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      textAlign: 'center', padding: '20px', color: '#fff'
+    }}>
+      <div className="m-icon" style={{ fontSize: '80px', color: '#3291ff', marginBottom: '24px', opacity: 0.8 }}>
+         <i className="fa-solid fa-screwdriver-wrench fa-bounce" />
+      </div>
+      <h1 style={{ fontSize: '32px', marginBottom: '16px', fontWeight: 800 }}>Platform Upgrading</h1>
+      <p style={{ maxWidth: '500px', color: '#64748b', lineHeight: 1.6, fontSize: '16px' }}>
+        We are currently performing scheduled maintenance to enhance your trading experience. 
+        Mirrox will be back online shortly. Thank you for your patience.
+      </p>
+      <div style={{ marginTop: '40px', padding: '12px 24px', background: 'rgba(50,145,255,0.1)', borderRadius: '12px', border: '1px solid rgba(50,145,255,0.2)' }}>
+         <span style={{ fontSize: '12px', letterSpacing: '1px', fontWeight: 700, color: '#3291ff' }}>ESTIMATED UPTIME: 15 MINUTES</span>
+      </div>
+    </div>
+  );
+
+  if (checkingMaintenance) return null; // Wait for initial check
+
+  // Guard: If maintenance is ON and user is NOT admin and NOT on admin login path
+  const isUserPath = window.location.pathname.startsWith('/app') || ['/', '/login', '/register'].includes(window.location.pathname);
+  if (maintenanceMode && !isAdminLoggedIn && isUserPath && !window.location.pathname.includes('/admin')) {
+      return <MaintenanceScreen />;
+  }
 
   return (
     <BrowserRouter>

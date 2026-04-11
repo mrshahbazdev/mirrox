@@ -17,6 +17,34 @@ const AdminLayout = ({ children, onAdminLogout }) => {
   const [pendingFinanceCount, setPendingFinanceCount] = useState(0);
   const [supportUnreadCount, setSupportUnreadCount] = useState(0);
   const [onlineVisitorCount, setOnlineVisitorCount] = useState(0);
+  const [broadcast, setBroadcast] = useState(null);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    // Presence Sync
+    socket.emit('admin:presence', { page: window.location.pathname });
+
+    // Global Alert Listener
+    socket.on('admin:global_alert', (data) => {
+      setBroadcast(data);
+      setTimeout(() => setBroadcast(null), 10000); // Auto-hide after 10s
+    });
+
+    // Forced Logout Listener (Session Revocation)
+    socket.on('admin:force_logout', ({ adminId, sessionId }) => {
+      const currentSessionId = localStorage.getItem('mirrox_admin_session_id');
+      if (currentSessionId === sessionId) {
+         alert('Your session has been revoked by a Super Admin.');
+         onAdminLogout();
+      }
+    });
+
+    return () => {
+      socket.off('admin:global_alert');
+      socket.off('admin:force_logout');
+    };
+  }, [socket, window.location.pathname, onAdminLogout]);
 
   const fetchAdminStats = useCallback(async () => {
     try {
@@ -146,10 +174,46 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="adm-content">
-          {children}
-        </main>
+        {/* Admin Broadcast Banner */}
+      {broadcast && (
+        <div className={`admin-broadcast-banner ${broadcast.type}`}>
+           <i className="fa-solid fa-triangle-exclamation" />
+           <div className="broadcast-content">
+              <strong>SYSTEM BROADCAST FROM {broadcast.sender}:</strong>
+              <span>{broadcast.message}</span>
+           </div>
+           <button onClick={() => setBroadcast(null)}><i className="fa-solid fa-xmark" /></button>
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      <main className="adm-content">
+        {children}
+      </main>
+
+      <style>{`
+        .admin-broadcast-banner {
+          position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+          width: 90%; max-width: 800px; padding: 16px 24px;
+          background: rgba(15, 21, 32, 0.95); backdrop-filter: blur(10px);
+          border: 1px solid #3291ff; border-radius: 16px; 
+          display: flex; align-items: center; gap: 20px; z-index: 10000;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(50,145,255,0.2);
+          animation: bannerSlideIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        @keyframes bannerSlideIn { 
+          from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+          to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        .admin-broadcast-banner.warning { border-color: #f59e0b; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(245,158,11,0.2); }
+        .admin-broadcast-banner i { font-size: 24px; color: #3291ff; }
+        .admin-broadcast-banner.warning i { color: #f59e0b; }
+        .broadcast-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .broadcast-content strong { font-size: 10px; font-weight: 800; color: #64748b; letter-spacing: 1px; }
+        .broadcast-content span { color: #fff; font-size: 14px; font-weight: 600; }
+        .admin-broadcast-banner button { background: none; border: none; color: #475569; cursor: pointer; font-size: 18px; transition: color 0.2s; }
+        .admin-broadcast-banner button:hover { color: #fff; }
+      `}</style>
       </div>
 
       <style>{`

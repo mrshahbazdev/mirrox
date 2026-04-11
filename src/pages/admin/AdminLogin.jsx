@@ -31,6 +31,7 @@ const AdminLogin = ({ onAdminLogin }) => {
       }
 
       if (res.data.role) {
+        localStorage.setItem('mirrox_admin_session_id', res.data.sessionId);
         onAdminLogin(res.data.token);
         navigate('/admin/clients');
       } else {
@@ -51,6 +52,7 @@ const AdminLogin = ({ onAdminLogin }) => {
         id: adminId,
         code: otpCode
       });
+      localStorage.setItem('mirrox_admin_session_id', res.data.sessionId);
       onAdminLogin(res.data.token);
       navigate('/admin/clients');
     } catch (err) {

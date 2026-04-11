@@ -201,7 +201,10 @@ export default function LiveChat({ currentUser }) {
         setTicket(r.data);
         setMessages(r.data.messages || []);
         setChatStatus(r.data.status || 'open');
-        if (socket) socket.emit('chat:join', { ticketId: r.data.id });
+        if (socket) {
+          socket.emit('chat:join', { ticketId: r.data.id });
+          socket.emit('chat:auto_assign', { ticketId: r.data.id });
+        }
       } catch (e) {
         console.error('Failed to open ticket');
       } finally {
@@ -224,7 +227,10 @@ export default function LiveChat({ currentUser }) {
       setTicket(r.data);
       setMessages(r.data.messages || []);
       setChatStatus(r.data.status || 'open');
-      if (socket) socket.emit('chat:join', { ticketId: r.data.id });
+      if (socket) {
+        socket.emit('chat:join', { ticketId: r.data.id });
+        socket.emit('chat:auto_assign', { ticketId: r.data.id });
+      }
     } catch (e) {
       console.error('Failed to create new ticket');
     } finally {

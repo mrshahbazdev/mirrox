@@ -70,18 +70,38 @@ const verifyClientToken = (req, res, next) => {
   });
 };
 
-const verifyAdminToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Access Denied: No Admin Token' });
+// Middleware: Verify Admin Token (Hardened Session & IP Check)
+const verifyAdminToken = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'No admin token' });
 
-  jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, decoded) => {
-    if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
-    if (!['admin', 'super', 'support', 'moderator'].includes(decoded.role)) {
-      return res.status(403).json({ error: 'Requires Admin Privileges' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    
+    // Hardening: Verify session still exists in DB
+    const admin = await Admin.findById(decoded.id);
+    if (!admin || admin.status === 'suspended') return res.status(403).json({ error: 'Access revoked' });
+
+    // 1. Session Check (The "Kick" logic)
+    const sessionExists = admin.activeSessions.some(s => s.sessionId === decoded.sessionId);
+    if (!sessionExists) return res.status(401).json({ error: 'Session revoked by Super Admin' });
+
+    // 2. IP Whitelist Check (IP Sovereignty)
+    if (admin.allowedIPs?.length > 0) {
+      const clientIp = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      // Simple lookup (could be improved with CIDR if needed)
+      const allowed = admin.allowedIPs.includes(clientIp);
+      if (!allowed) {
+        console.warn(`[BLOCKED] Admin ${admin.name} attempted access from unauthorized IP: ${clientIp}`);
+        return res.status(403).json({ error: 'Security: Access restricted from this IP address' });
+      }
     }
-    req.user = decoded;
+
+    req.user = decoded; // { id, role, sessionId }
     next();
-  });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid or expired admin token' });
+  }
 };
 
 const verifyAdminPermission = (permission) => {
@@ -207,15 +227,24 @@ app.post('/api/auth/login', async (req, res) => {
       adminUser.loginAttempts = 0;
       adminUser.lockoutUntil = null;
       adminUser.lastActive = new Date();
+      
+      // Record Session
+      const sessionId = 'S' + Date.now().toString().slice(-6);
+      adminUser.activeSessions.push({
+          sessionId,
+          ip: req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+          device: req.headers['user-agent'] || 'Unknown',
+          lastActive: new Date()
+      });
       await adminUser.save();
 
       // Check 2FA
       if (adminUser.twoFactorEnabled) {
-          return res.json({ require2FA: true, id: adminUser._id });
+          return res.json({ require2FA: true, id: adminUser._id, sessionId });
       }
 
-      const token = jwt.sign({ id: adminUser._id, role: adminUser.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-      return res.json({ role: adminUser.role, token });
+      const token = jwt.sign({ id: adminUser._id, role: adminUser.role, sessionId }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      return res.json({ role: adminUser.role, token, sessionId });
     }
   } catch (err) { console.error('Admin login err:', err); }
 
@@ -244,9 +273,56 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
       const isValid = authenticator.check(code, admin.twoFactorSecret);
       if (!isValid) return res.status(401).json({ error: 'Invalid 2FA code' });
 
-      const token = jwt.sign({ id: admin._id, role: admin.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-      res.json({ role: admin.role, token });
+      // Find the session we created in the first step (it was saved to DB but not signed into token yet)
+      const lastSession = admin.activeSessions[admin.activeSessions.length - 1];
+      const sessionId = lastSession ? lastSession.sessionId : 'S' + Date.now().toString().slice(-6);
+
+      const token = jwt.sign({ id: admin._id, role: admin.role, sessionId }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      res.json({ role: admin.role, token, sessionId });
   } catch(err) { res.status(500).json({ error: 'Server error' }); }
+});
+
+// Session & IP Management
+app.delete('/api/admins/:id/sessions/:sessionId', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.params.id);
+        admin.activeSessions = admin.activeSessions.filter(s => s.sessionId !== req.params.sessionId);
+        await admin.save();
+        res.json({ success: true });
+    } catch(err) { res.status(500).json({ error: 'Failed to revoke session' }); }
+});
+
+app.put('/api/admins/:id/allowed-ips', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.params.id);
+        admin.allowedIPs = req.body.ips;
+        await admin.save();
+        await logAdminActivity(req, 'UPDATE_IP_WHITELIST', 'Admin', admin._id, { newValue: req.body.ips });
+        res.json({ success: true });
+    } catch(err) { res.status(500).json({ error: 'Failed to update IPs' }); }
+});
+
+// Maintenance Mode
+app.post('/api/admins/maintenance', verifyAdminToken, verifyAdminPermission('manageSettings'), async (req, res) => {
+    const { status } = req.body; // true/false
+    try {
+        // We'll store this in systemConfig
+        const Config = require('./models/Config');
+        await Config.findOneAndUpdate({ key: 'maintenance_mode' }, { value: status }, { upsert: true });
+        await logAdminActivity(req, 'TOGGLE_MAINTENANCE', 'System', 'ALL', { newValue: status });
+        res.json({ success: true });
+    } catch(err) { res.status(500).json({ error: 'Failed to toggle maintenance' }); }
+});
+
+// Public Configuration (Maintenance Status, etc.)
+app.get('/api/config/public', async (req, res) => {
+    try {
+        const Config = require('./models/Config');
+        const mMode = await Config.findOne({ key: 'maintenance_mode' });
+        res.json({ 
+            maintenance_mode: mMode ? (mMode.value === 'true' || mMode.value === true) : false 
+        });
+    } catch(err) { res.status(500).json({ error: 'Config fetch failed' }); }
 });
 
 // Admin Management Endpoints

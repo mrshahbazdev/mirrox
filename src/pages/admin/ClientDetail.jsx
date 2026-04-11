@@ -25,7 +25,23 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [withdrawals, setWithdrawals] = useState([]);
   const [deposits, setDeposits] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [otherAdmins, setOtherAdmins] = useState([]);
 
+  useEffect(() => {
+    const socket = window.socket;
+    if (socket) {
+      socket.emit('admin:presence', { page: window.location.pathname });
+      socket.on('admin:presence_update', (list) => {
+        // Filter to only show admins on THIS page, excluding self
+        const currentPath = window.location.pathname;
+        const others = list.filter(a => a.page === currentPath && a.socketId !== socket.id);
+        setOtherAdmins(others);
+      });
+    }
+    return () => {
+      if (socket) socket.off('admin:presence_update');
+    };
+  }, [id]);
 
   // New Modal states for P/L editing
   const [showModal, setShowModal] = useState(false);
@@ -330,9 +346,31 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   return (
     <AdminLayout onAdminLogout={onAdminLogout}>
-      <button className="adm-back-btn" onClick={() => navigate('/admin/clients')}>
-        <i className="fa-solid fa-arrow-left" /> Back to Clients
-      </button>
+      <div className="client-detail-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <button className="back-btn" onClick={() => navigate('/admin/clients')}>
+            <i className="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <h1>{client.name}</h1>
+            <p className="uid-tag">UID: {client.id} • Registered {new Date(client.registeredAt).toLocaleDateString()}</p>
+          </div>
+        </div>
+        
+        {/* Admin Presence Indicator */}
+        {otherAdmins.length > 0 && (
+          <div className="presence-indicator">
+             <span>Currently viewing:</span>
+             <div className="presence-avatars">
+                {otherAdmins.map(adm => (
+                   <div key={adm.id} className="presence-badge" title={`${adm.name} (${adm.role})`}>
+                      {adm.name.charAt(0)}
+                   </div>
+                ))}
+             </div>
+          </div>
+        )}
+      </div>
 
       <div className="cd-section cd-profile-card">
         <div className="cd-section-label">Client Profile</div>

@@ -23,6 +23,12 @@ const AdminSchema = new mongoose.Schema({
   loginAttempts: { type: Number, default: 0 },
   lockoutUntil: { type: Date },
   allowedIPs: [{ type: String }],
+  activeSessions: [{
+    sessionId: { type: String },
+    device: { type: String },
+    ip: { type: String },
+    lastActive: { type: Date, default: Date.now }
+  }],
   lastActive: { type: Date, default: Date.now },
   status: { type: String, default: 'active' } // active, suspended
 }, { timestamps: true });
