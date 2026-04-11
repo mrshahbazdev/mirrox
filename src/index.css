@@ -401,10 +401,10 @@ body {
 
 /* Market Watch */
 .marketwatch-list {
-  flex: 1;
-  overflow-y: auto;
+  /* flex: 1; */
+  /* overflow-y: auto; */
   min-height: 0;
-  height: calc(100vh - var(--header-height) - 44px); /* Exact height to force scroll */
+  height: calc(100vh - var(--header-height) - 44px); /* Simplified to match user request */
 }
 
 /* Premium Scrollbar with high contrast */
