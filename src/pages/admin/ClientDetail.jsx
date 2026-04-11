@@ -1023,6 +1023,64 @@ const ClientDetail = ({ onAdminLogout }) => {
         </div>
       )}
 
+      {/* Dynamic Bias & Profit Modal */}
+      {showModal && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal-content animate-pop">
+            <div className="modal-header">
+              <h3 style={{ color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <i className="fa-solid fa-chart-line" style={{ color: '#3291ff' }} /> Trade Bias Control
+              </h3>
+              <button className="close-x" onClick={() => setShowModal(false)}>&times;</button>
+            </div>
+            
+            <div className="modal-body">
+              <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '20px' }}>
+                Set the price trend for Trade <span style={{ color: '#fff' }}>{modalTrade?.id}</span> ({modalTrade?.symbol})
+              </p>
+
+              <div className="bias-options">
+                <button className={`bias-btn ${modalMode === 'none' ? 'active' : ''}`} onClick={() => setModalMode('none')}>
+                  <i className="fa-solid fa-arrows-left-right" /> Neutral (Market Flow)
+                </button>
+                <button className={`bias-btn ${modalMode === 'profit' ? 'active' : ''}`} onClick={() => setModalMode('profit')}>
+                  <i className="fa-solid fa-arrow-up" style={{ color: '#00cc88' }} /> Forced Profit (Green)
+                </button>
+                <button className={`bias-btn ${modalMode === 'loss' ? 'active' : ''}`} onClick={() => setModalMode('loss')}>
+                  <i className="fa-solid fa-arrow-down" style={{ color: '#ff4d4d' }} /> Forced Loss (Red)
+                </button>
+                <button className={`bias-btn ${modalMode === 'lock' ? 'active' : ''}`} onClick={() => setModalMode('lock')}>
+                   <i className="fa-solid fa-lock" style={{ color: '#3291ff' }} /> Fixed Profit Lock
+                </button>
+              </div>
+
+              <div className="intensity-group">
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '12px' }}>
+                  Trend Intensity / Multiplier
+                </label>
+                <input 
+                   type="number"
+                   step="0.1"
+                   className="adm-input"
+                   style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                   value={modalMultiplier}
+                   onChange={(e) => setModalMultiplier(e.target.value)}
+                   placeholder="1.0"
+                />
+                <p style={{ fontSize: '10px', color: '#475569', marginTop: '8px' }}>
+                  1.0 is normal market speed. Higher values accelerate profit/loss.
+                </p>
+              </div>
+            </div>
+
+            <div className="modal-footer" style={{ marginTop: '24px' }}>
+              <button className="modal-btn secondary" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="modal-btn primary" onClick={submitEditPL}>Update Bias</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </AdminLayout>
   );
 };
