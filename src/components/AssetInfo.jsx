@@ -120,13 +120,13 @@ const AssetInfo = ({ symbol, onTrade }) => {
 
   const handleBuy = () => {
      if (symbol && onTrade) {
-       onTrade(symbol.name, parseFloat(volume), 'BUY', execMode === 'Pending' ? parseFloat(atPrice) : null, parseFloat(stopLoss) || null, parseFloat(takeProfit) || null);
+       onTrade(symbol.symbol, parseFloat(volume), 'BUY', execMode === 'Pending' ? parseFloat(atPrice) : null, parseFloat(stopLoss) || null, parseFloat(takeProfit) || null);
      }
   }
 
   const handleSell = () => {
      if (symbol && onTrade) {
-       onTrade(symbol.name, parseFloat(volume), 'SELL', execMode === 'Pending' ? parseFloat(atPrice) : null, parseFloat(stopLoss) || null, parseFloat(takeProfit) || null);
+       onTrade(symbol.symbol, parseFloat(volume), 'SELL', execMode === 'Pending' ? parseFloat(atPrice) : null, parseFloat(stopLoss) || null, parseFloat(takeProfit) || null);
      }
   }
 
@@ -240,21 +240,23 @@ const AssetInfo = ({ symbol, onTrade }) => {
                    className="exec-btn sell"
                    onClick={handleSell}
                  >
-                    <div className="exec-side">
-                       {execMode === 'Market' ? 'SELL' : 'SELL LIMIT'}
-                       {!isVerified && <span style={{ marginLeft: 8, background: '#ef4444', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '9px' }}>DEMO</span>}
+                    <div className="exec-side">{execMode === 'Market' ? 'SELL' : 'SELL LIMIT'}</div>
+                    <div className="exec-price">
+                       {parseFloat(symbol?.price || 0).toFixed(symbol?.precision || 2)}
                     </div>
-                    <div className="exec-symbol">{symbol.name}</div>
                  </button>
                  <button 
                    className="exec-btn buy"
                    onClick={handleBuy}
                  >
-                    <div className="exec-side">
-                       {execMode === 'Market' ? 'BUY' : 'BUY LIMIT'}
-                       {!isVerified && <span style={{ marginLeft: 8, background: '#10b981', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '9px' }}>DEMO</span>}
+                    <div className="exec-side">{execMode === 'Market' ? 'BUY' : 'BUY LIMIT'}</div>
+                    <div className="exec-price">
+                       {(() => {
+                          const precisionFactor = Math.pow(10, symbol?.precision || 5);
+                          const spreadInQuote = (symbol?.spread || 0) / precisionFactor;
+                          return (parseFloat(symbol?.price || 0) + spreadInQuote).toFixed(symbol?.precision || 2);
+                       })()}
                     </div>
-                    <div className="exec-symbol">{symbol.name}</div>
                  </button>
               </div>
            </div>
@@ -383,16 +385,17 @@ const AssetInfo = ({ symbol, onTrade }) => {
             .exec-btn.buy:hover {
                box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
             }
-            .exec-side {
-               font-size: 11px;
-               font-weight: 800;
-               letter-spacing: 2px;
-            }
-            .exec-symbol {
-               font-size: 14px;
-               font-weight: 700;
-               font-family: 'Outfit', sans-serif;
-            }
+             .exec-side {
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: 2px;
+                opacity: 0.8;
+             }
+             .exec-price {
+                font-size: 18px;
+                font-weight: 800;
+                font-family: 'Space Mono', monospace;
+             }
 
             @media (max-width: 600px) {
                .trading-execution-panel { padding: 12px; }
