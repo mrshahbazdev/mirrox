@@ -156,7 +156,7 @@ const StaffManager = ({ onAdminLogout }) => {
                    <i className={`fa-solid fa-chevron-${selectedAdmin?._id === admin._id ? 'up' : 'down'}`} />
                 </button>
               </div>
-
+              <div className="staff-quick-stats">
                       <div className="stat-item">
                           <label>ROLE:</label>
                           <span className={`role-text ${admin.role}`}>{admin.role.toUpperCase()}</span>
