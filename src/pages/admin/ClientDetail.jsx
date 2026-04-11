@@ -128,6 +128,7 @@ const ClientDetail = ({ onAdminLogout }) => {
     setShowModal(true);
   };
 
+  const submitEditPL = () => {
     if (modalMode === 'lock') {
       const forced = parseFloat(modalForcedPL);
       if (isNaN(forced)) {
