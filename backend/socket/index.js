@@ -2,6 +2,7 @@ const { activeTrades, symbolsList, saveData, clients } = require('../store');
 const jwt = require('jsonwebtoken');
 const WebSocket = require('ws');
 const SupportTicket = require('../models/SupportTicket');
+const Admin = require('../models/Admin');
 
 // Set up Live Binance Feed for Crypto Markets
 let binanceWs = null;
@@ -60,8 +61,9 @@ module.exports = (io) => {
     });
   });
 
-  // ─── Online Visitor Tracking ────────────────────────────────────────────────
+    // ─── Online Visitor Tracking ────────────────────────────────────────────────
   const onlineVisitors = new Map(); // clientId → { clientName, clientUid, page, joinedAt, socketId }
+  const adminOnline = new Map(); // adminId → { name, role, page, socketId }
 
   const broadcastVisitors = () => {
     const now = Date.now();
@@ -614,8 +616,7 @@ module.exports = (io) => {
     });
 
     // ─── SOVEREIGN ADMIN CONTROL ─────────────────────────────────────────────
-    const adminOnline = new Map(); // adminId -> { name, role, page, socketId }
-
+    
     if (socket.decoded.role !== 'user') {
       const adminId = socket.decoded.id;
       
