@@ -665,6 +665,34 @@ app.put('/api/support/tickets/:ticketId/read-client', verifyClientToken, async (
   }
 });
 
+// PUT rate support ticket
+app.put('/api/support/tickets/:ticketId/rate', verifyClientToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOneAndUpdate(
+      { id: req.params.ticketId, clientId: req.user.id },
+      { rating: req.body.rating },
+      { new: true }
+    );
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to submit rating' });
+  }
+});
+
+// POST upload attachment
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  
+  const uploadStream = cloudinary.uploader.upload_stream(
+    { folder: 'support_attachments' },
+    (error, result) => {
+      if (error) return res.status(500).json({ error: error.message || 'Cloudinary upload failed' });
+      res.json({ url: result.secure_url });
+    }
+  );
+  streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+});
+
 // Setup WebSockets
 setupSockets(io);
 

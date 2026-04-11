@@ -594,6 +594,24 @@ module.exports = (io) => {
       }
     });
 
+    // Admin or User deletes a message
+    socket.on('chat:delete_message', async ({ ticketId, timestamp }) => {
+      try {
+        await SupportTicket.updateOne(
+          { id: ticketId },
+          { $pull: { messages: { timestamp: new Date(timestamp) } } } // Mongoose handles string dating occasionally, but be safe
+        );
+        // Fallback for direct string vs Date schema
+        await SupportTicket.updateOne(
+          { id: ticketId },
+          { $pull: { messages: { timestamp: timestamp } } }
+        );
+        io.to(`ticket:${ticketId}`).emit('chat:message_deleted', { ticketId, timestamp });
+      } catch (err) {
+        console.error('[CHAT] Delete message error:', err.message);
+      }
+    });
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
       // Auto-remove from online visitors on disconnect

@@ -148,6 +148,9 @@ export default function LiveChat({ currentUser }) {
         setMessages(prev => prev.map(m => m.senderRole === 'user' ? { ...m, read: true } : m));
       }
     };
+    const onDeleted = ({ timestamp }) => {
+      setMessages(prev => prev.filter(m => m.timestamp !== timestamp));
+    };
 
     socket.on('chat:message', onMessage);
     socket.on('chat:typing', onTyping);
@@ -155,6 +158,7 @@ export default function LiveChat({ currentUser }) {
     socket.on('chat:ticket_reopened', onReopened);
     socket.on('chat:ticket_blocked', onBlocked);
     socket.on('chat:messages_read', onRead);
+    socket.on('chat:message_deleted', onDeleted);
 
     return () => {
       socket.off('chat:message', onMessage);
@@ -163,6 +167,7 @@ export default function LiveChat({ currentUser }) {
       socket.off('chat:ticket_reopened', onReopened);
       socket.off('chat:ticket_blocked', onBlocked);
       socket.off('chat:messages_read', onRead);
+      socket.off('chat:message_deleted', onDeleted);
     };
   }, [socket, ticket, playDing]);
 
@@ -215,29 +220,51 @@ export default function LiveChat({ currentUser }) {
     setTimeout(() => inputRef.current?.focus(), 300);
   };
 
-  const sendMessage = (text) => {
+  const sendMessage = (text, attachmentUrl = null) => {
     const msg = text || input.trim();
-    if (!msg || !ticket || chatStatus === 'closed' || chatStatus === 'blocked') return;
+    if ((!msg && !attachmentUrl) || !ticket || chatStatus === 'closed' || chatStatus === 'blocked') return;
     setInput('');
     setShowEmoji(false);
 
-    // Optimistic — add immediately for user, do NOT add again when socket echoes back
     const optimistic = {
       senderId: currentUser?.id,
       senderRole: 'user',
       senderName: currentUser?.name,
       text: msg,
+      attachment: attachmentUrl,
       timestamp: new Date().toISOString(),
       read: false,
     };
     setMessages(prev => [...prev, optimistic]);
 
     if (socket) {
-      socket.emit('chat:message', { ticketId: ticket.id, text: msg });
-      // Stop typing text stream to admin
+      socket.emit('chat:message', { ticketId: ticket.id, text: msg, attachment: attachmentUrl });
       socket.emit('chat:typing_text', { ticketId: ticket.id, text: '' });
       socket.emit('chat:typing', { ticketId: ticket.id, isTyping: false });
     }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      setConnecting(true); // Re-using state as an uploading indicator spinner
+      const res = await axios.post(`${API}/api/upload`, formData);
+      sendMessage('', res.data.url);
+    } catch (err) {
+      console.error('File upload failed');
+    } finally {
+      setConnecting(false);
+    }
+  };
+
+  const submitRating = async (stars) => {
+    try {
+      const res = await axios.put(`${API}/api/support/tickets/${ticket.id}/rate`, { rating: stars }, authHeader);
+      setTicket(res.data);
+    } catch (e) { }
   };
 
   const handleTyping = (e) => {
@@ -392,6 +419,9 @@ export default function LiveChat({ currentUser }) {
                     )}
                     <div className="chat-msg-bubble-wrap">
                       <div className={`chat-msg-bubble ${isUser ? 'user' : 'admin'}`}>
+                        {msg.attachment && (
+                          <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
+                        )}
                         {msg.text}
                       </div>
                       <div className="chat-msg-meta">
@@ -426,6 +456,22 @@ export default function LiveChat({ currentUser }) {
         {/* Closed Banner */}
         {chatStatus === 'closed' && (
           <div className="chat-closed-banner" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {!ticket?.rating ? (
+              <div style={{ textAlign: 'center', background: 'var(--bg-card)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                <h4 style={{ margin: '0 0 10px 0', fontSize: '15px' }}>Rate this conversation</h4>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', fontSize: '24px', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <i key={star} className="fa-solid fa-star csat-star" onClick={() => submitRating(star)} 
+                       onMouseEnter={(e) => { e.target.style.color = '#fbbf24'; }} 
+                       onMouseLeave={(e) => { e.target.style.color = 'var(--text-muted)'; }} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <i className="fa-solid fa-check-circle" style={{ color: 'var(--success)' }} /> You rated this chat {ticket.rating} stars.
+              </div>
+            )}
             <div><i className="fa-solid fa-lock" /> This chat has been closed by support.</div>
             <button onClick={startNewChat} style={{
               background: '#3291ff', color: '#fff', border: 'none', borderRadius: '6px', 
@@ -456,7 +502,11 @@ export default function LiveChat({ currentUser }) {
               </div>
             )}
             <div className="chat-input-row">
-              <button type="button" className="chat-tool-btn" onClick={() => setShowEmoji(s => !s)}>
+              <input type="file" id="chat-file-upload" style={{ display: 'none' }} accept="image/*" onChange={handleFileUpload} />
+              <button className="chat-tool-btn" onClick={() => document.getElementById('chat-file-upload').click()} title="Attach Image">
+                <i className="fa-solid fa-paperclip" />
+              </button>
+              <button className="chat-tool-btn" onClick={() => setShowEmoji(!showEmoji)} title="Emojis">
                 <i className="fa-regular fa-face-smile" />
               </button>
               <textarea

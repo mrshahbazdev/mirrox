@@ -145,6 +145,12 @@ export default function SupportChat({ onAdminLogout }) {
       setSelectedTicket(prev => prev?.id === ticketId ? { ...prev, status: 'blocked' } : prev);
     });
 
+    s.on('chat:message_deleted', ({ ticketId, timestamp }) => {
+      if (selectedTicketRef.current?.id === ticketId) {
+        setMessages(prev => prev.filter(m => m.timestamp !== timestamp));
+      }
+    });
+
     s.on('chat:messages_read', ({ ticketId, readBy }) => {
       if (readBy === 'user') {
         if (selectedTicketRef.current?.id === ticketId) {
@@ -199,26 +205,44 @@ export default function SupportChat({ onAdminLogout }) {
     setTimeout(() => inputRef.current?.focus(), 200);
   };
 
-  const sendMessage = (text) => {
+  const sendMessage = (text, attachmentUrl = null) => {
     const msg = text || input.trim();
-    if (!msg || !selectedTicket) return;
+    if ((!msg && !attachmentUrl) || !selectedTicket) return;
     setInput('');
     setShowQuickReplies(false);
 
     if (socket) {
-      socket.emit('chat:message', { ticketId: selectedTicket.id, text: msg });
+      socket.emit('chat:message', { ticketId: selectedTicket.id, text: msg, attachment: attachmentUrl });
     }
 
-    // Optimistic — add admin message immediately, socket will NOT add it again (filtered on user side)
     const optimistic = {
       senderId: 'admin',
       senderRole: 'admin',
       senderName: 'Support Team',
       text: msg,
+      attachment: attachmentUrl,
       timestamp: new Date().toISOString(),
       read: false,
     };
     setMessages(prev => [...prev, optimistic]);
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await axios.post(`${API}/api/upload`, formData, authHeader);
+      sendMessage('', res.data.url);
+    } catch (err) {
+      console.error('File upload failed');
+    }
+  };
+
+  const deleteMessage = (timestamp) => {
+    if (!selectedTicket || !socket) return;
+    socket.emit('chat:delete_message', { ticketId: selectedTicket.id, timestamp });
   };
 
   const handleTyping = (e) => {
@@ -465,13 +489,21 @@ export default function SupportChat({ onAdminLogout }) {
                         )}
                         <div className="support-msg-bubble-wrap">
                           <div className={`chat-msg-bubble ${isAdmin ? 'admin' : 'user'}`}>
+                            {msg.attachment && (
+                              <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
+                            )}
                             {msg.text}
                           </div>
                           <div className="chat-msg-meta">
                             {isAdmin ? 'You' : msg.senderName} · {formatTime(msg.timestamp)}
                             {isAdmin && (
-                              <i className={`fa-solid fa-check${msg.read ? '-double' : ''} chat-read-icon`}
-                                style={{ color: msg.read ? '#3291ff' : '#64748b' }} />
+                              <>
+                                <i className={`fa-solid fa-check${msg.read ? '-double' : ''} chat-read-icon`}
+                                  style={{ color: msg.read ? '#3291ff' : '#64748b' }} />
+                                <span style={{ marginLeft: 8, cursor: 'pointer', color: '#ff4d4d' }} onClick={() => deleteMessage(msg.timestamp)} title="Unsend Message">
+                                  <i className="fa-solid fa-trash-can" />
+                                </span>
+                              </>
                             )}
                           </div>
                         </div>
@@ -532,6 +564,14 @@ export default function SupportChat({ onAdminLogout }) {
                   </div>
                 )}
                 <div className="support-input-row">
+                  <input type="file" id="admin-chat-file" style={{ display: 'none' }} accept="image/*" onChange={handleFileUpload} />
+                  <button
+                    className="chat-tool-btn"
+                    onClick={() => document.getElementById('admin-chat-file').click()}
+                    title="Attach Image"
+                  >
+                    <i className="fa-solid fa-paperclip" />
+                  </button>
                   <button
                     className="chat-tool-btn"
                     onClick={() => setShowQuickReplies(s => !s)}
