@@ -135,8 +135,12 @@ const saveData = () => {
 
       // 3. Save Trades
       let flatTrades = [];
-      Object.values(activeTrades).forEach(tradesArray => {
-        flatTrades.push(...tradesArray);
+      Object.keys(activeTrades).forEach(cId => {
+        const tradesArray = activeTrades[cId];
+        tradesArray.forEach(t => {
+          if (!t.clientId) t.clientId = cId; // Ensure clientId exists for DB indexing
+          flatTrades.push(t);
+        });
       });
       if (flatTrades.length > 0) {
         const tradeBulk = flatTrades.map(t => ({

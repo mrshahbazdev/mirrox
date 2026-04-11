@@ -341,6 +341,7 @@ module.exports = (io) => {
 
       const newTrade = {
         id: 'T' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 900 + 100),
+        clientId: clientId, // ATTACH OWNER ID
         symbol,
         type,
         lots: parseFloat(volume),
