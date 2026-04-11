@@ -99,6 +99,10 @@ export const TradingProvider = ({ children }) => {
       showAlert(`⚠️ MARGIN CALL: Your margin level dropped below 50% (${data.marginLevel.toFixed(2)}%). System liquidations have started to protect your account.`, 'Margin Call', 'error');
     });
 
+    s.on('trade_error', (data) => {
+      showAlert(data.message, 'Execution Error', 'warning');
+    });
+
     return () => s.disconnect();
   }, [token]);
 

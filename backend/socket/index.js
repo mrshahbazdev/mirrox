@@ -296,6 +296,9 @@ module.exports = (io) => {
       
       if (!symData || !client) return;
 
+      // Force sync metrics before check to ensure balance/equity is up to date
+      syncClientMetrics(clientId);
+
       const isPending = !!pendingPrice;
       
       // Apply Spread only for Market orders
@@ -319,12 +322,12 @@ module.exports = (io) => {
       const currentFreeMargin = client.tradingMetrics?.freeMargin || 0;
       if (currentFreeMargin < marginUsed && !isPending) {
          console.log(`[TRADE BLOCKED] ${clientId} attempted to open ${volume} ${symbol} but has insufficient free margin.`);
-         socket.emit('trade_error', { message: 'Insufficient Free Margin. Please deposit more funds or close active trades.' });
+         socket.emit('trade_error', { message: 'Insufficient Free Margin (Available: $' + currentFreeMargin.toFixed(2) + '). Please deposit more funds or close active trades.' });
          return;
       }
 
       const newTrade = {
-        id: 'T' + Date.now().toString().slice(-4),
+        id: 'T' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 90 + 10),
         symbol,
         type,
         lots: parseFloat(volume),
