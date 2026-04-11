@@ -13,7 +13,11 @@ const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
 const AdminActivity = require('./models/AdminActivity');
-const { authenticator } = require('otplib');
+let otplib = require('otplib');
+const authenticator = otplib.authenticator || otplib.default?.authenticator;
+if (!authenticator) {
+    console.error('❌ Critical Error: otplib authenticator COULD NOT be initialized. Check package version.');
+}
 const QRCode = require('qrcode');
 
 const multer = require('multer');
