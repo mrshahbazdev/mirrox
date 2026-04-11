@@ -295,15 +295,15 @@ module.exports = (io) => {
       const client = clients.find(c => c.id === clientId);
       
       if (!symData || !client) return;
-
+      
       // Force sync metrics before check to ensure balance/equity is up to date
       syncClientMetrics(clientId);
 
       const isPending = !!pendingPrice;
       
       // Apply Spread only for Market orders
-      const precisionFactor = Math.pow(10, symData.precision);
-      const spreadValue = symData.spread / precisionFactor;
+      const precisionFactor = Math.pow(10, symData.precision || 2);
+      const spreadValue = (symData.spread || 0) / precisionFactor; // Safety fallback for spread
       
       let entryPrice;
       if (isPending) {
@@ -315,19 +315,20 @@ module.exports = (io) => {
       }
 
       const contractSize = symData.category === 'Metals' ? 100 : 100000;
-      const leverage = parseInt(client.accountSummary?.leverage?.split(':')[1]) || 100;
+      const leverageString = client.accountSummary?.leverage || "1:100";
+      const leverage = parseInt(leverageString.split(':')[1] || leverageString.split(':')[0]) || 100;
       const marginUsed = (entryPrice * parseFloat(volume) * contractSize) / leverage;
 
       // Free Margin Validation
       const currentFreeMargin = client.tradingMetrics?.freeMargin || 0;
       if (currentFreeMargin < marginUsed && !isPending) {
-         console.log(`[TRADE BLOCKED] ${clientId} attempted to open ${volume} ${symbol} but has insufficient free margin.`);
+         console.log(`[TRADE BLOCKED] ${clientId} insufficient free margin: ${currentFreeMargin.toFixed(2)} < ${marginUsed.toFixed(2)}`);
          socket.emit('trade_error', { message: 'Insufficient Free Margin (Available: $' + currentFreeMargin.toFixed(2) + '). Please deposit more funds or close active trades.' });
          return;
       }
 
       const newTrade = {
-        id: 'T' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 90 + 10),
+        id: 'T' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 900 + 100),
         symbol,
         type,
         lots: parseFloat(volume),
