@@ -359,7 +359,13 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto; /* Added safety scroll to the card container */
+  overflow-x: hidden;
+}
+
+.market-watch-card {
+  height: 100%;
+  border-right: 1px solid var(--border);
 }
 
 .tabs-header {
