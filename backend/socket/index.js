@@ -55,10 +55,25 @@ module.exports = (io) => {
         console.log('Socket Connection Refused: Invalid Token');
         return next(new Error('Authentication error: Invalid Token'));
       }
-      socket.decoded = decoded; // Store decoded info (id, role)
+      socket.decoded = decoded;
       next();
     });
   });
+
+  // ─── Online Visitor Tracking ────────────────────────────────────────────────
+  const onlineVisitors = new Map(); // clientId → { clientName, clientUid, page, joinedAt, socketId }
+
+  const broadcastVisitors = () => {
+    const now = Date.now();
+    const list = Array.from(onlineVisitors.values()).map(v => ({
+      ...v,
+      duration: Math.floor((now - v.joinedAt) / 1000)
+    }));
+    io.emit('visitors:update', list);
+  };
+
+  // Update visitor durations every 5 seconds
+  setInterval(broadcastVisitors, 5000);
 
   // Helper to recalculate a specific client's financial metrics based on their open trades
   const syncClientMetrics = (clientId) => {
@@ -254,7 +269,23 @@ module.exports = (io) => {
     // Initial state push
     socket.emit('market_update', { prices: symbolsList, trades: activeTrades, clients: clients });
 
-    // USER opens a trade frontend
+    // ─── User Visit Tracking ─────────────────────────────────────────────────
+    socket.on('user:visit', ({ clientId, clientName, clientUid, page }) => {
+      if (!clientId || socket.decoded?.role !== 'user') return;
+      onlineVisitors.set(clientId, {
+        clientId, clientName, clientUid, page,
+        joinedAt: Date.now(),
+        socketId: socket.id
+      });
+      broadcastVisitors();
+      console.log(`[VISITOR] ${clientName} (${clientId}) visiting ${page}`);
+    });
+
+    socket.on('user:leave', ({ clientId }) => {
+      onlineVisitors.delete(clientId);
+      broadcastVisitors();
+    });
+
     socket.on('open_trade', (data) => {
       const { symbol, volume, type, pendingPrice, stopLoss, takeProfit } = data;
       const clientId = socket.decoded.id; // Enforce ID from Token
@@ -515,10 +546,17 @@ module.exports = (io) => {
       }
     });
 
-    // Typing indicator
+    // Typing indicator (dots only)
     socket.on('chat:typing', ({ ticketId, isTyping }) => {
       const role = socket.decoded.role;
       socket.to(`ticket:${ticketId}`).emit('chat:typing', { role, isTyping });
+    });
+
+    // Real-time typing text (user → admin only)
+    socket.on('chat:typing_text', ({ ticketId, text }) => {
+      if (socket.decoded.role !== 'user') return;
+      // Broadcast only to admins in the room (not back to the user)
+      socket.to(`ticket:${ticketId}`).emit('chat:typing_text', { ticketId, text });
     });
 
     // Admin closes a ticket — notify user
@@ -541,6 +579,18 @@ module.exports = (io) => {
         io.emit('chat:ticket_update', { ticketId, status: 'open' });
       } catch (err) {
         console.error('[CHAT] Reopen ticket error:', err.message);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected:', socket.id);
+      // Auto-remove from online visitors on disconnect
+      if (socket.decoded?.role === 'user') {
+        const clientId = socket.decoded.id;
+        if (onlineVisitors.has(clientId)) {
+          onlineVisitors.delete(clientId);
+          broadcastVisitors();
+        }
       }
     });
   });

@@ -15,6 +15,8 @@ const AdminLayout = ({ children, onAdminLogout }) => {
   const [pendingKycCount, setPendingKycCount] = useState(0);
   const [activeTraderCount, setActiveTraderCount] = useState(0);
   const [pendingFinanceCount, setPendingFinanceCount] = useState(0);
+  const [supportUnreadCount, setSupportUnreadCount] = useState(0);
+  const [onlineVisitorCount, setOnlineVisitorCount] = useState(0);
 
   const fetchAdminStats = useCallback(async () => {
     try {
@@ -44,11 +46,27 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     
     if (socket) {
       socket.on('finance_update', fetchAdminStats);
+
+      // Support unread badge
+      socket.on('chat:ticket_update', (data) => {
+        if (data.unreadByAdmin > 0) {
+          setSupportUnreadCount(prev => prev + 1);
+        }
+      });
+
+      // Online visitor count
+      socket.on('visitors:update', (visitors) => {
+        setOnlineVisitorCount(visitors.length);
+      });
     }
 
     return () => {
       clearInterval(interval);
-      if (socket) socket.off('finance_update', fetchAdminStats);
+      if (socket) {
+        socket.off('finance_update', fetchAdminStats);
+        socket.off('chat:ticket_update');
+        socket.off('visitors:update');
+      }
     };
   }, [socket, fetchAdminStats]);
 
@@ -58,6 +76,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     { icon: 'fa-solid fa-address-card', path: '/admin/verifications', label: 'Verifications', badge: pendingKycCount, badgeColor: '#ff4d4d' },
     { icon: 'fa-solid fa-coins', path: '/admin/symbols', label: 'Symbols' },
     { icon: 'fa-solid fa-chart-pie', path: '/admin/reports', label: 'Reports', badge: pendingFinanceCount, badgeColor: '#f59e0b' },
+    { icon: 'fa-solid fa-comments', path: '/admin/support', label: 'Support', badge: supportUnreadCount, badgeColor: '#3291ff' },
     { icon: 'fa-solid fa-gears', path: '/admin/settings', label: 'Settings' },
   ];
 

@@ -34,24 +34,23 @@ export default function LiveChat({ currentUser }) {
   const [ticket, setTicket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [adminTyping, setAdminTyping] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
-  const [chatStatus, setChatStatus] = useState('open'); // 'open' | 'closed'
+  const [chatStatus, setChatStatus] = useState('open');
   const [connecting, setConnecting] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
+  const isOpenRef = useRef(isOpen);
 
-  // Scroll to bottom
+  useEffect(() => { isOpenRef.current = isOpen; }, [isOpen]);
+
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, adminTyping]);
+  useEffect(() => { scrollToBottom(); }, [messages, adminTyping]);
 
   // Load existing ticket on mount
   useEffect(() => {
@@ -68,32 +67,46 @@ export default function LiveChat({ currentUser }) {
       .catch(() => {});
   }, [currentUser]);
 
+  // Emit user visit event when user connects
+  useEffect(() => {
+    if (!socket || !currentUser?.id) return;
+    socket.emit('user:visit', {
+      clientId: currentUser.id,
+      clientName: currentUser.name,
+      clientUid: currentUser.uid,
+      page: window.location.pathname
+    });
+
+    // Track page changes
+    const onUnload = () => socket.emit('user:leave', { clientId: currentUser.id });
+    window.addEventListener('beforeunload', onUnload);
+    return () => window.removeEventListener('beforeunload', onUnload);
+  }, [socket, currentUser]);
+
   // Socket events
   useEffect(() => {
     if (!socket || !ticket) return;
 
-    // Join ticket room
     socket.emit('chat:join', { ticketId: ticket.id });
 
     const onMessage = (data) => {
       if (data.ticketId !== ticket.id) return;
-      setMessages(prev => [...prev, data.message]);
-      if (!isOpen && data.message.senderRole === 'admin') {
-        setUnreadCount(c => c + 1);
+      // Only add messages from ADMIN — user messages are added optimistically
+      if (data.message.senderRole === 'admin') {
+        setMessages(prev => [...prev, data.message]);
+        if (!isOpenRef.current) {
+          setUnreadCount(c => c + 1);
+        }
       }
     };
 
     const onTyping = ({ role, isTyping }) => {
+      // Only show indicator for admin typing — NOT admin's text
       if (role === 'admin') setAdminTyping(isTyping);
     };
 
-    const onClosed = () => {
-      setChatStatus('closed');
-    };
-
-    const onReopened = () => {
-      setChatStatus('open');
-    };
+    const onClosed = () => setChatStatus('closed');
+    const onReopened = () => setChatStatus('open');
 
     socket.on('chat:message', onMessage);
     socket.on('chat:typing', onTyping);
@@ -106,7 +119,7 @@ export default function LiveChat({ currentUser }) {
       socket.off('chat:ticket_closed', onClosed);
       socket.off('chat:ticket_reopened', onReopened);
     };
-  }, [socket, ticket, isOpen]);
+  }, [socket, ticket]);
 
   // Mark read when opened
   useEffect(() => {
@@ -135,13 +148,13 @@ export default function LiveChat({ currentUser }) {
     setTimeout(() => inputRef.current?.focus(), 300);
   };
 
-  const sendMessage = async (text) => {
+  const sendMessage = (text) => {
     const msg = text || input.trim();
     if (!msg || !ticket || chatStatus === 'closed') return;
     setInput('');
     setShowEmoji(false);
 
-    // Optimistic UI
+    // Optimistic — add immediately for user, do NOT add again when socket echoes back
     const optimistic = {
       senderId: currentUser?.id,
       senderRole: 'user',
@@ -149,23 +162,30 @@ export default function LiveChat({ currentUser }) {
       text: msg,
       timestamp: new Date().toISOString(),
       read: false,
-      _optimistic: true
     };
     setMessages(prev => [...prev, optimistic]);
 
     if (socket) {
       socket.emit('chat:message', { ticketId: ticket.id, text: msg });
+      // Stop typing text stream to admin
+      socket.emit('chat:typing_text', { ticketId: ticket.id, text: '' });
+      socket.emit('chat:typing', { ticketId: ticket.id, isTyping: false });
     }
   };
 
   const handleTyping = (e) => {
-    setInput(e.target.value);
+    const val = e.target.value;
+    setInput(val);
     if (socket && ticket) {
-      socket.emit('chat:typing', { ticketId: ticket.id, isTyping: true });
+      // Send real-time text to admin
+      socket.emit('chat:typing_text', { ticketId: ticket.id, text: val });
+      // Send typing indicator
+      socket.emit('chat:typing', { ticketId: ticket.id, isTyping: !!val });
       clearTimeout(typingTimerRef.current);
       typingTimerRef.current = setTimeout(() => {
         socket.emit('chat:typing', { ticketId: ticket.id, isTyping: false });
-      }, 1500);
+        socket.emit('chat:typing_text', { ticketId: ticket.id, text: '' });
+      }, 3000);
     }
   };
 
@@ -176,7 +196,6 @@ export default function LiveChat({ currentUser }) {
     }
   };
 
-  // Group messages by date
   const groupedMessages = messages.reduce((groups, msg) => {
     const date = formatDate(msg.timestamp);
     if (!groups[date]) groups[date] = [];
@@ -287,6 +306,7 @@ export default function LiveChat({ currentUser }) {
             </div>
           ))}
 
+          {/* Admin typing — only dots indicator, no text */}
           {adminTyping && (
             <div className="chat-msg-row admin">
               <div className="chat-msg-avatar">

@@ -10,6 +10,7 @@ function formatTime(ts) {
 }
 
 function formatRelative(ts) {
+  if (!ts) return '';
   const d = new Date(ts);
   const now = new Date();
   const diff = Math.floor((now - d) / 1000);
@@ -29,6 +30,12 @@ function formatDate(ts) {
   return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
+function formatDuration(seconds) {
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+  return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
+}
+
 const QUICK_RESPONSES = [
   "Thank you for reaching out! How can I assist you today?",
   "I understand the issue. Let me look into this for you.",
@@ -45,48 +52,59 @@ export default function SupportChat({ onAdminLogout }) {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [userTyping, setUserTyping] = useState(false);
-  const [filter, setFilter] = useState('all'); // 'all' | 'open' | 'closed'
+  const [userTypingText, setUserTypingText] = useState(''); // real-time text from user
+  const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showQuickReplies, setShowQuickReplies] = useState(false);
   const [totalUnread, setTotalUnread] = useState(0);
+  const [onlineVisitors, setOnlineVisitors] = useState([]); // live visitors
+  const [showVisitors, setShowVisitors] = useState(false);
+  const [newMsgTicketIds, setNewMsgTicketIds] = useState(new Set()); // for sidebar notification
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
+  const selectedTicketRef = useRef(null);
   const adminToken = localStorage.getItem('mirrox_admin_token');
-
-  // Axios header
   const authHeader = { headers: { Authorization: `Bearer ${adminToken}` } };
+
+  useEffect(() => { selectedTicketRef.current = selectedTicket; }, [selectedTicket]);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, userTyping]);
+  useEffect(() => { scrollToBottom(); }, [messages, userTyping, userTypingText]);
 
-  // Init socket with admin token
+  // Init socket
   useEffect(() => {
     const s = io(API, { auth: { token: adminToken } });
     setSocket(s);
 
     s.on('chat:message', (data) => {
-      // Update ticket list with new last message info
+      // Update ticket list
       setTickets(prev => prev.map(t =>
         t.id === data.ticketId
-          ? { ...t, lastMessage: data.message.text, lastMessageAt: data.message.timestamp,
-              unreadByAdmin: data.message.senderRole === 'user' ? (t.unreadByAdmin || 0) + 1 : t.unreadByAdmin }
+          ? {
+              ...t,
+              lastMessage: data.message.text,
+              lastMessageAt: data.message.timestamp,
+              unreadByAdmin: data.message.senderRole === 'user'
+                ? (selectedTicketRef.current?.id === data.ticketId ? t.unreadByAdmin : (t.unreadByAdmin || 0) + 1)
+                : t.unreadByAdmin
+            }
           : t
       ));
 
-      // If this ticket is selected, add message to view
-      setSelectedTicket(prev => {
-        if (prev?.id === data.ticketId) {
-          setMessages(m => [...m, data.message]);
-          return prev;
-        }
-        return prev;
-      });
+      // Add message to view only if from USER (admin already added optimistically)
+      if (selectedTicketRef.current?.id === data.ticketId && data.message.senderRole === 'user') {
+        setMessages(m => [...m, data.message]);
+        setUserTypingText(''); // clear typing preview
+      }
+
+      // Badge notification for new user messages
+      if (data.message.senderRole === 'user' && selectedTicketRef.current?.id !== data.ticketId) {
+        setNewMsgTicketIds(prev => new Set([...prev, data.ticketId]));
+      }
     });
 
     s.on('chat:ticket_update', (data) => {
@@ -95,8 +113,17 @@ export default function SupportChat({ onAdminLogout }) {
       ));
     });
 
+    // User typing indicator
     s.on('chat:typing', ({ role, isTyping }) => {
       if (role === 'user') setUserTyping(isTyping);
+    });
+
+    // Real-time text from user as they type
+    s.on('chat:typing_text', ({ ticketId, text }) => {
+      if (selectedTicketRef.current?.id === ticketId) {
+        setUserTypingText(text);
+        setUserTyping(!!text);
+      }
     });
 
     s.on('chat:ticket_closed', ({ ticketId }) => {
@@ -109,6 +136,11 @@ export default function SupportChat({ onAdminLogout }) {
       setSelectedTicket(prev => prev?.id === ticketId ? { ...prev, status: 'open' } : prev);
     });
 
+    // Online visitors
+    s.on('visitors:update', (visitors) => {
+      setOnlineVisitors(visitors);
+    });
+
     return () => s.disconnect();
   }, [adminToken]);
 
@@ -116,11 +148,7 @@ export default function SupportChat({ onAdminLogout }) {
   useEffect(() => {
     setLoading(true);
     axios.get(`${API}/api/support/tickets`, authHeader)
-      .then(r => {
-        setTickets(r.data);
-        const unread = r.data.reduce((sum, t) => sum + (t.unreadByAdmin || 0), 0);
-        setTotalUnread(unread);
-      })
+      .then(r => setTickets(r.data))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -135,18 +163,17 @@ export default function SupportChat({ onAdminLogout }) {
     setSelectedTicket(ticket);
     setMessages(ticket.messages || []);
     setUserTyping(false);
+    setUserTypingText('');
+    setNewMsgTicketIds(prev => { const n = new Set(prev); n.delete(ticket.id); return n; });
 
-    // Join room
     if (socket) socket.emit('chat:join', { ticketId: ticket.id });
 
-    // Fetch full messages
     try {
       const r = await axios.get(`${API}/api/support/tickets/${ticket.id}`, authHeader);
       setMessages(r.data.messages || []);
       setSelectedTicket(r.data);
     } catch {}
 
-    // Mark as read
     try {
       await axios.put(`${API}/api/support/tickets/${ticket.id}/read-admin`, {}, authHeader);
       setTickets(prev => prev.map(t => t.id === ticket.id ? { ...t, unreadByAdmin: 0 } : t));
@@ -165,7 +192,7 @@ export default function SupportChat({ onAdminLogout }) {
       socket.emit('chat:message', { ticketId: selectedTicket.id, text: msg });
     }
 
-    // Optimistic
+    // Optimistic — add admin message immediately, socket will NOT add it again (filtered on user side)
     const optimistic = {
       senderId: 'admin',
       senderRole: 'admin',
@@ -173,7 +200,6 @@ export default function SupportChat({ onAdminLogout }) {
       text: msg,
       timestamp: new Date().toISOString(),
       read: false,
-      _optimistic: true
     };
     setMessages(prev => [...prev, optimistic]);
   };
@@ -210,7 +236,6 @@ export default function SupportChat({ onAdminLogout }) {
     setTickets(prev => prev.map(t => t.id === selectedTicket.id ? { ...t, status: 'open' } : t));
   };
 
-  // Filter + search tickets
   const filteredTickets = tickets.filter(t => {
     const matchFilter = filter === 'all' || t.status === filter;
     const matchSearch = !search || t.clientName?.toLowerCase().includes(search.toLowerCase())
@@ -219,7 +244,6 @@ export default function SupportChat({ onAdminLogout }) {
     return matchFilter && matchSearch;
   });
 
-  // Group messages by date
   const groupedMessages = messages.reduce((groups, msg) => {
     const date = formatDate(msg.timestamp);
     if (!groups[date]) groups[date] = [];
@@ -238,6 +262,38 @@ export default function SupportChat({ onAdminLogout }) {
             </h2>
             {totalUnread > 0 && <span className="support-unread-badge">{totalUnread}</span>}
           </div>
+
+          {/* Online Visitors Toggle */}
+          <button
+            className={`visitors-toggle-btn ${showVisitors ? 'active' : ''}`}
+            onClick={() => setShowVisitors(s => !s)}
+          >
+            <span className="visitors-live-dot" />
+            <span>{onlineVisitors.length} Online</span>
+            <i className={`fa-solid fa-chevron-${showVisitors ? 'up' : 'down'}`} />
+          </button>
+
+          {showVisitors && (
+            <div className="visitors-panel">
+              <div className="visitors-panel-title">
+                <i className="fa-solid fa-eye" /> Live Visitors
+              </div>
+              {onlineVisitors.length === 0 ? (
+                <div className="visitors-empty">No users online right now</div>
+              ) : (
+                onlineVisitors.map(v => (
+                  <div key={v.clientId} className="visitor-row">
+                    <div className="visitor-dot" />
+                    <div className="visitor-info">
+                      <div className="visitor-name">{v.clientName}</div>
+                      <div className="visitor-meta">{v.clientUid} · {v.page}</div>
+                    </div>
+                    <div className="visitor-time">{formatDuration(v.duration)}s</div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
 
           <div className="support-search-wrap">
             <i className="fa-solid fa-magnifying-glass support-search-icon" />
@@ -284,7 +340,7 @@ export default function SupportChat({ onAdminLogout }) {
             <div
               key={ticket.id}
               id={`ticket-${ticket.id}`}
-              className={`support-ticket-item ${selectedTicket?.id === ticket.id ? 'active' : ''} ${ticket.unreadByAdmin > 0 ? 'unread' : ''}`}
+              className={`support-ticket-item ${selectedTicket?.id === ticket.id ? 'active' : ''} ${(ticket.unreadByAdmin > 0 || newMsgTicketIds.has(ticket.id)) ? 'unread' : ''}`}
               onClick={() => selectTicket(ticket)}
             >
               <div className="ticket-item-avatar">
@@ -303,8 +359,8 @@ export default function SupportChat({ onAdminLogout }) {
                   {ticket.messages?.[ticket.messages.length - 1]?.text || 'No messages yet'}
                 </div>
               </div>
-              {ticket.unreadByAdmin > 0 && (
-                <span className="ticket-unread-count">{ticket.unreadByAdmin}</span>
+              {(ticket.unreadByAdmin > 0 || newMsgTicketIds.has(ticket.id)) && (
+                <span className="ticket-unread-count">{ticket.unreadByAdmin || '!'}</span>
               )}
             </div>
           ))}
@@ -394,7 +450,27 @@ export default function SupportChat({ onAdminLogout }) {
                 </div>
               ))}
 
-              {userTyping && (
+              {/* Real-time typing text preview from user */}
+              {userTypingText && (
+                <div className="support-msg-row user">
+                  <div className="support-msg-avatar">
+                    {selectedTicket.clientName?.[0]?.toUpperCase() || 'C'}
+                  </div>
+                  <div className="support-msg-bubble-wrap">
+                    <div className="chat-msg-bubble user typing-preview">
+                      {userTypingText}
+                      <span className="typing-cursor" />
+                    </div>
+                    <div className="chat-msg-meta" style={{ color: 'var(--success)' }}>
+                      <i className="fa-solid fa-keyboard" style={{ marginRight: 4 }} />
+                      typing...
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Typing indicator (dots) — shown only when typing but no text yet */}
+              {userTyping && !userTypingText && (
                 <div className="support-msg-row user">
                   <div className="support-msg-avatar">
                     {selectedTicket.clientName?.[0]?.toUpperCase() || 'C'}

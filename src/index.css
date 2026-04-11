@@ -1811,3 +1811,65 @@ body {
   display: flex; align-items: center;
   flex-shrink: 0;
 }
+
+/* ─────────────────────────────────────────────────
+   ADMIN SUPPORT CHAT - VISITORS & TYPING PREVIEW
+───────────────────────────────────────────────── */
+
+/* Visitors Toggle Button */
+.visitors-toggle-btn {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 12px 20px;
+  background: rgba(0,204,136,0.05); border: 1px solid rgba(0,204,136,0.15);
+  color: var(--success); font-size: 12px; font-weight: 700;
+  border-radius: 8px; cursor: pointer; transition: var(--transition);
+  margin-bottom: 14px; justify-content: space-between;
+}
+.visitors-toggle-btn:hover { background: rgba(0,204,136,0.1); }
+.visitors-live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success); box-shadow: 0 0 8px var(--success);
+  animation: onlinePulse 2s infinite;
+}
+
+/* Visitors Panel */
+.visitors-panel {
+  background: var(--bg-card-alt); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 14px; padding: 12px;
+  max-height: 200px; overflow-y: auto;
+}
+.visitors-panel-title {
+  font-size: 11px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.visitors-empty {
+  font-size: 12px; color: var(--text-dim); text-align: center; padding: 10px;
+}
+.visitor-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: 6px;
+  background: var(--bg-hover); margin-bottom: 4px;
+}
+.visitor-row:last-child { margin-bottom: 0; }
+.visitor-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--success); flex-shrink: 0;
+}
+.visitor-info { flex: 1; min-width: 0; }
+.visitor-name { font-size: 12px; font-weight: 700; color: var(--text-main); }
+.visitor-meta { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.visitor-time { font-size: 10px; color: var(--accent); font-family: 'Space Mono', monospace; font-weight: 700; }
+
+/* Typing Preview */
+.typing-preview {
+  opacity: 0.7; font-style: italic;
+  background: rgba(50,145,255,0.1) !important;
+  border: 1px dashed rgba(50,145,255,0.4) !important;
+  color: var(--text-main) !important;
+}
+.typing-cursor {
+  display: inline-block; width: 2px; height: 12px;
+  background: var(--accent); margin-left: 2px;
+  vertical-align: middle; animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
