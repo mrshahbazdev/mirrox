@@ -18,6 +18,10 @@ const ClientDetail = ({ onAdminLogout }) => {
   const navigate = useNavigate();
   const { allTrades, prices, socket, allClients } = useTrading();
   const { showAlert, showConfirm, showPrompt } = useModal();
+  
+  const adminToken = localStorage.getItem('mirrox_admin_token');
+  const authHeader = { headers: { Authorization: `Bearer ${adminToken}` } };
+
   const [activeTab, setActiveTab] = useState('trades');
   const [tradePage, setTradePage] = useState(1);
 
@@ -178,7 +182,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const handleUpdateStatus = async (newStatus) => {
     try {
-      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: newStatus });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { status: newStatus }, authHeader);
       setStaticClient(res.data);
     } catch (err) {
       console.error('Failed to update status', err);
@@ -197,7 +201,7 @@ const ClientDetail = ({ onAdminLogout }) => {
       const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/${endpoint}/${txId}/status`, { 
         status: newStatus,
         reason: reason
-      });
+      }, authHeader);
       
       // Update local state arrays for immediate UI feedback
       if (type === 'deposit') {
@@ -210,7 +214,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
       // If approved, the backend updated the client balance, so we should refresh the static client too
       if (newStatus === 'approved') {
-        const clientRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+        const clientRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, authHeader);
         setStaticClient(clientRes.data);
       }
     } catch (err) {
@@ -221,7 +225,7 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   const handleUpdateKYC = async (kycData) => {
     try {
-      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/kyc`, kycData);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/kyc`, kycData, authHeader);
       setStaticClient(res.data);
     } catch (err) {
       console.error('Failed to update KYC', err);
@@ -233,7 +237,7 @@ const ClientDetail = ({ onAdminLogout }) => {
     showPrompt("Enter new 4-digit PIN for client:", "Reset Withdrawal PIN", async (newPin) => {
       if (!newPin || newPin.length !== 4) return showAlert("PIN must be 4 digits", "Error", "error");
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/pin`, { pin: newPin });
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/pin`, { pin: newPin }, authHeader);
         showAlert("Withdrawal PIN updated successfully", "Success", "success");
       } catch (err) {
         showAlert("Failed to reset PIN", "Error", "error");
@@ -244,7 +248,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   const handleEditProfile = async () => {
     setEditing(true);
     try {
-      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, editData);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, editData, authHeader);
       setStaticClient(res.data);
       setShowEditModal(false);
     } catch (err) {
@@ -262,10 +266,10 @@ const ClientDetail = ({ onAdminLogout }) => {
         amount: adjustData.amount,
         type: adjustData.type,
         note: adjustData.note || 'Manual Adjustment'
-      });
+      }, authHeader);
       if (res.data.success) {
         // Refresh client data to reflect new balance
-        const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+        const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, authHeader);
         setStaticClient(updated.data);
         setShowBalanceModal(false);
         setAdjustData({ amount: '', type: 'increase', note: '' });
@@ -284,8 +288,8 @@ const ClientDetail = ({ onAdminLogout }) => {
         amount: 10000,
         type: 'increase',
         note: 'Quick Demo Funding'
-      });
-      const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`);
+      }, authHeader);
+      const updated = await axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, authHeader);
       setStaticClient(updated.data);
       showAlert('Account funded with $10,000.00!', 'Funding Success', 'success');
     } catch (err) {
@@ -386,7 +390,7 @@ const ClientDetail = ({ onAdminLogout }) => {
             const note = e.target.value;
             if (note === (client.adminNote || '')) return;
             try {
-              const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { adminNote: note });
+              const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { adminNote: note }, authHeader);
               setStaticClient(res.data);
               // Show a temporary "Saved" indicator if needed, but the UI is clean
             } catch (err) {
