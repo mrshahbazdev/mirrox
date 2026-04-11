@@ -6,6 +6,7 @@ const Settings = ({ onAdminLogout }) => {
   const [configs, setConfigs] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [toast, setToast] = useState(null);
 
   const showToast = (msg, type = 'success') => {
@@ -181,6 +182,64 @@ const Settings = ({ onAdminLogout }) => {
                   onChange={(e) => handleChange('support_icon', e.target.value)}
                   placeholder="fa-solid fa-headset"
                 />
+              </div>
+            </div>
+
+            <div className="setting-card" style={{ marginBottom: '16px' }}>
+              <label className="setting-label">Support Team Avatar (Custom Image)</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid var(--accent)' }}>
+                  {configs.support_avatar ? (
+                    <img src={configs.support_avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <i className={configs.support_icon || 'fa-solid fa-headset'} style={{ fontSize: '20px', color: 'var(--accent)' }} />
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px' }}>Recommended size: 100x100 (Square)</p>
+                  <input 
+                    type="file" 
+                    id="support-avatar-input" 
+                    accept="image/*" 
+                    style={{ display: 'none' }} 
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+                      setUploadingAvatar(true);
+                      try {
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        const res = await axios.post(`${API}/api/upload`, formData, {
+                          headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+                        handleChange('support_avatar', res.data.url);
+                      } catch (err) {
+                        alert('Upload failed');
+                      } finally {
+                        setUploadingAvatar(false);
+                      }
+                    }} 
+                  />
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button 
+                      className="qr-add-btn" 
+                      style={{ padding: '6px 12px', fontSize: '12px' }} 
+                      disabled={uploadingAvatar}
+                      onClick={() => document.getElementById('support-avatar-input').click()}
+                    >
+                      {uploadingAvatar ? <i className="fa-solid fa-spinner fa-spin" /> : <><i className="fa-solid fa-upload" /> Upload Image</>}
+                    </button>
+                    {configs.support_avatar && (
+                      <button 
+                         className="qr-add-btn" 
+                         style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }} 
+                         onClick={() => handleChange('support_avatar', '')}
+                      >
+                         <i className="fa-solid fa-trash" /> Remove
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 

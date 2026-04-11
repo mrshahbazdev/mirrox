@@ -63,6 +63,7 @@ export default function SupportChat({ onAdminLogout }) {
   const [newMsgTicketIds, setNewMsgTicketIds] = useState(new Set()); // for sidebar notification
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [systemConfig, setSystemConfig] = useState({});
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -155,10 +156,8 @@ export default function SupportChat({ onAdminLogout }) {
     });
 
     s.on('chat:messages_read', ({ ticketId, readBy }) => {
-      if (readBy === 'user') {
-        if (selectedTicketRef.current?.id === ticketId) {
-          setMessages(prev => prev.map(m => m.senderRole === 'admin' ? { ...m, read: true } : m));
-        }
+      if (selectedTicketRef.current?.id === ticketId && readBy === 'user') {
+        setMessages(msgs => msgs.map(m => m.senderRole === 'admin' ? { ...m, read: true } : m));
       }
     });
 
@@ -169,6 +168,10 @@ export default function SupportChat({ onAdminLogout }) {
 
     return () => s.disconnect();
   }, [adminToken]);
+
+  useEffect(() => {
+    axios.get(`${API}/api/config`).then(r => setSystemConfig(r.data)).catch(() => {});
+  }, []);
 
   // Fetch all tickets
   useEffect(() => {
@@ -543,7 +546,11 @@ export default function SupportChat({ onAdminLogout }) {
                           </div>
                         </div>
                         {isAdmin && <div className="support-msg-avatar admin-bubble-avatar">
-                          <i className="fa-solid fa-headset" />
+                          {systemConfig.support_avatar ? (
+                            <img src={systemConfig.support_avatar} alt="Admin" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <i className={systemConfig.support_icon || 'fa-solid fa-headset'} />
+                          )}
                         </div>}
                       </div>
                     );

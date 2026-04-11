@@ -360,7 +360,11 @@ export default function LiveChat({ currentUser }) {
           <div className="chat-header-info">
             <div className="chat-avatar-wrap">
               <div className="chat-avatar support-avatar">
-                <i className={supportIcon} />
+                {systemConfig.support_avatar ? (
+                  <img src={systemConfig.support_avatar} alt="Support" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <i className={supportIcon} />
+                )}
               </div>
               <span className="chat-online-dot" />
             </div>
@@ -402,7 +406,11 @@ export default function LiveChat({ currentUser }) {
           {!connecting && messages.length === 0 && (
             <div className="chat-welcome">
               <div className="chat-welcome-icon">
-                <i className={supportIcon} />
+                {systemConfig.support_avatar ? (
+                  <img src={systemConfig.support_avatar} alt="Support" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '16px', border: '3px solid var(--accent)' }} />
+                ) : (
+                  <i className={supportIcon} />
+                )}
               </div>
               <h4>Welcome to {supportName}</h4>
               <p>How can we help you today? Please select a category:</p>
@@ -435,7 +443,11 @@ export default function LiveChat({ currentUser }) {
                   <div key={i} className={`chat-msg-row ${isUser ? 'user' : 'admin'}`}>
                     {!isUser && (
                       <div className="chat-msg-avatar">
-                        <i className={supportIcon} />
+                        {systemConfig.support_avatar ? (
+                          <img src={systemConfig.support_avatar} alt="S" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <i className={supportIcon} />
+                        )}
                       </div>
                     )}
                     <div className="chat-msg-bubble-wrap">
@@ -463,7 +475,11 @@ export default function LiveChat({ currentUser }) {
           {adminTyping && (
             <div className="chat-msg-row admin">
               <div className="chat-msg-avatar">
-                <i className={supportIcon} />
+                {systemConfig.support_avatar ? (
+                  <img src={systemConfig.support_avatar} alt="S" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <i className={supportIcon} />
+                )}
               </div>
               <div className="chat-typing-indicator">
                 <span /><span /><span />
