@@ -120,7 +120,8 @@ const PositionTabs = () => {
               <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
               {activeTab === 'open' && <th>Current Price</th>}
               {activeTab === 'closed' && <th>Close Price</th>}
-              {activeTab !== 'pending' && <th>Profit / Swap</th>}
+              {activeTab !== 'pending' && <th>Profit / Loss</th>}
+              {activeTab !== 'pending' && <th>Swap</th>}
               {activeTab === 'closed' && <th>Comment</th>}
               {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
             </tr>
@@ -147,25 +148,29 @@ const PositionTabs = () => {
                     )}
 
                     {activeTab !== 'pending' && (
-                       <td style={{ color: total >= 0 ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>
-                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                            <span>
-                              {total >= 0 ? '+' : ''}{total.toFixed(2)} USD
-                              {trade.swapLocked && <span title="Swap manually set by admin" style={{ marginLeft: 4, fontSize: '10px' }}>🔒</span>}
-                            </span>
-                            {/* Always show swap breakdown on closed trades; only show if non-zero on open */}
-                            {(isClosed || swap !== 0) && (
-                              <small style={{ opacity: 0.6, fontSize: '10px', color: swap < 0 ? '#ef4444' : '#10b981' }}>
-                                Swap: {swap >= 0 ? '+' : ''}{swap.toFixed(2)}
-                              </small>
-                            )}
-                            {isClosed && (
-                              <small style={{ opacity: 0.5, fontSize: '10px' }}>
-                                P/L: {profit >= 0 ? '+' : ''}{profit.toFixed(2)}
-                              </small>
-                            )}
-                         </div>
-                       </td>
+                       <>
+                         <td style={{ color: profit >= 0 ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>
+                            {profit >= 0 ? '+' : ''}{profit.toFixed(2)} USD
+                         </td>
+                         <td style={{ color: swap < 0 ? '#ef4444' : '#10b981', fontWeight: '500' }}>
+                            {(() => {
+                              const tradeAgeMs = Date.now() - new Date(trade.openTime).getTime();
+                              const isOldEnough = tradeAgeMs >= 24 * 60 * 60 * 1000;
+                              const shouldShowSwap = trade.status === 'Closed' || isOldEnough;
+                              const visibleSwap = shouldShowSwap ? swap : 0;
+                              
+                              return (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                   <span>{visibleSwap >= 0 ? '+' : ''}{visibleSwap.toFixed(2)} USD</span>
+                                   {trade.swapLocked && <span title="Swap manually set by admin" style={{ fontSize: '10px' }}>🔒</span>}
+                                   {!shouldShowSwap && trade.status === 'Open' && (
+                                     <i className="fa-solid fa-clock-rotate-left" style={{ fontSize: '9px', opacity: 0.5 }} title="Swap appears after 24h"></i>
+                                   )}
+                                </div>
+                              );
+                            })()}
+                         </td>
+                       </>
                     )}
 
                     {activeTab === 'closed' && (
