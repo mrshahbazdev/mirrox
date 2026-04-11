@@ -372,6 +372,33 @@ const ClientDetail = ({ onAdminLogout }) => {
         )}
       </div>
 
+      {/* Admin Sticky Note (Internal Only) */}
+      <div className="sticky-note-card">
+        <div className="sticky-label">
+          <i className="fa-solid fa-note-sticky" />
+          Sovereign Internal Memo
+        </div>
+        <textarea 
+          className="sticky-textarea"
+          placeholder="Type an internal note about this client here... (Admins only)"
+          defaultValue={client.adminNote || ''}
+          onBlur={async (e) => {
+            const note = e.target.value;
+            if (note === (client.adminNote || '')) return;
+            try {
+              const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, { adminNote: note });
+              setStaticClient(res.data);
+              // Show a temporary "Saved" indicator if needed, but the UI is clean
+            } catch (err) {
+              console.error('Failed to save admin note');
+            }
+          }}
+        />
+        <div className="note-status-indicator">
+          <i className="fa-solid fa-lock" /> CONFIDENTIAL STAFF ACCESS
+        </div>
+      </div>
+
       <div className="cd-section cd-profile-card">
         <div className="cd-section-label">Client Profile</div>
         <div className="cd-profile-grid">

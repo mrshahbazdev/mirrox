@@ -62,7 +62,8 @@ const ClientSchema = new mongoose.Schema({
     date: Date,
     read: { type: Boolean, default: false },
     type: { type: String, default: 'info' }
-  }]
+  }],
+  adminNote: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Client', ClientSchema);

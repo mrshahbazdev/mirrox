@@ -553,7 +553,7 @@ app.get('/api/clients/:id', verifyClientToken, (req, res) => {
   if (!client) return res.status(404).send('Not Found');
   
   // Sanitize for response
-  const { password: p, withdrawalPin: wp, ...sanitizedClient } = client;
+  const { password: p, withdrawalPin: wp, adminNote: an, ...sanitizedClient } = client;
   sanitizedClient.hasPin = !!wp;
   
   res.json(sanitizedClient);
@@ -600,6 +600,12 @@ app.put('/api/clients/:id', verifyAdminToken, (req, res) => {
   const index = clients.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).send('Not Found');
   clients[index] = { ...clients[index], ...req.body };
+  
+  // Update MongoDB if online
+  if (mongoose.connection.readyState === 1) {
+    Client.updateOne({ id: req.params.id }, { $set: req.body }).catch(err => console.warn('DB Update failed:', err.message));
+  }
+  
   saveData();
   res.json(clients[index]);
 });

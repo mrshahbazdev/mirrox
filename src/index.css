@@ -2225,3 +2225,60 @@ body {
   box-shadow: 0 8px 20px rgba(0,204,136,0.3) !important; transition: 0.3s !important;
 }
 .create-admin-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
+
+/* Admin Sticky Note Elite Styles */
+.sticky-note-card {
+  background: rgba(245, 158, 11, 0.03) !important;
+  border: 1px dashed rgba(245, 158, 11, 0.3) !important;
+  border-radius: 16px !important;
+  padding: 18px !important;
+  margin-bottom: 24px !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  transition: all 0.3s !important;
+}
+.sticky-note-card:hover {
+  background: rgba(245, 158, 11, 0.05) !important;
+  border-style: solid !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.05) !important;
+}
+.sticky-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: #f59e0b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+.sticky-label i { font-size: 14px !important; }
+.sticky-textarea {
+  background: transparent !important;
+  border: none !important;
+  color: #e2e8f0 !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  font-family: 'Inter', sans-serif !important;
+  width: 100% !important;
+  min-height: 80px !important;
+  resize: vertical !important;
+  outline: none !important;
+  padding: 0 !important;
+}
+.sticky-textarea::placeholder { color: #475569 !important; font-style: italic !important; }
+.note-save-indicator {
+  position: absolute !important;
+  bottom: 12px !important;
+  right: 18px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  opacity: 0.8 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
