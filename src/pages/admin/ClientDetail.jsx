@@ -683,11 +683,11 @@ const ClientDetail = ({ onAdminLogout }) => {
                       <td><span className={`cd-type-badge ${t.type === 'BUY' ? 'buy' : 'sell'}`}>{t.type}</span></td>
                       <td className="adm-mono">{t.lots}</td>
                       <td className="adm-mono">{t.openPrice}</td>
-                      <td className="adm-mono">{prices.find(p=>p.name===t.symbol)?.price || '...'}</td>
+                      <td className="adm-mono">{prices.find(p=>p.symbol===t.symbol)?.price || '...'}</td>
                       <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#3291ff' : '#64748b' }}>
                         {t.status === 'Closed' 
-                          ? (t.closePrice?.toFixed(prices.find(p=>p.name===t.symbol)?.precision || 2) || '---')
-                          : (t.selectedPrice ? t.selectedPrice.toFixed(prices.find(p=>p.name===t.symbol)?.precision || 2) : '---')
+                          ? (t.closePrice?.toFixed(prices.find(p=>p.symbol===t.symbol)?.precision || 2) || '---')
+                          : (t.selectedPrice ? t.selectedPrice.toFixed(prices.find(p=>p.symbol===t.symbol)?.precision || 2) : '---')
                         }
                       </td>
                       <td className="adm-mono" style={{ color: (t.swap || 0) < 0 ? '#ff4d4d' : '#00cc88' }}>
