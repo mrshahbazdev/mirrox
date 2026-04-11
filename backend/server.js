@@ -605,6 +605,34 @@ app.post('/api/support/tickets', verifyClientToken, async (req, res) => {
   }
 });
 
+// GET all available support admins
+app.get('/api/support/admins', verifyAdminToken, async (req, res) => {
+  try {
+     const ads = admins.map(a => ({ name: a.name, email: a.email }));
+     res.json(ads);
+  } catch (err) {
+     res.status(500).json({ error: 'Failed to fetch admins' });
+  }
+});
+
+// PUT transfer ticket to another admin
+app.put('/api/support/tickets/:ticketId/transfer', verifyAdminToken, async (req, res) => {
+  const { assignedTo } = req.body;
+  if (!assignedTo) return res.status(400).json({ error: 'AssignedTo is required' });
+  try {
+    const ticket = await SupportTicket.findOneAndUpdate(
+      { id: req.params.ticketId }, 
+      { assignedTo }, 
+      { new: true }
+    );
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+    io.to(`ticket:${req.params.ticketId}`).emit('chat:ticket_update', { ticketId: ticket.id, assignedTo });
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to transfer ticket' });
+  }
+});
+
 // PUT close ticket (admin)
 app.put('/api/support/tickets/:ticketId/close', verifyAdminToken, async (req, res) => {
   try {

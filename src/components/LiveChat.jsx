@@ -88,7 +88,9 @@ export default function LiveChat({ currentUser }) {
   // Load existing ticket on mount
   useEffect(() => {
     if (!currentUser?.id) return;
-    axios.get(`${API}/api/support/my-ticket`)
+    const token = localStorage.getItem('mirrox_token');
+    const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
+    axios.get(`${API}/api/support/my-ticket`, clientHeader)
       .then(r => {
         if (r.data) {
           setTicket(r.data);
@@ -336,8 +338,12 @@ export default function LiveChat({ currentUser }) {
 
   const downloadTranscript = () => {
     if (!messages.length) return;
-    const text = messages.map(m => `[${formatTime(m.timestamp)}] ${m.senderRole === 'user' ? 'You' : supportName}: ${m.text}`).join('\n');
-    const blob = new Blob([text], { type: 'text/plain' });
+    const sName = systemConfig.support_name || 'Mirrox Support';
+    const text = messages.map(m => `[${formatTime(m.timestamp)}] ${m.senderRole === 'user' ? 'You' : sName}: ${m.text || (m.attachment ? '[Image Attachment]' : '')}`).join('\n');
+    
+    const header = `--- ${sName} Chat Transcript ---\nTicket ID: ${ticket?.id || 'N/A'}\nDate: ${new Date().toLocaleString()}\n---------------------------------------\n\n`;
+    
+    const blob = new Blob([header + text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

@@ -64,6 +64,8 @@ export default function SupportChat({ onAdminLogout }) {
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
   const [systemConfig, setSystemConfig] = useState({});
+  const [availableAdmins, setAvailableAdmins] = useState([]);
+  const [showTransferModal, setShowTransferModal] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -171,7 +173,10 @@ export default function SupportChat({ onAdminLogout }) {
 
   useEffect(() => {
     axios.get(`${API}/api/config`).then(r => setSystemConfig(r.data)).catch(() => {});
-  }, []);
+    axios.get(`${API}/api/support/admins`, { headers: { Authorization: `Bearer ${adminToken}` } })
+      .then(r => setAvailableAdmins(r.data))
+      .catch(() => {});
+  }, [adminToken]);
 
   // Fetch all tickets
   useEffect(() => {
@@ -269,7 +274,7 @@ export default function SupportChat({ onAdminLogout }) {
 
   const downloadTranscript = () => {
     if (!messages.length || !selectedTicket) return;
-    const supportName = systemConfig.support_name || 'Mirrox Support';
+    const sName = systemConfig.support_name || 'Mirrox Support';
     const content = messages.map(m => {
        const time = formatTime(m.timestamp);
        const sender = m.senderRole === 'admin' ? 'You' : (m.senderName || 'Client');
@@ -277,7 +282,7 @@ export default function SupportChat({ onAdminLogout }) {
        return `[${time}] ${sender}: ${text}`;
     }).join('\n');
 
-    const header = `--- Mirrox Support Chat Transcript ---\nTicket ID: ${selectedTicket.id}\nClient: ${selectedTicket.clientName} (${selectedTicket.clientUid})\nDate: ${new Date().toLocaleString()}\n---------------------------------------\n\n`;
+    const header = `--- ${sName} Chat Transcript ---\nTicket ID: ${selectedTicket.id}\nClient: ${selectedTicket.clientName} (${selectedTicket.clientUid})\nDate: ${new Date().toLocaleString()}\n---------------------------------------\n\n`;
     
     const blob = new Blob([header + content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -321,6 +326,16 @@ export default function SupportChat({ onAdminLogout }) {
   const blockTicket = () => {
     if (!selectedTicket) return;
     setShowBlockModal(true);
+  };
+
+  const transferTicket = async (adminName) => {
+    try {
+      await axios.put(`${API}/api/support/tickets/${selectedTicket.id}/transfer`, { assignedTo: adminName }, authHeader);
+      setSelectedTicket(prev => ({ ...prev, assignedTo: adminName }));
+      setShowTransferModal(false);
+    } catch (e) {
+      alert('Transfer failed');
+    }
   };
 
   const confirmBlock = () => {
@@ -487,6 +502,7 @@ export default function SupportChat({ onAdminLogout }) {
                   <div className="convo-client-name">{selectedTicket.clientName}</div>
                   <div className="convo-client-meta">
                     {selectedTicket.clientUid} · <span className="convo-ticket-id">{selectedTicket.id}</span>
+                    {selectedTicket.assignedTo && <span style={{ color: 'var(--accent)', marginLeft: 8 }}>· Assigned to: {selectedTicket.assignedTo}</span>}
                     {userTyping && <span style={{ color: 'var(--success)', marginLeft: 8 }}>· Typing...</span>}
                   </div>
                 </div>
@@ -498,6 +514,9 @@ export default function SupportChat({ onAdminLogout }) {
                 </span>
                 <button className="chat-minimize-btn" title="Download Transcript" onClick={downloadTranscript} style={{ border: '1px solid var(--border)', background: 'var(--bg-hover)', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <i className="fa-solid fa-download" style={{ fontSize: '13px' }} />
+                </button>
+                <button className="chat-minimize-btn" title="Transfer Chat" onClick={() => setShowTransferModal(true)} style={{ border: '1px solid var(--border)', background: 'var(--bg-hover)', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <i className="fa-solid fa-shuffle" style={{ fontSize: '13px' }} />
                 </button>
                 {selectedTicket.status === 'open' ? (
                   <>
@@ -695,6 +714,41 @@ export default function SupportChat({ onAdminLogout }) {
           </>
         )}
       </div>
+      {/* Transfer Modal */}
+      {showTransferModal && (
+        <div className="support-modal-overlay">
+          <div className="support-modal-card" style={{ maxWidth: '350px' }}>
+            <div className="support-modal-header">
+              <i className="fa-solid fa-shuffle" style={{ color: 'var(--accent)' }} />
+              <h4>Transfer Chat</h4>
+            </div>
+            <div className="support-modal-body" style={{ padding: '20px' }}>
+              <p style={{ marginBottom: '16px', fontSize: '13px', color: 'var(--text-muted)' }}>Select a support member to handle this ticket:</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {availableAdmins.map(ad => (
+                  <button 
+                    key={ad.email} 
+                    className="qr-item" 
+                    style={{ textAlign: 'left', padding: '12px', background: 'var(--bg-hover)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-main)', display: 'flex', alignItems: 'center' }}
+                    onClick={() => transferTicket(ad.name)}
+                  >
+                    <i className="fa-solid fa-user-tie" style={{ marginRight: '10px', fontSize: '16px' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                       <span style={{ fontWeight: 600 }}>{ad.name}</span>
+                       <span style={{ fontSize: '11px', opacity: 0.7 }}>{ad.email}</span>
+                    </div>
+                  </button>
+                ))}
+                {availableAdmins.length === 0 && <p style={{ textAlign: 'center', fontStyle: 'italic', padding: '20px' }}>No other admins available.</p>}
+              </div>
+            </div>
+            <div className="support-modal-footer">
+               <button className="support-modal-btn cancel" onClick={() => setShowTransferModal(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Block Confirmation Modal */}
       {showBlockModal && (
         <div className="support-modal-overlay">

@@ -17,6 +17,7 @@ const SupportTicketSchema = new mongoose.Schema({
   clientUid:      { type: String },
   status:         { type: String, enum: ['open', 'closed', 'blocked'], default: 'open' },
   category:       { type: String },
+  assignedTo:     { type: String, default: null }, // Admin Name or Email
   adminNote:      { type: String },
   rating:         { type: Number },
   messages:       [MessageSchema],
