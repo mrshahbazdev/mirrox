@@ -69,6 +69,9 @@ const Verifications = ({ onAdminLogout }) => {
     if (c.kyc?.por?.status && c.kyc.por.status !== 'none') {
         allRequests.push({ client: c, type: 'Proof of Residence', category: 'por', data: c.kyc.por });
     }
+    if (c.kyc?.selfie?.status && c.kyc.selfie.status !== 'none') {
+        allRequests.push({ client: c, type: 'Selfie with ID', category: 'selfie', data: c.kyc.selfie });
+    }
     // Backward compatibility for legacy clients before split
     if (c.kyc?.documentUrl && (!c.kyc?.poi || c.kyc.poi.status === 'none')) {
         allRequests.push({ 
@@ -121,7 +124,7 @@ const Verifications = ({ onAdminLogout }) => {
           <h2 className="adm-page-title">
             <i className="fa-solid fa-address-card" /> Verification Center
           </h2>
-          <p className="adm-page-sub">Review POI and POR documents to activate live accounts</p>
+          <p className="adm-page-sub">Review POI, POR and Selfie documents to activate live accounts</p>
         </div>
         <div className="adm-stat-pill">
           <span className="dot pulse" /> {allRequests.filter(r => r.data.status === 'pending').length} Pending
@@ -163,7 +166,7 @@ const Verifications = ({ onAdminLogout }) => {
                   <div className="kyc-doc-info">
                     <div className="doc-label">Document Type</div>
                     <div className="doc-type" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <i className="fa-solid fa-file-lines" style={{ color: req.category === 'poi' ? '#3291ff' : '#f59e0b' }} /> 
+                      <i className={`fa-solid ${req.category === 'selfie' ? 'fa-camera-retro' : 'fa-file-lines'}`} style={{ color: req.category === 'poi' ? '#3291ff' : (req.category === 'por' ? '#f59e0b' : '#10b981') }} /> 
                       <strong style={{ color: '#fff' }}>{req.type}</strong>
                       {req.data.url && (
                         <a href={req.data.url} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#3291ff', fontSize: 11, textDecoration: 'none', background: 'rgba(50,145,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
