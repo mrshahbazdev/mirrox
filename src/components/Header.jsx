@@ -96,7 +96,9 @@ const Header = ({ currentUser }) => {
           </div>
 
           <div className="account-selector">
-            <span style={{ color: 'var(--accent)', fontWeight: 700 }}>LIVE</span>
+            <span style={{ color: realTimeClient?.accountType === 'live' ? 'var(--accent)' : '#f59e0b', fontWeight: 700 }}>
+              {realTimeClient?.accountType === 'live' ? 'LIVE' : 'DEMO'}
+            </span>
             <span style={{ color: 'var(--text-main)', opacity: 0.8 }}>{realTimeClient?.uid || 'MRX-0000'}</span>
             <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', color: 'var(--text-muted)' }}></i>
           </div>

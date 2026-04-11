@@ -24,7 +24,7 @@ const Dashboard = () => {
   const selectedSymbol = prices.find(s => s.id === selectedSymbolId) || prices[0];
   
   const { currentClientExtended } = useTrading();
-  const isVerified = currentClientExtended?.kyc?.status === 'approved';
+  const isVerified = currentClientExtended?.kyc?.status === 'verified' || currentClientExtended?.accountType === 'live';
 
   return (
     <>
