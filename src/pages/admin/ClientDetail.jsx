@@ -225,6 +225,28 @@ const ClientDetail = ({ onAdminLogout }) => {
     }
   };
 
+  const handleReviewKYC = async (category, action, reason = null) => {
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/kyc/review`, {
+        category,
+        action,
+        rejectionReason: reason
+      }, authHeader);
+      
+      // Update local state to show change instantly
+      setStaticClient(prev => ({
+        ...prev,
+        kyc: res.data.kyc,
+        accountType: res.data.kyc.status === 'verified' ? 'live' : (prev ? prev.accountType : 'demo')
+      }));
+      
+      showAlert(`Document ${action === 'approve' ? 'approved' : 'rejected'} successfully`, 'KYC Updated', 'success');
+    } catch (err) {
+      console.error('Failed to review KYC', err);
+      showAlert('Error updating KYC document status', 'Update Failed', 'error');
+    }
+  };
+
   const handleUpdateKYC = async (kycData) => {
     try {
       const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/kyc`, kycData, authHeader);
@@ -446,8 +468,8 @@ const ClientDetail = ({ onAdminLogout }) => {
               <div className="cd-field" key={f.label}>
                 <div className="cd-field-icon"><i className={`fa-solid ${f.icon}`} /></div>
                 <div>
-                  <div className="cd-field-label">{f.label}</div>
-                  <div className="cd-field-value">{f.value}</div>
+                   <div className="cd-field-label">{f.label}</div>
+                   <div className="cd-field-value">{f.value}</div>
                 </div>
               </div>
             ))}
@@ -467,69 +489,58 @@ const ClientDetail = ({ onAdminLogout }) => {
       </div>
 
       <div className="cd-section">
-        <div className="cd-section-label" style={{ color: '#a855f7' }}>KYC Verification</div>
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px' }}>
-           {client.kyc ? (
-             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                   <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Document Type</div>
-                   <div style={{ fontSize: '15px', color: '#e0e6ed', fontWeight: 700, textTransform: 'capitalize' }}>
-                      {client.kyc.docType?.replace('_', ' ') || 'None Provided'}
-                   </div>
-                   {client.kyc.docName && (
-                     <div style={{ fontSize: '13px', color: '#3291ff', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <div><i className="fa-regular fa-file-image" style={{ marginRight: '6px' }}></i>{client.kyc.docName}</div>
-                        {client.kyc.documentUrl && (
-                          <a href={client.kyc.documentUrl} target="_blank" rel="noreferrer" style={{ color: '#00cc88', textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            <i className="fa-solid fa-external-link-alt" style={{ fontSize: '10px' }}></i> View Document
-                          </a>
-                        )}
-                     </div>
-                   )}
-                </div>
-                <div>
-                   <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Status</div>
-                   <span className={`cd-trade-status ${client.kyc.status === 'approved' ? 'approved' : client.kyc.status === 'pending' ? 'pending' : client.kyc.status === 'rejected' ? 'rejected' : 'closed'}`}>
-                      {client.kyc.status}
-                   </span>
-                   {client.kyc.status === 'rejected' && client.kyc.overallRejectionReason && (
-                     <div style={{ fontSize: '11px', color: '#ff4d4d', marginTop: '6px', maxWidth: '200px', background: 'rgba(255,77,77,0.05)', padding: '6px', borderRadius: '6px' }}>
-                        <i className="fa-solid fa-circle-info" style={{ marginRight: '5px' }}></i>
-                        {client.kyc.overallRejectionReason}
-                     </div>
-                   )}
-                </div>
-                <div>
-                   <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '4px' }}>Account Type</div>
-                   <div style={{ fontSize: '15px', color: client.accountType === 'live' ? '#10b981' : '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
-                      {client.accountType || 'DEMO'}
-                   </div>
-                </div>
-                {(client.kyc.status === 'pending' || client.kyc.status === 'unverified') && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                     <button 
-                        onClick={() => handleUpdateKYC({ status: 'approved' })}
-                        style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: 'rgba(0,204,136,0.1)', color: '#00cc88', fontWeight: 700, cursor: 'pointer' }}
-                     >
-                        Approve
-                     </button>
-                     <button 
-                        onClick={async () => {
-                           const reason = await showPrompt("Enter rejection reason:", "Reject KYC", "Reason for rejection...");
-                           if (reason) handleUpdateKYC({ status: 'rejected', rejectionReason: reason });
-                        }}
-                        style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: 'rgba(255,77,77,0.1)', color: '#ff4d4d', fontWeight: 700, cursor: 'pointer' }}
-                     >
-                        Reject
-                     </button>
-                  </div>
-                )}
-             </div>
-           ) : (
-             <div style={{ color: '#64748b', fontSize: '14px', textAlign: 'center', padding: '12px' }}>
-                No KYC data available for this legacy client.
-             </div>
-           )}
+        <div className="cd-section-label" style={{ color: '#a855f7' }}>Verification Center (KYC Documents)</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '16px' }}>
+          
+          {[
+            { id: 'poi', label: 'Proof of Identity', data: client?.kyc?.poi },
+            { id: 'por', label: 'Proof of Residence', data: client?.kyc?.por },
+            { id: 'selfie', label: 'Selfie with ID', data: client?.kyc?.selfie },
+          ].map((item) => (
+            <div key={item.id} className="adm-kyc-card" style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px' }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#94a3b8' }}>{item.label}</div>
+                  <span className={`cd-trade-status ${item.data?.status || 'none'}`}>
+                     {item.data?.status || 'Not Submitted'}
+                  </span>
+               </div>
+
+               {item.data?.url ? (
+                 <>
+                    <div style={{ background: '#000', height: '180px', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                       <img src={item.data.url} alt={item.id} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                       <a href={item.data.url} target="_blank" rel="noreferrer" className="adm-mini-act" style={{ background: 'rgba(50,145,255,0.1)', color: '#3291ff', textDecoration: 'none', textAlign: 'center', flex: 1, padding: '8px', borderRadius: '8px', fontSize: '12px', fontWeight: 600 }}>
+                          <i className="fa-solid fa-expand" style={{ marginRight: '6px' }} /> View
+                       </a>
+                       {(item.data.status === 'pending' || item.data.status === 'rejected') && (
+                         <button onClick={() => handleReviewKYC(item.id, 'approve')} className="adm-mini-act" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
+                            <i className="fa-solid fa-check" style={{ marginRight: '6px' }} /> Approve
+                         </button>
+                       )}
+                       {(item.data.status === 'pending' || item.data.status === 'approved') && (
+                         <button onClick={async () => {
+                            const reason = await showPrompt("Enter rejection reason:", `Reject ${item.label}`, "Incomplete or blurry...");
+                            if (reason) handleReviewKYC(item.id, 'reject', reason);
+                         }} className="adm-mini-act" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
+                            <i className="fa-solid fa-xmark" style={{ marginRight: '6px' }} /> Reject
+                         </button>
+                       )}
+                    </div>
+                    {item.data.rejectionReason && (
+                       <div style={{ marginTop: '12px', fontSize: '11px', color: '#ff4d4d', padding: '8px', background: 'rgba(255,77,77,0.05)', borderRadius: '8px' }}>
+                          <i className="fa-solid fa-circle-info" style={{ marginRight: '6px' }} /> {item.data.rejectionReason}
+                       </div>
+                    )}
+                 </>
+               ) : (
+                 <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', fontSize: '13px', fontStyle: 'italic', border: '1px dashed rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+                    Document not yet submitted
+                 </div>
+               )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -901,6 +912,10 @@ const ClientDetail = ({ onAdminLogout }) => {
         .t-btn.active { color: #fff; }
         .t-btn.increase.active { background: rgba(0,204,136,0.1); border-color: #00cc88; color: #00cc88; }
         .t-btn.decrease.active { background: rgba(255,77,77,0.1); border-color: #ff4d4d; color: #ff4d4d; }
+        
+        .adm-mini-act { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+        .adm-mini-act.approve { background: rgba(16,185,129,0.1); color: #10b981; border-color: rgba(16,185,129,0.2); }
+        .adm-mini-act.reject { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
       `}</style>
 
       {/* Balance Adjustment Modal */}

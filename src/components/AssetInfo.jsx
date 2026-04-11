@@ -8,87 +8,10 @@ const AssetInfo = ({ symbol, onTrade }) => {
 
   const MarketView = () => (
     <div className="market-tab-content animate-fade">
-      {/* Sentiment Section */}
-      <div className="market-sentiment-section">
-        <div className="hours-title ms-header">Market sentiment</div>
-        <div className="sent-bar-layout">
-           <span className="buy-val">50%</span>
-           <div className="ms-rail">
-              <div className="ms-fill" style={{ width: '50%' }}></div>
-           </div>
-           <span className="sell-val">50%</span>
-        </div>
-      </div>
-
-      {/* Change Section */}
-      <div className="change-section">
-        <div className="hours-title ms-header">Change</div>
-        <div className="change-stat-grid">
-           <div className="change-stat-card">
-              <span className="label">Daily</span>
-              <span className="val neg">- 0.18%</span>
-           </div>
-           <div className="change-stat-card">
-              <span className="label">Weekly</span>
-              <span className="val neg">- 0.42%</span>
-           </div>
-           <div className="change-stat-card">
-              <span className="label">Monthly</span>
-              <span className="val neg">- 2.53%</span>
-           </div>
-        </div>
-      </div>
-
-      {/* Range Section */}
-      <div className="range-section">
-        <div className="hours-title ms-header">Range</div>
-        <div className="range-ui-group">
-           <div className="range-ui-row">
-              <div className="range-header">
-                 <span className="range-label">Daily</span>
-                 <div className="range-prices" style={{display: 'flex', gap: '8px'}}>
-                    <span className="range-price down">L: 1.14997</span>
-                    <span className="range-price up">H: 1.15458</span>
-                 </div>
-              </div>
-              <div className="range-track">
-                 <div className="range-indicator" style={{ left: '42%' }}>
-                    <i className="fa-solid fa-caret-up"></i>
-                 </div>
-              </div>
-           </div>
-
-           <div className="range-ui-row">
-              <div className="range-header">
-                 <span className="range-label">Weekly</span>
-                 <div className="range-prices" style={{display: 'flex', gap: '8px'}}>
-                    <span className="range-price down">L: 1.14825</span>
-                    <span className="range-price up">H: 1.16378</span>
-                 </div>
-              </div>
-              <div className="range-track">
-                 <div className="range-indicator" style={{ left: '35%' }}>
-                    <i className="fa-solid fa-caret-up"></i>
-                 </div>
-              </div>
-           </div>
-
-           <div className="range-ui-row">
-              <div className="range-header">
-                 <span className="range-label">Monthly</span>
-                 <div className="range-prices" style={{display: 'flex', gap: '8px'}}>
-                    <span className="range-price down">L: 1.14088</span>
-                    <span className="range-price up">H: 1.17939</span>
-                 </div>
-              </div>
-              <div className="range-track">
-                 <div className="range-indicator" style={{ left: '55%' }}>
-                    <i className="fa-solid fa-caret-up"></i>
-                 </div>
-              </div>
-           </div>
-        </div>
-      </div>
+       <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>
+          <i className="fa-solid fa-chart-pie" style={{ display: 'block', fontSize: '24px', marginBottom: '12px', opacity: 0.5 }}></i>
+          Market data for {symbol?.name || 'this asset'} is currently being updated.
+       </div>
     </div>
   );
 

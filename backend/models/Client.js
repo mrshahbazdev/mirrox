@@ -36,6 +36,12 @@ const ClientSchema = new mongoose.Schema({
       publicId: String,
       rejectionReason: String
     },
+    selfie: { // Selfie with ID
+      status: { type: String, enum: ['none', 'pending', 'approved', 'rejected'], default: 'none' },
+      url: String,
+      publicId: String,
+      rejectionReason: String
+    },
 
     submittedAt: Date,
     reviewedAt: Date,

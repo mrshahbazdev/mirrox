@@ -634,9 +634,21 @@ app.post('/api/clients/:id/kyc/submit', verifyClientToken, upload.single('docume
 
   const uploadStream = cloudinary.uploader.upload_stream({ folder: 'mirrox_kyc' }, async (error, result) => {
       if (error) return res.status(500).json({ error: 'Upload failed' });
-      const cat = docCategory === 'por' ? 'por' : 'poi';
-      if (!client.kyc) client.kyc = { poi: {}, por: {} };
-      client.kyc[cat] = { status: 'pending', url: result.secure_url, publicId: result.public_id, submittedAt: new Date() };
+      
+      const allowedCategories = ['poi', 'por', 'selfie'];
+      const cat = allowedCategories.includes(docCategory) ? docCategory : 'poi';
+      
+      if (!client.kyc) client.kyc = { poi: {}, por: {}, selfie: {} };
+      if (!client.kyc.selfie) client.kyc.selfie = {}; // Migration safety
+      
+      client.kyc[cat] = { 
+        status: 'pending', 
+        url: result.secure_url, 
+        publicId: result.public_id, 
+        submittedAt: new Date(),
+        docType: req.body.docType || 'unknown'
+      };
+      
       client.kyc.status = 'pending';
       saveData();
       res.json({ message: 'Submitted', kyc: client.kyc });
@@ -649,16 +661,25 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).json({ error: 'Not found' });
 
-  const cat = category === 'por' ? 'por' : 'poi';
+  const allowedCategories = ['poi', 'por', 'selfie'];
+  const cat = allowedCategories.includes(category) ? category : 'poi';
+  
+  if (!client.kyc[cat]) client.kyc[cat] = {};
   client.kyc[cat].status = action === 'approve' ? 'approved' : 'rejected';
   client.kyc[cat].rejectionReason = action === 'reject' ? rejectionReason : null;
   client.kyc.reviewedAt = new Date();
 
-  if (client.kyc.poi?.status === 'approved' && client.kyc.por?.status === 'approved') {
+  const poiStatus = client.kyc.poi?.status;
+  const porStatus = client.kyc.por?.status;
+  const selfieStatus = client.kyc.selfie?.status;
+
+  if (poiStatus === 'approved' && porStatus === 'approved' && selfieStatus === 'approved') {
      client.kyc.status = 'verified';
      client.accountType = 'live';
-  } else if (client.kyc.poi?.status === 'rejected' || client.kyc.por?.status === 'rejected') {
+  } else if (poiStatus === 'rejected' || porStatus === 'rejected' || selfieStatus === 'rejected') {
      client.kyc.status = 'rejected';
+  } else {
+     client.kyc.status = 'pending';
   }
   saveData();
   res.json({ message: 'Reviewed', kyc: client.kyc });

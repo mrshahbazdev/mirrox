@@ -240,6 +240,16 @@ const Documents = () => {
                     { value: 'tax_document', label: 'Tax Document' }
                 ]}
             />
+
+            <KYCBox 
+                title="Selfie Verification" 
+                desc="Upload a clear selfie holding your ID document next to your face. Ensure both your face and ID details are clearly visible without glare." 
+                category="selfie"
+                clientData={currentClientExtended}
+                options={[
+                    { value: 'selfie_with_id', label: 'Selfie with ID Document' }
+                ]}
+            />
         </div>
       )}
 
