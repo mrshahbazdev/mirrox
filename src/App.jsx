@@ -14,6 +14,7 @@ import Reports from './pages/admin/Reports';
 import Verifications from './pages/admin/Verifications';
 import ActiveTraders from './pages/admin/ActiveTraders';
 import Settings from './pages/admin/Settings';
+import SupportChat from './pages/admin/SupportChat';
 import axios from 'axios';
 import Welcome from './pages/Welcome';
 import Register from './pages/Register';
@@ -22,6 +23,7 @@ import Affiliate from './pages/Affiliate';
 import Help from './pages/Help';
 import NotFound from './pages/NotFound';
 import GlobalModal from './components/GlobalModal';
+import LiveChat from './components/LiveChat';
 import { useTrading } from './context/TradingContext';
 
 // Client auth wrapper
@@ -72,7 +74,10 @@ function App() {
           path="/app" 
           element={
             <ProtectedRoute clientId={clientId}>
-              <Layout currentUser={currentClientExtended} onLogout={() => setClientId(null)} />
+              <>
+                <Layout currentUser={currentClientExtended} onLogout={() => setClientId(null)} />
+                <LiveChat currentUser={currentClientExtended} />
+              </>
             </ProtectedRoute>
           }
         >
@@ -153,6 +158,14 @@ function App() {
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
               <Settings onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/support"
+          element={
+            <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
+              <SupportChat onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />

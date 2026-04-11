@@ -1,6 +1,7 @@
 const { activeTrades, symbolsList, saveData, clients } = require('../store');
 const jwt = require('jsonwebtoken');
 const WebSocket = require('ws');
+const SupportTicket = require('../models/SupportTicket');
 
 // Set up Live Binance Feed for Crypto Markets
 let binanceWs = null;
@@ -444,6 +445,103 @@ module.exports = (io) => {
 
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
+    });
+
+    // ─── LIVE SUPPORT CHAT ────────────────────────────────────────────────────
+
+    // Join a support ticket room (both user and admin)
+    socket.on('chat:join', async ({ ticketId }) => {
+      socket.join(`ticket:${ticketId}`);
+      console.log(`[CHAT] ${socket.decoded.role} ${socket.decoded.id} joined room ticket:${ticketId}`);
+    });
+
+    // Send a chat message
+    socket.on('chat:message', async ({ ticketId, text }) => {
+      if (!ticketId || !text?.trim()) return;
+
+      try {
+        const role = socket.decoded.role;
+        const senderId = socket.decoded.id;
+
+        // Determine sender name
+        let senderName = 'Support Team';
+        if (role === 'user') {
+          const client = clients.find(c => c.id === senderId);
+          senderName = client?.name || 'Client';
+        }
+
+        const message = {
+          senderId,
+          senderRole: role,
+          senderName,
+          text: text.trim(),
+          timestamp: new Date(),
+          read: false
+        };
+
+        // Persist to DB
+        const updateObj = {
+          $push: { messages: message },
+          $set: { lastMessageAt: new Date() },
+          $inc: role === 'user' ? { unreadByAdmin: 1 } : { unreadByClient: 1 }
+        };
+        const ticket = await SupportTicket.findOneAndUpdate(
+          { id: ticketId },
+          updateObj,
+          { new: true }
+        );
+
+        if (!ticket) return;
+
+        // Broadcast to everyone in the room
+        io.to(`ticket:${ticketId}`).emit('chat:message', {
+          ticketId,
+          message: { ...message, timestamp: message.timestamp.toISOString() }
+        });
+
+        // Notify admin panel of new ticket activity
+        if (role === 'user') {
+          io.emit('chat:ticket_update', {
+            ticketId,
+            clientName: ticket.clientName,
+            clientUid: ticket.clientUid,
+            lastMessage: text.trim(),
+            lastMessageAt: message.timestamp.toISOString(),
+            unreadByAdmin: ticket.unreadByAdmin
+          });
+        }
+      } catch (err) {
+        console.error('[CHAT] Message error:', err.message);
+      }
+    });
+
+    // Typing indicator
+    socket.on('chat:typing', ({ ticketId, isTyping }) => {
+      const role = socket.decoded.role;
+      socket.to(`ticket:${ticketId}`).emit('chat:typing', { role, isTyping });
+    });
+
+    // Admin closes a ticket — notify user
+    socket.on('chat:close_ticket', async ({ ticketId }) => {
+      try {
+        await SupportTicket.findOneAndUpdate({ id: ticketId }, { status: 'closed' });
+        io.to(`ticket:${ticketId}`).emit('chat:ticket_closed', { ticketId });
+        io.emit('chat:ticket_update', { ticketId, status: 'closed' });
+        console.log(`[CHAT] Ticket ${ticketId} closed by admin.`);
+      } catch (err) {
+        console.error('[CHAT] Close ticket error:', err.message);
+      }
+    });
+
+    // Admin reopens a ticket
+    socket.on('chat:reopen_ticket', async ({ ticketId }) => {
+      try {
+        await SupportTicket.findOneAndUpdate({ id: ticketId }, { status: 'open' });
+        io.to(`ticket:${ticketId}`).emit('chat:ticket_reopened', { ticketId });
+        io.emit('chat:ticket_update', { ticketId, status: 'open' });
+      } catch (err) {
+        console.error('[CHAT] Reopen ticket error:', err.message);
+      }
     });
   });
 };

@@ -48,7 +48,11 @@ const Help = () => {
             <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 20px 0' }}>
               Have an urgent request regarding deposits, withdrawals, or an active margin call? Reach out instantly.
             </p>
-            <button style={{ background: '#00cc88', border: 'none', color: '#fff', padding: '12px 20px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
+            <button
+              style={{ background: '#00cc88', border: 'none', color: '#fff', padding: '12px 20px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
+              onClick={() => document.getElementById('live-chat-bubble')?.click()}
+            >
+              <i className="fa-solid fa-message" style={{ marginRight: 8 }} />
               Start Live Chat
             </button>
           </div>

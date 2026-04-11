@@ -1,4 +1,4 @@
-import os
+Dimport os
 
 file_path = r'c:\sites\mirrox\src\pages\Finances.jsx'
 with open(file_path, 'r', encoding='utf-8') as f:

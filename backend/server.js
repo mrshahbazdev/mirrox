@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const Client = require('./models/Client');
 const Admin = require('./models/Admin');
 const Trade = require('./models/Trade');
+const SupportTicket = require('./models/SupportTicket');
 const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
@@ -545,6 +546,121 @@ app.get('/api/clients/:id/analytics', verifyClientToken, (req, res) => {
   });
 });
 
+
+// --- SUPPORT CHAT APIS ---
+
+// GET all tickets (admin)
+app.get('/api/support/tickets', verifyAdminToken, async (req, res) => {
+  try {
+    const tickets = await SupportTicket.find().sort({ lastMessageAt: -1 }).lean();
+    res.json(tickets);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch tickets' });
+  }
+});
+
+// GET single ticket (client or admin)
+app.get('/api/support/tickets/:ticketId', verifyClientToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOne({ id: req.params.ticketId }).lean();
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch ticket' });
+  }
+});
+
+// GET my open ticket (client — returns existing open or null)
+app.get('/api/support/my-ticket', verifyClientToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOne({ clientId: req.user.id, status: 'open' }).lean();
+    res.json(ticket || null);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch your ticket' });
+  }
+});
+
+// POST create ticket (client — one open ticket per client)
+app.post('/api/support/tickets', verifyClientToken, async (req, res) => {
+  try {
+    const existing = await SupportTicket.findOne({ clientId: req.user.id, status: 'open' });
+    if (existing) return res.json(existing);
+
+    const client = clients.find(c => c.id === req.user.id);
+    const ticketId = 'TKT-' + Date.now().toString().slice(-6);
+    const ticket = new SupportTicket({
+      id: ticketId,
+      clientId: req.user.id,
+      clientName: client?.name || 'Unknown',
+      clientUid: client?.uid || '',
+      status: 'open',
+      messages: [],
+      unreadByAdmin: 0,
+      unreadByClient: 0
+    });
+    await ticket.save();
+    res.status(201).json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create ticket' });
+  }
+});
+
+// PUT close ticket (admin)
+app.put('/api/support/tickets/:ticketId/close', verifyAdminToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOneAndUpdate(
+      { id: req.params.ticketId },
+      { status: 'closed' },
+      { new: true }
+    );
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to close ticket' });
+  }
+});
+
+// PUT reopen ticket (admin)
+app.put('/api/support/tickets/:ticketId/reopen', verifyAdminToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOneAndUpdate(
+      { id: req.params.ticketId },
+      { status: 'open' },
+      { new: true }
+    );
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reopen ticket' });
+  }
+});
+
+// PUT mark messages read by admin
+app.put('/api/support/tickets/:ticketId/read-admin', verifyAdminToken, async (req, res) => {
+  try {
+    await SupportTicket.updateOne(
+      { id: req.params.ticketId },
+      { unreadByAdmin: 0, 'messages.$[elem].read': true },
+      { arrayFilters: [{ 'elem.senderRole': 'user' }] }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to mark read' });
+  }
+});
+
+// PUT mark messages read by client
+app.put('/api/support/tickets/:ticketId/read-client', verifyClientToken, async (req, res) => {
+  try {
+    await SupportTicket.updateOne(
+      { id: req.params.ticketId },
+      { unreadByClient: 0 }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to mark read' });
+  }
+});
 
 // Setup WebSockets
 setupSockets(io);
