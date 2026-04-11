@@ -665,6 +665,35 @@ app.put('/api/support/tickets/:ticketId/read-client', verifyClientToken, async (
   }
 });
 
+// PUT update ticket admin note
+app.put('/api/support/tickets/:ticketId/admin-note', verifyAdminToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOneAndUpdate(
+      { id: req.params.ticketId },
+      { adminNote: req.body.note },
+      { new: true }
+    );
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update note' });
+  }
+});
+
+// PUT update ticket category
+app.put('/api/support/tickets/:ticketId/category', verifyClientToken, async (req, res) => {
+  try {
+    const ticket = await SupportTicket.findOneAndUpdate(
+      { id: req.params.ticketId },
+      { category: req.body.category },
+      { new: true }
+    );
+    io.emit('chat:ticket_update', { ticketId: ticket.id, category: ticket.category });
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update category' });
+  }
+});
+
 // PUT rate support ticket
 app.put('/api/support/tickets/:ticketId/rate', verifyClientToken, async (req, res) => {
   try {

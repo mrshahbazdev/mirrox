@@ -267,6 +267,15 @@ export default function LiveChat({ currentUser }) {
     } catch (e) { }
   };
 
+  const selectCategory = async (cat) => {
+    if (!ticket) return;
+    try {
+      await axios.put(`${API}/api/support/tickets/${ticket.id}/category`, { category: cat });
+      setTicket(prev => ({ ...prev, category: cat }));
+      sendMessage(`I need help with: ${cat}`);
+    } catch (e) {}
+  };
+
   const handleTyping = (e) => {
     const val = e.target.value;
     setInput(val);
@@ -394,15 +403,25 @@ export default function LiveChat({ currentUser }) {
                 <i className={supportIcon} />
               </div>
               <h4>Welcome to {supportName}</h4>
-              <p>Our team is ready to help you. Ask us anything!</p>
-              <div className="quick-replies">
-                {QUICK_REPLIES.map((qr, i) => (
-                  <button key={i} className="quick-reply-btn" onClick={() => sendMessage(qr)}>
-                    {qr}
-                  </button>
-                ))}
+              <p>How can we help you today? Please select a category:</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '16px' }}>
+                <button className="quick-reply-btn" onClick={() => selectCategory('Deposit/Withdrawal')}><i className="fa-solid fa-wallet" /> Finance</button>
+                <button className="quick-reply-btn" onClick={() => selectCategory('Technical Support')}><i className="fa-solid fa-gears" /> Technical</button>
+                <button className="quick-reply-btn" onClick={() => selectCategory('Account Issues')}><i className="fa-solid fa-user-shield" /> Account</button>
+                <button className="quick-reply-btn" onClick={() => selectCategory('General Inquiry')}><i className="fa-solid fa-circle-info" /> General</button>
               </div>
             </div>
+          )}
+
+          {!connecting && messages.length > 0 && !ticket?.category && (
+             <div className="chat-welcome" style={{ padding: '10px', background: 'var(--bg-hover)', borderRadius: '12px', marginBottom: '20px' }}>
+                <p style={{ fontSize: '12px', marginBottom: '8px', fontWeight: 700 }}>Select a category to help us route your request:</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                   {['Finance', 'Technical', 'Account', 'General'].map(c => (
+                      <button key={c} className="quick-reply-btn" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => selectCategory(c)}>{c}</button>
+                   ))}
+                </div>
+             </div>
           )}
 
           {Object.entries(groupedMessages).map(([date, msgs]) => (
@@ -501,6 +520,28 @@ export default function LiveChat({ currentUser }) {
                 ))}
               </div>
             )}
+            {/* Quick Replies Tray inside chat */}
+            {messages.length > 0 && (
+              <div className="chat-quick-replies-tray">
+                {(() => {
+                  try {
+                    const replies = JSON.parse(systemConfig.support_quick_replies || '[]');
+                    return (replies.length > 0 ? replies : QUICK_REPLIES).map((qr, i) => (
+                      <button key={i} className="chat-qr-pill" onClick={() => sendMessage(qr)}>
+                        {qr}
+                      </button>
+                    ));
+                  } catch (e) {
+                    return QUICK_REPLIES.map((qr, i) => (
+                      <button key={i} className="chat-qr-pill" onClick={() => sendMessage(qr)}>
+                        {qr}
+                      </button>
+                    ));
+                  }
+                })()}
+              </div>
+            )}
+
             <div className="chat-input-row">
               <input type="file" id="chat-file-upload" style={{ display: 'none' }} accept="image/*" onChange={handleFileUpload} />
               <button className="chat-tool-btn" onClick={() => document.getElementById('chat-file-upload').click()} title="Attach Image">

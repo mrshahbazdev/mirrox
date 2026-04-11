@@ -207,7 +207,14 @@ const initializeDB = async () => {
           { key: 'min_deposit', value: 100 },
           { key: 'min_withdrawal', value: 50 },
           { key: 'referral_bonus', value: 25 },
-          { key: 'platform_name', value: 'Mirrox' }
+          { key: 'platform_name', value: 'Mirrox' },
+          { key: 'support_quick_replies', value: JSON.stringify([
+            "Hello! How can we help you today?",
+            "Your withdrawal is currently being processed.",
+            "Please provide a screenshot of the transaction.",
+            "We have received your verification documents.",
+            "This issue has been escalated to our technical team."
+          ])}
        ]);
     }
 

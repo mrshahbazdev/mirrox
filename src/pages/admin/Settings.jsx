@@ -161,7 +161,7 @@ const Settings = ({ onAdminLogout }) => {
 
           <div className="settings-section">
             <h3 className="section-title"><i className="fa-solid fa-headset" /> Support Chat Customization</h3>
-            <div className="setting-grid">
+            <div className="setting-grid" style={{ marginBottom: '16px' }}>
               <div className="setting-card">
                 <label className="setting-label">Support Display Name</label>
                 <input 
@@ -181,7 +181,57 @@ const Settings = ({ onAdminLogout }) => {
                   onChange={(e) => handleChange('support_icon', e.target.value)}
                   placeholder="fa-solid fa-headset"
                 />
-                <p className="setting-help">Example: fa-solid fa-headset, fa-solid fa-robot</p>
+              </div>
+            </div>
+
+            <div className="setting-card">
+              <label className="setting-label">Quick Response Templates</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {(() => {
+                  try {
+                    const replies = JSON.parse(configs.support_quick_replies || '[]');
+                    return (
+                      <>
+                        {replies.map((r, i) => (
+                          <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                            <input 
+                              type="text" 
+                              className="setting-input" 
+                              value={r} 
+                              onChange={(e) => {
+                                const newReplies = [...replies];
+                                newReplies[i] = e.target.value;
+                                handleChange('support_quick_replies', JSON.stringify(newReplies));
+                              }}
+                            />
+                            <button 
+                              type="button" 
+                              style={{ background: '#2d1a1a', border: '1px solid #7c2d2d', color: '#f87171', borderRadius: '8px', padding: '0 12px', cursor: 'pointer' }}
+                              onClick={() => {
+                                const newReplies = replies.filter((_, idx) => idx !== i);
+                                handleChange('support_quick_replies', JSON.stringify(newReplies));
+                              }}
+                            >
+                              <i className="fa-solid fa-trash-can" />
+                            </button>
+                          </div>
+                        ))}
+                        <button 
+                          type="button"
+                          className="qr-add-btn"
+                          onClick={() => {
+                            const newReplies = [...replies, "New Quick Reply..."];
+                            handleChange('support_quick_replies', JSON.stringify(newReplies));
+                          }}
+                        >
+                          <i className="fa-solid fa-plus" /> Add Template
+                        </button>
+                      </>
+                    );
+                  } catch (e) {
+                    return <p style={{ color: '#ef4444' }}>Error parsing quick replies</p>;
+                  }
+                })()}
               </div>
             </div>
           </div>
@@ -250,6 +300,16 @@ const Settings = ({ onAdminLogout }) => {
         }
         .adm-toast.success { background: #0f2a1e; border: 1px solid #00cc88; color: #00cc88; }
         .adm-toast.warn { background: #2a1a0a; border: 1px solid #f59e0b; color: #f59e0b; }
+
+        .qr-add-btn {
+          background: rgba(50, 145, 255, 0.1); color: #3291ff;
+          border: 1px dashed #3291ff; border-radius: 8px;
+          padding: 10px; font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          margin-top: 8px;
+        }
+        .qr-add-btn:hover { background: rgba(50, 145, 255, 0.15); }
       `}</style>
     </AdminLayout>
   );

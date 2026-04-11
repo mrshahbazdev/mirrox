@@ -263,6 +263,15 @@ export default function SupportChat({ onAdminLogout }) {
     }
   };
 
+  const saveAdminNote = async (note) => {
+    if (!selectedTicket) return;
+    try {
+      await axios.put(`${API}/api/support/tickets/${selectedTicket.id}/admin-note`, { note }, authHeader);
+      setSelectedTicket(prev => ({ ...prev, adminNote: note }));
+      setTickets(prev => prev.map(t => t.id === selectedTicket.id ? { ...t, adminNote: note } : t));
+    } catch {}
+  };
+
   const closeTicket = () => {
     if (!selectedTicket) return;
     if (socket) socket.emit('chat:close_ticket', { ticketId: selectedTicket.id });
@@ -403,6 +412,7 @@ export default function SupportChat({ onAdminLogout }) {
                 </div>
                 <div className="ticket-item-sub">
                   <span className="ticket-item-uid">{ticket.clientUid}</span>
+                  {ticket.category && <span className="ticket-category-tag">{ticket.category}</span>}
                   <span className={`ticket-status-dot ${ticket.status}`} />
                 </div>
                 <div className="ticket-item-preview">
@@ -464,6 +474,18 @@ export default function SupportChat({ onAdminLogout }) {
                   </button>
                 )}
               </div>
+            </div>
+
+            {/* Admin Internal Memo */}
+            <div className="admin-memo-strip">
+              <i className="fa-solid fa-note-sticky" />
+              <input 
+                type="text" 
+                placeholder="Add a private note/memo for this ticket..."
+                defaultValue={selectedTicket.adminNote || ''}
+                onBlur={(e) => saveAdminNote(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
+              />
             </div>
 
             {/* Messages */}
