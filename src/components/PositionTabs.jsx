@@ -187,7 +187,7 @@ const PositionTabs = () => {
 
                     {activeTab !== 'closed' && (
                       <td style={{ textAlign: 'right' }}>
-                         {activeTab !== 'pending' && (
+                         {activeTab === 'pending' && (
                            <button 
                              className="close-trade-btn" style={{ background: 'transparent', color: '#10b981', marginRight: '8px' }}
                              onClick={() => handleOpenModify(trade)}
