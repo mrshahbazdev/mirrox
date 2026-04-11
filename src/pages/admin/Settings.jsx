@@ -7,6 +7,8 @@ const Settings = ({ onAdminLogout }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingAdminSound, setUploadingAdminSound] = useState(false);
+  const [uploadingUserSound, setUploadingUserSound] = useState(false);
   const [toast, setToast] = useState(null);
 
   const showToast = (msg, type = 'success') => {
@@ -236,6 +238,75 @@ const Settings = ({ onAdminLogout }) => {
                          onClick={() => handleChange('support_avatar', '')}
                       >
                          <i className="fa-solid fa-trash" /> Remove
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="setting-card" style={{ marginBottom: '16px' }}>
+              <label className="setting-label">Chat Notification Sounds</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                {/* Admin Sound */}
+                <div style={{ background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 600, marginBottom: '8px' }}>Admin Dashboard Sound</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                    <i className="fa-solid fa-bell" style={{ color: 'var(--accent)' }} />
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {configs.admin_notification_sound ? 'Custom Sound Set' : 'Default Beep'}
+                    </span>
+                  </div>
+                  <input type="file" id="admin-sound-input" accept="audio/*" style={{ display: 'none' }} onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    setUploadingAdminSound(true);
+                    try {
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      const res = await axios.post(`${API}/api/upload`, formData);
+                      handleChange('admin_notification_sound', res.data.url);
+                    } catch (err) { alert('Upload failed'); } finally { setUploadingAdminSound(false); }
+                  }} />
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => document.getElementById('admin-sound-input').click()} disabled={uploadingAdminSound}>
+                      {uploadingAdminSound ? <i className="fa-solid fa-spinner fa-spin" /> : <><i className="fa-solid fa-upload" /> Upload</>}
+                    </button>
+                    {configs.admin_notification_sound && (
+                      <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px', color: '#ef4444' }} onClick={() => handleChange('admin_notification_sound', '')}>
+                        <i className="fa-solid fa-rotate-left" /> Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* User Sound */}
+                <div style={{ background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 600, marginBottom: '8px' }}>User Chat-box Sound</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                    <i className="fa-solid fa-volume-high" style={{ color: 'var(--success)' }} />
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {configs.user_notification_sound ? 'Custom Sound Set' : 'Default Ping'}
+                    </span>
+                  </div>
+                  <input type="file" id="user-sound-input" accept="audio/*" style={{ display: 'none' }} onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    setUploadingUserSound(true);
+                    try {
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      const res = await axios.post(`${API}/api/upload`, formData);
+                      handleChange('user_notification_sound', res.data.url);
+                    } catch (err) { alert('Upload failed'); } finally { setUploadingUserSound(false); }
+                  }} />
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => document.getElementById('user-sound-input').click()} disabled={uploadingUserSound}>
+                      {uploadingUserSound ? <i className="fa-solid fa-spinner fa-spin" /> : <><i className="fa-solid fa-upload" /> Upload</>}
+                    </button>
+                    {configs.user_notification_sound && (
+                      <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px', color: '#ef4444' }} onClick={() => handleChange('user_notification_sound', '')}>
+                        <i className="fa-solid fa-rotate-left" /> Reset
                       </button>
                     )}
                   </div>

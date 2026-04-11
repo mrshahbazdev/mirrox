@@ -950,13 +950,64 @@ body {
 }
 .circle-text { fill: #fff; font-size: 8px; font-weight: 800; text-anchor: middle; }
 
+}
+
+/* Image Zoom Lightbox */
+.zoom-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  cursor: zoom-out;
+  animation: fadeIn 0.2s ease;
+}
+.zoom-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zoom-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.zoom-close {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 10px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.message-attachment img, .support-attachment-preview img {
+  transition: transform 0.2s ease;
+}
+.message-attachment:hover img, .support-attachment-preview:hover img {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
 /* Analytics Responsive Fixes */
 @media (max-width: 768px) {
   .analytics-container {
     padding: 16px !important;
     gap: 20px;
   }
-
   .performance-card {
     padding: 24px !important;
     min-height: auto !important;

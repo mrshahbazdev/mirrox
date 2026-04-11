@@ -42,6 +42,7 @@ export default function LiveChat({ currentUser }) {
   const [chatStatus, setChatStatus] = useState('open');
   const [connecting, setConnecting] = useState(false);
   const [systemConfig, setSystemConfig] = useState({});
+  const [activeZoomImage, setActiveZoomImage] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -51,6 +52,11 @@ export default function LiveChat({ currentUser }) {
 
   const playDing = useCallback(() => {
     try {
+      if (systemConfig.user_notification_sound) {
+         const audio = new Audio(systemConfig.user_notification_sound);
+         audio.play().catch(() => {});
+         return;
+      }
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -63,7 +69,7 @@ export default function LiveChat({ currentUser }) {
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.3);
     } catch(e){}
-  }, []);
+  }, [systemConfig.user_notification_sound]);
 
   useEffect(() => {
     if (unreadCount > 0) {
@@ -130,9 +136,11 @@ export default function LiveChat({ currentUser }) {
       if (data.message.senderRole === 'admin') {
         setMessages(prev => [...prev, data.message]);
         if (!isOpenRef.current) {
+          setIsOpen(true);
           setUnreadCount(c => c + 1);
-          playDing();
-        } else {
+        }
+        playDing();
+        if (isOpenRef.current) {
           // If open, notify admin that we read it immediately
           const token = localStorage.getItem('mirrox_token');
           const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
@@ -467,7 +475,9 @@ export default function LiveChat({ currentUser }) {
                     <div className="chat-msg-bubble-wrap">
                       <div className={`chat-msg-bubble ${isUser ? 'user' : 'admin'}`}>
                         {msg.attachment && (
-                          <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
+                          <div className="message-attachment" onClick={() => setActiveZoomImage(msg.attachment)} style={{ cursor: 'zoom-in' }}>
+                            <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
+                          </div>
                         )}
                         {msg.text}
                       </div>
@@ -603,6 +613,18 @@ export default function LiveChat({ currentUser }) {
               </button>
             </div>
             <div className="chat-input-hint">Press Enter to send · Shift+Enter for new line</div>
+          </div>
+        )}
+
+        {/* Image Zoom Lightbox */}
+        {activeZoomImage && (
+          <div className="zoom-overlay" onClick={() => setActiveZoomImage(null)}>
+            <div className="zoom-content" onClick={e => e.stopPropagation()}>
+              <button className="zoom-close" onClick={() => setActiveZoomImage(null)}>
+                <i className="fa-solid fa-xmark" />
+              </button>
+              <img src={activeZoomImage} alt="Zoomed" />
+            </div>
           </div>
         )}
       </div>

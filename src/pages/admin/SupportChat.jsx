@@ -66,6 +66,7 @@ export default function SupportChat({ onAdminLogout }) {
   const [systemConfig, setSystemConfig] = useState({});
   const [availableAdmins, setAvailableAdmins] = useState([]);
   const [showTransferModal, setShowTransferModal] = useState(false);
+  const [activeZoomImage, setActiveZoomImage] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -79,6 +80,27 @@ export default function SupportChat({ onAdminLogout }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
+  const playDing = useCallback(() => {
+    try {
+      if (systemConfig.admin_notification_sound) {
+         const audio = new Audio(systemConfig.admin_notification_sound);
+         audio.play().catch(() => {});
+         return;
+      }
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } catch(e){}
+  }, [systemConfig.admin_notification_sound]);
+
   useEffect(() => { scrollToBottom(); }, [messages, userTyping, userTypingText]);
 
   // Init socket
@@ -86,30 +108,36 @@ export default function SupportChat({ onAdminLogout }) {
     const s = io(API, { auth: { token: adminToken } });
     setSocket(s);
 
+    const isCurrentTicket = (tId) => selectedTicketRef.current?.id === tId;
+
     s.on('chat:message', (data) => {
-      // Update ticket list
-      setTickets(prev => prev.map(t =>
-        t.id === data.ticketId
-          ? {
-              ...t,
-              lastMessage: data.message.text,
-              lastMessageAt: data.message.timestamp,
-              unreadByAdmin: data.message.senderRole === 'user'
-                ? (selectedTicketRef.current?.id === data.ticketId ? t.unreadByAdmin : (t.unreadByAdmin || 0) + 1)
-                : t.unreadByAdmin
-            }
-          : t
-      ));
+      const { ticketId, message } = data;
+      
+      // Play sound for incoming user messages
+      if (message.senderRole === 'user') playDing();
 
-      // Add message to view only if from USER (admin already added optimistically)
-      if (selectedTicketRef.current?.id === data.ticketId && data.message.senderRole === 'user') {
-        setMessages(m => [...m, data.message]);
-        setUserTypingText(''); // clear typing preview
-      }
-
-      // Badge notification for new user messages
-      if (data.message.senderRole === 'user' && selectedTicketRef.current?.id !== data.ticketId) {
-        setNewMsgTicketIds(prev => new Set([...prev, data.ticketId]));
+      if (isCurrentTicket(ticketId)) {
+        if (message.senderRole === 'user') {
+          setMessages(m => [...m, message]);
+          setUserTypingText('');
+        }
+        // Sync ticket list metadata
+        setTickets(prev => prev.map(t => t.id === ticketId ? { 
+          ...t, 
+          lastMessageAt: message.timestamp,
+          unreadByAdmin: 0
+        } : t));
+        axios.put(`${API}/api/support/tickets/${ticketId}/read-admin`, {}, authHeader).catch(() => {});
+      } else {
+        // Notification for background tickets
+        if (message.senderRole === 'user') {
+          setTickets(prev => prev.map(t => t.id === ticketId ? { 
+            ...t, 
+            lastMessageAt: message.timestamp, 
+            unreadByAdmin: (t.unreadByAdmin || 0) + 1 
+          } : t));
+          setNewMsgTicketIds(prev => new Set([...prev, ticketId]));
+        }
       }
     });
 
@@ -571,7 +599,9 @@ export default function SupportChat({ onAdminLogout }) {
                         <div className="support-msg-bubble-wrap">
                           <div className={`chat-msg-bubble ${isAdmin ? 'admin' : 'user'}`}>
                             {msg.attachment && (
-                              <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
+                              <div className="support-attachment-preview" onClick={() => setActiveZoomImage(msg.attachment)} style={{ cursor: 'zoom-in' }}>
+                                <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
+                              </div>
                             )}
                             {msg.text}
                           </div>
@@ -764,6 +794,18 @@ export default function SupportChat({ onAdminLogout }) {
               <button className="support-modal-btn cancel" onClick={() => setShowBlockModal(false)}>Cancel</button>
               <button className="support-modal-btn confirm-block" onClick={confirmBlock}>Yes, Block User</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Zoom Lightbox */}
+      {activeZoomImage && (
+        <div className="zoom-overlay" onClick={() => setActiveZoomImage(null)}>
+          <div className="zoom-content" onClick={e => e.stopPropagation()}>
+            <button className="zoom-close" onClick={() => setActiveZoomImage(null)}>
+              <i className="fa-solid fa-xmark" />
+            </button>
+            <img src={activeZoomImage} alt="Zoomed" />
           </div>
         </div>
       )}
