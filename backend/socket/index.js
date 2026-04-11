@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const WebSocket = require('ws');
 const SupportTicket = require('../models/SupportTicket');
 const Admin = require('../models/Admin');
+const Trade = require('../models/Trade');
 
 // Set up Live Binance Feed for Crypto Markets
 let binanceWs = null;
@@ -218,7 +219,7 @@ module.exports = (io) => {
 
           if (hitSL || hitTP || hitLimit) {
              t.status = 'Closed';
-             t.closePrice = currentPrice;
+             t.closePrice = hitLimit ? t.selectedPrice : currentPrice;
              t.closeTime = new Date().toISOString();
              t.closedBy = hitLimit ? 'Admin (Limit)' : (hitSL ? 'System SL' : 'System TP');
              t.comment = hitLimit ? `Target price ${t.selectedPrice} reached` : `Hit ${hitSL ? 'Stop Loss' : 'Take Profit'} at ${currentPrice}`;

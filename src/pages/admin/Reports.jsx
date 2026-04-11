@@ -36,22 +36,23 @@ const Reports = ({ onAdminLogout }) => {
         ]);
         const clientsData = clientsRes.data;
 
-        // Since we don't have a global trades endpoint that returns ALL closed trades yet
-        // we can still loop trades for now or just rely on activeTrades summary, but 
-        // to not break the UI, we'll keep the Trades loop for the recent trades log.
-        const trds = [];
-        for (const c of clientsData) {
-          try {
-             const tRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/trades/${c.id}`);
-             trds.push(...tRes.data.map(t => ({ ...t, clientName: c.name, clientId: c.id })));
-          } catch(e) {}
-        }
+        // Fetch recent global history and combine with current presence
+        const [historyRes, tradersRes] = await Promise.all([
+          axios.get(import.meta.env.VITE_API_URL + '/api/trades/history/all'),
+          axios.get(import.meta.env.VITE_API_URL + '/api/active-traders')
+        ]);
+        
+        // Map history to include client names (could be optimized but good for now)
+        const historyData = historyRes.data.map(t => ({
+          ...t,
+          clientName: clientsData.find(c => c.id === t.clientId)?.name || 'Deleted Client'
+        }));
 
         setData({ 
           clients: clientsData, 
           deposits: depsRes.data, 
           withdrawals: widsRes.data, 
-          allTrades: trds 
+          allTrades: historyData 
         });
       } catch (err) {
         console.error('Failed to load reports data', err);
@@ -385,7 +386,7 @@ const Reports = ({ onAdminLogout }) => {
             <thead>
               <tr>
                 <th>Trade ID</th><th>Client</th><th>Symbol</th><th>Type</th>
-                <th>Lots</th><th>Open Price</th><th>Profit</th><th>Closed By</th><th>Status</th>
+                <th>Lots</th><th>Open Price</th><th>Target / Close Price</th><th>Profit</th><th>Closed By</th><th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -399,6 +400,12 @@ const Reports = ({ onAdminLogout }) => {
                   </td>
                   <td className="adm-mono">{t.lots}</td>
                   <td className="adm-mono">{t.openPrice}</td>
+                  <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#3291ff' : '#64748b' }}>
+                    {(() => {
+                        if (t.status === 'Closed') return t.closePrice ? parseFloat(t.closePrice).toFixed(2) : '---';
+                        return t.selectedPrice ? parseFloat(t.selectedPrice).toFixed(2) : '---';
+                    })()}
+                  </td>
                   <td className={`adm-mono ${t.profit >= 0 ? 'pos' : 'neg'}`}>
                     {t.profit >= 0 ? '+' : ''}{t.profit?.toFixed(2)}
                   </td>
@@ -410,7 +417,7 @@ const Reports = ({ onAdminLogout }) => {
                     ) : '---'}
                   </td>
                   <td>
-                    <span className={`cd-trade-status ${t.status}`}>{t.status}</span>
+                    <span className={`cd-trade-status ${t.status?.toLowerCase()}`}>{t.status}</span>
                   </td>
                 </tr>
               ))}

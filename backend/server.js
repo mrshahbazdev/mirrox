@@ -1122,6 +1122,25 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
 });
 
+// --- TRADE HISTORY APIS ---
+app.get('/api/trades/:clientId/history', verifyAdminOrClient, async (req, res) => {
+  try {
+    const history = await Trade.find({ clientId: req.params.clientId, status: 'Closed' }).sort({ closeTime: -1 });
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch trade history' });
+  }
+});
+
+app.get('/api/trades/history/all', verifyAdminToken, async (req, res) => {
+  try {
+    const history = await Trade.find({ status: 'Closed' }).sort({ closeTime: -1 }).limit(500);
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch global trade history' });
+  }
+});
+
 // Setup WebSockets
 setupSockets(io);
 

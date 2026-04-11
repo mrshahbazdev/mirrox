@@ -128,7 +128,7 @@ const PositionTabs = () => {
               <th>Volume</th>
               <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
               {activeTab === 'open' && <th>Current Price</th>}
-              {(activeTab === 'open' || activeTab === 'closed') && <th>Close Price</th>}
+              {(activeTab === 'open' || activeTab === 'closed') && <th>Target / Close Price</th>}
               {activeTab !== 'pending' && <th>Profit / Loss</th>}
               {activeTab !== 'pending' && <th>Swap</th>}
               {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
@@ -153,12 +153,14 @@ const PositionTabs = () => {
 
                     {(activeTab === 'open' || activeTab === 'closed') && (
                        <td>
-                          {activeTab === 'open' 
-                            ? (trade.takeProfit 
-                                ? trade.takeProfit.toFixed(prices.find(p=>p.symbol===trade.symbol)?.precision || 2) 
-                                : (trade.selectedPrice ? trade.selectedPrice.toFixed(prices.find(p=>p.symbol===trade.symbol)?.precision || 2) : '---'))
-                            : (trade.closePrice?.toFixed(prices.find(p=>p.symbol===trade.symbol)?.precision || 2) || '...')
-                          }
+                        {(() => {
+                           const precision = prices.find(p => p.symbol === trade.symbol)?.precision || 2;
+                           if (activeTab === 'open') {
+                              const target = trade.takeProfit || trade.selectedPrice;
+                              return target ? parseFloat(target).toFixed(precision) : '---';
+                           }
+                           return trade.closePrice ? parseFloat(trade.closePrice).toFixed(precision) : '...';
+                        })()}
                        </td>
                     )}
 
@@ -307,10 +309,10 @@ const PositionTabs = () => {
               </div>
             </div>
             <div className="modal-footer-simple">
-              <button className="confirm-btn secondary" onClick={() => setShowModify(false)}>Cancel</button>
-              <button className="confirm-btn" style={{ background: '#10b981' }} onClick={submitModifyTrade} disabled={isModifying}>
-                {isModifying ? 'Saving...' : 'Save Settings'}
-              </button>
+               <button className="confirm-btn secondary" onClick={() => setShowModify(false)}>Cancel</button>
+               <button className="confirm-btn" style={{ background: '#10b981' }} onClick={submitModifyTrade} disabled={isModifying}>
+                 {isModifying ? 'Saving...' : 'Save Settings'}
+               </button>
             </div>
           </div>
         </div>

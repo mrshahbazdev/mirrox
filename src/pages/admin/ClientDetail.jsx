@@ -52,8 +52,9 @@ const ClientDetail = ({ onAdminLogout }) => {
   // New Modal states for P/L editing
   const [showModal, setShowModal] = useState(false);
   const [modalTrade, setModalTrade] = useState(null);
-  const [modalMode, setModalMode] = useState('none'); // none, profit, loss
+  const [modalMode, setModalMode] = useState('none'); // none, profit, loss, lock
   const [modalMultiplier, setModalMultiplier] = useState('1');
+  const [modalForcedPL, setModalForcedPL] = useState('0');
 
   // New Modal states for Swap editing
   const [showSwapModal, setShowSwapModal] = useState(false);
@@ -127,19 +128,23 @@ const ClientDetail = ({ onAdminLogout }) => {
     setShowModal(true);
   };
 
-  const submitEditPL = () => {
-    if (!socket || !socket.connected) {
-      showAlert("Socket not connected! Can't submit.", 'Connection Error', 'error');
-      return;
+    if (modalMode === 'lock') {
+      const forced = parseFloat(modalForcedPL);
+      if (isNaN(forced)) {
+        showAlert("Please enter a valid amount", 'Validation Error', 'warning');
+        return;
+      }
+      console.log('[ADMIN] Emitting admin_set_pl:', { clientId: id, tradeId: modalTrade.id, forcedProfit: forced });
+      socket.emit('admin_set_pl', { clientId: id, tradeId: modalTrade.id, forcedProfit: forced });
+    } else {
+      const mult = parseFloat(modalMultiplier);
+      if (isNaN(mult) || mult < 0) {
+        showAlert("Please enter a valid positive intensity", 'Validation Error', 'warning');
+        return;
+      }
+      console.log('[ADMIN] Emitting admin_set_bias:', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
+      socket.emit('admin_set_bias', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
     }
-    const mult = parseFloat(modalMultiplier);
-    if (isNaN(mult) || mult < 0) {
-      showAlert("Please enter a valid positive intensity", 'Validation Error', 'warning');
-      return;
-    }
-
-    console.log('[ADMIN] Emitting admin_set_bias:', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
-    socket.emit('admin_set_bias', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
     
     setShowModal(false);
     setModalTrade(null);
@@ -673,10 +678,10 @@ const ClientDetail = ({ onAdminLogout }) => {
                 </tr>
               </thead>
               <tbody>
-                {trades.length === 0 ? (
-                  <tr><td colSpan="12" style={{textAlign:'center', padding:'20px', color:'#64748b'}}>No active trades found.</td></tr>
+                {paginatedData.length === 0 ? (
+                  <tr><td colSpan="12" style={{textAlign:'center', padding:'20px', color:'#64748b'}}>No records found in this category.</td></tr>
                 ) : (
-                  trades.map((t) => (
+                  paginatedData.map((t) => (
                     <tr className="adm-table-row" key={t.id}>
                       <td><span className="adm-uid-badge">{t.id}</span></td>
                       <td style={{ fontWeight: 700, color: '#e0e6ed' }}>{t.symbol}</td>
@@ -685,17 +690,20 @@ const ClientDetail = ({ onAdminLogout }) => {
                       <td className="adm-mono">{t.openPrice}</td>
                       <td className="adm-mono">{prices.find(p=>p.symbol===t.symbol)?.price || '...'}</td>
                       <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#3291ff' : '#64748b' }}>
-                        {t.status === 'Closed' 
-                          ? (t.closePrice?.toFixed(prices.find(p=>p.symbol===t.symbol)?.precision || 2) || '---')
-                          : (t.selectedPrice ? t.selectedPrice.toFixed(prices.find(p=>p.symbol===t.symbol)?.precision || 2) : '---')
-                        }
+                        {(() => {
+                           const precision = prices.find(p=>p.symbol===t.symbol)?.precision || 2;
+                           if (t.status === 'Closed') {
+                              return t.closePrice ? parseFloat(t.closePrice).toFixed(precision) : '---';
+                           }
+                           return t.selectedPrice ? parseFloat(t.selectedPrice).toFixed(precision) : '---';
+                        })()}
                       </td>
                       <td className="adm-mono" style={{ color: (t.swap || 0) < 0 ? '#ff4d4d' : '#00cc88' }}>
                         {(t.swap || 0).toFixed(2)}
                       </td>
                       <td className={`adm-mono ${t.profit >= 0 ? 'pos' : 'neg'}`}>
                         {t.profit >= 0 ? '+' : ''}{t.profit?.toFixed(2)}
-                        {t.forcedPL && <i className="fa-solid fa-lock" style={{ marginLeft: 6, fontSize: 10, color: '#f59e0b' }} title="Profit Locked"></i>}
+                        {t.bias === 'lock' && <i className="fa-solid fa-lock" style={{ marginLeft: 6, fontSize: 10, color: '#f59e0b' }} title="Profit Locked"></i>}
                       </td>
                       <td>
                         {t.status === 'Closed' ? (
@@ -1115,23 +1123,44 @@ const ClientDetail = ({ onAdminLogout }) => {
                 </button>
               </div>
 
-              <div className="intensity-group">
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '12px' }}>
-                  Trend Intensity / Multiplier
-                </label>
-                <input 
-                   type="number"
-                   step="0.1"
-                   className="adm-input"
-                   style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
-                   value={modalMultiplier}
-                   onChange={(e) => setModalMultiplier(e.target.value)}
-                   placeholder="1.0"
-                />
-                <p style={{ fontSize: '10px', color: '#475569', marginTop: '8px' }}>
-                  1.0 is normal market speed. Higher values accelerate profit/loss.
-                </p>
-              </div>
+              {modalMode === 'lock' ? (
+                <div className="intensity-group">
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '12px' }}>
+                    Fixed Profit/Loss Amount (USD)
+                  </label>
+                  <input 
+                     type="number"
+                     step="0.01"
+                     className="adm-input"
+                     style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                     value={modalForcedPL}
+                     onChange={(e) => setModalForcedPL(e.target.value)}
+                     placeholder="e.g. 500.50"
+                  />
+                  <p style={{ fontSize: '10px', color: '#475569', marginTop: '8px' }}>
+                    Positive for profit (e.g. 150), negative for loss (e.g. -150).
+                  </p>
+                </div>
+              ) : (
+                <div className="intensity-group">
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '12px' }}>
+                    Trend Intensity / Multiplier
+                  </label>
+                  <input 
+                     type="number"
+                     step="0.1"
+                     className="adm-input"
+                     style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
+                     value={modalMultiplier}
+                     onChange={(e) => setModalMultiplier(e.target.value)}
+                     placeholder="1.0"
+                     disabled={modalMode === 'none'}
+                  />
+                  <p style={{ fontSize: '10px', color: '#475569', marginTop: '8px' }}>
+                    1.0 is normal market speed. Higher values accelerate profit/loss.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="modal-footer" style={{ marginTop: '24px' }}>
