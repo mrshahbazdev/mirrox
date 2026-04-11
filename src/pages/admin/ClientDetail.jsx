@@ -125,19 +125,21 @@ const ClientDetail = ({ onAdminLogout }) => {
     setModalTrade(null);
   };
 
-  const handleForceClose = (tradeId) => {
+  const handleForceClose = async (tradeId) => {
     console.log('[ADMIN] Attempting to force close trade:', tradeId);
     if (!socket || !socket.connected) {
       showAlert("Socket not connected!", 'Connection Error', 'error');
       return;
     }
-    showConfirm(
+    
+    const confirmed = await showConfirm(
       `Are you sure you want to forcibly close trade ${tradeId}?\nThis will realize the current profit into the user balance.`,
-      'Force Close Trade',
-      () => {
-        socket.emit('admin_force_close', { clientId: id, tradeId });
-      }
+      'Force Close Trade'
     );
+
+    if (confirmed) {
+      socket.emit('admin_force_close', { clientId: id, tradeId });
+    }
   };
 
   const handleEditSwap = (trade) => {
@@ -234,15 +236,17 @@ const ClientDetail = ({ onAdminLogout }) => {
   };
 
   const handleResetPin = async () => {
-    showPrompt("Enter new 4-digit PIN for client:", "Reset Withdrawal PIN", async (newPin) => {
-      if (!newPin || newPin.length !== 4) return showAlert("PIN must be 4 digits", "Error", "error");
-      try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/pin`, { pin: newPin }, authHeader);
-        showAlert("Withdrawal PIN updated successfully", "Success", "success");
-      } catch (err) {
-        showAlert("Failed to reset PIN", "Error", "error");
-      }
-    }, "e.g. 1234");
+    const newPin = await showPrompt("Enter new 4-digit PIN for client:", "Reset Withdrawal PIN", "e.g. 1234");
+    if (!newPin) return; // Cancelled
+    
+    if (newPin.length !== 4) return showAlert("PIN must be 4 digits", "Error", "error");
+    
+    try {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${id}/pin`, { pin: newPin }, authHeader);
+      showAlert("Withdrawal PIN updated successfully", "Success", "success");
+    } catch (err) {
+      showAlert("Failed to reset PIN", "Error", "error");
+    }
   };
 
   const handleEditProfile = async () => {
@@ -510,10 +514,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                         Approve
                      </button>
                      <button 
-                        onClick={() => {
-                           showPrompt("Enter rejection reason:", "Reject KYC", (reason) => {
-                             if (reason) handleUpdateKYC({ status: 'rejected', rejectionReason: reason });
-                           }, "Reason for rejection...");
+                        onClick={async () => {
+                           const reason = await showPrompt("Enter rejection reason:", "Reject KYC", "Reason for rejection...");
+                           if (reason) handleUpdateKYC({ status: 'rejected', rejectionReason: reason });
                         }}
                         style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: 'rgba(255,77,77,0.1)', color: '#ff4d4d', fontWeight: 700, cursor: 'pointer' }}
                      >

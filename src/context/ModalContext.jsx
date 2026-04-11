@@ -28,35 +28,45 @@ export const ModalProvider = ({ children }) => {
     });
   }, []);
 
-  const showConfirm = useCallback((message, title = 'Are you sure?', onConfirm) => {
-    setModal({
-      isOpen: true,
-      type: 'confirm',
-      title,
-      message,
-      status: 'warning',
-      onConfirm: () => {
-        if (onConfirm) onConfirm();
-        closeModal();
-      },
-      onCancel: () => closeModal()
+  const showConfirm = useCallback((message, title = 'Are you sure?') => {
+    return new Promise((resolve) => {
+      setModal({
+        isOpen: true,
+        type: 'confirm',
+        title,
+        message,
+        status: 'warning',
+        onConfirm: () => {
+          closeModal();
+          resolve(true);
+        },
+        onCancel: () => {
+          closeModal();
+          resolve(false);
+        }
+      });
     });
   }, []);
 
-  const showPrompt = useCallback((message, title = 'Input Required', onConfirm, placeholder = '') => {
-    setModal({
-      isOpen: true,
-      type: 'prompt',
-      title,
-      message,
-      status: 'info',
-      placeholder,
-      inputValue: '',
-      onConfirm: (val) => {
-        if (onConfirm) onConfirm(val);
-        closeModal();
-      },
-      onCancel: () => closeModal()
+  const showPrompt = useCallback((message, title = 'Input Required', placeholder = '') => {
+    return new Promise((resolve) => {
+      setModal({
+        isOpen: true,
+        type: 'prompt',
+        title,
+        message,
+        status: 'info',
+        placeholder,
+        inputValue: '',
+        onConfirm: (val) => {
+          closeModal();
+          resolve(val);
+        },
+        onCancel: () => {
+          closeModal();
+          resolve(null);
+        }
+      });
     });
   }, []);
 
