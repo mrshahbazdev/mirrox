@@ -267,6 +267,27 @@ export default function SupportChat({ onAdminLogout }) {
     inputRef.current?.focus();
   };
 
+  const downloadTranscript = () => {
+    if (!messages.length || !selectedTicket) return;
+    const supportName = systemConfig.support_name || 'Mirrox Support';
+    const content = messages.map(m => {
+       const time = formatTime(m.timestamp);
+       const sender = m.senderRole === 'admin' ? 'You' : (m.senderName || 'Client');
+       const text = m.text || (m.attachment ? '[Image Attachment]' : '');
+       return `[${time}] ${sender}: ${text}`;
+    }).join('\n');
+
+    const header = `--- Mirrox Support Chat Transcript ---\nTicket ID: ${selectedTicket.id}\nClient: ${selectedTicket.clientName} (${selectedTicket.clientUid})\nDate: ${new Date().toLocaleString()}\n---------------------------------------\n\n`;
+    
+    const blob = new Blob([header + content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Transcript_${selectedTicket.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -475,6 +496,9 @@ export default function SupportChat({ onAdminLogout }) {
                   <span className={`ticket-status-dot ${selectedTicket.status}`} />
                   {selectedTicket.status === 'open' ? 'Open' : selectedTicket.status === 'blocked' ? 'Blocked' : 'Closed'}
                 </span>
+                <button className="chat-minimize-btn" title="Download Transcript" onClick={downloadTranscript} style={{ border: '1px solid var(--border)', background: 'var(--bg-hover)', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <i className="fa-solid fa-download" style={{ fontSize: '13px' }} />
+                </button>
                 {selectedTicket.status === 'open' ? (
                   <>
                     <button className="btn-close-ticket" onClick={closeTicket}>
