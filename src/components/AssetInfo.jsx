@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTrading } from '../context/TradingContext';
 
 const AssetInfo = ({ symbol, onTrade }) => {
@@ -109,6 +109,22 @@ const AssetInfo = ({ symbol, onTrade }) => {
   const [atPrice, setAtPrice] = useState('');
   const [stopLoss, setStopLoss] = useState('');
   const [takeProfit, setTakeProfit] = useState('');
+  const [lastPopulatedSymbol, setLastPopulatedSymbol] = useState(null);
+
+  // Auto-populate TP/SL based on current prices when symbol changes
+  useEffect(() => {
+    if (symbol && symbol.id !== lastPopulatedSymbol) {
+      const price = parseFloat(symbol.price || 0);
+      if (price > 0) {
+        const precision = symbol.precision || 2;
+        const offset = 100 / Math.pow(10, precision); // 100 points default
+        
+        setTakeProfit((price + offset).toFixed(precision));
+        setStopLoss((price - offset).toFixed(precision));
+        setLastPopulatedSymbol(symbol.id);
+      }
+    }
+  }, [symbol, lastPopulatedSymbol]);
 
   // Sync At Price with market price when switching to Pending for convenience
   const handleModeToggle = (mode) => {
