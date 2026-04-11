@@ -156,6 +156,28 @@ export default function LiveChat({ currentUser }) {
     setTimeout(() => inputRef.current?.focus(), 300);
   };
 
+  const startNewChat = async () => {
+    if (socket && ticket) {
+      socket.emit('chat:leave', { ticketId: ticket.id });
+    }
+    setTicket(null);
+    setMessages([]);
+    setChatStatus('open');
+    setConnecting(true);
+    try {
+      const r = await axios.post(`${API}/api/support/tickets`);
+      setTicket(r.data);
+      setMessages(r.data.messages || []);
+      setChatStatus(r.data.status || 'open');
+      if (socket) socket.emit('chat:join', { ticketId: r.data.id });
+    } catch (e) {
+      console.error('Failed to create new ticket');
+    } finally {
+      setConnecting(false);
+    }
+    setTimeout(() => inputRef.current?.focus(), 300);
+  };
+
   const sendMessage = (text) => {
     const msg = text || input.trim();
     if (!msg || !ticket || chatStatus === 'closed' || chatStatus === 'blocked') return;
@@ -351,8 +373,15 @@ export default function LiveChat({ currentUser }) {
 
         {/* Closed Banner */}
         {chatStatus === 'closed' && (
-          <div className="chat-closed-banner">
-            <i className="fa-solid fa-lock" /> This chat has been closed by support.
+          <div className="chat-closed-banner" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div><i className="fa-solid fa-lock" /> This chat has been closed by support.</div>
+            <button onClick={startNewChat} style={{
+              background: '#3291ff', color: '#fff', border: 'none', borderRadius: '6px', 
+              padding: '8px 12px', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+            }}>
+              <i className="fa-solid fa-plus"></i> Start New Conversation
+            </button>
           </div>
         )}
         {chatStatus === 'blocked' && (

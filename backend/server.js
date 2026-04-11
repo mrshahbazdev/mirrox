@@ -573,7 +573,7 @@ app.get('/api/support/tickets/:ticketId', verifyClientToken, async (req, res) =>
 // GET my open ticket (client — returns existing open or null)
 app.get('/api/support/my-ticket', verifyClientToken, async (req, res) => {
   try {
-    const ticket = await SupportTicket.findOne({ clientId: req.user.id, status: 'open' }).lean();
+    const ticket = await SupportTicket.findOne({ clientId: req.user.id, status: { $in: ['open', 'blocked'] } }).lean();
     res.json(ticket || null);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch your ticket' });
@@ -583,7 +583,7 @@ app.get('/api/support/my-ticket', verifyClientToken, async (req, res) => {
 // POST create ticket (client — one open ticket per client)
 app.post('/api/support/tickets', verifyClientToken, async (req, res) => {
   try {
-    const existing = await SupportTicket.findOne({ clientId: req.user.id, status: 'open' });
+    const existing = await SupportTicket.findOne({ clientId: req.user.id, status: { $in: ['open', 'blocked'] } });
     if (existing) return res.json(existing);
 
     const client = clients.find(c => c.id === req.user.id);
