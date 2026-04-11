@@ -2205,3 +2205,23 @@ body {
 .adm-page-header { background: #0b0e14 !important; padding: 32px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; margin-bottom: 32px !important; }
 .adm-page-title { font-size: 28px !important; font-weight: 800 !important; color: #fff !important; margin: 0 !important; display: flex !important; align-items: center !important; gap: 16px !important; }
 .adm-page-sub { color: #64748b !important; margin: 8px 0 0 !important; font-size: 15px !important; }
+
+/* Header Button Elite Styles */
+.tab-btn { 
+  background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(255,255,255,0.05) !important; 
+  color: #94a3b8 !important; padding: 10px 22px !important; border-radius: 14px !important; font-size: 13px !important; font-weight: 600 !important;
+  cursor: pointer !important; display: flex !important; align-items: center !important; gap: 10px !important; transition: all 0.2s !important;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.06) !important; color: #fff !important; }
+.tab-btn.active { 
+  background: linear-gradient(135deg, #3291ff 0%, #1a6fd4 100%) !important; 
+  color: #fff !important; border: none !important; 
+  box-shadow: 0 8px 20px rgba(50,145,255,0.3) !important; 
+}
+.create-admin-btn { 
+  background: linear-gradient(135deg, #00cc88 0%, #00a36d 100%) !important; color: #fff !important; border: none !important; 
+  padding: 10px 24px !important; border-radius: 14px !important; font-size: 13px !important; font-weight: 700 !important;
+  cursor: pointer !important; display: flex !important; align-items: center !important; gap: 10px !important; margin-left: auto !important;
+  box-shadow: 0 8px 20px rgba(0,204,136,0.3) !important; transition: 0.3s !important;
+}
+.create-admin-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
