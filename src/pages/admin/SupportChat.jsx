@@ -60,6 +60,7 @@ export default function SupportChat({ onAdminLogout }) {
   const [onlineVisitors, setOnlineVisitors] = useState([]); // live visitors
   const [showVisitors, setShowVisitors] = useState(false);
   const [newMsgTicketIds, setNewMsgTicketIds] = useState(new Set()); // for sidebar notification
+  const [showBlockModal, setShowBlockModal] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -288,11 +289,16 @@ export default function SupportChat({ onAdminLogout }) {
 
   const blockTicket = () => {
     if (!selectedTicket) return;
-    if (window.confirm("Are you sure you want to block this user from support chat?")) {
-      if (socket) socket.emit('chat:block_ticket', { ticketId: selectedTicket.id });
+    setShowBlockModal(true);
+  };
+
+  const confirmBlock = () => {
+    if (socket && selectedTicket) {
+      socket.emit('chat:block_ticket', { ticketId: selectedTicket.id });
       setSelectedTicket(prev => ({ ...prev, status: 'blocked' }));
       setTickets(prev => prev.map(t => t.id === selectedTicket.id ? { ...t, status: 'blocked' } : t));
     }
+    setShowBlockModal(false);
   };
 
   const filteredTickets = tickets.filter(t => {
@@ -633,6 +639,24 @@ export default function SupportChat({ onAdminLogout }) {
           </>
         )}
       </div>
+      {/* Block Confirmation Modal */}
+      {showBlockModal && (
+        <div className="support-modal-overlay">
+          <div className="support-modal-card">
+            <div className="support-modal-header">
+              <i className="fa-solid fa-ban" style={{ color: '#ef4444' }} />
+              <h4>Block User Access</h4>
+            </div>
+            <div className="support-modal-body">
+              <p>Are you sure you want to block <strong>{selectedTicket?.clientName}</strong>? They will no longer be able to send messages, but they can still see their chat history.</p>
+            </div>
+            <div className="support-modal-footer">
+              <button className="support-modal-btn cancel" onClick={() => setShowBlockModal(false)}>Cancel</button>
+              <button className="support-modal-btn confirm-block" onClick={confirmBlock}>Yes, Block User</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
