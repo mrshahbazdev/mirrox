@@ -626,7 +626,7 @@ const ClientDetail = ({ onAdminLogout }) => {
               <thead>
                 <tr>
                   <th>Trade ID</th><th>Symbol</th><th>Type</th><th>Lots</th>
-                  <th>Open Price</th><th>Current Price</th><th>Selected Price</th><th>Swap</th><th>Profit / Loss</th><th>Closed By</th><th>Status</th><th>Admin Control</th>
+                  <th>Open Price</th><th>Current Price</th><th>Target / Close Price</th><th>Swap</th><th>Profit / Loss</th><th>Closed By</th><th>Status</th><th>Admin Control</th>
                 </tr>
               </thead>
               <tbody>
@@ -641,8 +641,11 @@ const ClientDetail = ({ onAdminLogout }) => {
                       <td className="adm-mono">{t.lots}</td>
                       <td className="adm-mono">{t.openPrice}</td>
                       <td className="adm-mono">{prices.find(p=>p.name===t.symbol)?.price || '...'}</td>
-                      <td className="adm-mono" style={{ color: t.selectedPrice ? '#3291ff' : '#64748b' }}>
-                        {t.selectedPrice ? t.selectedPrice.toFixed(prices.find(p=>p.name===t.symbol)?.precision || 2) : '---'}
+                      <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#3291ff' : '#64748b' }}>
+                        {t.status === 'Closed' 
+                          ? (t.closePrice?.toFixed(prices.find(p=>p.name===t.symbol)?.precision || 2) || '---')
+                          : (t.selectedPrice ? t.selectedPrice.toFixed(prices.find(p=>p.name===t.symbol)?.precision || 2) : '---')
+                        }
                       </td>
                       <td className="adm-mono" style={{ color: (t.swap || 0) < 0 ? '#ff4d4d' : '#00cc88' }}>
                         {(t.swap || 0).toFixed(2)}

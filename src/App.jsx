@@ -110,7 +110,6 @@ function App() {
 
         {/* Global Redirects for direct URL hits */}
         <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
-        <Route path="/analytics" element={<Navigate to="/app/analytics" replace />} />
         <Route path="/explore" element={<Navigate to="/app/explore" replace />} />
         <Route path="/documents" element={<Navigate to="/app/documents" replace />} />
         <Route path="/finances" element={<Navigate to="/app/finances" replace />} />
@@ -130,7 +129,6 @@ function App() {
         >
           <Route index element={<Navigate to="/app/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard currentUser={currentClientExtended} />} />
-          <Route path="analytics" element={<Analytics />} />
           <Route path="explore" element={<Explore />} />
           <Route path="documents" element={<Documents />} />
           <Route path="finances" element={<Finances />} />
