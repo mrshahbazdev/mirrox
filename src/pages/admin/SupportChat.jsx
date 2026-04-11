@@ -108,9 +108,13 @@ export default function SupportChat({ onAdminLogout }) {
     });
 
     s.on('chat:ticket_update', (data) => {
-      setTickets(prev => prev.map(t =>
-        t.id === data.ticketId ? { ...t, ...data } : t
-      ));
+      setTickets(prev => {
+        const exists = prev.find(t => t.id === data.ticketId);
+        if (exists) {
+          return prev.map(t => t.id === data.ticketId ? { ...t, ...data } : t);
+        }
+        return [{ id: data.ticketId, ...data, status: 'open' }, ...prev];
+      });
     });
 
     // User typing indicator
@@ -266,7 +270,7 @@ export default function SupportChat({ onAdminLogout }) {
   }, {});
 
   return (
-    <div className="support-chat-layout">
+    <div className={`support-chat-layout ${selectedTicket ? 'has-open-ticket' : ''}`}>
       {/* LEFT — Ticket List */}
       <div className="support-inbox">
         <div className="support-inbox-header">
@@ -394,6 +398,9 @@ export default function SupportChat({ onAdminLogout }) {
             {/* Convo Header */}
             <div className="support-convo-header">
               <div className="support-convo-client-info">
+                <button className="mobile-convo-back-btn" onClick={() => setSelectedTicket(null)}>
+                  <i className="fa-solid fa-chevron-left" />
+                </button>
                 <div className="convo-avatar">
                   {selectedTicket.clientName?.[0]?.toUpperCase() || 'C'}
                 </div>

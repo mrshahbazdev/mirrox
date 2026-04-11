@@ -1572,8 +1572,10 @@ body {
 }
 
 @media (max-width: 768px) {
-  .support-chat-layout { grid-template-columns: 1fr; }
-  .support-conversation { display: none; }
+  .support-chat-layout { display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  .support-chat-layout.has-open-ticket .support-inbox { display: none; }
+  .support-chat-layout:not(.has-open-ticket) .support-conversation { display: none; }
+  .support-conversation { flex: 1; display: flex; flex-direction: column; }
 }
 
 /* Inbox (Left Panel) */
@@ -1717,6 +1719,15 @@ body {
 .convo-client-name { font-size: 15px; font-weight: 700; color: var(--text-main); }
 .convo-client-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .convo-ticket-id { font-family: 'Space Mono', monospace; color: var(--text-muted); }
+
+.mobile-convo-back-btn {
+  display: none; background: transparent; border: none; 
+  color: var(--text-main); font-size: 18px; cursor: pointer; 
+  padding: 8px 10px 8px 0; margin-right: 2px;
+}
+@media (max-width: 768px) {
+  .mobile-convo-back-btn { display: block; }
+}
 
 .support-convo-actions { display: flex; align-items: center; gap: 10px; }
 .convo-status-badge {
