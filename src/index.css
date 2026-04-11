@@ -397,23 +397,26 @@ body {
 .marketwatch-list {
   flex: 1;
   overflow-y: auto;
-  min-height: 0; /* Ensures flex child scrolls correctly */
+  min-height: 0;
+  max-height: 500px; /* Force a boundary for the list to trigger scroll */
 }
 
-/* Enhanced Scrollbar for MarketWatch */
+/* Premium Scrollbar with high contrast */
 .marketwatch-list::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 .marketwatch-list::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 .marketwatch-list::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--accent);
   border-radius: 10px;
-  border: 1px solid var(--bg-card);
+  border: 2px solid var(--bg-card);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
 .marketwatch-list::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: #2a81e5;
 }
 
 .symbol-row {
