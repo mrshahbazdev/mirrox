@@ -397,6 +397,23 @@ body {
 .marketwatch-list {
   flex: 1;
   overflow-y: auto;
+  min-height: 0; /* Ensures flex child scrolls correctly */
+}
+
+/* Enhanced Scrollbar for MarketWatch */
+.marketwatch-list::-webkit-scrollbar {
+  width: 6px;
+}
+.marketwatch-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+.marketwatch-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+  border: 1px solid var(--bg-card);
+}
+.marketwatch-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .symbol-row {
