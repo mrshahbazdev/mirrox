@@ -19,6 +19,9 @@ const StaffManager = ({ onAdminLogout }) => {
     name: '', email: '', password: '', role: 'admin', team: 'General',
     permissions: { manageClients: true, manageFinance: true, manageTrading: true, manageSupport: true, manageSettings: false, manageStaff: false }
   });
+  
+  const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [newIp, setNewIp] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -33,8 +36,16 @@ const StaffManager = ({ onAdminLogout }) => {
       ]);
       setAdmins(admRes.data);
       setActivities(actRes.data);
-      const mMode = cfgRes.data.find(c => c.key === 'maintenance_mode');
-      setMaintenance(mMode ? mMode.value === 'true' || mMode.value === true : false);
+      
+      // Safety check: handle config both as array (Mongoose find) or object
+      let mModeVal = false;
+      if (Array.isArray(cfgRes.data)) {
+          const mModeObj = cfgRes.data.find(c => c.key === 'maintenance_mode');
+          mModeVal = mModeObj ? (mModeObj.value === 'true' || mModeObj.value === true) : false;
+      } else if (cfgRes.data && cfgRes.data.maintenance_mode !== undefined) {
+          mModeVal = cfgRes.data.maintenance_mode;
+      }
+      setMaintenance(mModeVal);
     } catch (err) { console.error('Data fetch failed', err); }
     finally { setLoading(false); }
   };
