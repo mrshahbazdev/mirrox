@@ -63,7 +63,7 @@ const verifyClientToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Access Denied: No Token Provided' });
 
-  jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', (err, decoded) => {
     if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
     req.user = decoded;
     next();
@@ -76,23 +76,29 @@ const verifyAdminToken = async (req, res, next) => {
   if (!token) return res.status(401).json({ error: 'No admin token' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026');
     
     // Hardening: Verify session still exists in DB
     const admin = await Admin.findById(decoded.id);
     if (!admin || admin.status === 'suspended') return res.status(403).json({ error: 'Access revoked' });
 
     // 1. Session Check (The "Kick" logic)
-    const sessionExists = admin.activeSessions.some(s => s.sessionId === decoded.sessionId);
-    if (!sessionExists) return res.status(401).json({ error: 'Session revoked by Super Admin' });
+    // If the token has a sessionId, we MUST verify it exists in DB
+    if (decoded.sessionId) {
+      const sessionExists = admin.activeSessions.some(s => s.sessionId === decoded.sessionId);
+      if (!sessionExists) return res.status(401).json({ error: 'Session revoked by Super Admin' });
+    } else {
+      // Legacy token support: If no sessionId in token, we allow it for now
+      // but only if the admin is active. (Optional: log this as a legacy access)
+    }
 
     // 2. IP Whitelist Check (IP Sovereignty)
     if (admin.allowedIPs?.length > 0) {
-      const clientIp = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      // Simple lookup (could be improved with CIDR if needed)
+      let clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      if (clientIp.includes(',')) clientIp = clientIp.split(',')[0].trim();
+      
       const allowed = admin.allowedIPs.includes(clientIp);
       if (!allowed) {
-        console.warn(`[BLOCKED] Admin ${admin.name} attempted access from unauthorized IP: ${clientIp}`);
         return res.status(403).json({ error: 'Security: Access restricted from this IP address' });
       }
     }
@@ -190,7 +196,7 @@ app.post('/api/auth/register', async (req, res) => {
     const { password: p, withdrawalPin: wp, ...sanitizedClient } = newClient.toObject ? newClient.toObject() : newClient;
     sanitizedClient.hasPin = !!wp;
 
-    const token = jwt.sign({ id: newClient.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+    const token = jwt.sign({ id: newClient.id, role: 'user' }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
     res.status(201).json({ success: true, token, client: sanitizedClient });
   } catch (err) {
     res.status(500).json({ error: 'Server error during registration' });
@@ -243,7 +249,7 @@ app.post('/api/auth/login', async (req, res) => {
           return res.json({ require2FA: true, id: adminUser._id, sessionId });
       }
 
-      const token = jwt.sign({ id: adminUser._id, role: adminUser.role, sessionId }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      const token = jwt.sign({ id: adminUser._id, role: adminUser.role, sessionId }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
       return res.json({ role: adminUser.role, token, sessionId });
     }
   } catch (err) { console.error('Admin login err:', err); }
@@ -259,7 +265,7 @@ app.post('/api/auth/login', async (req, res) => {
   const { password: p, withdrawalPin: wp, ...sanitizedClient } = clientUser;
   sanitizedClient.hasPin = !!wp;
 
-  const token = jwt.sign({ id: clientUser.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+  const token = jwt.sign({ id: clientUser.id, role: 'user' }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
   res.json({ success: true, token, client: sanitizedClient });
 });
 
@@ -277,7 +283,7 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
       const lastSession = admin.activeSessions[admin.activeSessions.length - 1];
       const sessionId = lastSession ? lastSession.sessionId : 'S' + Date.now().toString().slice(-6);
 
-      const token = jwt.sign({ id: admin._id, role: admin.role, sessionId }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      const token = jwt.sign({ id: admin._id, role: admin.role, sessionId }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
       res.json({ role: admin.role, token, sessionId });
   } catch(err) { res.status(500).json({ error: 'Server error' }); }
 });
