@@ -61,7 +61,6 @@ export default function SupportChat({ onAdminLogout }) {
         setOtherPresence(others);
       });
     }
-    fetchTickets();
     return () => {
       if (socket) socket.off('admin:presence_update');
     };
