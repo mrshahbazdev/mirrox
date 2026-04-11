@@ -77,9 +77,9 @@ const ClientDetail = ({ onAdminLogout }) => {
       try {
         setLoading(true);
         const [clientRes, wRes, dRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/withdrawals/${id}`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/deposits/${id}`)
+          axios.get(`${import.meta.env.VITE_API_URL}/api/clients/${id}`, authHeader),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/withdrawals/${id}`, authHeader),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/deposits/${id}`, authHeader)
         ]);
         setStaticClient(clientRes.data);
         setWithdrawals(wRes.data);

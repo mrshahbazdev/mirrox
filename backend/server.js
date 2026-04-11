@@ -689,11 +689,21 @@ app.put('/api/clients/:id/kyc', verifyAdminToken, async (req, res) => {
 app.get('/api/deposits', verifyAdminToken, (req, res) => res.json(deposits));
 app.get('/api/withdrawals', verifyAdminToken, (req, res) => res.json(withdrawals));
 
-app.get('/api/deposits/:clientId', verifyClientToken, (req, res) => {
+const verifyAdminOrClient = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Auth required' });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch(e) { res.status(401).json({ error: 'Invalid token' }); }
+};
+
+app.get('/api/deposits/:clientId', verifyAdminOrClient, (req, res) => {
   res.json(deposits.filter(d => d.clientId === req.params.clientId));
 });
 
-app.get('/api/withdrawals/:clientId', verifyClientToken, (req, res) => {
+app.get('/api/withdrawals/:clientId', verifyAdminOrClient, (req, res) => {
   res.json(withdrawals.filter(w => w.clientId === req.params.clientId));
 });
 
