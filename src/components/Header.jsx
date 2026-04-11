@@ -69,6 +69,13 @@ const Header = ({ currentUser }) => {
             <span className="pill-value">${balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
           </div>
 
+          <div className="stat-pill profit-pill">
+            <span className="pill-label">Profit</span>
+            <span className={`pill-value ${floatingPL >= 0 ? "up" : "down"}`}>
+              {floatingPL >= 0 ? '+' : ''}${floatingPL.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </span>
+          </div>
+
           <div className="stat-pill equity-pill">
             <span className="pill-label">Equity</span>
             <span className={`pill-value ${floatingPL >= 0 ? "up" : "down"}`}>
