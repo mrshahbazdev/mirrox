@@ -146,7 +146,9 @@ const PositionTabs = () => {
                     {(activeTab === 'open' || activeTab === 'closed') && (
                        <td>
                           {activeTab === 'open' 
-                            ? (trade.selectedPrice ? trade.selectedPrice.toFixed(prices.find(p=>p.name===trade.symbol)?.precision || 2) : '---')
+                            ? (trade.takeProfit 
+                                ? trade.takeProfit.toFixed(prices.find(p=>p.name===trade.symbol)?.precision || 2) 
+                                : (trade.selectedPrice ? trade.selectedPrice.toFixed(prices.find(p=>p.name===trade.symbol)?.precision || 2) : '---'))
                             : (trade.closePrice?.toFixed(prices.find(p=>p.name===trade.symbol)?.precision || 2) || '...')
                           }
                        </td>
