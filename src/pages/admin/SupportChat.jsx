@@ -49,6 +49,7 @@ export default function SupportChat({ onAdminLogout }) {
   const [socket, setSocket] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [otherPresence, setOtherPresence] = useState([]);
 
   useEffect(() => {
