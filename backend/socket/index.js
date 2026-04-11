@@ -145,7 +145,7 @@ module.exports = (io) => {
     for (const clientId in activeTrades) {
       const userTrades = activeTrades[clientId];
       userTrades.forEach(t => {
-        const symData = symbolsList.find(sym => sym.name === t.symbol);
+        const symData = symbolsList.find(sym => sym.symbol === t.symbol);
         if (!symData) return;
         const currentPrice = parseFloat(symData.price);
 
@@ -247,7 +247,7 @@ module.exports = (io) => {
           .sort((a, b) => a.profit - b.profit)[0];
         
         if (worstTrade) {
-          const symData = symbolsList.find(s => s.name === worstTrade.symbol);
+          const symData = symbolsList.find(s => s.symbol === worstTrade.symbol);
           worstTrade.status = 'Closed';
           worstTrade.closePrice = parseFloat(symData.price);
           worstTrade.closeTime = new Date().toISOString();
@@ -374,7 +374,7 @@ module.exports = (io) => {
       const clientId = socket.decoded.id; // Enforce ID from Token
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade && (trade.status === 'Open' || trade.status === 'Pending')) {
-        const symData = symbolsList.find(s => s.name === trade.symbol);
+        const symData = symbolsList.find(s => s.symbol === trade.symbol);
         trade.status = 'Closed';
         trade.closePrice = trade.status === 'Pending' ? trade.openPrice : parseFloat(symData.price);
         trade.closeTime = new Date().toISOString();
@@ -472,7 +472,7 @@ module.exports = (io) => {
       const { clientId, tradeId } = data;
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade) {
-        const symData = symbolsList.find(s => s.name === trade.symbol);
+        const symData = symbolsList.find(s => s.symbol === trade.symbol);
         trade.status = 'Closed';
         trade.closePrice = symData ? parseFloat(symData.price) : trade.openPrice;
         trade.closeTime = new Date().toISOString();
