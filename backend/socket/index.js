@@ -161,11 +161,23 @@ module.exports = (io) => {
         }
 
         if (t.status === 'Open') {
-          // 2. Accrue Swap (Dynamic rate from symbolsList)
+          // 2. Accrue Swap (4% of Margin after 24h 1m)
           // Only auto-accrue if admin has NOT manually locked this swap value
           if (!t.swapLocked) {
-            const swapRate = symData.swapRate || 0.01;
-            t.swap = (t.swap || 0) - (swapRate * t.lots);
+            const tradeAgeMs = Date.now() - new Date(t.openTime).getTime();
+            const thresholdMs = (24 * 60 + 1) * 60 * 1000; // 24 hours + 1 minute
+            
+            if (tradeAgeMs > thresholdMs) {
+              // Calculate days held (at least 1 day if over threshold)
+              const daysHeld = Math.max(1, Math.floor(tradeAgeMs / (24 * 60 * 60 * 1000)));
+              
+              // Apply 4% of margin used per day held
+              const swapAmount = (t.marginUsed || 0) * 0.04 * daysHeld;
+              t.swap = -swapAmount;
+            } else {
+              // No swap charge before 24h 1m
+              t.swap = 0;
+            }
           }
 
           if (t.bias === 'lock') return;
