@@ -708,6 +708,20 @@ app.put('/api/support/tickets/:ticketId/rate', verifyClientToken, async (req, re
   }
 });
 
+// Notifications: Mark as read
+app.put('/api/clients/:clientId/notifications/:notifId/read', async (req, res) => {
+  try {
+    await Client.updateOne(
+      { id: req.params.clientId, "notifications.id": req.params.notifId },
+      { $set: { "notifications.$.read": true } }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Failed to mark notification read:', err);
+    res.status(500).json({ error: 'Failed to mark read' });
+  }
+});
+
 // POST upload attachment
 app.post('/api/upload', upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
