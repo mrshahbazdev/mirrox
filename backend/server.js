@@ -404,16 +404,24 @@ app.get('/api/admins/activities', verifyAdminToken, verifyAdminPermission('manag
   app.post('/api/admins/2fa/setup', verifyAdminToken, async (req, res) => {
     try {
         const admin = await Admin.findById(req.user.id);
-        if (!admin) return res.status(404).json({ error: 'Admin not found' });
+        if (!admin) return res.status(404).json({ error: 'Admin record not found in database.' });
+        
+        // Ensure email is valid for QR generation
+        const adminEmail = admin.email || 'admin@mirrox.com';
         
         const secret = authenticator.generateSecret();
-        const otpauth = authenticator.keyuri(admin.email || 'admin@mirrox.com', 'Mirrox', secret);
-        const qr = await QRCode.toDataURL(otpauth);
+        const otpauth = authenticator.keyuri(adminEmail, 'Mirrox', secret);
         
-        res.json({ secret, qr });
+        try {
+            const qr = await QRCode.toDataURL(otpauth);
+            res.json({ secret, qr });
+        } catch (qrErr) {
+            console.error('QR Generation Error:', qrErr);
+            return res.status(500).json({ error: 'QR Code generation failed', details: qrErr.message });
+        }
     } catch(err) { 
-        console.error('2FA Setup Error:', err);
-        res.status(500).json({ error: 'Setup failed' }); 
+        console.error('2FA Setup Master Error:', err);
+        res.status(500).json({ error: 'Sovereign 2FA Setup failed', details: err.message }); 
     }
 });
 
