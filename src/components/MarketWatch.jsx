@@ -5,12 +5,20 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filtering Logic: Combines tab selection and real-time search
+  // Filtering Logic: Combines tab selection, real-time search, and robust sorting
   const displaySymbols = (() => {
-    let baseList = activeTab === 'Top Movers' 
-      ? [...symbols].sort((a, b) => Math.abs(parseFloat(b.change)) - Math.abs(parseFloat(a.change)))
-      : symbols;
+    let baseList = [...symbols];
     
+    // 1. Sort by Change for Top Movers
+    if (activeTab === 'Top Movers') {
+      baseList = baseList.sort((a, b) => {
+        const changeA = Math.abs(parseFloat(a.change) || 0);
+        const changeB = Math.abs(parseFloat(b.change) || 0);
+        return changeB - changeA;
+      });
+    }
+    
+    // 2. Filter by Search Query
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return baseList.filter(s => 
