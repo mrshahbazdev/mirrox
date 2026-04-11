@@ -119,7 +119,7 @@ const PositionTabs = () => {
               <th>Volume</th>
               <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
               {activeTab === 'open' && <th>Current Price</th>}
-              {activeTab === 'closed' && <th>Close Price</th>}
+              {(activeTab === 'open' || activeTab === 'closed') && <th>Close Price</th>}
               {activeTab !== 'pending' && <th>Profit / Loss</th>}
               {activeTab !== 'pending' && <th>Swap</th>}
               {activeTab === 'closed' && <th>Comment</th>}
@@ -143,8 +143,13 @@ const PositionTabs = () => {
                        <td>{prices.find(p=>p.name===trade.symbol)?.price || '...'}</td>
                     )}
 
-                    {activeTab === 'closed' && (
-                       <td>{trade.closePrice?.toFixed(2) || '...'}</td>
+                    {(activeTab === 'open' || activeTab === 'closed') && (
+                       <td>
+                          {activeTab === 'open' 
+                            ? (trade.selectedPrice ? trade.selectedPrice.toFixed(prices.find(p=>p.name===trade.symbol)?.precision || 2) : '---')
+                            : (trade.closePrice?.toFixed(prices.find(p=>p.name===trade.symbol)?.precision || 2) || '...')
+                          }
+                       </td>
                     )}
 
                     {activeTab !== 'pending' && (
