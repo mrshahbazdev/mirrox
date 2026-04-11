@@ -2,30 +2,65 @@ import React, { useState } from 'react';
 
 const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol }) => {
   const [activeTab, setActiveTab] = useState('Favorites');
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Sort symbols by absolute percentage change when in Top Movers tab
-  const displaySymbols = activeTab === 'Top Movers' 
-    ? [...symbols].sort((a, b) => Math.abs(parseFloat(b.change)) - Math.abs(parseFloat(a.change)))
-    : symbols;
+  // Filtering Logic: Combines tab selection and real-time search
+  const displaySymbols = (() => {
+    let baseList = activeTab === 'Top Movers' 
+      ? [...symbols].sort((a, b) => Math.abs(parseFloat(b.change)) - Math.abs(parseFloat(a.change)))
+      : symbols;
+    
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return baseList.filter(s => 
+        s.name.toLowerCase().includes(q) || 
+        (s.symbol && s.symbol.toLowerCase().includes(q))
+      );
+    }
+    return baseList;
+  })();
 
   return (
     <div className="card market-watch-card">
       <div className="tabs-header">
-        <div 
-          className={`tab-item ${activeTab === 'Favorites' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Favorites')}
-        >
-          Favorites
-        </div>
-        <div 
-          className={`tab-item ${activeTab === 'Top Movers' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Top Movers')}
-        >
-          Top Movers
-        </div>
-        <div className="search-icon-wrapper" style={{ marginLeft: 'auto' }}>
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </div>
+        {!showSearch ? (
+          <>
+            <div 
+              className={`tab-item ${activeTab === 'Favorites' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Favorites')}
+            >
+              Favorites
+            </div>
+            <div 
+              className={`tab-item ${activeTab === 'Top Movers' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Top Movers')}
+            >
+              Top Movers
+            </div>
+            <div className="search-icon-wrapper" style={{ marginLeft: 'auto', cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => setShowSearch(true)}>
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </div>
+          </>
+        ) : (
+          <div className="search-input-wrapper" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <i className="fa-solid fa-magnifying-glass" style={{ color: 'var(--accent)', fontSize: '13px' }}></i>
+            <input 
+              type="text" 
+              className="market-search-input"
+              style={{ flex: 1, background: 'none', border: 'none', color: '#fff', fontSize: '13px', outline: 'none' }}
+              placeholder="Search assets..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+            <i 
+              className="fa-solid fa-xmark" 
+              style={{ cursor: 'pointer', color: 'var(--text-muted)', fontSize: '14px' }}
+              onClick={() => { setShowSearch(false); setSearchQuery(''); }}
+            ></i>
+          </div>
+        )}
       </div>
 
       <div className="marketwatch-list">
@@ -52,32 +87,6 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol }) => {
         ))}
       </div>
 
-      <div className="trade-panel glass">
-        <div className="trade-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-           <span style={{ fontSize: '14px', fontWeight: 700 }}>{selectedSymbol.name}</span>
-           <div className="lot-selector">
-              <i className="fa-solid fa-minus"></i>
-              <span>0.01</span>
-              <i className="fa-solid fa-plus"></i>
-           </div>
-        </div>
-
-        <div className="order-controls">
-          <button className="btn-trade btn-sell">
-            <div className="order-label">SELL</div>
-            <div className="order-price">{selectedSymbol.price}</div>
-          </button>
-          <button className="btn-trade btn-buy">
-            <div className="order-label">BUY</div>
-            <div className="order-price">{(parseFloat(selectedSymbol.price) + 0.0001).toFixed(selectedSymbol.precision)}</div>
-          </button>
-        </div>
-        
-        <div className="advanced-toggle" style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: 'var(--text-muted)' }}>
-           <span>Advanced Order</span>
-           <i className="fa-solid fa-toggle-off" style={{ fontSize: '16px', cursor: 'pointer' }}></i>
-        </div>
-      </div>
 
       <style>{`
         .lot-selector {

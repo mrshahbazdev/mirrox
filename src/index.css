@@ -398,7 +398,6 @@ body {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  max-height: 500px; /* Force a boundary for the list to trigger scroll */
 }
 
 /* Premium Scrollbar with high contrast */
