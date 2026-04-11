@@ -947,10 +947,7 @@ body {
   stroke-width: 3; 
   stroke-linecap: round; 
   transition: stroke-dashoffset 0.5s ease;
-}
 .circle-text { fill: #fff; font-size: 8px; font-weight: 800; text-anchor: middle; }
-
-}
 
 /* Image Zoom Lightbox */
 .zoom-overlay {

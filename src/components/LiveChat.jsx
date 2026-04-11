@@ -132,14 +132,13 @@ export default function LiveChat({ currentUser }) {
 
     const onMessage = (data) => {
       if (data.ticketId !== ticket.id) return;
-      // Only add messages from ADMIN — user messages are added optimistically
       if (data.message.senderRole === 'admin') {
+        playDing(); // Play sound first
         setMessages(prev => [...prev, data.message]);
         if (!isOpenRef.current) {
-          setIsOpen(true);
-          setUnreadCount(c => c + 1);
+           setIsOpen(true);
+           setUnreadCount(c => c + 1);
         }
-        playDing();
         if (isOpenRef.current) {
           // If open, notify admin that we read it immediately
           const token = localStorage.getItem('mirrox_token');
