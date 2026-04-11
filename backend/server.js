@@ -708,7 +708,14 @@ app.get('/api/withdrawals/:clientId', verifyAdminOrClient, (req, res) => {
 });
 
 app.post('/api/deposits', verifyClientToken, (req, res) => {
-  const newDep = { id: 'D' + Date.now().toString().slice(-6), status: 'pending', ...req.body, date: new Date() };
+  const newDep = { 
+    id: 'D' + Date.now().toString().slice(-6), 
+    status: 'pending', 
+    type: 'deposit',
+    clientId: req.user.id, // Enforce sender ID from token
+    ...req.body, 
+    date: new Date() 
+  };
   deposits.push(newDep);
   saveData();
   io.emit('finance_update');
@@ -755,7 +762,14 @@ app.post('/api/withdrawals', verifyClientToken, async (req, res) => {
     return res.status(400).json({ error: 'Insufficient balance' });
   }
 
-  const newWit = { id: 'W' + Date.now().toString().slice(-6), status: 'pending', ...req.body, date: new Date() };
+  const newWit = { 
+    id: 'W' + Date.now().toString().slice(-6), 
+    status: 'pending', 
+    type: 'withdrawal',
+    clientId: req.user.id, // Enforce sender ID from token
+    ...req.body, 
+    date: new Date() 
+  };
   client.tradingMetrics.balance -= parseFloat(amount);
   withdrawals.push(newWit);
   saveData();

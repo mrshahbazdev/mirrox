@@ -5,7 +5,7 @@ import { useModal } from './ModalContext';
 
 // Global Axios Interceptor for JWT Authentication
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('mirrox_token');
+  const token = localStorage.getItem('mirrox_token') || localStorage.getItem('mirrox_admin_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -28,7 +28,7 @@ export const TradingProvider = ({ children }) => {
   
   // Initialize clientId and token from localStorage if available
   const [clientId, setClientIdState] = useState(() => localStorage.getItem('mirrox_client_id'));
-  const [token, setTokenState] = useState(() => localStorage.getItem('mirrox_token'));
+  const [token, setTokenState] = useState(() => localStorage.getItem('mirrox_token') || localStorage.getItem('mirrox_admin_token'));
 
   const setClientId = (id, newToken = null) => {
     if (id) {
