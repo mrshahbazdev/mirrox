@@ -31,7 +31,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   const [loading, setLoading] = useState(true);
   const [historyTrades, setHistoryTrades] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [allAdmins, setAllAdmins] = useState([]);
+  const [otherAdmins, setOtherAdmins] = useState([]);
 
   useEffect(() => {
     const socket = window.socket;
