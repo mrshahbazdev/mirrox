@@ -342,7 +342,5 @@ const StaffManager = ({ onAdminLogout }) => {
     </AdminLayout>
   );
 };
-  );
-};
 
 export default StaffManager;
