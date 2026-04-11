@@ -187,7 +187,12 @@ const initializeDB = async () => {
     if (aCount === 0) {
       console.log('Seeding MongoDB with default Admin...');
       const hashedPassword = await bcrypt.hash('admin', 10);
-      await Admin.create({ email: 'admin@mirrox.com', password: hashedPassword, name: 'Super Admin', role: 'admin' });
+      await Admin.create({ 
+        email: 'admin@mirrox.com', 
+        password: hashedPassword, 
+        name: 'Super Admin', 
+        role: 'super' // Changed from 'admin' to 'super'
+      });
     }
 
     const sCount = await SymbolModel.countDocuments();

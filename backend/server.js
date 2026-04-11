@@ -115,7 +115,8 @@ const verifyAdminPermission = (permission) => {
     try {
       const admin = await Admin.findById(req.user.id);
       if (!admin) return res.status(403).json({ error: 'Admin not found' });
-      if (admin.role === 'super') return next(); 
+      // Bypass for master roles
+      if (admin.role === 'super' || admin.role === 'admin') return next(); 
       if (admin.permissions && admin.permissions[permission]) {
         return next();
       }
@@ -342,6 +343,17 @@ app.get('/api/admins', verifyAdminToken, verifyAdminPermission('manageStaff'), a
 app.post('/api/admins', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
   const { name, email, password, role, team, permissions } = req.body;
   try {
+      const aCount = await Admin.countDocuments();
+    if (aCount === 0) {
+      console.log('Seeding MongoDB with default Admin...');
+      const hashedPassword = await bcrypt.hash('admin', 10);
+      await Admin.create({ 
+        email: 'admin@mirrox.com', 
+        password: hashedPassword, 
+        name: 'Super Admin', 
+        role: 'super' // Changed from 'admin' to 'super'
+      });
+    }
       const exists = await Admin.findOne({ email });
       if (exists) return res.status(400).json({ error: 'Email already registered' });
 
@@ -389,17 +401,20 @@ app.get('/api/admins/activities', verifyAdminToken, verifyAdminPermission('manag
   } catch(err) { res.status(500).json({ error: 'Failed to fetch logs' }); }
 });
 
-// 2FA Setup
-app.post('/api/admins/2fa/setup', verifyAdminToken, async (req, res) => {
+  app.post('/api/admins/2fa/setup', verifyAdminToken, async (req, res) => {
     try {
         const admin = await Admin.findById(req.user.id);
+        if (!admin) return res.status(404).json({ error: 'Admin not found' });
+        
         const secret = authenticator.generateSecret();
-        const otpauth = authenticator.keyuri(admin.email, 'Mirrox', secret);
+        const otpauth = authenticator.keyuri(admin.email || 'admin@mirrox.com', 'Mirrox', secret);
         const qr = await QRCode.toDataURL(otpauth);
         
-        // Don't save yet, wait for verification
         res.json({ secret, qr });
-    } catch(err) { res.status(500).json({ error: 'Setup failed' }); }
+    } catch(err) { 
+        console.error('2FA Setup Error:', err);
+        res.status(500).json({ error: 'Setup failed' }); 
+    }
 });
 
 app.post('/api/admins/2fa/enable', verifyAdminToken, async (req, res) => {
