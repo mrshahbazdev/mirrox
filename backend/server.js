@@ -1123,11 +1123,26 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 });
 
 // --- TRADE HISTORY APIS ---
-app.get('/api/trades/:clientId/history', verifyAdminOrClient, async (req, res) => {
+app.get('/api/trades/:idInUrl/history', verifyAdminOrClient, async (req, res) => {
   try {
-    const history = await Trade.find({ clientId: req.params.clientId, status: 'Closed' }).sort({ closeTime: -1 });
+    const { idInUrl } = req.params;
+    
+    // Resolve the client. The URL ID could be a MongoDB _id (Admin) or a Logical ID (User Dashboard).
+    // 1. Check memory store (clients array)
+    let clientFound = clients.find(c => c._id?.toString() === idInUrl || c.id === idInUrl);
+    
+    // 2. Fallback to DB if not found in memory (for deep consistency)
+    if (!clientFound && mongoose.Types.ObjectId.isValid(idInUrl)) {
+       clientFound = await Client.findById(idInUrl);
+    }
+    
+    // The Trade model always stores logical ID 'id' (e.g., C1234)
+    const searchId = clientFound ? clientFound.id : idInUrl;
+
+    const history = await Trade.find({ clientId: searchId, status: 'Closed' }).sort({ closeTime: -1 });
     res.json(history);
   } catch (err) {
+    console.error('History fetch error:', err.message);
     res.status(500).json({ error: 'Failed to fetch trade history' });
   }
 });
