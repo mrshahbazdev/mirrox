@@ -698,7 +698,7 @@ app.get('/api/withdrawals/:clientId', verifyClientToken, (req, res) => {
 });
 
 app.post('/api/deposits', verifyClientToken, (req, res) => {
-  const newDep = { id: 'D' + Date.now().slice(-6), status: 'pending', ...req.body, date: new Date() };
+  const newDep = { id: 'D' + Date.now().toString().slice(-6), status: 'pending', ...req.body, date: new Date() };
   deposits.push(newDep);
   saveData();
   io.emit('finance_update');
