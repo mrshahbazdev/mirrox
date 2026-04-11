@@ -488,7 +488,7 @@ module.exports = (io) => {
 
         console.log(`[ADMIN KILLED] Trade ${tradeId} closed by Admin.`);
         saveData();
-        io.emit('trade_killed', { tradeId }); 
+        io.emit('trade_killed', { tradeId, reason: 'Admin Force Close' }); 
         io.emit('trade_update', activeTrades);
         io.emit('client_update', clients);
       }
