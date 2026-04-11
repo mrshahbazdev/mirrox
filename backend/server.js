@@ -12,6 +12,9 @@ const SupportTicket = require('./models/SupportTicket');
 const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
+const AdminActivity = require('./models/AdminActivity');
+const { authenticator } = require('otplib');
+const QRCode = require('qrcode');
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -73,11 +76,51 @@ const verifyAdminToken = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, decoded) => {
     if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
-    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Requires Admin Privileges' });
+    if (!['admin', 'super', 'support', 'moderator'].includes(decoded.role)) {
+      return res.status(403).json({ error: 'Requires Admin Privileges' });
+    }
     req.user = decoded;
     next();
   });
 };
+
+const verifyAdminPermission = (permission) => {
+  return async (req, res, next) => {
+    try {
+      const admin = await Admin.findById(req.user.id);
+      if (!admin) return res.status(403).json({ error: 'Admin not found' });
+      if (admin.role === 'super') return next(); 
+      if (admin.permissions && admin.permissions[permission]) {
+        return next();
+      }
+      res.status(403).json({ error: `Permission Denied: Requires ${permission}` });
+    } catch(err) { res.status(500).json({ error: 'Authorization check failed' }); }
+  };
+};
+
+// Advanced Differential Logging Helper
+const logAdminActivity = async (req, action, resourceType, resourceId, details) => {
+  try {
+    const adminId = req.user.id;
+    const admin = await Admin.findById(adminId);
+    if (!admin) return;
+    
+    await new AdminActivity({
+      adminId,
+      adminName: admin.name,
+      action,
+      resourceType,
+      resourceId,
+      details: {
+        oldValue: details.oldValue || null,
+        newValue: details.newValue || null,
+        description: details.description || ''
+      },
+      ipAddress: req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    }).save();
+  } catch (err) { console.error('Logging error:', err.message); }
+};
+
 
 // --- AUTH APIS ---
 app.post('/api/auth/register', async (req, res) => {
@@ -136,14 +179,47 @@ app.post('/api/auth/register', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
-  const adminUser = admins.find(a => a.email === email);
-  if (adminUser) {
-    const isMatch = await bcrypt.compare(password, adminUser.password);
-    if (!isMatch) return res.status(401).json({ error: 'Invalid admin credentials' });
-    const token = jwt.sign({ id: adminUser._id, role: adminUser.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-    return res.json({ role: adminUser.role, token });
-  }
+  
+  // 1. Try Admin Login first
+  try {
+    const adminUser = await Admin.findOne({ email });
+    if (adminUser) {
+      if (adminUser.status === 'suspended') return res.status(403).json({ error: 'Account suspended' });
+      
+      // Check Lockout
+      if (adminUser.lockoutUntil && adminUser.lockoutUntil > Date.now()) {
+        const remaining = Math.ceil((adminUser.lockoutUntil - Date.now()) / 60000);
+        return res.status(403).json({ error: `Account locked. Try again in ${remaining} minutes.` });
+      }
 
+      const isMatch = await bcrypt.compare(password, adminUser.password);
+      if (!isMatch) {
+         adminUser.loginAttempts += 1;
+         if (adminUser.loginAttempts >= 5) {
+            adminUser.lockoutUntil = Date.now() + 30 * 60 * 1000; // 30 min lock
+            adminUser.loginAttempts = 0;
+         }
+         await adminUser.save();
+         return res.status(401).json({ error: 'Invalid admin credentials' });
+      }
+
+      // Success - Reset attempts
+      adminUser.loginAttempts = 0;
+      adminUser.lockoutUntil = null;
+      adminUser.lastActive = new Date();
+      await adminUser.save();
+
+      // Check 2FA
+      if (adminUser.twoFactorEnabled) {
+          return res.json({ require2FA: true, id: adminUser._id });
+      }
+
+      const token = jwt.sign({ id: adminUser._id, role: adminUser.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      return res.json({ role: adminUser.role, token });
+    }
+  } catch (err) { console.error('Admin login err:', err); }
+
+  // 2. Client Login
   const clientUser = clients.find(c => c.email === email);
   if (!clientUser) return res.status(401).json({ error: 'Invalid credentials' });
 
@@ -156,6 +232,106 @@ app.post('/api/auth/login', async (req, res) => {
 
   const token = jwt.sign({ id: clientUser.id, role: 'user' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
   res.json({ success: true, token, client: sanitizedClient });
+});
+
+// 2FA Verification Route
+app.post('/api/auth/verify-2fa', async (req, res) => {
+  const { id, code } = req.body;
+  try {
+      const admin = await Admin.findById(id);
+      if (!admin || !admin.twoFactorSecret) return res.status(400).json({ error: '2FA not setup' });
+      
+      const isValid = authenticator.check(code, admin.twoFactorSecret);
+      if (!isValid) return res.status(401).json({ error: 'Invalid 2FA code' });
+
+      const token = jwt.sign({ id: admin._id, role: admin.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      res.json({ role: admin.role, token });
+  } catch(err) { res.status(500).json({ error: 'Server error' }); }
+});
+
+// Admin Management Endpoints
+app.get('/api/admins', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+  try {
+      const allAdmins = await Admin.find().select('-password -twoFactorSecret');
+      res.json(allAdmins);
+  } catch(err) { res.status(500).json({ error: 'Failed to fetch admins' }); }
+});
+
+app.post('/api/admins', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+  const { name, email, password, role, team, permissions } = req.body;
+  try {
+      const exists = await Admin.findOne({ email });
+      if (exists) return res.status(400).json({ error: 'Email already registered' });
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newAdmin = new Admin({ name, email, password: hashedPassword, role, team, permissions });
+      await newAdmin.save();
+      
+      await logAdminActivity(req, 'CREATE_ADMIN', 'Admin', newAdmin._id, { description: `Created new admin: ${name}` });
+      res.status(201).json(newAdmin);
+  } catch(err) { res.status(500).json({ error: 'Failed to create admin' }); }
+});
+
+app.put('/api/admins/:id/permissions', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+  try {
+      const admin = await Admin.findById(req.params.id);
+      if (admin.role === 'super') return res.status(403).json({ error: 'Cannot modify super admin' });
+      
+      const oldPerms = { ...admin.permissions.toObject() };
+      admin.permissions = req.body;
+      await admin.save();
+
+      await logAdminActivity(req, 'UPDATE_PERMISSIONS', 'Admin', admin._id, { 
+          oldValue: oldPerms, 
+          newValue: req.body,
+          description: `Updated permissions for ${admin.name}` 
+      });
+      res.json({ success: true });
+  } catch(err) { res.status(500).json({ error: 'Update failed' }); }
+});
+
+app.delete('/api/admins/:id', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+  try {
+      const admin = await Admin.findById(req.params.id);
+      if (admin.role === 'super') return res.status(403).json({ error: 'Cannot delete super admin' });
+      await Admin.findByIdAndDelete(req.params.id);
+      await logAdminActivity(req, 'DELETE_ADMIN', 'Admin', req.params.id, { description: `Deleted admin: ${admin.name}` });
+      res.json({ success: true });
+  } catch(err) { res.status(500).json({ error: 'Deletion failed' }); }
+});
+
+app.get('/api/admins/activities', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+  try {
+      const activities = await AdminActivity.find().sort({ timestamp: -1 }).limit(100);
+      res.json(activities);
+  } catch(err) { res.status(500).json({ error: 'Failed to fetch logs' }); }
+});
+
+// 2FA Setup
+app.post('/api/admins/2fa/setup', verifyAdminToken, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.user.id);
+        const secret = authenticator.generateSecret();
+        const otpauth = authenticator.keyuri(admin.email, 'Mirrox', secret);
+        const qr = await QRCode.toDataURL(otpauth);
+        
+        // Don't save yet, wait for verification
+        res.json({ secret, qr });
+    } catch(err) { res.status(500).json({ error: 'Setup failed' }); }
+});
+
+app.post('/api/admins/2fa/enable', verifyAdminToken, async (req, res) => {
+    const { secret, code } = req.body;
+    try {
+        const isValid = authenticator.check(code, secret);
+        if (!isValid) return res.status(400).json({ error: 'Invalid verification code' });
+        
+        await Admin.findByIdAndUpdate(req.user.id, {
+            twoFactorSecret: secret,
+            twoFactorEnabled: true
+        });
+        res.json({ success: true });
+    } catch(err) { res.status(500).json({ error: 'Activation failed' }); }
 });
 
 app.post('/api/auth/pin', verifyClientToken, async (req, res) => {

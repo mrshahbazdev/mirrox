@@ -77,6 +77,8 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     { icon: 'fa-solid fa-coins', path: '/admin/symbols', label: 'Symbols' },
     { icon: 'fa-solid fa-chart-pie', path: '/admin/reports', label: 'Reports', badge: pendingFinanceCount, badgeColor: '#f59e0b' },
     { icon: 'fa-solid fa-comments', path: '/admin/support', label: 'Support', badge: supportUnreadCount, badgeColor: '#3291ff' },
+    { icon: 'fa-solid fa-user-gear', path: '/admin/staff', label: 'Team' },
+    { icon: 'fa-solid fa-shield-halved', path: '/admin/security', label: 'Security' },
     { icon: 'fa-solid fa-gears', path: '/admin/settings', label: 'Settings' },
   ];
 

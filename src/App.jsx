@@ -15,6 +15,8 @@ import Verifications from './pages/admin/Verifications';
 import ActiveTraders from './pages/admin/ActiveTraders';
 import Settings from './pages/admin/Settings';
 import SupportChat from './pages/admin/SupportChat';
+import StaffManager from './pages/admin/StaffManager';
+import Admin2FA from './pages/admin/Admin2FA';
 import axios from 'axios';
 import Welcome from './pages/Welcome';
 import Register from './pages/Register';
@@ -158,6 +160,22 @@ function App() {
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
               <Settings onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/staff"
+          element={
+            <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
+              <StaffManager onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/security"
+          element={
+            <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
+              <Admin2FA onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />

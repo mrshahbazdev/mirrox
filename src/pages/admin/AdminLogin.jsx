@@ -7,6 +7,9 @@ const AdminLogin = ({ onAdminLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [require2FA, setRequire2FA] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [adminId, setAdminId] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -16,11 +19,18 @@ const AdminLogin = ({ onAdminLogin }) => {
 
     try {
       const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', { 
-        email: username.includes('@') ? username : 'admin@mirrox.com', // Match the hardcoded email in backend for now
+        email: username.includes('@') ? username : 'admin@mirrox.com',
         password: password 
       });
 
-      if (res.data.role === 'admin') {
+      if (res.data.require2FA) {
+        setRequire2FA(true);
+        setAdminId(res.data.id);
+        setLoading(false);
+        return;
+      }
+
+      if (res.data.role) {
         onAdminLogin(res.data.token);
         navigate('/admin/clients');
       } else {
@@ -28,6 +38,23 @@ const AdminLogin = ({ onAdminLogin }) => {
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Authentication Failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2FAVerify = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/verify-2fa', {
+        id: adminId,
+        code: otpCode
+      });
+      onAdminLogin(res.data.token);
+      navigate('/admin/clients');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Invalid 2FA code');
     } finally {
       setLoading(false);
     }
@@ -53,53 +80,93 @@ const AdminLogin = ({ onAdminLogin }) => {
           <p>Backend Control Panel</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="adm-login-form">
-          <div className="adm-input-wrap">
-            <i className="fa-solid fa-user adm-inp-icon" />
-            <input
-              type="text"
-              placeholder="Admin Username"
-              value={username}
-              onChange={(e) => { setUsername(e.target.value); setError(''); }}
-              required
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="adm-input-wrap">
-            <i className="fa-solid fa-lock adm-inp-icon" />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(''); }}
-              required
-            />
-          </div>
-
-          {error && (
-            <div className="adm-error-msg">
-              <i className="fa-solid fa-circle-exclamation" />
-              {error}
+        {!require2FA ? (
+          <form onSubmit={handleSubmit} className="adm-login-form">
+            <div className="adm-input-wrap">
+              <i className="fa-solid fa-user adm-inp-icon" />
+              <input
+                type="text"
+                placeholder="Admin Username"
+                value={username}
+                onChange={(e) => { setUsername(e.target.value); setError(''); }}
+                required
+                autoComplete="off"
+              />
             </div>
-          )}
 
-          <button type="submit" className="adm-login-btn" disabled={loading}>
-            {loading ? (
-              <><i className="fa-solid fa-circle-notch fa-spin" /> Authenticating...</>
-            ) : (
-              <><i className="fa-solid fa-shield" /> Enter Dashboard</>
+            <div className="adm-input-wrap">
+              <i className="fa-solid fa-lock adm-inp-icon" />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="adm-error-msg">
+                <i className="fa-solid fa-circle-exclamation" />
+                {error}
+              </div>
             )}
-          </button>
 
-          <button
-            type="button"
-            className="adm-demo-btn"
-            onClick={() => { setUsername('admin'); setPassword('admin'); setError(''); }}
-          >
-            <i className="fa-solid fa-wand-magic-sparkles" /> Fill Demo Credentials
-          </button>
-        </form>
+            <button type="submit" className="adm-login-btn" disabled={loading}>
+              {loading ? (
+                <><i className="fa-solid fa-circle-notch fa-spin" /> Authenticating...</>
+              ) : (
+                <><i className="fa-solid fa-shield" /> Enter Dashboard</>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="adm-demo-btn"
+              onClick={() => { setUsername('admin@mirrox.com'); setPassword('admin'); setError(''); }}
+            >
+              <i className="fa-solid fa-wand-magic-sparkles" /> Fill Demo Credentials
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handle2FAVerify} className="adm-login-form">
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600 }}>Two-Factor Authentication</p>
+              <p style={{ color: '#64748b', fontSize: '12px' }}>Enter the 6-digit code from your authenticator app.</p>
+            </div>
+            
+            <div className="adm-input-wrap">
+              <i className="fa-solid fa-key adm-inp-icon" />
+              <input
+                type="text"
+                placeholder="000 000"
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0,6))}
+                required
+                autoFocus
+                style={{ textAlign: 'center', letterSpacing: '4px', fontSize: '18px' }}
+              />
+            </div>
+
+            {error && (
+              <div className="adm-error-msg">
+                <i className="fa-solid fa-circle-exclamation" />
+                {error}
+              </div>
+            )}
+
+            <button type="submit" className="adm-login-btn" disabled={loading || otpCode.length !== 6}>
+              {loading ? (
+                <><i className="fa-solid fa-circle-notch fa-spin" /> Verifying...</>
+              ) : (
+                <><i className="fa-solid fa-lock-open" /> Verify & Login</>
+              )}
+            </button>
+            <button type="button" className="adm-demo-btn" onClick={() => setRequire2FA(false)}>
+              <i className="fa-solid fa-arrow-left" /> Back to Login
+            </button>
+          </form>
+        )}
 
         <div className="adm-login-footer">
           <i className="fa-solid fa-circle-dot" style={{ color: '#00cc88' }} />
