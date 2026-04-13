@@ -18,12 +18,41 @@ import SupportChat from './pages/admin/SupportChat';
 import StaffManager from './pages/admin/StaffManager';
 import Admin2FA from './pages/admin/Admin2FA';
 import axios from 'axios';
-import Welcome from './pages/Welcome';
 import Register from './pages/Register';
 import Finances from './pages/Finances';
 import Affiliate from './pages/Affiliate';
 import Help from './pages/Help';
 import NotFound from './pages/NotFound';
+
+import PublicLayout from './components/PublicLayout';
+import HomePublic from './pages/public/HomePublic';
+import WebTrader from './pages/public/WebTrader';
+import TradingApp from './pages/public/TradingApp';
+import Forex from './pages/public/Forex';
+import Commodities from './pages/public/Commodities';
+import Indices from './pages/public/Indices';
+import Stocks from './pages/public/Stocks';
+import CryptocurrenciesCfds from './pages/public/CryptocurrenciesCfds';
+import Metals from './pages/public/Metals';
+import TradingAccounts from './pages/public/TradingAccounts';
+import CfdList from './pages/public/CfdList';
+import CfdExpiries from './pages/public/CfdExpiries';
+import SwapFees from './pages/public/SwapFees';
+import MarketHolidays from './pages/public/MarketHolidays';
+import Education from './pages/public/Education';
+import EconomicCalendar from './pages/public/EconomicCalendar';
+import TradingCentral from './pages/public/TradingCentral';
+import ChartAnalysis from './pages/public/ChartAnalysis';
+import Glossary from './pages/public/Glossary';
+import TradingEducation from './pages/public/TradingEducation';
+import RiskManagementTools from './pages/public/RiskManagementTools';
+import Faq from './pages/public/Faq';
+import ContactUs from './pages/public/ContactUs';
+import AboutUs from './pages/public/AboutUs';
+import BecomeAPartner from './pages/public/BecomeAPartner';
+import Legal from './pages/public/Legal';
+import ComplaintInfo from './pages/public/ComplaintInfo';
+import CookiesPrivacy from './pages/public/CookiesPrivacy';
 import GlobalModal from './components/GlobalModal';
 import LiveChat from './components/LiveChat';
 import { useTrading } from './context/TradingContext';
@@ -97,8 +126,37 @@ function App() {
     <BrowserRouter>
       <GlobalModal />
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Welcome />} />
+        {/* Public Routes with Template */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePublic />} />
+          <Route path="/web-trader" element={<WebTrader />} />
+          <Route path="/trading-app" element={<TradingApp />} />
+          <Route path="/forex" element={<Forex />} />
+          <Route path="/commodities" element={<Commodities />} />
+          <Route path="/indices" element={<Indices />} />
+          <Route path="/stocks" element={<Stocks />} />
+          <Route path="/cryptocurrencies-cfds" element={<CryptocurrenciesCfds />} />
+          <Route path="/metals" element={<Metals />} />
+          <Route path="/trading-accounts" element={<TradingAccounts />} />
+          <Route path="/cfd-list" element={<CfdList />} />
+          <Route path="/cfd-expiries" element={<CfdExpiries />} />
+          <Route path="/swap-fees" element={<SwapFees />} />
+          <Route path="/market-holidays" element={<MarketHolidays />} />
+          <Route path="/education" element={<Education />} />
+          <Route path="/economic-calendar" element={<EconomicCalendar />} />
+          <Route path="/trading-central" element={<TradingCentral />} />
+          <Route path="/chart-analysis" element={<ChartAnalysis />} />
+          <Route path="/glossary" element={<Glossary />} />
+          <Route path="/trading-education" element={<TradingEducation />} />
+          <Route path="/risk-management-tools" element={<RiskManagementTools />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/become-a-partner" element={<BecomeAPartner />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/complaint-info" element={<ComplaintInfo />} />
+          <Route path="/cookies-privacy" element={<CookiesPrivacy />} />
+        </Route>
         <Route 
           path="/login" 
           element={clientId ? <Navigate to="/app/dashboard" replace /> : <Login onLogin={() => {}} />} 

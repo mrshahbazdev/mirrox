@@ -2307,4 +2307,136 @@ body {
   display: flex !important;
   align-items: center !important;
   gap: 5px !important;
+}/* Sidebar styling */
+.sidebar {
+    transition: transform 0.3s ease-in-out;
+    background-color: #F9FAFB;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+}
+
+.sidebar-group {
+    margin-bottom: 4px;
+}
+
+.sidebar-item-header {
+    padding: 16px 24px;
+    font-size: 14px;
+    color: #FF4D5E;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    background-color: #fff;
+}
+
+.sidebar-item-header:hover {
+    background-color: #fef2f2;
+}
+
+.arrow {
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #FF4D5E;
+    border-bottom: 2px solid #FF4D5E;
+    transform: rotate(-135deg);
+    transition: transform 0.3s;
+}
+
+.has-submenu:not(.open) .arrow {
+    transform: rotate(45deg);
+}
+
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.has-submenu.open .submenu {
+    max-height: 1000px;
+}
+
+.submenu-item {
+    padding: 12px 48px;
+    font-size: 14px;
+    color: #4b5563;
+    display: block;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.submenu-item.active {
+    color: #FF4D5E;
+}
+
+.submenu-item:hover {
+    color: #FF4D5E;
+    background-color: #fef2f2;
+}
+
+.single-link {
+    padding: 16px 24px;
+    font-size: 14px;
+    color: #4b5563;
+    display: block;
+    background-color: #fff;
+    font-weight: 500;
+}
+
+.single-link.active {
+    color: #FF4D5E;
+}
+
+.single-link.red-text {
+    color: #FF4D5E;
+}
+
+.section-img {
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #FF4D5E;
+    border-radius: 10px;
 }
