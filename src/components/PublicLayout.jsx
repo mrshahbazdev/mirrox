@@ -192,9 +192,7 @@ const PublicLayout = () => {
 
                 {/* Main Content Area */}
                 <main className="main-content flex-1 md:ml-[280px] pt-16 md:pt-0">
-                    <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
-                        <Outlet />
-                    </div>
+                    <Outlet />
 
                     {/* Default Footer */}
                     <footer className="bg-white border-t border-gray-200 py-16">
