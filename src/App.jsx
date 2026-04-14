@@ -83,9 +83,13 @@ function App() {
   React.useEffect(() => {
     const checkStatus = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/config/public`);
-        setMaintenanceMode(res.data.maintenance_mode);
-      } catch (err) { console.error('Maintenance check failed'); }
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const res = await axios.get(`${apiUrl}/api/config/public`);
+        setMaintenanceMode(!!res.data?.maintenance_mode);
+      } catch (err) { 
+        console.warn('Maintenance check unreachable - defaulting to LIVE mode'); 
+        setMaintenanceMode(false); // Ensure app stays alive if backend is down
+      }
       finally { setCheckingMaintenance(false); }
     };
     checkStatus();

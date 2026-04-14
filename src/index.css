@@ -30,7 +30,6 @@ body {
   background-color: var(--bg-deep);
   color: var(--text-main);
   font-family: var(--font-main);
-  overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -39,7 +38,6 @@ body {
   width: 100vw;
 }
 
-/* Dashboard Layout */
 .dashboard-layout {
   display: grid;
   grid-template-areas:
@@ -80,8 +78,8 @@ body {
   }
 }
 
-/* Sidebar - Assign to Grid Area */
-.sidebar {
+/* Dashboard Sidebar */
+.dash-sidebar {
   grid-area: sidebar;
   background: var(--bg-card);
   border-right: 1px solid var(--border);

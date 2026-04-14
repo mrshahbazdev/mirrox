@@ -64,8 +64,8 @@ const PublicLayout = () => {
             <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
 
             <div className="flex">
-                {/* Sidebar */}
-                <aside id="sidebar" className={`sidebar fixed top-0 bottom-0 left-0 w-[280px] bg-gray-50 border-r z-50 flex flex-col overflow-y-auto md:translate-x-0 ${sidebarOpen ? 'active' : ''}`}>
+                {/* Fixed Left Sidebar */}
+                <aside className={`public-sidebar fixed top-0 bottom-0 left-0 w-[280px] bg-white border-r z-50 flex flex-col overflow-y-auto transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="p-8 hidden md:block bg-white cursor-pointer" onClick={() => navigate('/')}>
                         <div className="flex items-center gap-2">
                             <div className="w-7 h-7 bg-[#FF4D5E] flex items-center justify-center rounded-sm">

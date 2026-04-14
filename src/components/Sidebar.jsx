@@ -11,7 +11,7 @@ const Sidebar = ({ currentUser, onLogout }) => {
   ];
 
   return (
-    <aside className="sidebar glass">
+    <aside className="dash-sidebar glass">
       <div className="sidebar-logo">
         <i className="fa-solid fa-cube"></i>
       </div>

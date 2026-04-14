@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, PlayCircle } from 'lucide-react';
 
 const Indices = () => {
     const indicesData = [
