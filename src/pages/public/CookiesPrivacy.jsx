@@ -1,56 +1,142 @@
 import React from 'react';
+import { 
+    Shield, Lock, Eye, FileText, CheckCircle2, 
+    ArrowRight, Mail, Globe, Scale
+} from 'lucide-react';
 
 const CookiesPrivacy = () => {
     return (
-        <div className="fade-in">
-            <section className="mb-16">
-                <h1 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-gray-900">
-                    Cookies & Privacy
-                </h1>
-                
-                <p className="text-gray-600 text-lg leading-relaxed mb-4">Capital Crest Ltd operating under the trading name Mirrox, is a limited liability company registered with the registrar of International Business Companies in Comoros Union, with registration number HT00324037 (referred to hereinafter as ‘the Company’) and is authorised by the Mwali International Services Authority of Comoros (hereinafter referred to as the “Regulator”) with an international brokerage and clearing house license number BFX2024064</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">We understand the importance of maintaining the confidentiality and privacy of personal information that we hold about our clients and other third parties. This Policy (hereinafter this” Policy”) outlines how we manage and protect the personal information you give us and hold about our clients. By visiting our websiteand using our services, your agreement to this Policy is implied.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">This Policy will be reviewed periodically to take account of changes to our operations or practices and, further, to make sure it remains appropriate to any changes in law, technology and the business environment. You should check this Policy from time to time to ensure that you are happy with any changes.Any information held will be governed by our most current Policy.</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Collection and processing of personal information</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">In order to open an account with us, you must first complete and submit an application form to us by completing the required information. By completing the application form, you are requested to disclose personal information in order to enable the Company to assess your application and comply with the relevant rules and regulations. The information you provide may also be used by the Company to inform you regarding its services.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">We obtain this information in a number of ways through your use of our services including through any ofour websites, apps, the account opening applications, our demo sign up forms, webinar sign up forms, subscribing to news updates and from information provided in the course of ongoing customer service communications. We may also collect this information about you from third partiessuch asthrough publiclyavailable sources.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">The personal data you provide us with, is used to verify contact information and identity. We also use personal data to register clients, open and configure trading accounts, and issue activation codes and passwords. By providing contact information, you help us improve our services and promptly communicate the availability of additional services, features, and promotions we may be offering.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">If you choose not to provide the information, we need to fulfil your request for a specific product or service,we may not be able to provide you with the requested product or service.</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">How we use cookies</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">When you use our website, we will use cookies to distinguish you from other users of our website. This helps us to provide you with a more relevant and effective experience when you browse our website, including presenting websites according to your needs or preferences and allows us to improve the site generally</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Disclosure of the personal information</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">The Company shall not disclose any of its clients’ confidential information to a third party, except:</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">(a) to the extent that it is required to do so pursuant to any applicable laws, rules and/or regulations; and/or</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">(b) if there is a duty to the public to disclose; and/or</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">(c) if our legitimate business interests require disclosure; and/or</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">(d) at your request or with your consent or to persons described in this Policy. The Company will endeavorto make such disclosures on a ‘need-to-know’ basis, unless otherwise instructed by a regulatory authority. Under such circumstances, the Company will notify the third party regarding the confidential nature of anysuch information.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Depending on the products and services concerned and the relevant restrictions on sensitive data, personalinformation may be disclosed to:</p>
-<ul className="list-disc pl-5 text-gray-600 mb-6">
-<li className="mb-2">potential successors in title to our business;</li><li className="mb-2">third party consultants, contractors or other service providers who may access your personalinformation when providing services (including but not limited to IT support services) to us;</li><li className="mb-2">any organisation or person acting on your behalf to whom you request us to provide information,including your financial advisor, broker, solicitor or accountant;</li><li className="mb-2">third parties where it is necessary to process a transaction or provide services you have requested;</li><li className="mb-2">Banks (where they request additional information following payments that you have made);</li><li className="mb-2">credit providers, courts, tribunals and regulatory authorities in response to legal and regulatoryrequests or other government agencies, as agreed or authorised by law;</li><li className="mb-2">auditors or contractors or other advisers auditing, assisting with or advising on any of our businesspurposes, in any jurisdiction where we operate;</li><li className="mb-2">at your request or with your consent.</li>
-</ul>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">How we obtain your consent</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Where our use of your personal information requires your consent, such consent will be provided in accordance with the express written terms which govern our business relationship (which are available onour website(s) as amended from time to time), or any other contract we may have entered into with you oras set out in our communication with you from time to time.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">By submitting any personal information (including, without limitation, your account details) to us, you consent to the use of information as set out in this Policy. We reserve the right to amend or modify this Policy and if we do so, we will post the changes on the Website. It is your responsibility to check the Policywhen you submit information to us. Your use of the Website will signify that you agree to any such changes.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">If we rely on your consent as our legal basis for holding and processing your personal information, you have the right to withdraw that consent at any time by contacting us, using the contact details set out in thisPolicy.</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Storage of your personal information and retention period</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Safeguarding the privacy of your information is of utmost importance to us, whether you interact with us personally, by phone, by mail, over the internet or any other electronic medium. We will hold personal information, for as long as we have a business relationship with you, in a combination of secure computer storage facilities and paper-based files and other records and we take the necessary measures to protect thepersonal information we hold from misuse, loss, unauthorised access, modification or disclosure.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">When we consider that personal information is no longer necessary for the purpose for which it was collected, we will remove any details that will identify you or we will securely destroy the records. However, we may need to maintain records for a significant period of time. For example, we are subject tocertain anti-money laundering laws which require us to retain the following, for a period of seven (7) yearsafter our business relationship with you has ended:</p>
-<ul className="list-disc pl-5 text-gray-600 mb-6">
-<li className="mb-2">a copy of the documents we used in order to comply with our customer due diligence obligations;</li><li className="mb-2">supporting evidence and records of transactions with you and your relationship with us.</li>
-</ul>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Also, the personal information we hold in the form of a recorded communication, by telephone, electronically, inf person or otherwise, will be held in line with local regulatory requirements (i.e. 7 years after our business relationship with you has ended). Where you have opted out of receiving marketing communications, we will hold your details on our suppression list so that we know you do not want to receive these communications.</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">We may keep your data for longer than 7 years if we cannot delete it for legal, regulatory or technical reasons. Amendments</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">We may, at any time and at our discretion, vary this, Policy. We will notify you, if we amend this Privacy Policy, by contacting you through the contact details you have provided to us. Any amended Privacy Policyis effective once we notify you of the change.</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">How to contact us</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">If you have any questions regarding this Policy, wish to access or change your information, or if you haveany questions about security on our website, you may email us at [email protected] .</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">If you have a concern about any aspect of our privacy practices, you can submit a complaint. This will be acted upon promptly. To make a complaint, please contact us via email at [email protected]</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Join Mirrox and Start Trading</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Make Every Trade Count</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">This website uses cookies, check Cookies Policy for more information.</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Important information:</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Thank you for visiting Mirrox</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Please note that Mirrox does not accept traders from your country</p>
+        <div className="bg-white min-h-screen font-['Outfit'] overflow-x-hidden">
+            {/* --- HERO SECTION --- */}
+            <section className="bg-[#FF4D5E] py-24 px-6 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
+                <div className="relative z-10 max-w-4xl mx-auto">
+                    <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-none">Privacy & Cookies Policy</h1>
+                    <p className="text-rose-100 text-lg md:text-xl font-medium opacity-90 max-w-2xl mx-auto uppercase tracking-widest leading-relaxed">
+                        Our commitment to protecting your personal data and transparency.
+                    </p>
+                </div>
             </section>
+
+            {/* --- CONTENT SECTION --- */}
+            <div className="max-w-4xl mx-auto px-6 py-32 space-y-24">
+                
+                {/* Introduction */}
+                <section className="space-y-8">
+                    <div className="flex items-center gap-4 text-[#FF4D5E]">
+                        <Shield size={32} />
+                        <h2 className="text-3xl md:text-4xl font-black text-gray-900 uppercase tracking-tight">Introduction</h2>
+                    </div>
+                    <div className="prose prose-lg max-w-none text-gray-500 font-medium leading-relaxed space-y-6">
+                        <p>
+                            Capital Crest Ltd operating under the trading name Mirrox, is a limited liability company registered with the registrar of International Business Companies in Comoros Union, with registration number HT00324037 and is authorised by the Mwali International Services Authority.
+                        </p>
+                        <p>
+                            We understand the importance of maintaining the confidentiality and privacy of personal information that we hold about our clients and other third parties. This Policy outlines how we manage and protect the personal information you give us.
+                        </p>
+                    </div>
+                </section>
+
+                {/* Collection */}
+                <section className="space-y-8 p-10 bg-gray-50 rounded-[3rem] border border-gray-100">
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tight">Collection and processing of personal information</h2>
+                    <div className="space-y-6 text-gray-500 font-medium leading-relaxed">
+                        <p>
+                            In order to open an account with us, you must first complete and submit an application form to us by completing the required information. By doing so, you are requested to disclose personal information in order to enable the Company to assess your application and comply with relevant regulations.
+                        </p>
+                        <ul className="space-y-4">
+                            {[
+                                "Websites and mobile applications",
+                                "Account opening and demo sign-up forms",
+                                "Customer service communications",
+                                "Publicly available sources"
+                            ].map((item, i) => (
+                                <li key={i} className="flex items-center gap-3 text-xs font-black uppercase text-gray-400">
+                                    <CheckCircle2 size={16} className="text-[#FF4D5E]" /> {item}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
+
+                {/* Cookies */}
+                <section className="space-y-8">
+                     <h2 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tight">How we use cookies</h2>
+                     <p className="text-gray-500 font-medium leading-relaxed">
+                        When you use our website, we will use cookies to distinguish you from other users. This helps us to provide you with a more relevant and effective experience when you browse our website and allows us to improve the site generally.
+                     </p>
+                </section>
+
+                {/* Disclosure */}
+                <section className="space-y-8">
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tight">Disclosure of the personal information</h2>
+                    <div className="grid md:grid-cols-2 gap-8 text-gray-500 font-medium leading-relaxed">
+                        <div className="p-8 bg-red-50/50 rounded-2xl border border-red-100">
+                            <p className="text-xs font-black text-[#FF4D5E] uppercase tracking-widest mb-4">Internal Usage</p>
+                            To the extent that it is required to do so pursuant to any applicable laws, rules and/or regulations.
+                        </div>
+                        <div className="p-8 bg-gray-50 rounded-2xl border border-gray-100">
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">External Disclosure</p>
+                            To potential successors in title to our business or third-party consultants acting on our behalf.
+                        </div>
+                    </div>
+                </section>
+
+                {/* Storage & Retention */}
+                <section className="space-y-8">
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tight">Storage and retention period</h2>
+                    <p className="text-gray-500 font-medium leading-relaxed">
+                        Safeguarding the privacy of your information is of utmost importance to us. We will hold personal information for as long as we have a business relationship with you, in a combination of secure computer storage facilities and paper-based files.
+                    </p>
+                    <div className="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
+                         <div className="absolute top-0 right-0 p-8 opacity-10">
+                            <Lock size={120} />
+                         </div>
+                         <div className="space-y-4 relative z-10">
+                            <p className="text-xs font-black uppercase tracking-widest text-[#FF4D5E]">Regulatory Compliance</p>
+                            <p className="text-lg font-bold italic">"We are subject to anti-money laundering laws which require us to retain records for a period of seven (7) years after our business relationship ends."</p>
+                         </div>
+                    </div>
+                </section>
+
+                {/* Contact */}
+                <section className="space-y-8 border-t border-gray-100 pt-24 text-center">
+                    <h2 className="text-2xl md:text-4xl font-black text-gray-900 uppercase tracking-tight">How to contact us</h2>
+                    <p className="text-gray-500 font-medium leading-relaxed max-w-2xl mx-auto">
+                        If you have any questions regarding this Policy, wish to access or change your information, or if you have any questions about security.
+                    </p>
+                    <div className="flex flex-col md:flex-row justify-center gap-6">
+                         <button className="flex items-center justify-center gap-3 bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 shadow-xl shadow-red-100">
+                            <Mail size={18} /> Email Support
+                         </button>
+                         <button className="flex items-center justify-center gap-3 bg-gray-900 text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-800 transition-colors">
+                            <Scale size={18} /> Legal Inquiry
+                         </button>
+                    </div>
+                </section>
+
+            </div>
+
+            {/* --- FINAL CTA --- */}
+            <section className="px-6 py-24">
+                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group shadow-[0_45px_100px_rgba(255,77,94,0.35)]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
+                    <div className="relative z-10 space-y-10">
+                        <h2 className="text-4xl md:text-8xl font-black text-white leading-tight tracking-tighter uppercase whitespace-pre-line text-center font-['Outfit']">Join Mirrox and{"\n"}Start Trading</h2>
+                        <div className="flex flex-col md:flex-row justify-center gap-6 text-center">
+                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform text-center mx-auto">
+                                Start Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <footer className="text-center pb-16 px-6">
+                <p className="max-w-4xl mx-auto text-[10px] font-black uppercase tracking-widest text-gray-400 opacity-80 decoration-dotted underline underline-offset-4">
+                    MIRROX IS FULLY COMMITTED TO THE PROTECTION OF YOUR DATA ACCORDING TO GLOBAL STANDARDS.
+                </p>
+            </footer>
         </div>
     );
 };

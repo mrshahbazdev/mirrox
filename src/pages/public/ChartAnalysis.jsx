@@ -1,19 +1,51 @@
 import React from 'react';
+import { Lock, ArrowRight, Shield, Zap, BarChart3, TrendingUp } from 'lucide-react';
 
 const ChartAnalysis = () => {
     return (
-        <div className="fade-in">
-            <section className="mb-16">
-                <h1 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-gray-900">
-                    Chart Analysis
-                </h1>
-                
-                <h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Join Mirrox and Start Trading</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Make Every Trade Count</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">This website uses cookies, check Cookies Policy for more information.</p>
-<h3 className="text-2xl font-bold mb-4 mt-8 text-gray-900">Important information:</h3>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Thank you for visiting Mirrox</p>
-<p className="text-gray-600 text-lg leading-relaxed mb-4">Please note that Mirrox does not accept traders from your country</p>
+        <div className="bg-white min-h-screen font-['Outfit'] overflow-x-hidden relative">
+            
+            {/* --- BLURRED BACKGROUND MOCKUP --- */}
+            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none filter blur-md">
+                <div className="max-w-7xl mx-auto px-6 py-24 space-y-12">
+                     <div className="h-24 bg-red-50 rounded-3xl w-full"></div>
+                     <div className="grid grid-cols-12 gap-6">
+                        <div className="col-span-8 h-[600px] bg-gray-100 rounded-[3rem]"></div>
+                        <div className="col-span-4 h-[600px] bg-gray-50 rounded-[3rem]"></div>
+                     </div>
+                </div>
+            </div>
+
+            {/* --- LOCKED OVERLAY --- */}
+            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+                <div className="max-w-xl w-full bg-white/90 backdrop-blur-2xl p-12 rounded-[3.5rem] shadow-[0_50px_100px_rgba(255,77,94,0.15)] border border-white text-center space-y-10 border-gray-100">
+                    <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center text-[#FF4D5E] mx-auto shadow-inner">
+                        <Lock size={40} />
+                    </div>
+                    <div className="space-y-4">
+                        <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter leading-none">Chart Analysis Is Locked</h1>
+                        <p className="text-gray-500 font-medium leading-relaxed">Please sign up or log in to unlock access to our professional real-time chart analysis tools.</p>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-4 justify-center">
+                        <button className="bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-red-100">Login</button>
+                        <button className="bg-white text-gray-900 border border-gray-200 px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-50 transition-all">Create Account</button>
+                    </div>
+                </div>
+            </div>
+
+             {/* --- FINAL CTA --- */}
+             <section className="px-6 py-24 relative z-10">
+                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group shadow-[0_45px_100px_rgba(255,77,94,0.35)]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
+                    <div className="relative z-10 space-y-10">
+                        <h2 className="text-4xl md:text-8xl font-black text-white leading-tight tracking-tighter uppercase whitespace-pre-line text-center">Join Mirrox and{"\n"}Start Trading</h2>
+                        <div className="flex flex-col md:flex-row justify-center gap-6 text-center text-center">
+                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform text-center mx-auto">
+                                Start Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     );
