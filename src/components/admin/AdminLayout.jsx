@@ -125,10 +125,11 @@ const AdminLayout = ({ children, onAdminLogout }) => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `adm-nav-item ${isActive ? 'active' : ''}`
+                `adm-nav-item ${isActive || window.location.pathname.startsWith(item.path) ? 'active' : ''}`
               }
               title={item.label}
             >
+              <div className="adm-active-bar" />
               <i className={item.icon} />
               {item.badge > 0 && (
                 <span className="adm-nav-badge" style={{ background: item.badgeColor, boxShadow: `0 0 10px ${item.badgeColor}66` }}>
@@ -266,12 +267,21 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           font-size: 16px;
         }
         .adm-nav-item:hover, .adm-nav-item.active {
-          background: rgba(50,145,255,0.1);
+          background: rgba(50,145,255,0.08);
           color: #3291ff;
         }
         .adm-nav-item.active {
-          box-shadow: 0 0 15px rgba(50,145,255,0.15);
-          border: 1px solid rgba(50,145,255,0.2);
+          background: rgba(50,145,255,0.12) !important;
+          box-shadow: 0 0 20px rgba(50,145,255,0.1);
+        }
+        .adm-active-bar {
+          position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
+          background: #3291ff; border-radius: 0 4px 4px 0;
+          opacity: 0; transition: all 0.2s;
+          box-shadow: 0 0 10px #3291ff;
+        }
+        .adm-nav-item.active .adm-active-bar {
+          opacity: 1;
         }
         .adm-nav-tooltip {
           position: absolute; left: 58px;

@@ -21,9 +21,10 @@ const Sidebar = ({ currentUser, onLogout }) => {
           <NavLink 
             key={index}
             to={item.path} 
-            className={({ isActive }) => `nav-item ${isActive ? 'active active-glow' : ''}`}
+            className={({ isActive }) => `nav-item ${isActive || window.location.pathname.startsWith(item.path) ? 'active' : ''}`}
             data-tooltip={item.label}
           >
+            <div className="active-indicator-bar" />
             <i className={item.icon}></i>
           </NavLink>
         ))}
@@ -38,6 +39,19 @@ const Sidebar = ({ currentUser, onLogout }) => {
          </button>
       </div>
       <style>{`
+        .nav-item.active {
+          background: rgba(50,145,255,0.1) !important;
+          color: #3291ff !important;
+        }
+        .active-indicator-bar {
+          position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px;
+          background: #3291ff; border-radius: 0 4px 4px 0;
+          opacity: 0; transition: 0.2s;
+          box-shadow: 0 0 10px rgba(50,145,255,0.5);
+        }
+        .nav-item.active .active-indicator-bar {
+          opacity: 1;
+        }
         .admin-shortcut { color: #a855f7 !important; }
         .admin-shortcut:hover {
           background-color: rgba(168,85,247,0.12) !important;
