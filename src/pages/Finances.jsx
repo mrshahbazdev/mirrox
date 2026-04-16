@@ -172,32 +172,29 @@ const Finances = () => {
                 </div>
             </div>
 
-            {/* Premium Digital Wallet Card */}
-            <div className="relative overflow-hidden rounded-[2rem] p-6 shadow-2xl shadow-indigo-500/30 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 w-full shrink-0">
+            {/* Premium Digital Wallet Card (Powered by Raw CSS) */}
+            <div className="premium-wallet-card-v2">
                <div className="relative z-10 flex flex-col h-full justify-between">
                   <div className="flex justify-between items-start">
                      <div>
-                        <p className="text-[10px] text-indigo-100 font-bold uppercase tracking-widest mb-1">Available Funds</p>
-                        <h3 className="text-3xl font-black text-white tracking-tight truncate max-w-[200px]">
+                        <p className="wallet-card-subtitle">Available Funds</p>
+                        <h3 className="wallet-card-title">
                            ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </h3>
                      </div>
-                     <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 shrink-0">
-                        <span className="text-[10px] font-black text-white uppercase">{currentClientExtended?.accountType || 'DEMO'}</span>
+                     <div className="wallet-card-badge">
+                        <span>{currentClientExtended?.accountType || 'DEMO'}</span>
                      </div>
                   </div>
                   
                   <div className="mt-8 flex items-center justify-between">
                      <div className="flex -space-x-2">
-                        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-indigo-400 flex items-center justify-center text-[10px] font-bold text-white uppercase">M</div>
-                        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-indigo-300 uppercase">X</div>
+                        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-indigo-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-md">M</div>
+                        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-indigo-300 uppercase shadow-md">X</div>
                      </div>
-                     <p className="text-[10px] text-indigo-100/60 font-mono tracking-widest uppercase">**** 2026</p>
+                     <p className="wallet-card-account">**** 2026</p>
                   </div>
                </div>
-               {/* Pattern / Mesh Overlays */}
-               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-xl"></div>
             </div>
         </header>
 
@@ -395,20 +392,16 @@ const Finances = () => {
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] ml-5">Institutional Grade Asset Management</p>
           </div>
           
-          {/* Dynamic Global Wallet Card */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-8 py-6 rounded-[2rem] shadow-2xl flex flex-col justify-between w-full md:w-[400px] animate-slide-up shrink-0 border border-white/10" style={{ minHeight: '180px' }}>
-             {/* Radial Glare */}
-             <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16 blur-2xl"></div>
-             
+          {/* Dynamic Global Wallet Card (Powered by Raw CSS) */}
+          <div className="premium-wallet-card-v2 animate-slide-up" style={{ minHeight: '180px' }}>
              <div className="relative z-10 flex justify-between items-start">
                 <div>
-                   <p className="text-indigo-100 font-bold text-[10px] uppercase tracking-widest mb-1">Available Portfolio Balance</p>
-                   <h2 className="text-3xl xl:text-4xl font-black text-white tracking-tight truncate max-w-[220px]">
+                   <p className="wallet-card-subtitle">Available Portfolio Balance</p>
+                   <h2 className="wallet-card-title lg">
                       ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                    </h2>
                 </div>
-                <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0">
+                <div className="wallet-card-icon">
                    <i className="fa-solid fa-wallet"></i>
                 </div>
              </div>
