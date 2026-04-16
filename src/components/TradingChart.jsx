@@ -9,7 +9,7 @@ const timeframeMap = {
   'D': 86400
 };
 
-const TradingChart = ({ symbol, currentPrice }) => {
+const TradingChart = ({ symbol, currentPrice, isMobile = false }) => {
   const chartContainerRef = useRef();
   const chartRef = useRef();
   const seriesRef = useRef();
@@ -19,7 +19,7 @@ const TradingChart = ({ symbol, currentPrice }) => {
   const allDataRef = useRef([]);
   const isLoadingHistoryRef = useRef(false);
   
-  const [chartType, setChartType] = useState('candles'); 
+  const [chartType, setChartType] = useState(isMobile ? 'area' : 'candles'); 
   const [timeframe, setTimeframe] = useState('1m');
   const [legendData, setLegendData] = useState({ o: 0, h: 0, l: 0, c: 0, ch: 0, chp: 0 });
 

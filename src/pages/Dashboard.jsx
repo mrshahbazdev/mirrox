@@ -111,6 +111,7 @@ const Dashboard = () => {
                  <TradingChart 
                   symbol={selectedSymbol} 
                   currentPrice={parseFloat(selectedSymbol.price)} 
+                  isMobile={true}
                 />
                </ErrorBoundary>
             </div>
@@ -154,8 +155,8 @@ const Dashboard = () => {
           <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '12px 16px', borderRadius: '12px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
              <i className="fa-solid fa-triangle-exclamation" style={{ color: '#f59e0b', fontSize: '20px' }}></i>
              <div style={{ flex: 1 }}>
-               <h4 style={{ color: '#f59e0b', margin: '0 0 4px 0', fontSize: '13px', fontWeight: 800 }}>DEMO ACCOUNT MODE</h4>
-               <p style={{ margin: 0, fontSize: '12px', color: '#fbbf24' }}>Please verify your identity with a valid ID card to unlock Real Trading.</p>
+                <h4 style={{ color: '#f59e0b', margin: '0 0 4px 0', fontSize: '13px', fontWeight: 800 }}>DEMO ACCOUNT MODE</h4>
+                <p style={{ margin: 0, fontSize: '12px', color: '#fbbf24' }}>Please verify your identity with a valid ID card to unlock Real Trading.</p>
              </div>
              <Link to="/app/documents" style={{ background: '#f59e0b', color: '#fff', padding: '8px 16px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>Verify Now</Link>
           </div>
@@ -166,6 +167,7 @@ const Dashboard = () => {
             <TradingChart 
               symbol={selectedSymbol} 
               currentPrice={parseFloat(selectedSymbol.price)} 
+              isMobile={false}
             />
           </ErrorBoundary>
         </div>
