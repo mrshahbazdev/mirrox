@@ -194,24 +194,26 @@ const Documents = () => {
 
   if (isMobile) {
     return (
-      <div className="mobile-verification no-scrollbar pb-10">
-        <header className="px-2 pt-6 pb-4">
-            <h1 className="text-2xl font-black text-white">Verification</h1>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Status: {isFullyVerified ? 'Verified' : 'Action Required'}</p>
+      <div className="mobile-verification no-scrollbar">
+        <header className="m-kyc-header">
+            <h1>Verification</h1>
+            <p className={`m-kyc-status-badge ${isFullyVerified ? 'verified' : ''}`}>
+              Status: {isFullyVerified ? 'Verified' : 'Action Required'}
+            </p>
         </header>
 
         {isFullyVerified ? (
-          <section className="py-8">
-            <div className="glass-card p-10 flex flex-col items-center text-center">
-                <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
-                    <i className="fa-solid fa-shield-check text-4xl text-emerald-500"></i>
+          <section className="px-4">
+            <div className="m-kyc-success-view">
+                <div className="m-kyc-icon-box">
+                    <i className="fa-solid fa-shield-check"></i>
                 </div>
-                <h3 className="text-xl font-black text-white">Account Verified</h3>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">Your identity has been successfully confirmed. You have full access to all platform features.</p>
+                <h3>Account Verified</h3>
+                <p>Your identity has been successfully confirmed. You have full access to all platform features.</p>
             </div>
           </section>
         ) : (
-          <div className="space-y-6">
+          <div className="m-kyc-box-container px-4">
              {/* Verification Boxes */}
              <KYCBox 
                 title="Identity" 
@@ -248,19 +250,19 @@ const Documents = () => {
             />
 
             {/* Mobile Guidelines */}
-            <section className="px-1">
-                <div className="bg-slate-800/20 border border-slate-700/50 rounded-3xl p-6">
-                    <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Guidelines</h4>
-                    <ul className="space-y-4">
-                        <li className="flex items-start space-x-3">
-                            <i className="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
-                            <p className="text-[11px] text-slate-400 leading-tight">Ensure all text on documents is clearly readable and not blurred.</p>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                            <i className="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
-                            <p className="text-[11px] text-slate-400 leading-tight">Use official government-issued documents only.</p>
-                        </li>
-                    </ul>
+            <section className="pb-10">
+                <div className="m-kyc-guidelines">
+                    <h4>Guidelines</h4>
+                    <div className="m-kyc-list">
+                        <div className="m-kyc-list-item">
+                            <i className="fa-solid fa-check"></i>
+                            <p>Ensure all text on documents is clearly readable and not blurred.</p>
+                        </div>
+                        <div className="m-kyc-list-item">
+                            <i className="fa-solid fa-check"></i>
+                            <p>Use official government-issued documents only.</p>
+                        </div>
+                    </div>
                 </div>
             </section>
           </div>
@@ -271,12 +273,7 @@ const Documents = () => {
             display: flex;
             flex-direction: column;
             gap: 8px;
-          }
-          .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 32px;
+            overflow-x: hidden;
           }
         `}</style>
       </div>
