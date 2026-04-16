@@ -104,117 +104,174 @@ const PositionTabs = () => {
     }
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="card positions-card">
       <div className="tabs-header">
         <div className={`tab-item ${activeTab === 'open' ? 'active' : ''}`} onClick={() => setActiveTab('open')}>
-          Open Positions ({openTrades.length})
+          Open ({openTrades.length})
         </div>
         <div className={`tab-item ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>
-          Pending Orders ({pendingTrades.length})
+          Pending ({pendingTrades.length})
         </div>
         <div className={`tab-item ${activeTab === 'closed' ? 'active' : ''}`} onClick={() => setActiveTab('closed')}>
-          Closed History
+          History
         </div>
-        <div className="tab-item">Finance</div>
+        {!isMobile && <div className="tab-item">Finance</div>}
       </div>
 
       <div className="table-container">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Type</th>
-              <th>Volume</th>
-              <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
-              {activeTab === 'open' && <th>Current Price</th>}
-              {(activeTab === 'open' || activeTab === 'closed') && <th>Target / Close Price</th>}
-              {activeTab !== 'pending' && <th>Profit / Loss</th>}
-              {activeTab !== 'pending' && <th>Swap</th>}
-              {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
-            </tr>
-          </thead>
-          <tbody>
+        {!isMobile ? (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Type</th>
+                <th>Volume</th>
+                <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
+                {activeTab === 'open' && <th>Current Price</th>}
+                {(activeTab === 'open' || activeTab === 'closed') && <th>Target / Close Price</th>}
+                {activeTab !== 'pending' && <th>Profit / Loss</th>}
+                {activeTab !== 'pending' && <th>Swap</th>}
+                {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {displayTrades.map(trade => {
+                  const profit = trade.profit || 0;
+                  const swap = trade.swap || 0;
+                  return (
+                    <tr key={trade.id}>
+                      <td style={{ fontWeight: 600 }}>{trade.symbol}</td>
+                      <td style={{ color: trade.type === 'BUY' ? '#10b981' : '#ef4444' }}>{trade.type}</td>
+                      <td>{trade.lots}</td>
+                      <td>{(trade.openPrice || 0).toFixed(2)}</td>
+                      
+                      {activeTab === 'open' && (
+                        <td>{prices.find(p=>p.symbol===trade.symbol)?.price || '...'}</td>
+                      )}
+
+                      {(activeTab === 'open' || activeTab === 'closed') && (
+                        <td>
+                          {(() => {
+                            const precision = prices.find(p => p.symbol === trade.symbol)?.precision || 2;
+                            if (activeTab === 'open') {
+                                const target = trade.takeProfit || trade.selectedPrice;
+                                return target ? parseFloat(target).toFixed(precision) : '---';
+                            }
+                            return trade.closePrice ? parseFloat(trade.closePrice).toFixed(precision) : '...';
+                          })()}
+                        </td>
+                      )}
+
+                      {activeTab !== 'pending' && (
+                        <>
+                          <td style={{ color: profit >= 0 ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>
+                              {profit >= 0 ? '+' : ''}{profit.toFixed(2)} USD
+                          </td>
+                          <td style={{ color: swap < 0 ? '#ef4444' : '#10b981', fontWeight: '500' }}>
+                              {(() => {
+                                const tradeAgeMs = Date.now() - new Date(trade.openTime).getTime();
+                                const isOldEnough = tradeAgeMs >= 24 * 60 * 60 * 1000;
+                                const shouldShowSwap = trade.status === 'Closed' || isOldEnough;
+                                const visibleSwap = shouldShowSwap ? swap : 0;
+                                
+                                return (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span>{visibleSwap >= 0 ? '+' : ''}{visibleSwap.toFixed(2)} USD</span>
+                                    {trade.swapLocked && <span title="Swap manually set by admin" style={{ fontSize: '10px' }}>🔒</span>}
+                                  </div>
+                                );
+                              })()}
+                          </td>
+                        </>
+                      )}
+
+                      {activeTab !== 'closed' && (
+                        <td style={{ textAlign: 'right' }}>
+                          {activeTab === 'pending' && (
+                            <button 
+                              className="close-trade-btn" style={{ background: 'transparent', color: '#10b981', marginRight: '8px' }}
+                              onClick={() => handleOpenModify(trade)}
+                            >
+                              <i className="fa-solid fa-pen"></i>
+                            </button>
+                          )}
+                          <button className="close-trade-btn" onClick={() => handleOpenConfirm(trade)}>
+                            {activeTab === 'pending' ? 'Cancel' : 'Close'}
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })}
+              </tbody>
+          </table>
+        ) : (
+          <div className="mobile-trade-list">
              {displayTrades.map(trade => {
                 const profit = trade.profit || 0;
-                const swap = trade.swap || 0;
-                const total = profit + swap;
-                const isClosed = trade.status === 'Closed';
+                const p = prices.find(it => it.symbol === trade.symbol);
                 return (
-                  <tr key={trade.id}>
-                    <td style={{ fontWeight: 600 }}>{trade.symbol}</td>
-                    <td style={{ color: trade.type === 'BUY' ? '#10b981' : '#ef4444' }}>{trade.type}</td>
-                    <td>{trade.lots}</td>
-                    <td>{(trade.openPrice || 0).toFixed(2)}</td>
-                    
-                    {activeTab === 'open' && (
-                       <td>{prices.find(p=>p.symbol===trade.symbol)?.price || '...'}</td>
-                    )}
+                  <div key={trade.id} className="mobile-trade-card">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-white font-bold">{trade.symbol}</span>
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded ${trade.type === 'BUY' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                            {trade.type}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500">Vol: <span className="text-slate-300 font-mono">{trade.lots}</span></div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`text-base font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                           {profit >= 0 ? '+' : ''}{profit.toFixed(2)} <span className="text-[10px] opacity-60">USD</span>
+                        </div>
+                        <div className="text-[10px] text-slate-500">Net Return</div>
+                      </div>
+                    </div>
 
-                    {(activeTab === 'open' || activeTab === 'closed') && (
-                       <td>
-                        {(() => {
-                           const precision = prices.find(p => p.symbol === trade.symbol)?.precision || 2;
-                           if (activeTab === 'open') {
-                              const target = trade.takeProfit || trade.selectedPrice;
-                              return target ? parseFloat(target).toFixed(precision) : '---';
-                           }
-                           return trade.closePrice ? parseFloat(trade.closePrice).toFixed(precision) : '...';
-                        })()}
-                       </td>
-                    )}
-
-                    {activeTab !== 'pending' && (
-                       <>
-                         <td style={{ color: profit >= 0 ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>
-                            {profit >= 0 ? '+' : ''}{profit.toFixed(2)} USD
-                         </td>
-                         <td style={{ color: swap < 0 ? '#ef4444' : '#10b981', fontWeight: '500' }}>
-                            {(() => {
-                              const tradeAgeMs = Date.now() - new Date(trade.openTime).getTime();
-                              const isOldEnough = tradeAgeMs >= 24 * 60 * 60 * 1000;
-                              const shouldShowSwap = trade.status === 'Closed' || isOldEnough;
-                              const visibleSwap = shouldShowSwap ? swap : 0;
-                              
-                              return (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                   <span>{visibleSwap >= 0 ? '+' : ''}{visibleSwap.toFixed(2)} USD</span>
-                                   {trade.swapLocked && <span title="Swap manually set by admin" style={{ fontSize: '10px' }}>🔒</span>}
-                                   {!shouldShowSwap && trade.status === 'Open' && (
-                                     <i className="fa-solid fa-clock-rotate-left" style={{ fontSize: '9px', opacity: 0.5 }} title="Swap appears after 24h"></i>
-                                   )}
-                                </div>
-                              );
-                            })()}
-                         </td>
-                       </>
-                    )}
-
+                    <div className="grid grid-cols-2 gap-4 p-3 bg-black/20 rounded-xl mb-3">
+                      <div>
+                        <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Open Price</div>
+                        <div className="text-xs text-white font-mono">{(trade.openPrice || 0).toFixed(p?.precision || 2)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Market</div>
+                        <div className="text-xs text-indigo-400 font-mono">{p?.price || '...'}</div>
+                      </div>
+                    </div>
 
                     {activeTab !== 'closed' && (
-                      <td style={{ textAlign: 'right' }}>
-                         {activeTab === 'pending' && (
-                           <button 
-                             className="close-trade-btn" style={{ background: 'transparent', color: '#10b981', marginRight: '8px' }}
-                             onClick={() => handleOpenModify(trade)}
-                             title="Modify TP/SL"
-                           >
-                             <i className="fa-solid fa-pen"></i>
-                           </button>
-                         )}
-                         <button 
-                           className="close-trade-btn"
-                           onClick={() => handleOpenConfirm(trade)}
-                         >
-                           {activeTab === 'pending' ? 'Cancel' : 'Close'}
-                         </button>
-                      </td>
+                      <div className="flex gap-2">
+                        {activeTab === 'pending' && (
+                          <button 
+                            className="flex-1 bg-slate-800 text-slate-300 py-2.5 rounded-xl font-bold text-xs"
+                            onClick={() => handleOpenModify(trade)}
+                          >
+                            Modify
+                          </button>
+                        )}
+                        <button 
+                          className={`flex-1 ${activeTab === 'pending' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-rose-500 text-white'} py-2.5 rounded-xl font-bold text-xs shadow-lg`}
+                          onClick={() => handleOpenConfirm(trade)}
+                        >
+                          {activeTab === 'pending' ? 'Cancel Order' : 'Close Position'}
+                        </button>
+                      </div>
                     )}
-                  </tr>
-                  );
-               })}
-            </tbody>
-        </table>
+                  </div>
+                );
+             })}
+          </div>
+        )}
         
         {activeTab === 'closed' && isLoadingHistory && (
            <div style={{ padding: '20px', textAlign: 'center', color: '#64748b' }}>
@@ -377,6 +434,36 @@ const PositionTabs = () => {
         .confirm-btn.danger:hover { background: #dc2626; transform: translateY(-2px); }
         .confirm-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
         .confirm-btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+        /* Mobile Card Styles */
+        .mobile-trade-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          padding: 12px;
+          background: #0f172a;
+        }
+        .mobile-trade-card {
+           background: rgba(30, 41, 59, 0.4);
+           backdrop-filter: blur(10px);
+           border: 1px solid rgba(255, 255, 255, 0.05);
+           border-radius: 20px;
+           padding: 16px;
+           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .text-emerald-400 { color: #34d399; }
+        .bg-emerald-500\/20 { background: rgba(16, 185, 129, 0.2); }
+        .text-rose-400 { color: #f87171; }
+        .bg-rose-500\/20 { background: rgba(239, 68, 68, 0.2); }
+        .text-slate-500 { color: #64748b; }
+        .text-slate-300 { color: #cbd5e1; }
+        .tracking-tight { letter-spacing: -0.025em; }
+
+        @media (max-width: 600px) {
+           .tabs-header { overflow-x: auto; white-space: nowrap; gap: 8px; height: 48px; }
+           .tab-item { flex-shrink: 0; padding: 0 12px; font-size: 12px; }
+           .positions-footer { font-size: 10px; padding: 10px; gap: 8px; }
+        }
       `}</style>
     </div>
   );

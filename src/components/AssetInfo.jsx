@@ -419,17 +419,20 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
 
             @media (max-width: 600px) {
                .trading-execution-panel { padding: 12px; }
-               .lot-btn { width: 40px; height: 40px; }
-               .lot-input { font-size: 14px; }
-               .exec-btn { padding: 12px; }
+               .lot-btn { width: 44px; height: 44px; }
+               .lot-input { font-size: 15px; }
+               .exec-btn { padding: 14px; }
+               .input-row-group { flex-direction: column; gap: 12px; }
+               .lot-input-wrapper { margin-bottom: 4px !important; }
             }
 
             @media (max-width: 480px) {
-               .exec-buttons { flex-direction: column; }
-               .input-row-group { flex-direction: column; gap: 0; }
-               .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 14px 20px; }
+               .exec-buttons { flex-direction: column; gap: 10px; }
+               .input-row-group { flex-direction: column; gap: 12px; }
+               .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 16px 24px; border-radius: 16px; }
                .exec-side { font-size: 12px; }
-               .exec-symbol { font-size: 16px; }
+               .exec-price { font-size: 18px; }
+               .lot-label { font-size: 10px; margin-bottom: 4px; }
             }
          `}</style>
       </div>

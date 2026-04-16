@@ -36,14 +36,14 @@ const Dashboard = () => {
 
   if (isMobile) {
     return (
-      <div className="mobile-dashboard-content">
+      <div className="mobile-dashboard-content overflow-x-hidden max-w-[100vw]">
         {/* Equity Section */}
         <section className="m-equity-section">
-          <div className="bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-3xl p-6 shadow-xl shadow-indigo-500/20">
+          <div className="bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-3xl p-4 shadow-xl shadow-indigo-500/20">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <p className="text-indigo-100 text-[10px] font-bold opacity-80 mb-1 uppercase tracking-wider">Total Equity</p>
-                <h1 className="text-2xl font-bold tracking-tight text-white">${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h1>
+                <h1 className="text-xl font-bold tracking-tight text-white">${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h1>
               </div>
               <span className="bg-white/20 px-2 py-1 rounded-lg text-[10px] font-bold text-white uppercase">
                 {currentClientExtended?.accountType || 'DEMO'}
@@ -63,7 +63,7 @@ const Dashboard = () => {
         </section>
 
         {/* Market Watch Horizontal */}
-        <section className="pt-6">
+        <section className="pt-4">
           <div className="flex items-center justify-between px-2 mb-4">
             <h3 className="font-bold text-lg text-white">Market Watch</h3>
             <Link to="/app/explore" className="text-indigo-400 text-xs font-semibold">See All</Link>
@@ -91,8 +91,8 @@ const Dashboard = () => {
         </section>
 
         {/* Simplified Asset Info / Quick Trade */}
-        <section className="py-6">
-          <div className="glass-card p-5">
+        <section className="py-2">
+          <div className="glass-card p-4">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -104,7 +104,7 @@ const Dashboard = () => {
               </div>
             </div>
             
-            <div className="h-32 w-full relative chart-gradient rounded-xl mb-4 overflow-hidden">
+            <div className="h-56 w-full relative chart-gradient rounded-xl mb-4 overflow-hidden">
                <ErrorBoundary>
                  <TradingChart 
                   symbol={selectedSymbol} 
@@ -118,7 +118,7 @@ const Dashboard = () => {
         </section>
 
         {/* Active Positions */}
-        <section className="pb-8">
+        <section className="pb-10">
            <PositionTabs />
         </section>
 
@@ -126,11 +126,12 @@ const Dashboard = () => {
           .mobile-dashboard-content {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            padding-top: 8px;
+            gap: 12px;
+            padding-top: 4px;
+            overflow-x: hidden;
           }
           .m-equity-section {
-            padding: 0 4px;
+            padding: 0 8px;
           }
         `}</style>
       </div>
