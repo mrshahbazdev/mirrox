@@ -397,8 +397,6 @@ const Finances = () => {
       </div>
     );
   }
-;
-  }
 
   // Desktop View
   return (
