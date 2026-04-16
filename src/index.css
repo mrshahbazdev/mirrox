@@ -23,6 +23,8 @@
   --sidebar-width: 64px;
   --marketwatch-width: 320px;
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -731,11 +733,57 @@ body {
 .up { color: var(--success); }
 .down { color: var(--danger); }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Mobile-First Premium Styles (From Mockup) */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+}
+
+.chart-gradient {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0) 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.m-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.m-asset-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.m-asset-card {
+  flex-shrink: 0;
+  width: 140px;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 1023px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    overflow-y: auto;
+    height: auto;
+    background: #0f172a;
+    padding: 0;
+  }
+}
 
 /* Dashboard Component Responsive Fixes */
 @media (max-width: 600px) {

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useTrading } from '../context/TradingContext';
 
-const AssetInfo = ({ symbol, onTrade }) => {
+const AssetInfo = ({ symbol, onTrade, compact }) => {
   const { currentClientExtended } = useTrading();
   const isVerified = currentClientExtended?.kyc?.status === 'approved';
   const [activeTab, setActiveTab] = useState('Market');
 
   const MarketView = () => (
     <div className="market-tab-content animate-fade">
-       <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>
-          <i className="fa-solid fa-chart-pie" style={{ display: 'block', fontSize: '24px', marginBottom: '12px', opacity: 0.5 }}></i>
-          Market data for {symbol?.name || 'this asset'} is currently being updated.
-       </div>
+       {!compact && (
+         <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>
+            <i className="fa-solid fa-chart-pie" style={{ display: 'block', fontSize: '24px', marginBottom: '12px', opacity: 0.5 }}></i>
+            Market data for {symbol?.name || 'this asset'} is currently being updated.
+         </div>
+       )}
     </div>
   );
 
@@ -148,26 +150,28 @@ const AssetInfo = ({ symbol, onTrade }) => {
 
   return (
     <div className="card asset-info-card">
-      <div className="tabs-header">
-        <div 
-          className={`tab-item ${activeTab === 'Calendar' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Calendar')}
-        >
-          Calendar
+      {!compact && (
+        <div className="tabs-header">
+          <div 
+            className={`tab-item ${activeTab === 'Calendar' ? 'active' : ''}`}
+            onClick={() => setActiveTab('Calendar')}
+          >
+            Calendar
+          </div>
+          <div 
+            className={`tab-item ${activeTab === 'Market' ? 'active' : ''}`}
+            onClick={() => setActiveTab('Market')}
+          >
+            Market
+          </div>
+          <div 
+            className={`tab-item ${activeTab === 'Symbol info' ? 'active' : ''}`}
+            onClick={() => setActiveTab('Symbol info')}
+          >
+            Symbol info
+          </div>
         </div>
-        <div 
-          className={`tab-item ${activeTab === 'Market' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Market')}
-        >
-          Market
-        </div>
-        <div 
-          className={`tab-item ${activeTab === 'Symbol info' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Symbol info')}
-        >
-          Symbol info
-        </div>
-      </div>
+      )}
 
       <div className="asset-info-body">
          {/* Trading Input Area */}

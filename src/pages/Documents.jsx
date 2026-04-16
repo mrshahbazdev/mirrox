@@ -179,11 +179,106 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
   );
 };
 
-const Documents = () => {
-  const { currentClientExtended } = useTrading();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
-  const isFullyVerified = currentClientExtended?.kyc?.status === 'verified' || currentClientExtended?.accountType === 'live';
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
+  if (isMobile) {
+    return (
+      <div className="mobile-verification no-scrollbar pb-10">
+        <header className="px-2 pt-6 pb-4">
+            <h1 className="text-2xl font-black text-white">Verification</h1>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Status: {isFullyVerified ? 'Verified' : 'Action Required'}</p>
+        </header>
+
+        {isFullyVerified ? (
+          <section className="py-8">
+            <div className="glass-card p-10 flex flex-col items-center text-center">
+                <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
+                    <i className="fa-solid fa-shield-check text-4xl text-emerald-500"></i>
+                </div>
+                <h3 className="text-xl font-black text-white">Account Verified</h3>
+                <p className="text-xs text-slate-400 mt-2 leading-relaxed">Your identity has been successfully confirmed. You have full access to all platform features.</p>
+            </div>
+          </section>
+        ) : (
+          <div className="space-y-6">
+             {/* Verification Boxes */}
+             <KYCBox 
+                title="Identity" 
+                desc="ID card, Driving license, or Passport." 
+                category="poi"
+                clientData={currentClientExtended}
+                options={[
+                    { value: 'id_card', label: 'ID Card' },
+                    { value: 'passport', label: 'Passport' },
+                    { value: 'driving_license', label: 'Driving License' }
+                ]}
+            />
+            
+            <KYCBox 
+                title="Residence" 
+                desc="Bill or Statement (max 3 months old)." 
+                category="por"
+                clientData={currentClientExtended}
+                options={[
+                    { value: 'utility_bill', label: 'Utility Bill' },
+                    { value: 'bank_statement', label: 'Bank Statement' },
+                    { value: 'tax_document', label: 'Tax Document' }
+                ]}
+            />
+
+            <KYCBox 
+                title="Selfie" 
+                desc="Selfie holding your document." 
+                category="selfie"
+                clientData={currentClientExtended}
+                options={[
+                    { value: 'selfie_with_id', label: 'Selfie with ID' }
+                ]}
+            />
+
+            {/* Mobile Guidelines */}
+            <section className="px-1">
+                <div className="bg-slate-800/20 border border-slate-700/50 rounded-3xl p-6">
+                    <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Guidelines</h4>
+                    <ul className="space-y-4">
+                        <li className="flex items-start space-x-3">
+                            <i className="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                            <p className="text-[11px] text-slate-400 leading-tight">Ensure all text on documents is clearly readable and not blurred.</p>
+                        </li>
+                        <li className="flex items-start space-x-3">
+                            <i className="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                            <p className="text-[11px] text-slate-400 leading-tight">Use official government-issued documents only.</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+          </div>
+        )}
+
+        <style>{`
+          .mobile-verification {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+          .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Desktop View
   return (
     <div style={{ 
       gridColumn: '1 / -1', 
@@ -197,7 +292,7 @@ const Documents = () => {
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ marginBottom: '32px' }}>
          <h2 style={{ fontSize: '28px', fontWeight: 800, margin: '0 0 8px 0', background: 'linear-gradient(90deg, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-           Verification Center
+            Verification Center
          </h2>
          <p style={{ margin: 0, color: '#94a3b8', fontSize: '15px' }}>Verify your identity to unlock live trading and withdrawals.</p>
       </div>

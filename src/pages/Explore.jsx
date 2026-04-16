@@ -73,6 +73,138 @@ const Explore = () => {
   }, [prices]);
 
   return (
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const categories = ['Trending', 'Forex', 'Crypto', 'Stocks', 'Indices'];
+  const [activeCategory, setActiveCategory] = React.useState('Trending');
+
+  if (isMobile) {
+    return (
+      <div className="mobile-explore no-scrollbar">
+        <header className="px-2 pt-4 pb-2">
+            <h1 className="text-2xl font-black text-white mb-6">Explore</h1>
+            <div className="relative">
+                <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                <input 
+                  type="text" 
+                  placeholder="Search markets, assets, news..." 
+                  className="w-full bg-slate-800/40 border border-slate-700/50 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-indigo-500/50 transition-all text-white"
+                />
+            </div>
+        </header>
+
+        {/* Categories */}
+        <div className="flex space-x-3 overflow-x-auto py-4 no-scrollbar">
+            {categories.map(cat => (
+              <button 
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`flex-shrink-0 px-6 py-2.5 rounded-xl text-xs font-bold transition-all border ${activeCategory === cat ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-slate-800/40 text-slate-400 border-slate-700'}`}
+              >
+                {cat}
+              </button>
+            ))}
+        </div>
+
+        {/* Trending Section */}
+        <section className="py-4">
+            <div className="flex items-center justify-between mb-4 px-1">
+                <h3 className="font-bold text-lg text-white">Trending in <span className="text-indigo-400">FX</span></h3>
+                <i className="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+            </div>
+            <div className="glass-card p-4 space-y-4">
+                {trendingFX.slice(0, 3).map(item => (
+                  <div key={item.symbol} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                          <img 
+                            src={`https://flagcdn.com/w40/${item.symbol.substring(0,2).toLowerCase()}.png`} 
+                            className="w-8 h-8 rounded-full border border-slate-700/50"
+                            alt="" 
+                            onError={(e) => { e.target.src = 'https://flagcdn.com/w40/eu.png'; }}
+                          />
+                          <div>
+                              <p className="text-xs font-bold text-white uppercase">{item.symbol}</p>
+                              <p className="text-[10px] text-slate-500">Euro / US Dollar</p>
+                          </div>
+                      </div>
+                      <div className="text-right">
+                          <p className="text-xs font-bold text-white font-mono">{item.price}</p>
+                          <p className={`text-[10px] font-bold ${item.up ? 'text-emerald-400' : 'text-rose-400'}`}>{item.change}</p>
+                      </div>
+                  </div>
+                ))}
+            </div>
+        </section>
+
+        {/* Sentiment Section */}
+        <section className="py-4">
+            <h3 className="font-bold text-lg text-white mb-4 px-1">Global Trader Sentiment</h3>
+            <div className="glass-card p-5 space-y-6">
+                {sentiment.slice(0, 3).map(item => (
+                  <div key={item.symbol}>
+                      <div className="flex justify-between items-center mb-2">
+                          <div className="flex items-center space-x-2">
+                              <i className={`fa-solid ${item.icon} text-indigo-400 text-xs`}></i>
+                              <span className="text-xs font-bold text-white">{item.symbol}</span>
+                          </div>
+                          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">{item.buy}% Bullish</span>
+                      </div>
+                      <div className="w-full bg-slate-900/50 rounded-full h-1.5 overflow-hidden flex">
+                          <div className="h-full bg-indigo-500" style={{ width: `${item.buy}%` }}></div>
+                          <div className="h-full bg-slate-700/50 flex-1"></div>
+                      </div>
+                  </div>
+                ))}
+            </div>
+        </section>
+
+        {/* Market Movers */}
+        <section className="py-4 pb-8">
+            <h3 className="font-bold text-lg text-white mb-4 px-1">Market <span className="text-indigo-400">Movers</span></h3>
+            <div className="space-y-3">
+                {topMovers.slice(0, 3).map(item => (
+                  <div key={item.symbol} className={`glass-card p-4 flex items-center justify-between border-l-4 ${item.upD ? 'border-l-emerald-500' : 'border-l-rose-500'}`}>
+                      <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-400 text-sm">{item.icon}</div>
+                          <div>
+                              <p className="text-xs font-bold text-white uppercase">{item.symbol}</p>
+                              <p className="text-[9px] text-slate-500">Range: {item.low} - {item.high}</p>
+                          </div>
+                      </div>
+                      <div className="text-right">
+                          <span className={`font-bold text-sm ${item.upD ? 'text-emerald-400' : 'text-rose-400'}`}>{item.daily}</span>
+                      </div>
+                  </div>
+                ))}
+            </div>
+        </section>
+
+        <style>{`
+          .mobile-explore {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 20px;
+          }
+          .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Desktop View
+  return (
     <div className="explore-container redesign animate-fade" style={{ 
       gridColumn: '1 / -1', 
       height: '100%', 
@@ -178,7 +310,7 @@ const Explore = () => {
                 <tr key={item.symbol} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
                   <td style={{ padding: '10px 8px' }}>
                     <div className="td-mover-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div className="mover-icon" style={{ width: '28px', height: '28px', background: 'rgba(50,145,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifycontent: 'center', fontSize: '12px', fontWeight: 800, color: '#3291ff' }}>{item.icon}</div>
+                        <div className="mover-icon" style={{ width: '28px', height: '28px', background: 'rgba(50,145,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, color: '#3291ff' }}>{item.icon}</div>
                         <span className="mover-name" style={{ fontSize: '13px', fontWeight: 700 }}>{item.symbol}</span>
                     </div>
                   </td>

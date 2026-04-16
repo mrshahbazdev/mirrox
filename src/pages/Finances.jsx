@@ -148,6 +148,190 @@ const Finances = () => {
   }
 
   return (
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ padding: '40px', color: '#94a3b8', textAlign: 'center' }}>
+        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '32px', marginBottom: '16px' }}></i>
+        <p>Syncing Wallet...</p>
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <div className="mobile-finances no-scrollbar">
+        {/* Mobile Balance Header */}
+        <header className="px-2 pt-4 pb-6">
+            <div className="flex items-center space-x-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center border-2 border-indigo-400/30 overflow-hidden">
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentClientExtended?.name}`} alt="Avatar" />
+                </div>
+                <div>
+                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Account #MRX-{currentClientExtended?.id}</p>
+                   <div className="flex items-center space-x-2">
+                      <h2 className="text-sm font-black text-white">{currentClientExtended?.name}</h2>
+                      <span className="bg-indigo-500/20 text-indigo-400 text-[8px] font-bold px-1.5 py-0.5 rounded border border-indigo-500/30 uppercase">{currentClientExtended?.accountType}</span>
+                   </div>
+                </div>
+            </div>
+
+            <div className="glass-card p-6 bg-gradient-to-br from-indigo-500/10 to-transparent">
+               <p className="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mb-1 opacity-80">Available Balance</p>
+               <h3 className="text-3xl font-black text-white font-mono tracking-tight">${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+            </div>
+        </header>
+
+        {/* Mobile Segmented Control */}
+        <div className="px-1 py-4">
+            <div className="bg-slate-800/40 p-1 rounded-2xl flex items-center border border-slate-700/50">
+                <button 
+                  onClick={() => setActiveTab('deposit')}
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${activeTab === 'deposit' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500'}`}
+                >
+                    <i className="fa-solid fa-circle-plus"></i> Deposit
+                </button>
+                <button 
+                  onClick={() => setActiveTab('withdrawal')}
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${activeTab === 'withdrawal' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500'}`}
+                >
+                    <i className="fa-solid fa-circle-minus"></i> Withdraw
+                </button>
+                <button 
+                  onClick={() => setActiveTab('history')}
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${activeTab === 'history' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500'}`}
+                >
+                    <i className="fa-solid fa-clock-rotate-left"></i> History
+                </button>
+            </div>
+        </div>
+
+        {/* Dynamic Content Area */}
+        <section className="py-4 space-y-6">
+           {activeTab === 'deposit' && (
+             <div className="glass-card p-6 space-y-6">
+                <h4 className="font-bold text-white text-lg">New Deposit</h4>
+                <div className="space-y-4">
+                   <div className="space-y-1.5">
+                      <label className="text-[10px] text-slate-400 uppercase font-black ml-1">Select Method</label>
+                      <select 
+                        value={method} 
+                        onChange={(e) => setMethod(e.target.value)}
+                        className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 text-white text-sm outline-none appearance-none"
+                      >
+                         <option value="crypto">USDT (TRC20)</option>
+                         <option value="bank_transfer">Bank Transfer</option>
+                      </select>
+                   </div>
+                   
+                   <div className="p-4 bg-slate-900/40 border border-dashed border-indigo-500/30 rounded-2xl">
+                      <p className="text-[10px] font-bold text-indigo-400 uppercase mb-3"><i className="fa-solid fa-info-circle mr-1.5"></i> Payment Details</p>
+                      {method === 'crypto' ? (
+                        <div className="space-y-2">
+                           <code className="block text-xs text-indigo-300 break-all font-mono bg-black/30 p-2.5 rounded-lg border border-white/5">{platformConfig.usdt_address}</code>
+                           <button onClick={() => navigator.clipboard.writeText(platformConfig.usdt_address)} className="w-full py-2 bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase rounded-lg">Copy Address</button>
+                        </div>
+                      ) : (
+                        <div className="text-[11px] space-y-1 text-slate-300">
+                           <p>Bank: <span className="text-white font-bold">{platformConfig.bank_name}</span></p>
+                           <p>IBAN: <span className="text-white font-bold break-all">{platformConfig.bank_iban}</span></p>
+                        </div>
+                      )}
+                   </div>
+
+                   <div className="space-y-1.5">
+                      <label className="text-[10px] text-slate-400 uppercase font-black ml-1">Amount (USD)</label>
+                      <input 
+                        type="number" 
+                        value={amount} 
+                        onChange={(e) => setAmount(e.target.value)}
+                        placeholder="0.00"
+                        className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 text-white text-xl font-black outline-none"
+                      />
+                   </div>
+
+                   <button className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">Submit Request</button>
+                </div>
+             </div>
+           )}
+
+           {activeTab === 'withdrawal' && (
+             <div className="glass-card p-6 space-y-6">
+                <h4 className="font-bold text-white text-lg">Initial Payout</h4>
+                <div className="space-y-4">
+                   <div className="space-y-1.5">
+                      <label className="text-[10px] text-slate-400 uppercase font-black ml-1">Amount to Withdraw</label>
+                      <input 
+                        type="number" 
+                        value={amount} 
+                        onChange={(e) => setAmount(e.target.value)}
+                        placeholder="0.00"
+                        className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 text-white text-xl font-black outline-none"
+                      />
+                   </div>
+                   <div className="space-y-1.5">
+                      <label className="text-[10px] text-slate-400 uppercase font-black ml-1">Security PIN</label>
+                      <input 
+                        type="password" 
+                        maxLength="4"
+                        value={withdrawalPin} 
+                        onChange={(e) => setWithdrawalPin(e.target.value)}
+                        placeholder="••••"
+                        className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 text-white text-center text-2xl font-black tracking-[1em] outline-none"
+                      />
+                   </div>
+                   <button className="w-full py-4 bg-rose-600 text-white font-black rounded-2xl shadow-xl shadow-rose-500/20 active:scale-95 transition-all">Withdraw Now</button>
+                </div>
+             </div>
+           )}
+
+           {activeTab === 'history' && (
+              <div className="space-y-3">
+                 <h4 className="font-bold text-white text-lg px-1">Transaction History</h4>
+                 {history.map((tx, i) => (
+                    <div key={i} className="glass-card p-4 flex items-center justify-between">
+                       <div className="flex items-center space-x-4">
+                          <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-black ${tx.type === 'Deposit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-indigo-500/10 text-indigo-500'}`}>
+                             {tx.type === 'Deposit' ? 'IN' : 'OT'}
+                          </div>
+                          <div>
+                             <p className="text-xs font-bold text-white uppercase">{tx.type}</p>
+                             <p className="text-[10px] text-slate-500">{tx.date}</p>
+                          </div>
+                       </div>
+                       <div className="text-right">
+                          <p className={`text-sm font-black ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                             {tx.type === 'Deposit' ? '+' : '-'}${tx.amount.toLocaleString()}
+                          </p>
+                          <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">{tx.status}</span>
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           )}
+        </section>
+
+        <style>{`
+           .mobile-finances {
+             display: flex;
+             flex-direction: column;
+             gap: 4px;
+             padding-bottom: 40px;
+           }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Desktop View
+  return (
     <div style={{ 
       gridColumn: '1 / -1', 
       height: '100%', 

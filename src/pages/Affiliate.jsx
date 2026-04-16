@@ -42,6 +42,100 @@ const Affiliate = () => {
 
   const stats = currentClientExtended?.affiliateStats || { totalInvites: 0, totalEarnings: 0 };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="mobile-affiliate no-scrollbar pb-10">
+        <header className="px-2 pt-6 pb-4">
+            <h1 className="text-2xl font-black text-white">Affiliate</h1>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Level: Silver Agent</p>
+        </header>
+
+        {/* Affiliate Link Card */}
+        <section className="py-4">
+            <div className="glass-card p-6 bg-gradient-to-br from-indigo-500/10 to-transparent">
+                <h3 className="text-lg font-black text-white mb-2">Invite Friends</h3>
+                <p className="text-[10px] text-slate-400 leading-relaxed mb-6 font-bold uppercase tracking-tight">Earn <span className="text-emerald-400">${bonusAmount}</span> for every successful signup through your network.</p>
+                
+                <div className="space-y-3">
+                   <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 overflow-hidden">
+                      <code className="text-[10px] text-indigo-300 font-mono break-all">{referralLink}</code>
+                   </div>
+                   <button 
+                     onClick={handleCopy}
+                     className={`w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${copied ? 'bg-emerald-500 text-white' : 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'}`}
+                   >
+                       {copied ? 'Copied to Clipboard' : 'Copy referral link'}
+                   </button>
+                </div>
+            </div>
+        </section>
+
+        {/* Stats Grid */}
+        <section className="py-4 grid grid-cols-2 gap-4">
+            <div className="glass-card p-5">
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Invites</p>
+                <h4 className="text-2xl font-black text-white">{stats.totalInvites}</h4>
+            </div>
+            <div className="glass-card p-5">
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Earned</p>
+                <h4 className="text-2xl font-black text-emerald-400">${stats.totalEarnings.toLocaleString()}</h4>
+            </div>
+        </section>
+
+        {/* Referral List */}
+        <section className="py-4 space-y-3">
+            <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] ml-1">Your Network</h3>
+            {referrals.length === 0 ? (
+               <div className="glass-card p-8 text-center">
+                  <p className="text-xs text-slate-500">No referrals yet.</p>
+               </div>
+            ) : (
+                <div className="space-y-3">
+                   {referrals.map((r, i) => (
+                      <div key={i} className="glass-card p-4 flex items-center justify-between">
+                         <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-black text-indigo-400 text-xs">{r.name.charAt(0)}</div>
+                            <div>
+                               <p className="text-xs font-bold text-white uppercase">{r.name}</p>
+                               <p className="text-[9px] text-slate-500 tracking-tighter">{new Date(r.createdAt).toLocaleDateString()}</p>
+                            </div>
+                         </div>
+                         <div className="text-right">
+                             <p className="text-xs font-black text-emerald-400">+${bonusAmount}</p>
+                             <span className="text-[8px] font-black uppercase text-slate-600">{r.status}</span>
+                         </div>
+                      </div>
+                   ))}
+                </div>
+            )}
+        </section>
+
+        <style>{`
+          .mobile-affiliate {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+          .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Desktop View
   return (
     <div style={{ 
       gridColumn: '1 / -1', 

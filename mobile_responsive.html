@@ -1,0 +1,2277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Mobile App Full App Prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0a0a0c; color: white; }
+        .header { padding: 40px 20px; text-align: center; background: linear-gradient(to bottom, #111, #0a0a0c); border-bottom: 1px solid #222; }
+        .grid { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; justify-content: center; }
+        .device-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .label { font-size: 14px; font-weight: 800; text-transform: uppercase; color: #6366f1; letter-spacing: 2px; }
+        .mockup { width: 375px; height: 812px; background: white; border: 12px solid #1a1a1e; border-radius: 45px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: relative; }
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1a1a1e; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0; font-size: 32px; letter-spacing: -1px;">My Mobile App</h1>
+        <p style="color: #666; margin-top: 10px;">11 Screens Mobile App Prototype</p>
+    </div>
+    <div class="grid">
+        
+            <div class="device-container">
+                <div class="label">Home</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Home</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .chart-gradient { background: linear-gradient(180deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 100%); }
+        .active-tab { color: #6366F1; }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container (375x812 Optimization) -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-24 overflow-x-hidden&quot;>
+        
+        <!-- Header -->
+        <header class=&quot;flex items-center justify-between px-6 pt-8 pb-4&quot;>
+            <div class=&quot;flex items-center space-x-3&quot;>
+                <div class=&quot;w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center border-2 border-indigo-400/30 overflow-hidden&quot;>
+                    <img src=&quot;https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&quot; alt=&quot;User Avatar&quot;>
+                </div>
+                <div>
+                    <p class=&quot;text-xs text-slate-400&quot;>Welcome back,</p>
+                    <h2 class=&quot;text-sm font-semibold&quot;>Alex Richards</h2>
+                </div>
+            </div>
+            <div class=&quot;flex space-x-3&quot;>
+                <button class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-magnifying-glass text-slate-400&quot;></i>
+                </button>
+                <button class=&quot;relative w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-bell text-slate-400&quot;></i>
+                    <span class=&quot;absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-slate-900&quot;></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Balance Section -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-3xl p-6 shadow-xl shadow-indigo-500/20&quot;>
+                <div class=&quot;flex justify-between items-start mb-4&quot;>
+                    <div>
+                        <p class=&quot;text-indigo-100 text-xs font-medium opacity-80 mb-1 uppercase tracking-wider&quot;>Total Equity</p>
+                        <h1 class=&quot;text-3xl font-bold tracking-tight&quot;>$3,706,972.54</h1>
+                    </div>
+                    <span class=&quot;bg-white/20 px-2 py-1 rounded-lg text-[10px] font-bold&quot;>DEMO</span>
+                </div>
+                <div class=&quot;flex items-center space-x-2 text-emerald-300&quot;>
+                    <i class=&quot;fa-solid fa-arrow-trend-up text-xs&quot;></i>
+                    <span class=&quot;text-sm font-semibold&quot;>+$3,697,000.21 (14.2%)</span>
+                </div>
+                <div class=&quot;flex mt-6 space-x-3&quot;>
+                    <button class=&quot;flex-1 bg-white text-indigo-600 font-bold py-3 rounded-2xl text-sm transition-transform active:scale-95&quot;>Deposit</button>
+                    <button class=&quot;flex-1 bg-white/10 text-white font-bold py-3 rounded-2xl text-sm backdrop-blur-sm transition-transform active:scale-95 border border-white/10&quot;>Withdraw</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Quick Select -->
+        <section class=&quot;pt-4 pb-2&quot;>
+            <div class=&quot;flex items-center justify-between px-6 mb-4&quot;>
+                <h3 class=&quot;font-bold text-lg&quot;>Market Watch</h3>
+                <a href=&quot;Market.html&quot; class=&quot;text-indigo-400 text-xs font-semibold&quot;>See All</a>
+            </div>
+            <div class=&quot;flex space-x-4 overflow-x-auto px-6 no-scrollbar&quot;>
+                <!-- Asset Item 1 -->
+                <div class=&quot;flex-shrink-0 w-32 glass-card p-4 rounded-3xl border-indigo-500/30 bg-indigo-500/10&quot;>
+                    <div class=&quot;flex items-center justify-between mb-2&quot;>
+                        <div class=&quot;w-8 h-8 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-500&quot;>
+                            <i class=&quot;fa-solid fa-coins&quot;></i>
+                        </div>
+                        <span class=&quot;text-[10px] font-bold text-emerald-400&quot;>+0.14%</span>
+                    </div>
+                    <p class=&quot;text-xs font-bold text-white&quot;>XAUUSD</p>
+                    <p class=&quot;text-[10px] text-slate-400&quot;>2263.80</p>
+                </div>
+                <!-- Asset Item 2 -->
+                <div class=&quot;flex-shrink-0 w-32 glass-card p-4 rounded-3xl&quot;>
+                    <div class=&quot;flex items-center justify-between mb-2&quot;>
+                        <div class=&quot;w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-500&quot;>
+                            <i class=&quot;fa-brands fa-bitcoin&quot;></i>
+                        </div>
+                        <span class=&quot;text-[10px] font-bold text-red-400&quot;>-1.20%</span>
+                    </div>
+                    <p class=&quot;text-xs font-bold text-white&quot;>BTCUSD</p>
+                    <p class=&quot;text-[10px] text-slate-400&quot;>69665.83</p>
+                </div>
+                <!-- Asset Item 3 -->
+                <div class=&quot;flex-shrink-0 w-32 glass-card p-4 rounded-3xl&quot;>
+                    <div class=&quot;flex items-center justify-between mb-2&quot;>
+                        <div class=&quot;w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-500&quot;>
+                            <i class=&quot;fa-solid fa-euro-sign&quot;></i>
+                        </div>
+                        <span class=&quot;text-[10px] font-bold text-emerald-400&quot;>+0.05%</span>
+                    </div>
+                    <p class=&quot;text-xs font-bold text-white&quot;>EURUSD</p>
+                    <p class=&quot;text-[10px] text-slate-400&quot;>1.08379</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mini Chart Preview -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;glass-card rounded-3xl p-5&quot;>
+                <div class=&quot;flex justify-between items-center mb-4&quot;>
+                    <div class=&quot;flex items-center space-x-2&quot;>
+                        <div class=&quot;w-2 h-2 rounded-full bg-emerald-500 animate-pulse&quot;></div>
+                        <span class=&quot;text-xs font-bold uppercase tracking-widest text-slate-400&quot;>XAUUSD LIVE</span>
+                    </div>
+                    <div class=&quot;flex space-x-1&quot;>
+                        <button class=&quot;px-2 py-1 text-[10px] bg-indigo-500 rounded-lg&quot;>1H</button>
+                        <button class=&quot;px-2 py-1 text-[10px] text-slate-400&quot;>4H</button>
+                        <button class=&quot;px-2 py-1 text-[10px] text-slate-400&quot;>1D</button>
+                    </div>
+                </div>
+                <!-- Simple SVG Chart Representation -->
+                <div class=&quot;h-32 w-full relative chart-gradient rounded-xl mb-4 overflow-hidden&quot;>
+                    <svg viewBox=&quot;0 0 100 40&quot; class=&quot;absolute inset-0 w-full h-full stroke-indigo-500 stroke-[1.5] fill-transparent&quot;>
+                        <path d=&quot;M0,35 Q10,32 20,38 T40,30 T60,25 T80,15 T100,20&quot; vector-effect=&quot;non-scaling-stroke&quot;></path>
+                    </svg>
+                    <div class=&quot;absolute right-0 top-1/2 -translate-y-1/2 bg-indigo-500 text-[10px] px-1.5 py-0.5 rounded-l-md&quot;>2263.80</div>
+                </div>
+                <div class=&quot;grid grid-cols-2 gap-3&quot;>
+                    <button class=&quot;bg-red-500/10 border border-red-500/30 text-red-500 py-3 rounded-2xl font-bold flex flex-col items-center justify-center transition-transform active:scale-95&quot;>
+                        <span class=&quot;text-[10px] opacity-60 uppercase&quot;>Sell</span>
+                        <span class=&quot;text-sm&quot;>2263.80</span>
+                    </button>
+                    <button class=&quot;bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-2xl font-bold flex flex-col items-center justify-center transition-transform active:scale-95&quot;>
+                        <span class=&quot;text-[10px] opacity-60 uppercase&quot;>Buy</span>
+                        <span class=&quot;text-sm&quot;>2264.30</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section class=&quot;px-6 grid grid-cols-2 gap-4 pb-6&quot;>
+            <div class=&quot;glass-card rounded-2xl p-4&quot;>
+                <p class=&quot;text-[10px] text-slate-400 uppercase font-semibold mb-1&quot;>Free Margin</p>
+                <p class=&quot;text-sm font-bold&quot;>$3,706,742.46</p>
+            </div>
+            <div class=&quot;glass-card rounded-2xl p-4&quot;>
+                <p class=&quot;text-[10px] text-slate-400 uppercase font-semibold mb-1&quot;>Margin Level</p>
+                <p class=&quot;text-sm font-bold text-indigo-400&quot;>1611187.79%</p>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">page 2</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Trade</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .candle-green { fill: #10b981; }
+        .candle-red { fill: #ef4444; }
+        .active-tab { color: #6366F1; }
+        .trading-panel { background: rgba(15, 23, 42, 0.95); border-top: 1px solid rgba(99, 102, 241, 0.2); }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-24 overflow-hidden&quot;>
+        
+        <!-- Header -->
+        <header class=&quot;flex items-center justify-between px-4 pt-6 pb-2&quot;>
+            <div class=&quot;flex items-center space-x-3&quot;>
+                <a href=&quot;Home.html&quot; class=&quot;w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-chevron-left text-slate-300&quot;></i>
+                </a>
+                <div>
+                    <h2 class=&quot;text-sm font-bold&quot;>Gold vs US Dollar</h2>
+                    <div class=&quot;flex items-center space-x-2&quot;>
+                        <span class=&quot;text-[10px] text-emerald-400 font-bold&quot;>2263.80</span>
+                        <span class=&quot;text-[10px] text-slate-400&quot;>+0.14%</span>
+                    </div>
+                </div>
+            </div>
+            <div class=&quot;flex space-x-2&quot;>
+                <button class=&quot;w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-layer-group text-slate-400 text-xs&quot;></i>
+                </button>
+                <button class=&quot;w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-gear text-slate-400 text-xs&quot;></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Account Info Pill (Condensed Header Data) -->
+        <div class=&quot;px-4 py-2&quot;>
+            <div class=&quot;flex items-center justify-between bg-slate-800/50 rounded-2xl px-4 py-2 border border-slate-700/50&quot;>
+                <div class=&quot;text-center&quot;>
+                    <p class=&quot;text-[9px] text-slate-400 uppercase&quot;>Balance</p>
+                    <p class=&quot;text-xs font-bold&quot;>$9,999</p>
+                </div>
+                <div class=&quot;h-6 w-[1px] bg-slate-700&quot;></div>
+                <div class=&quot;text-center&quot;>
+                    <p class=&quot;text-[9px] text-slate-400 uppercase&quot;>Equity</p>
+                    <p class=&quot;text-xs font-bold&quot;>$3.7M</p>
+                </div>
+                <div class=&quot;h-6 w-[1px] bg-slate-700&quot;></div>
+                <div class=&quot;text-center&quot;>
+                    <p class=&quot;text-[9px] text-slate-400 uppercase&quot;>Profit</p>
+                    <p class=&quot;text-xs font-bold text-emerald-400&quot;>+$3.6M</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Banner -->
+        <div class=&quot;mx-4 my-2 bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl flex items-center space-x-3&quot;>
+            <i class=&quot;fa-solid fa-circle-exclamation text-amber-500&quot;></i>
+            <div class=&quot;flex-1&quot;>
+                <p class=&quot;text-[10px] text-amber-200 leading-tight&quot;>DEMO ACCOUNT MODE. Verify identity to unlock Real Trading.</p>
+            </div>
+            <button class=&quot;bg-amber-500 text-slate-900 text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap&quot;>Verify Now</button>
+        </div>
+
+        <!-- Timeframe & Tools Bar -->
+        <div class=&quot;px-4 py-2 flex items-center justify-between&quot;>
+            <div class=&quot;flex space-x-1 overflow-x-auto no-scrollbar&quot;>
+                <button class=&quot;px-3 py-1.5 bg-indigo-500 text-white text-[10px] font-bold rounded-lg&quot;>1m</button>
+                <button class=&quot;px-3 py-1.5 bg-slate-800 text-slate-400 text-[10px] font-bold rounded-lg&quot;>5m</button>
+                <button class=&quot;px-3 py-1.5 bg-slate-800 text-slate-400 text-[10px] font-bold rounded-lg&quot;>15m</button>
+                <button class=&quot;px-3 py-1.5 bg-slate-800 text-slate-400 text-[10px] font-bold rounded-lg&quot;>1h</button>
+                <button class=&quot;px-3 py-1.5 bg-slate-800 text-slate-400 text-[10px] font-bold rounded-lg&quot;>4h</button>
+            </div>
+            <div class=&quot;flex space-x-2 pl-2&quot;>
+                <button class=&quot;w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-chart-candlestick text-indigo-400 text-xs&quot;></i>
+                </button>
+                <button class=&quot;w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-pen-ruler text-slate-400 text-xs&quot;></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chart Area -->
+        <div class=&quot;px-4 h-56 w-full relative mb-4&quot;>
+            <div class=&quot;absolute inset-0 bg-[#0F172A] opacity-50 flex items-center justify-around pointer-events-none px-4&quot;>
+                <div class=&quot;h-full w-[1px] bg-slate-800/50&quot;></div>
+                <div class=&quot;h-full w-[1px] bg-slate-800/50&quot;></div>
+                <div class=&quot;h-full w-[1px] bg-slate-800/50&quot;></div>
+            </div>
+            <!-- Mock SVG Candlestick Chart -->
+            <svg class=&quot;w-full h-full&quot; viewBox=&quot;0 0 343 200&quot;>
+                <line x1=&quot;0&quot; y1=&quot;120&quot; x2=&quot;343&quot; y2=&quot;120&quot; stroke=&quot;#6366f1&quot; stroke-dasharray=&quot;4&quot; opacity=&quot;0.3&quot; />
+                <!-- Candles -->
+                <rect x=&quot;20&quot; y=&quot;80&quot; width=&quot;4&quot; height=&quot;40&quot; class=&quot;candle-red&quot; rx=&quot;1&quot; />
+                <line x1=&quot;22&quot; y1=&quot;70&quot; x2=&quot;22&quot; y2=&quot;130&quot; stroke=&quot;#ef4444&quot; stroke-width=&quot;1&quot; />
+                
+                <rect x=&quot;50&quot; y=&quot;90&quot; width=&quot;4&quot; height=&quot;20&quot; class=&quot;candle-red&quot; rx=&quot;1&quot; />
+                <line x1=&quot;52&quot; y1=&quot;80&quot; x2=&quot;52&quot; y2=&quot;120&quot; stroke=&quot;#ef4444&quot; stroke-width=&quot;1&quot; />
+                
+                <rect x=&quot;80&quot; y=&quot;60&quot; width=&quot;4&quot; height=&quot;40&quot; class=&quot;candle-green&quot; rx=&quot;1&quot; />
+                <line x1=&quot;82&quot; y1=&quot;50&quot; x2=&quot;82&quot; y2=&quot;110&quot; stroke=&quot;#10b981&quot; stroke-width=&quot;1&quot; />
+                
+                <rect x=&quot;110&quot; y=&quot;50&quot; width=&quot;4&quot; height=&quot;50&quot; class=&quot;candle-green&quot; rx=&quot;1&quot; />
+                <line x1=&quot;112&quot; y1=&quot;40&quot; x2=&quot;112&quot; y2=&quot;110&quot; stroke=&quot;#10b981&quot; stroke-width=&quot;1&quot; />
+                
+                <rect x=&quot;140&quot; y=&quot;70&quot; width=&quot;4&quot; height=&quot;30&quot; class=&quot;candle-red&quot; rx=&quot;1&quot; />
+                <line x1=&quot;142&quot; y1=&quot;60&quot; x2=&quot;142&quot; y2=&quot;110&quot; stroke=&quot;#ef4444&quot; stroke-width=&quot;1&quot; />
+
+                <rect x=&quot;170&quot; y=&quot;40&quot; width=&quot;4&quot; height=&quot;60&quot; class=&quot;candle-green&quot; rx=&quot;1&quot; />
+                <line x1=&quot;172&quot; y1=&quot;30&quot; x2=&quot;172&quot; y2=&quot;110&quot; stroke=&quot;#10b981&quot; stroke-width=&quot;1&quot; />
+
+                <rect x=&quot;200&quot; y=&quot;30&quot; width=&quot;4&quot; height=&quot;20&quot; class=&quot;candle-green&quot; rx=&quot;1&quot; />
+                <line x1=&quot;202&quot; y1=&quot;20&quot; x2=&quot;202&quot; y2=&quot;60&quot; stroke=&quot;#10b981&quot; stroke-width=&quot;1&quot; />
+
+                <rect x=&quot;230&quot; y=&quot;50&quot; width=&quot;4&quot; height=&quot;30&quot; class=&quot;candle-red&quot; rx=&quot;1&quot; />
+                <line x1=&quot;232&quot; y1=&quot;40&quot; x2=&quot;232&quot; y2=&quot;90&quot; stroke=&quot;#ef4444&quot; stroke-width=&quot;1&quot; />
+
+                <!-- Current Price Line -->
+                <line x1=&quot;0&quot; y1=&quot;60&quot; x2=&quot;343&quot; y2=&quot;60&quot; stroke=&quot;#10b981&quot; stroke-dasharray=&quot;4&quot; />
+                <rect x=&quot;290&quot; y=&quot;50&quot; width=&quot;53&quot; height=&quot;20&quot; fill=&quot;#10b981&quot; rx=&quot;4&quot; />
+                <text x=&quot;295&quot; y=&quot;64&quot; fill=&quot;white&quot; font-size=&quot;10&quot; font-weight=&quot;bold&quot;>2263.80</text>
+            </svg>
+        </div>
+
+        <!-- Position/History Toggle -->
+        <div class=&quot;px-4 mb-4&quot;>
+            <div class=&quot;flex items-center space-x-6 border-b border-slate-800 pb-2&quot;>
+                <button class=&quot;text-xs font-bold text-white relative&quot;>
+                    Open Positions (1)
+                    <span class=&quot;absolute -bottom-[10px] left-0 w-full h-[2px] bg-indigo-500&quot;></span>
+                </button>
+                <button class=&quot;text-xs font-bold text-slate-500&quot;>Pending</button>
+                <button class=&quot;text-xs font-bold text-slate-500&quot;>History</button>
+            </div>
+            
+            <!-- Position Item -->
+            <div class=&quot;py-4 border-b border-slate-800/50 flex items-center justify-between&quot;>
+                <div class=&quot;flex items-center space-x-3&quot;>
+                    <div class=&quot;w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500&quot;>
+                        <i class=&quot;fa-solid fa-arrow-trend-up text-xs&quot;></i>
+                    </div>
+                    <div>
+                        <div class=&quot;flex items-center space-x-1&quot;>
+                            <span class=&quot;text-xs font-bold uppercase&quot;>XAUUSD</span>
+                            <span class=&quot;text-[9px] bg-emerald-500/20 text-emerald-400 px-1 rounded&quot;>BUY</span>
+                        </div>
+                        <p class=&quot;text-[10px] text-slate-400&quot;>Vol: 0.10 | Price: 2300.77</p>
+                    </div>
+                </div>
+                <div class=&quot;text-right&quot;>
+                    <p class=&quot;text-xs font-bold text-emerald-400&quot;>+$3,697,000.21</p>
+                    <button class=&quot;text-[10px] font-bold text-red-400 uppercase tracking-tighter&quot;>Close Position</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Action Panel -->
+        <div class=&quot;px-4 py-4 trading-panel rounded-t-[32px] space-y-4&quot;>
+            <div class=&quot;flex items-center justify-between bg-slate-900 rounded-2xl p-1 border border-slate-800&quot;>
+                <button class=&quot;flex-1 py-2 text-[10px] font-bold bg-indigo-500 rounded-xl&quot;>Market Execution</button>
+                <button class=&quot;flex-1 py-2 text-[10px] font-bold text-slate-400&quot;>Pending Order</button>
+            </div>
+
+            <!-- Lot Size Selector -->
+            <div class=&quot;flex items-center justify-between bg-slate-800/50 rounded-2xl p-2 border border-slate-700&quot;>
+                <button class=&quot;w-10 h-10 flex items-center justify-center text-indigo-400 text-lg&quot;>-</button>
+                <div class=&quot;text-center&quot;>
+                    <p class=&quot;text-[8px] text-slate-500 uppercase font-bold&quot;>Volume (Lots)</p>
+                    <p class=&quot;text-lg font-bold&quot;>0.10</p>
+                </div>
+                <button class=&quot;w-10 h-10 flex items-center justify-center text-indigo-400 text-lg&quot;>+</button>
+            </div>
+
+            <!-- TP/SL inputs -->
+            <div class=&quot;grid grid-cols-2 gap-3&quot;>
+                <div class=&quot;bg-slate-800/50 rounded-2xl p-2 border border-slate-700&quot;>
+                    <p class=&quot;text-[8px] text-slate-500 uppercase font-bold text-center&quot;>Take Profit (TP)</p>
+                    <p class=&quot;text-center font-bold text-sm&quot;>2281.69</p>
+                </div>
+                <div class=&quot;bg-slate-800/50 rounded-2xl p-2 border border-slate-700&quot;>
+                    <p class=&quot;text-[8px] text-slate-500 uppercase font-bold text-center&quot;>Stop Loss (SL)</p>
+                    <p class=&quot;text-center font-bold text-sm&quot;>2259.69</p>
+                </div>
+            </div>
+
+            <!-- Buy/Sell Buttons -->
+            <div class=&quot;grid grid-cols-2 gap-4&quot;>
+                <button class=&quot;bg-red-500/10 border border-red-500/30 text-red-500 py-3 rounded-2xl font-bold flex flex-col items-center justify-center transition-transform active:scale-95&quot;>
+                    <span class=&quot;text-[9px] opacity-60 uppercase&quot;>Sell</span>
+                    <span class=&quot;text-lg&quot;>2263.80</span>
+                </button>
+                <button class=&quot;bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-2xl font-bold flex flex-col items-center justify-center transition-transform active:scale-95&quot;>
+                    <span class=&quot;text-[9px] opacity-60 uppercase&quot;>Buy</span>
+                    <span class=&quot;text-lg&quot;>2264.30</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">page 3</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Trading Terminal</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .chart-gradient { background: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0) 100%); }
+        .active-tab { color: #6366F1; }
+        .tab-active-indicator { position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: #6366F1; }
+        .input-dark { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-24 overflow-x-hidden&quot;>
+        
+        <!-- Top Status Bar (Mirroring Desktop Header) -->
+        <div class=&quot;bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 flex items-center justify-between&quot;>
+            <div class=&quot;flex items-center space-x-2&quot;>
+                <i class=&quot;fa-solid fa-triangle-exclamation text-amber-500 text-xs&quot;></i>
+                <span class=&quot;text-[10px] font-bold text-amber-500 uppercase tracking-tight&quot;>Demo Account Mode</span>
+            </div>
+            <button class=&quot;bg-amber-500 text-slate-900 px-3 py-1 rounded-full text-[10px] font-bold&quot;>Verify Now</button>
+        </div>
+
+        <!-- App Header & Market Selection -->
+        <header class=&quot;px-6 pt-4 pb-2&quot;>
+            <div class=&quot;flex items-center justify-between mb-4&quot;>
+                <div class=&quot;flex items-center space-x-2&quot;>
+                    <div class=&quot;w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center&quot;>
+                        <i class=&quot;fa-solid fa-chart-line text-white text-sm&quot;></i>
+                    </div>
+                    <h2 class=&quot;text-lg font-bold&quot;>XAUUSD</h2>
+                </div>
+                <div class=&quot;flex space-x-2&quot;>
+                    <button class=&quot;w-8 h-8 rounded-full glass-card flex items-center justify-center text-xs&quot;>
+                        <i class=&quot;fa-solid fa-ellipsis-vertical&quot;></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Horizontal Financial Stats Bar -->
+            <div class=&quot;flex space-x-4 overflow-x-auto no-scrollbar py-2&quot;>
+                <div class=&quot;flex-shrink-0&quot;>
+                    <p class=&quot;text-[9px] text-slate-400 uppercase font-bold&quot;>Balance</p>
+                    <p class=&quot;text-xs font-semibold&quot;>$9,999.93</p>
+                </div>
+                <div class=&quot;flex-shrink-0&quot;>
+                    <p class=&quot;text-[9px] text-emerald-400 uppercase font-bold&quot;>Profit</p>
+                    <p class=&quot;text-xs font-semibold text-emerald-400&quot;>+$3.69M</p>
+                </div>
+                <div class=&quot;flex-shrink-0&quot;>
+                    <p class=&quot;text-[9px] text-slate-400 uppercase font-bold&quot;>Equity</p>
+                    <p class=&quot;text-xs font-semibold&quot;>$3,706,972</p>
+                </div>
+                <div class=&quot;flex-shrink-0&quot;>
+                    <p class=&quot;text-[9px] text-slate-400 uppercase font-bold&quot;>Margin Level</p>
+                    <p class=&quot;text-xs font-semibold text-indigo-400&quot;>1611187%</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chart Section -->
+        <section class=&quot;px-4 py-2&quot;>
+            <div class=&quot;glass-card rounded-3xl p-4&quot;>
+                <!-- Chart Header Controls -->
+                <div class=&quot;flex items-center justify-between mb-4&quot;>
+                    <div class=&quot;flex bg-slate-800/50 rounded-lg p-1&quot;>
+                        <button class=&quot;px-2 py-1 text-[9px] font-bold bg-indigo-500 rounded&quot;>1m</button>
+                        <button class=&quot;px-2 py-1 text-[9px] font-bold text-slate-400&quot;>5m</button>
+                        <button class=&quot;px-2 py-1 text-[9px] font-bold text-slate-400&quot;>15m</button>
+                        <button class=&quot;px-2 py-1 text-[9px] font-bold text-slate-400&quot;>1h</button>
+                        <button class=&quot;px-2 py-1 text-[9px] font-bold text-slate-400&quot;>D</button>
+                    </div>
+                    <div class=&quot;flex space-x-2 text-slate-400&quot;>
+                        <i class=&quot;fa-solid fa-chart-candlestick text-xs&quot;></i>
+                        <i class=&quot;fa-solid fa-gear text-xs&quot;></i>
+                    </div>
+                </div>
+
+                <!-- Main Chart Visual -->
+                <div class=&quot;h-40 w-full relative mb-4 overflow-hidden&quot;>
+                    <div class=&quot;absolute inset-0 flex flex-col justify-between opacity-10&quot;>
+                        <div class=&quot;w-full border-t border-white&quot;></div>
+                        <div class=&quot;w-full border-t border-white&quot;></div>
+                        <div class=&quot;w-full border-t border-white&quot;></div>
+                        <div class=&quot;w-full border-t border-white&quot;></div>
+                    </div>
+                    <!-- Mock Trading Chart -->
+                    <svg viewBox=&quot;0 0 100 50&quot; class=&quot;absolute inset-0 w-full h-full&quot;>
+                        <path d=&quot;M0,45 L10,40 L20,42 L30,35 L40,38 L50,20 L60,25 L70,10 L80,18 L90,12 L100,15&quot; fill=&quot;none&quot; stroke=&quot;#6366F1&quot; stroke-width=&quot;1.5&quot; vector-effect=&quot;non-scaling-stroke&quot;/>
+                        <path d=&quot;M0,45 L10,40 L20,42 L30,35 L40,38 L50,20 L60,25 L70,10 L80,18 L90,12 L100,15 L100,50 L0,50 Z&quot; fill=&quot;url(#chartGradient)&quot; opacity=&quot;0.2&quot;/>
+                        <defs>
+                            <linearGradient id=&quot;chartGradient&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;0&quot; y2=&quot;1&quot;>
+                                <stop offset=&quot;0%&quot; stop-color=&quot;#6366F1&quot;/>
+                                <stop offset=&quot;100%&quot; stop-color=&quot;transparent&quot;/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Current Price Line -->
+                        <line x1=&quot;0&quot; y1=&quot;15&quot; x2=&quot;100&quot; y2=&quot;15&quot; stroke=&quot;#10B981&quot; stroke-width=&quot;0.5&quot; stroke-dasharray=&quot;2,2&quot;/>
+                    </svg>
+                    <div class=&quot;absolute right-0 top-[15%] translate-y-[-50%] bg-emerald-500 text-[10px] px-1 font-bold rounded&quot;>2263.80</div>
+                </div>
+
+                <div class=&quot;flex justify-between text-[10px] text-slate-400&quot;>
+                    <span class=&quot;text-emerald-400 font-bold&quot;>Gold vs US Dollar</span>
+                    <span>H: 2263.80 L: 2260.54</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Entry Section -->
+        <section class=&quot;px-4 py-2&quot;>
+            <div class=&quot;glass-card rounded-3xl p-5&quot;>
+                <div class=&quot;flex justify-between items-center mb-4&quot;>
+                    <div class=&quot;relative&quot;>
+                        <span class=&quot;text-xs font-bold text-indigo-400 uppercase tracking-widest&quot;>Market Execution</span>
+                        <div class=&quot;tab-active-indicator w-full&quot;></div>
+                    </div>
+                    <span class=&quot;text-xs font-bold text-slate-500 uppercase tracking-widest&quot;>Pending Order</span>
+                </div>
+
+                <!-- Volume Control -->
+                <div class=&quot;mb-4&quot;>
+                    <label class=&quot;text-[10px] text-slate-400 uppercase block mb-1&quot;>Volume (Lots)</label>
+                    <div class=&quot;flex items-center justify-between input-dark rounded-xl p-3&quot;>
+                        <button class=&quot;text-indigo-400 font-bold px-2 text-lg&quot;>-</button>
+                        <span class=&quot;text-lg font-bold&quot;>0.10</span>
+                        <button class=&quot;text-indigo-400 font-bold px-2 text-lg&quot;>+</button>
+                    </div>
+                </div>
+
+                <!-- TP / SL -->
+                <div class=&quot;grid grid-cols-2 gap-3 mb-5&quot;>
+                    <div>
+                        <label class=&quot;text-[10px] text-slate-400 uppercase block mb-1&quot;>Take Profit</label>
+                        <div class=&quot;input-dark rounded-xl p-3 text-center&quot;>
+                            <span class=&quot;text-sm font-bold text-emerald-400&quot;>2261.69</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class=&quot;text-[10px] text-slate-400 uppercase block mb-1&quot;>Stop Loss</label>
+                        <div class=&quot;input-dark rounded-xl p-3 text-center&quot;>
+                            <span class=&quot;text-sm font-bold text-red-400&quot;>2259.69</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buy/Sell Buttons -->
+                <div class=&quot;grid grid-cols-2 gap-3&quot;>
+                    <button class=&quot;bg-red-500/20 border border-red-500/50 text-red-500 py-3 rounded-2xl font-bold transition-transform active:scale-95&quot;>
+                        <div class=&quot;text-[10px] opacity-60&quot;>SELL</div>
+                        <div class=&quot;text-lg&quot;>2263.80</div>
+                    </button>
+                    <button class=&quot;bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 py-3 rounded-2xl font-bold transition-transform active:scale-95&quot;>
+                        <div class=&quot;text-[10px] opacity-60&quot;>BUY</div>
+                        <div class=&quot;text-lg&quot;>2264.30</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Positions List Section -->
+        <section class=&quot;px-4 py-2 pb-10&quot;>
+            <div class=&quot;flex items-center justify-between px-2 mb-3&quot;>
+                <div class=&quot;flex space-x-4&quot;>
+                    <h3 class=&quot;text-xs font-bold text-white border-b-2 border-indigo-500 pb-1&quot;>Open Positions (1)</h3>
+                    <h3 class=&quot;text-xs font-bold text-slate-500&quot;>History</h3>
+                </div>
+                <i class=&quot;fa-solid fa-list-check text-slate-500 text-xs&quot;></i>
+            </div>
+
+            <!-- Single Position Item -->
+            <div class=&quot;glass-card rounded-2xl p-4 mb-3&quot;>
+                <div class=&quot;flex justify-between items-start mb-2&quot;>
+                    <div class=&quot;flex items-center space-x-2&quot;>
+                        <span class=&quot;bg-emerald-500/20 text-emerald-500 text-[9px] font-bold px-2 py-0.5 rounded&quot;>BUY</span>
+                        <span class=&quot;font-bold text-sm&quot;>XAUUSD</span>
+                        <span class=&quot;text-[10px] text-slate-400&quot;>0.10 Lots</span>
+                    </div>
+                    <span class=&quot;text-emerald-400 font-bold text-sm&quot;>+$3,697,000.21</span>
+                </div>
+                <div class=&quot;flex justify-between items-end&quot;>
+                    <div class=&quot;grid grid-cols-2 gap-x-4 gap-y-1&quot;>
+                        <div>
+                            <p class=&quot;text-[9px] text-slate-500 uppercase&quot;>Open Price</p>
+                            <p class=&quot;text-[11px] font-medium&quot;>2300.77</p>
+                        </div>
+                        <div>
+                            <p class=&quot;text-[9px] text-slate-500 uppercase&quot;>Current</p>
+                            <p class=&quot;text-[11px] font-medium&quot;>2263.80</p>
+                        </div>
+                    </div>
+                    <button class=&quot;bg-slate-800 border border-slate-700 px-4 py-1.5 rounded-lg text-[10px] font-bold text-red-400&quot;>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/95 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">page 3</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Trading</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { color: #6366F1; }
+        .chart-grid { background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 20px 20px; }
+        .candlestick-green { width: 4px; background: #10b981; border-radius: 1px; }
+        .candlestick-red { width: 4px; background: #ef4444; border-radius: 1px; }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container (375x812 Optimization) -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-24 overflow-x-hidden&quot;>
+        
+        <!-- Header / Status Bar -->
+        <header class=&quot;flex items-center justify-between px-5 pt-6 pb-2&quot;>
+            <div class=&quot;flex items-center space-x-2&quot;>
+                <div class=&quot;w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center&quot;>
+                    <i class=&quot;fa-solid fa-layer-group text-sm&quot;></i>
+                </div>
+                <h2 class=&quot;text-sm font-bold tracking-tight&quot;>Mirrox</h2>
+            </div>
+            <div class=&quot;flex items-center space-x-3&quot;>
+                <div class=&quot;flex flex-col items-end&quot;>
+                    <span class=&quot;text-[10px] text-slate-400&quot;>Equity</span>
+                    <span class=&quot;text-xs font-bold&quot;>$3,706,972.54</span>
+                </div>
+                <button class=&quot;w-8 h-8 rounded-full border-2 border-indigo-500/30 overflow-hidden&quot;>
+                    <img src=&quot;https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&quot; alt=&quot;User&quot;>
+                </button>
+            </div>
+        </header>
+
+        <!-- Verification Notice -->
+        <section class=&quot;px-5 py-2&quot;>
+            <div class=&quot;bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-start space-x-3&quot;>
+                <i class=&quot;fa-solid fa-circle-exclamation text-amber-500 mt-1&quot;></i>
+                <div class=&quot;flex-1&quot;>
+                    <p class=&quot;text-[10px] font-bold text-amber-500 uppercase tracking-wide&quot;>Demo Account Mode</p>
+                    <p class=&quot;text-[11px] text-amber-200/70 leading-tight mb-2&quot;>Verify identity with a valid ID to unlock Real Trading.</p>
+                    <button class=&quot;bg-amber-500 text-slate-900 text-[10px] font-bold px-3 py-1.5 rounded-lg&quot;>Verify Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Symbol Info & Chart -->
+        <section class=&quot;px-5 py-3&quot;>
+            <div class=&quot;flex justify-between items-end mb-4&quot;>
+                <div>
+                    <h1 class=&quot;text-xl font-bold&quot;>Gold vs US Dollar</h1>
+                    <div class=&quot;flex items-center space-x-2 text-[11px]&quot;>
+                        <span class=&quot;text-emerald-400 font-bold&quot;>2263.80</span>
+                        <span class=&quot;text-emerald-500/80&quot;>+3.10000 (0.14%)</span>
+                    </div>
+                </div>
+                <div class=&quot;flex bg-slate-800 rounded-lg p-1 space-x-1&quot;>
+                    <button class=&quot;px-2 py-1 text-[10px] bg-indigo-600 rounded-md&quot;>1h</button>
+                    <button class=&quot;px-2 py-1 text-[10px] text-slate-400&quot;>4h</button>
+                    <button class=&quot;px-2 py-1 text-[10px] text-slate-400&quot;>1d</button>
+                </div>
+            </div>
+
+            <!-- Main Chart Area -->
+            <div class=&quot;h-48 w-full glass-card rounded-2xl relative overflow-hidden chart-grid&quot;>
+                <!-- Simplified SVG Candlesticks -->
+                <svg viewBox=&quot;0 0 300 150&quot; class=&quot;absolute inset-0 w-full h-full&quot;>
+                    <path d=&quot;M0,120 L40,110 L80,130 L120,90 L160,100 L200,60 L240,70 L280,30 L320,40&quot; fill=&quot;none&quot; stroke=&quot;#6366F1&quot; stroke-width=&quot;2&quot; />
+                    <circle cx=&quot;280&quot; cy=&quot;30&quot; r=&quot;3&quot; fill=&quot;#6366F1&quot; />
+                    <line x1=&quot;0&quot; y1=&quot;30&quot; x2=&quot;300&quot; y2=&quot;30&quot; stroke=&quot;#6366F1&quot; stroke-dasharray=&quot;4&quot; opacity=&quot;0.3&quot; />
+                </svg>
+                <div class=&quot;absolute right-2 top-[20%] bg-indigo-500 text-[10px] px-1.5 py-0.5 rounded&quot;>2263.80</div>
+                
+                <!-- Chart Controls Overlay -->
+                <div class=&quot;absolute bottom-3 left-3 flex space-x-2&quot;>
+                    <button class=&quot;w-7 h-7 rounded-lg bg-slate-800/80 flex items-center justify-center border border-white/10&quot;>
+                        <i class=&quot;fa-solid fa-chart-area text-[10px]&quot;></i>
+                    </button>
+                    <button class=&quot;w-7 h-7 rounded-lg bg-slate-800/80 flex items-center justify-center border border-white/10&quot;>
+                        <i class=&quot;fa-solid fa-wand-magic-sparkles text-[10px]&quot;></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trading Controls -->
+        <section class=&quot;px-5 py-2&quot;>
+            <div class=&quot;glass-card rounded-3xl p-4&quot;>
+                <div class=&quot;flex bg-slate-900/50 rounded-xl p-1 mb-4&quot;>
+                    <button class=&quot;flex-1 py-2 text-xs font-bold bg-indigo-600 rounded-lg&quot;>Market Execution</button>
+                    <button class=&quot;flex-1 py-2 text-xs font-bold text-slate-500&quot;>Pending Order</button>
+                </div>
+
+                <div class=&quot;grid grid-cols-2 gap-4 mb-4&quot;>
+                    <div class=&quot;space-y-1&quot;>
+                        <label class=&quot;text-[10px] text-slate-400 uppercase font-bold ml-1&quot;>Volume (Lots)</label>
+                        <div class=&quot;bg-slate-900/80 border border-slate-700 rounded-xl flex items-center justify-between p-2&quot;>
+                            <button class=&quot;text-indigo-400 px-2&quot;><i class=&quot;fa-solid fa-minus text-xs&quot;></i></button>
+                            <span class=&quot;text-sm font-bold&quot;>0.10</span>
+                            <button class=&quot;text-indigo-400 px-2&quot;><i class=&quot;fa-solid fa-plus text-xs&quot;></i></button>
+                        </div>
+                    </div>
+                    <div class=&quot;space-y-1&quot;>
+                        <label class=&quot;text-[10px] text-slate-400 uppercase font-bold ml-1&quot;>Take Profit</label>
+                        <div class=&quot;bg-slate-900/80 border border-slate-700 rounded-xl flex items-center justify-center p-2&quot;>
+                            <span class=&quot;text-sm font-bold text-emerald-400&quot;>2281.69</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=&quot;grid grid-cols-2 gap-4&quot;>
+                    <button class=&quot;bg-red-500/10 border border-red-500/30 rounded-2xl py-3 flex flex-col items-center group active:scale-95 transition-transform&quot;>
+                        <span class=&quot;text-[9px] text-red-500/60 font-bold uppercase&quot;>Sell</span>
+                        <span class=&quot;text-lg font-bold text-red-500&quot;>2263.80</span>
+                    </button>
+                    <button class=&quot;bg-emerald-500/10 border border-emerald-500/30 rounded-2xl py-3 flex flex-col items-center group active:scale-95 transition-transform&quot;>
+                        <span class=&quot;text-[9px] text-emerald-500/60 font-bold uppercase&quot;>Buy</span>
+                        <span class=&quot;text-lg font-bold text-emerald-500&quot;>2264.30</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Positions -->
+        <section class=&quot;px-5 py-4&quot;>
+            <div class=&quot;flex items-center justify-between mb-3&quot;>
+                <h3 class=&quot;text-sm font-bold&quot;>Open Positions <span class=&quot;text-indigo-400&quot;>(1)</span></h3>
+                <span class=&quot;text-[10px] text-slate-400 font-bold uppercase&quot;>History</span>
+            </div>
+            
+            <div class=&quot;glass-card rounded-2xl p-4 border-l-4 border-l-emerald-500&quot;>
+                <div class=&quot;flex justify-between items-start mb-2&quot;>
+                    <div>
+                        <div class=&quot;flex items-center space-x-2&quot;>
+                            <span class=&quot;text-xs font-bold&quot;>XAUUSD</span>
+                            <span class=&quot;text-[10px] bg-emerald-500/20 text-emerald-500 px-1.5 py-0.5 rounded font-bold uppercase&quot;>Buy 0.1</span>
+                        </div>
+                        <p class=&quot;text-[10px] text-slate-400 mt-1&quot;>Open: 2300.77 → Current: 2263.80</p>
+                    </div>
+                    <div class=&quot;text-right&quot;>
+                        <p class=&quot;text-sm font-bold text-emerald-400&quot;>+$3,697,000.21</p>
+                        <p class=&quot;text-[9px] text-red-400&quot;>Swap: -27.61 USD</p>
+                    </div>
+                </div>
+                <button class=&quot;w-full mt-2 py-2 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white/5&quot;>Close Position</button>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/95 rounded-t-[32px] flex items-center justify-around px-4 border-t-0 shadow-2xl&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Market.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Market</span>
+            </a>
+            <div class=&quot;relative -top-6&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-money-bill-transfer text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">page 5</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Profile</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { color: #6366F1; }
+        .status-badge { background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%); }
+        .profile-gradient { background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent); }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-28 profile-gradient overflow-x-hidden&quot;>
+        
+        <!-- Header -->
+        <header class=&quot;flex items-center justify-between px-6 pt-8 pb-4&quot;>
+            <h1 class=&quot;text-xl font-bold&quot;>Profile</h1>
+            <button class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                <i class=&quot;fa-solid fa-gear text-slate-400&quot;></i>
+            </button>
+        </header>
+
+        <!-- User Identity Section -->
+        <section class=&quot;px-6 py-4 flex flex-col items-center&quot;>
+            <div class=&quot;relative mb-4&quot;>
+                <div class=&quot;w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-purple-500&quot;>
+                    <div class=&quot;w-full h-full rounded-full bg-slate-900 border-4 border-[#0F172A] overflow-hidden&quot;>
+                        <img src=&quot;https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&quot; alt=&quot;User Avatar&quot; class=&quot;w-full h-full object-cover&quot;>
+                    </div>
+                </div>
+                <div class=&quot;absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 border-4 border-[#0F172A] rounded-full&quot;></div>
+            </div>
+            <h2 class=&quot;text-lg font-bold&quot;>Alex Richards</h2>
+            <p class=&quot;text-slate-400 text-xs mb-2&quot;>Account ID: MRX-67836</p>
+            <div class=&quot;flex space-x-2&quot;>
+                <span class=&quot;px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-[10px] font-bold border border-indigo-500/30 uppercase tracking-wider&quot;>Demo Mode</span>
+                <span class=&quot;px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-[10px] font-bold border border-slate-700 uppercase tracking-wider&quot;>Level 4</span>
+            </div>
+        </section>
+
+        <!-- Verification Alert (From Screenshot) -->
+        <section class=&quot;px-6 py-2&quot;>
+            <div class=&quot;bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-center space-x-4&quot;>
+                <div class=&quot;w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0&quot;>
+                    <i class=&quot;fa-solid fa-triangle-exclamation text-amber-500&quot;></i>
+                </div>
+                <div class=&quot;flex-1&quot;>
+                    <p class=&quot;text-xs font-bold text-amber-500 uppercase tracking-tight&quot;>Verify Identity</p>
+                    <p class=&quot;text-[10px] text-slate-300 leading-tight&quot;>Unlock real trading and withdrawals by verifying your ID.</p>
+                </div>
+                <button class=&quot;bg-amber-500 text-slate-900 text-[10px] font-black px-3 py-2 rounded-lg whitespace-nowrap&quot;>VERIFY</button>
+            </div>
+        </section>
+
+        <!-- Financial Summary -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;grid grid-cols-2 gap-3&quot;>
+                <div class=&quot;glass-card rounded-2xl p-4&quot;>
+                    <p class=&quot;text-[10px] text-slate-400 uppercase font-semibold mb-1&quot;>Total Equity</p>
+                    <p class=&quot;text-sm font-bold text-white&quot;>$3,706,972.54</p>
+                </div>
+                <div class=&quot;glass-card rounded-2xl p-4&quot;>
+                    <p class=&quot;text-[10px] text-slate-400 uppercase font-semibold mb-1&quot;>Total Profit</p>
+                    <p class=&quot;text-sm font-bold text-emerald-400&quot;>+$3.69M</p>
+                </div>
+                <div class=&quot;glass-card rounded-2xl p-4&quot;>
+                    <p class=&quot;text-[10px] text-slate-400 uppercase font-semibold mb-1&quot;>Free Margin</p>
+                    <p class=&quot;text-sm font-bold text-white&quot;>$3,706,742</p>
+                </div>
+                <div class=&quot;glass-card rounded-2xl p-4&quot;>
+                    <p class=&quot;text-[10px] text-slate-400 uppercase font-semibold mb-1&quot;>Margin Level</p>
+                    <p class=&quot;text-sm font-bold text-indigo-400&quot;>1,611,187%</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Menu List -->
+        <section class=&quot;px-6 py-2 space-y-3&quot;>
+            <h3 class=&quot;text-xs font-bold text-slate-500 uppercase tracking-widest ml-1&quot;>Management</h3>
+            
+            <a href=&quot;#&quot; class=&quot;flex items-center justify-between glass-card p-4 rounded-2xl transition-active active:scale-[0.98]&quot;>
+                <div class=&quot;flex items-center space-x-3&quot;>
+                    <div class=&quot;w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400&quot;>
+                        <i class=&quot;fa-solid fa-clock-rotate-left&quot;></i>
+                    </div>
+                    <span class=&quot;text-sm font-medium&quot;>Trading History</span>
+                </div>
+                <i class=&quot;fa-solid fa-chevron-right text-slate-600 text-xs&quot;></i>
+            </a>
+
+            <a href=&quot;#&quot; class=&quot;flex items-center justify-between glass-card p-4 rounded-2xl transition-active active:scale-[0.98]&quot;>
+                <div class=&quot;flex items-center space-x-3&quot;>
+                    <div class=&quot;w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400&quot;>
+                        <i class=&quot;fa-solid fa-wallet&quot;></i>
+                    </div>
+                    <span class=&quot;text-sm font-medium&quot;>Payment Methods</span>
+                </div>
+                <i class=&quot;fa-solid fa-chevron-right text-slate-600 text-xs&quot;></i>
+            </a>
+
+            <a href=&quot;#&quot; class=&quot;flex items-center justify-between glass-card p-4 rounded-2xl transition-active active:scale-[0.98]&quot;>
+                <div class=&quot;flex items-center space-x-3&quot;>
+                    <div class=&quot;w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400&quot;>
+                        <i class=&quot;fa-solid fa-shield-halved&quot;></i>
+                    </div>
+                    <span class=&quot;text-sm font-medium&quot;>Security & 2FA</span>
+                </div>
+                <i class=&quot;fa-solid fa-chevron-right text-slate-600 text-xs&quot;></i>
+            </a>
+
+            <a href=&quot;#&quot; class=&quot;flex items-center justify-between glass-card p-4 rounded-2xl transition-active active:scale-[0.98]&quot;>
+                <div class=&quot;flex items-center space-x-3&quot;>
+                    <div class=&quot;w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400&quot;>
+                        <i class=&quot;fa-solid fa-headset&quot;></i>
+                    </div>
+                    <span class=&quot;text-sm font-medium&quot;>Support Center</span>
+                </div>
+                <i class=&quot;fa-solid fa-chevron-right text-slate-600 text-xs&quot;></i>
+            </a>
+
+            <!-- Sign Out -->
+            <button class=&quot;w-full flex items-center justify-center space-x-2 py-4 text-red-400 font-bold text-sm&quot;>
+                <i class=&quot;fa-solid fa-right-from-bracket&quot;></i>
+                <span>Sign Out of Account</span>
+            </button>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">analytic page</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Analytics</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .chart-grid { background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 20px 20px; }
+        .active-tab { color: #6366F1; border-bottom: 2px solid #6366F1; }
+        .candlestick-green { fill: #10B981; stroke: #10B981; }
+        .candlestick-red { fill: #EF4444; stroke: #EF4444; }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-28 overflow-x-hidden&quot;>
+        
+        <!-- Top Status Bar -->
+        <header class=&quot;flex items-center justify-between px-6 pt-6 pb-2&quot;>
+            <div class=&quot;flex items-center space-x-3&quot;>
+                <a href=&quot;Home.html&quot; class=&quot;w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-chevron-left text-xs&quot;></i>
+                </a>
+                <div>
+                    <h2 class=&quot;text-sm font-bold&quot;>XAUUSD</h2>
+                    <p class=&quot;text-[10px] text-emerald-400 font-medium&quot;>Market Open • Live</p>
+                </div>
+            </div>
+            <div class=&quot;flex items-center bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 rounded-full&quot;>
+                <span class=&quot;text-[10px] font-bold text-yellow-500&quot;>DEMO MODE</span>
+            </div>
+        </header>
+
+        <!-- Dynamic Ticker (Stats Tape) -->
+        <div class=&quot;flex space-x-6 overflow-x-auto px-6 py-3 no-scrollbar border-b border-white/5&quot;>
+            <div class=&quot;flex-shrink-0&quot;>
+                <p class=&quot;text-[9px] text-slate-400 uppercase tracking-tighter&quot;>Equity</p>
+                <p class=&quot;text-xs font-bold&quot;>$3,706,972</p>
+            </div>
+            <div class=&quot;flex-shrink-0&quot;>
+                <p class=&quot;text-[9px] text-slate-400 uppercase tracking-tighter&quot;>Profit</p>
+                <p class=&quot;text-xs font-bold text-emerald-400&quot;>+$3.69M</p>
+            </div>
+            <div class=&quot;flex-shrink-0&quot;>
+                <p class=&quot;text-[9px] text-slate-400 uppercase tracking-tighter&quot;>Free Margin</p>
+                <p class=&quot;text-xs font-bold&quot;>$3,706,742</p>
+            </div>
+            <div class=&quot;flex-shrink-0&quot;>
+                <p class=&quot;text-[9px] text-slate-400 uppercase tracking-tighter&quot;>Margin Level</p>
+                <p class=&quot;text-xs font-bold text-indigo-400&quot;>161118%</p>
+            </div>
+        </div>
+
+        <!-- Timeframe & Tools -->
+        <div class=&quot;flex items-center justify-between px-4 py-3&quot;>
+            <div class=&quot;flex bg-slate-800/50 p-1 rounded-xl&quot;>
+                <button class=&quot;px-3 py-1.5 text-[10px] font-bold bg-indigo-600 rounded-lg&quot;>1H</button>
+                <button class=&quot;px-3 py-1.5 text-[10px] font-bold text-slate-400&quot;>4H</button>
+                <button class=&quot;px-3 py-1.5 text-[10px] font-bold text-slate-400&quot;>D</button>
+                <button class=&quot;px-3 py-1.5 text-[10px] font-bold text-slate-400&quot;>W</button>
+            </div>
+            <div class=&quot;flex space-x-2&quot;>
+                <button class=&quot;w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-chart-line text-xs text-indigo-400&quot;></i>
+                </button>
+                <button class=&quot;w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-wand-magic-sparkles text-xs text-slate-400&quot;></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Professional Chart Area -->
+        <section class=&quot;px-4 relative&quot;>
+            <div class=&quot;h-64 w-full glass-card rounded-2xl overflow-hidden relative chart-grid border-indigo-500/20&quot;>
+                <!-- Current Price Indicator Overlay -->
+                <div class=&quot;absolute right-0 top-1/2 -translate-y-1/2 z-10&quot;>
+                    <div class=&quot;bg-indigo-600 text-[10px] px-2 py-1 rounded-l-md font-bold shadow-lg&quot;>2263.80</div>
+                </div>
+                
+                <!-- SVG Candlesticks Placeholder -->
+                <svg viewBox=&quot;0 0 300 200&quot; class=&quot;w-full h-full p-4&quot;>
+                    <!-- Red Candle -->
+                    <rect x=&quot;20&quot; y=&quot;80&quot; width=&quot;8&quot; height=&quot;40&quot; class=&quot;candlestick-red&quot; />
+                    <line x1=&quot;24&quot; y1=&quot;70&quot; x2=&quot;24&quot; y2=&quot;130&quot; class=&quot;candlestick-red&quot; stroke-width=&quot;1&quot; />
+                    <!-- Green Candle -->
+                    <rect x=&quot;40&quot; y=&quot;60&quot; width=&quot;8&quot; height=&quot;50&quot; class=&quot;candlestick-green&quot; />
+                    <line x1=&quot;44&quot; y1=&quot;50&quot; x2=&quot;44&quot; y2=&quot;120&quot; class=&quot;candlestick-green&quot; stroke-width=&quot;1&quot; />
+                    <!-- Green Candle -->
+                    <rect x=&quot;60&quot; y=&quot;40&quot; width=&quot;8&quot; height=&quot;40&quot; class=&quot;candlestick-green&quot; />
+                    <line x1=&quot;64&quot; y1=&quot;30&quot; x2=&quot;64&quot; y2=&quot;90&quot; class=&quot;candlestick-green&quot; stroke-width=&quot;1&quot; />
+                    <!-- Red Candle -->
+                    <rect x=&quot;80&quot; y=&quot;55&quot; width=&quot;8&quot; height=&quot;30&quot; class=&quot;candlestick-red&quot; />
+                    <line x1=&quot;84&quot; y1=&quot;45&quot; x2=&quot;84&quot; y2=&quot;95&quot; class=&quot;candlestick-red&quot; stroke-width=&quot;1&quot; />
+                    <!-- Current Move Line -->
+                    <path d=&quot;M100 80 Q 150 20, 200 120 T 300 80&quot; fill=&quot;none&quot; stroke=&quot;#6366F1&quot; stroke-width=&quot;1.5&quot; stroke-dasharray=&quot;4&quot; opacity=&quot;0.6&quot; />
+                </svg>
+
+                <!-- Axis Labels -->
+                <div class=&quot;absolute bottom-2 left-4 text-[8px] text-slate-500 font-bold uppercase&quot;>14:00</div>
+                <div class=&quot;absolute bottom-2 right-12 text-[8px] text-slate-500 font-bold uppercase&quot;>15:00</div>
+            </div>
+        </section>
+
+        <!-- Trading Form -->
+        <section class=&quot;px-4 py-4&quot;>
+            <div class=&quot;glass-card rounded-3xl p-5 border-white/5&quot;>
+                <div class=&quot;flex items-center justify-between mb-4&quot;>
+                    <span class=&quot;text-xs font-bold&quot;>Volume (Lots)</span>
+                    <div class=&quot;flex items-center space-x-4 bg-slate-900 rounded-xl px-3 py-2 border border-slate-700&quot;>
+                        <button class=&quot;text-indigo-400 font-bold text-lg&quot;>-</button>
+                        <span class=&quot;text-sm font-bold w-12 text-center&quot;>0.10</span>
+                        <button class=&quot;text-indigo-400 font-bold text-lg&quot;>+</button>
+                    </div>
+                </div>
+
+                <div class=&quot;grid grid-cols-2 gap-4&quot;>
+                    <div class=&quot;space-y-1&quot;>
+                        <p class=&quot;text-[10px] text-slate-400 uppercase px-1&quot;>Take Profit</p>
+                        <div class=&quot;bg-slate-900/50 border border-slate-700 rounded-xl p-3 text-center&quot;>
+                            <span class=&quot;text-sm font-bold text-white&quot;>2281.69</span>
+                        </div>
+                    </div>
+                    <div class=&quot;space-y-1&quot;>
+                        <p class=&quot;text-[10px] text-slate-400 uppercase px-1&quot;>Stop Loss</p>
+                        <div class=&quot;bg-slate-900/50 border border-slate-700 rounded-xl p-3 text-center&quot;>
+                            <span class=&quot;text-sm font-bold text-white&quot;>2259.69</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=&quot;grid grid-cols-2 gap-4 mt-6&quot;>
+                    <button class=&quot;relative bg-red-500/10 border border-red-500/30 rounded-2xl py-4 overflow-hidden active:scale-95 transition-transform&quot;>
+                        <span class=&quot;block text-[10px] font-bold text-red-500/60 uppercase&quot;>SELL</span>
+                        <span class=&quot;text-lg font-bold text-red-500&quot;>2263.80</span>
+                        <div class=&quot;absolute top-0 right-0 p-1&quot;>
+                            <i class=&quot;fa-solid fa-arrow-down-long text-[8px] text-red-500&quot;></i>
+                        </div>
+                    </button>
+                    <button class=&quot;relative bg-emerald-500/10 border border-emerald-500/30 rounded-2xl py-4 overflow-hidden active:scale-95 transition-transform&quot;>
+                        <span class=&quot;block text-[10px] font-bold text-emerald-500/60 uppercase&quot;>BUY</span>
+                        <span class=&quot;text-lg font-bold text-emerald-500&quot;>2264.30</span>
+                        <div class=&quot;absolute top-0 right-0 p-1&quot;>
+                            <i class=&quot;fa-solid fa-arrow-up-long text-[8px] text-emerald-500&quot;></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Positions List -->
+        <section class=&quot;px-4&quot;>
+            <div class=&quot;flex items-center space-x-6 px-2 mb-4 text-xs font-bold text-slate-500 border-b border-white/5&quot;>
+                <button class=&quot;pb-2 active-tab&quot;>Open (1)</button>
+                <button class=&quot;pb-2&quot;>Pending (0)</button>
+                <button class=&quot;pb-2&quot;>History</button>
+            </div>
+            
+            <div class=&quot;space-y-3&quot;>
+                <div class=&quot;glass-card rounded-2xl p-4 flex items-center justify-between&quot;>
+                    <div class=&quot;flex items-center space-x-3&quot;>
+                        <div class=&quot;w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500 font-bold text-xs&quot;>BUY</div>
+                        <div>
+                            <p class=&quot;text-xs font-bold&quot;>XAUUSD <span class=&quot;text-slate-500 ml-1&quot;>0.10</span></p>
+                            <p class=&quot;text-[10px] text-slate-400&quot;>@ 2300.77</p>
+                        </div>
+                    </div>
+                    <div class=&quot;text-right&quot;>
+                        <p class=&quot;text-sm font-bold text-emerald-400&quot;>+$3,697,000.21</p>
+                        <p class=&quot;text-[9px] text-red-400&quot;>Swap: -$27.61</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">explore page</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Explore</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .sentiment-bar-green { height: 4px; background: #10b981; border-radius: 2px; }
+        .sentiment-bar-red { height: 4px; background: #ef4444; border-radius: 2px; }
+        .active-tab { color: #6366F1; }
+        .search-gradient { background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(30, 41, 59, 0.5) 100%); }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container (375x812 Optimization) -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-28 overflow-x-hidden&quot;>
+        
+        <!-- Header & Search -->
+        <header class=&quot;px-6 pt-8 pb-4&quot;>
+            <div class=&quot;flex items-center justify-between mb-6&quot;>
+                <h1 class=&quot;text-2xl font-bold tracking-tight&quot;>Explore</h1>
+                <div class=&quot;w-10 h-10 rounded-full border border-slate-700 overflow-hidden&quot;>
+                    <img src=&quot;https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&quot; alt=&quot;User Avatar&quot;>
+                </div>
+            </div>
+            <div class=&quot;relative group&quot;>
+                <i class=&quot;fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm&quot;></i>
+                <input type=&quot;text&quot; placeholder=&quot;Search markets, assets, news...&quot; 
+                    class=&quot;w-full bg-slate-800/50 border border-slate-700 rounded-2xl py-3.5 pl-11 pr-4 text-sm focus:outline-none focus:border-indigo-500/50 transition-all&quot;>
+            </div>
+        </header>
+
+        <!-- Category Chips -->
+        <div class=&quot;flex space-x-3 overflow-x-auto px-6 no-scrollbar mb-6&quot;>
+            <button class=&quot;flex-shrink-0 px-5 py-2 rounded-xl bg-indigo-600 text-xs font-bold&quot;>Trending</button>
+            <button class=&quot;flex-shrink-0 px-5 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold border border-slate-700&quot;>Forex</button>
+            <button class=&quot;flex-shrink-0 px-5 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold border border-slate-700&quot;>Crypto</button>
+            <button class=&quot;flex-shrink-0 px-5 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold border border-slate-700&quot;>Stocks</button>
+            <button class=&quot;flex-shrink-0 px-5 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold border border-slate-700&quot;>Indices</button>
+        </div>
+
+        <!-- Trending Section -->
+        <section class=&quot;px-6 mb-8&quot;>
+            <div class=&quot;flex items-center justify-between mb-4&quot;>
+                <h3 class=&quot;font-bold text-lg&quot;>Trending in <span class=&quot;text-indigo-400&quot;>FX</span></h3>
+                <i class=&quot;fa-solid fa-chevron-right text-slate-600 text-xs&quot;></i>
+            </div>
+            <div class=&quot;glass-card rounded-3xl overflow-hidden&quot;>
+                <div class=&quot;p-4 space-y-4&quot;>
+                    <!-- Row 1 -->
+                    <div class=&quot;flex items-center justify-between&quot;>
+                        <div class=&quot;flex items-center space-x-3&quot;>
+                            <div class=&quot;w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center text-[10px]&quot;>🇪🇺</div>
+                            <div>
+                                <p class=&quot;text-xs font-bold&quot;>EUR/USD</p>
+                                <p class=&quot;text-[9px] text-slate-500&quot;>Euro / US Dollar</p>
+                            </div>
+                        </div>
+                        <div class=&quot;text-right&quot;>
+                            <p class=&quot;text-xs font-bold&quot;>1.08571</p>
+                            <p class=&quot;text-[10px] text-red-500&quot;>-0.09%</p>
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class=&quot;flex items-center justify-between&quot;>
+                        <div class=&quot;flex items-center space-x-3&quot;>
+                            <div class=&quot;w-8 h-8 rounded-full bg-red-600/20 flex items-center justify-center text-[10px]&quot;>🇬🇧</div>
+                            <div>
+                                <p class=&quot;text-xs font-bold&quot;>GBP/USD</p>
+                                <p class=&quot;text-[9px] text-slate-500&quot;>British Pound</p>
+                            </div>
+                        </div>
+                        <div class=&quot;text-right&quot;>
+                            <p class=&quot;text-xs font-bold&quot;>1.27766</p>
+                            <p class=&quot;text-[10px] text-emerald-500&quot;>+0.17%</p>
+                        </div>
+                    </div>
+                    <!-- Row 3 -->
+                    <div class=&quot;flex items-center justify-between&quot;>
+                        <div class=&quot;flex items-center space-x-3&quot;>
+                            <div class=&quot;w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center text-[10px]&quot;>🛢️</div>
+                            <div>
+                                <p class=&quot;text-xs font-bold&quot;>Crude Oil</p>
+                                <p class=&quot;text-[9px] text-slate-500&quot;>WTI Market</p>
+                            </div>
+                        </div>
+                        <div class=&quot;text-right&quot;>
+                            <p class=&quot;text-xs font-bold&quot;>0.99970</p>
+                            <p class=&quot;text-[10px] text-red-500&quot;>-0.11%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sentiment Section -->
+        <section class=&quot;px-6 mb-8&quot;>
+            <h3 class=&quot;font-bold text-lg mb-4&quot;>Global Trader Sentiment</h3>
+            <div class=&quot;glass-card rounded-3xl p-5 space-y-6&quot;>
+                <!-- Sentiment Item 1 -->
+                <div>
+                    <div class=&quot;flex justify-between items-center mb-2&quot;>
+                        <div class=&quot;flex items-center space-x-2&quot;>
+                            <i class=&quot;fa-solid fa-coins text-yellow-500 text-xs&quot;></i>
+                            <span class=&quot;text-xs font-bold&quot;>XAUUSD</span>
+                        </div>
+                        <span class=&quot;text-[10px] font-bold text-emerald-400&quot;>100% Bullish</span>
+                    </div>
+                    <div class=&quot;w-full bg-slate-800 rounded-full h-1 overflow-hidden flex&quot;>
+                        <div class=&quot;sentiment-bar-green w-full&quot;></div>
+                    </div>
+                </div>
+                <!-- Sentiment Item 2 -->
+                <div>
+                    <div class=&quot;flex justify-between items-center mb-2&quot;>
+                        <div class=&quot;flex items-center space-x-2&quot;>
+                            <i class=&quot;fa-solid fa-euro-sign text-blue-400 text-xs&quot;></i>
+                            <span class=&quot;text-xs font-bold&quot;>EURUSD</span>
+                        </div>
+                        <span class=&quot;text-[10px] font-bold text-red-400&quot;>100% Bearish</span>
+                    </div>
+                    <div class=&quot;w-full bg-slate-800 rounded-full h-1 overflow-hidden flex&quot;>
+                        <div class=&quot;sentiment-bar-red w-full&quot;></div>
+                    </div>
+                </div>
+                <!-- Sentiment Item 3 -->
+                <div>
+                    <div class=&quot;flex justify-between items-center mb-2&quot;>
+                        <div class=&quot;flex items-center space-x-2&quot;>
+                            <i class=&quot;fa-brands fa-bitcoin text-orange-500 text-xs&quot;></i>
+                            <span class=&quot;text-xs font-bold&quot;>BTCUSD</span>
+                        </div>
+                        <div class=&quot;flex space-x-4 text-[10px] font-bold&quot;>
+                            <span class=&quot;text-emerald-400&quot;>50%</span>
+                            <span class=&quot;text-red-400&quot;>50%</span>
+                        </div>
+                    </div>
+                    <div class=&quot;w-full bg-slate-800 rounded-full h-1 overflow-hidden flex&quot;>
+                        <div class=&quot;sentiment-bar-green w-1/2&quot;></div>
+                        <div class=&quot;sentiment-bar-red w-1/2&quot;></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Movers -->
+        <section class=&quot;px-6 pb-4&quot;>
+            <h3 class=&quot;font-bold text-lg mb-4&quot;>Market <span class=&quot;text-indigo-400&quot;>Movers</span></h3>
+            <div class=&quot;space-y-3&quot;>
+                <!-- Mover 1 -->
+                <div class=&quot;glass-card rounded-2xl p-4 flex items-center justify-between border-l-4 border-l-emerald-500&quot;>
+                    <div class=&quot;flex items-center space-x-4&quot;>
+                        <div class=&quot;w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-400&quot;>U</div>
+                        <div>
+                            <p class=&quot;text-xs font-bold&quot;>USD/JPY</p>
+                            <p class=&quot;text-[9px] text-slate-500&quot;>Range: 151.064 - 156.772</p>
+                        </div>
+                    </div>
+                    <div class=&quot;text-right&quot;>
+                        <span class=&quot;text-emerald-400 font-bold text-sm&quot;>+4.14%</span>
+                    </div>
+                </div>
+                <!-- Mover 2 -->
+                <div class=&quot;glass-card rounded-2xl p-4 flex items-center justify-between border-l-4 border-l-red-500&quot;>
+                    <div class=&quot;flex items-center space-x-4&quot;>
+                        <div class=&quot;w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center font-bold text-blue-400&quot;>E</div>
+                        <div>
+                            <p class=&quot;text-xs font-bold&quot;>Euro Stoxx 50</p>
+                            <p class=&quot;text-[9px] text-slate-500&quot;>Range: 4982 - 5087</p>
+                        </div>
+                    </div>
+                    <div class=&quot;text-right&quot;>
+                        <span class=&quot;text-red-400 font-bold text-sm&quot;>-0.40%</span>
+                    </div>
+                </div>
+                <!-- Mover 3 -->
+                <div class=&quot;glass-card rounded-2xl p-4 flex items-center justify-between border-l-4 border-l-red-500&quot;>
+                    <div class=&quot;flex items-center space-x-4&quot;>
+                        <div class=&quot;w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center font-bold text-orange-400&quot;>C</div>
+                        <div>
+                            <p class=&quot;text-xs font-bold&quot;>CHF/JPY</p>
+                            <p class=&quot;text-[9px] text-slate-500&quot;>Range: 164.047 - 166.634</p>
+                        </div>
+                    </div>
+                    <div class=&quot;text-right&quot;>
+                        <span class=&quot;text-red-400 font-bold text-sm&quot;>-1.66%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Explore.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-compass text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Explore</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none z-50&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">finances page</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Finances</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { color: #6366F1; }
+        .input-field { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; color: white; padding: 12px 16px; width: 100%; outline: none; transition: border-color 0.2s; }
+        .input-field:focus { border-color: #6366F1; }
+        .dashed-border { border: 1px dashed rgba(99, 102, 241, 0.4); }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container (375x812 Optimization) -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-24 overflow-x-hidden&quot;>
+        
+        <!-- Header -->
+        <header class=&quot;flex items-center justify-between px-6 pt-8 pb-4&quot;>
+            <div class=&quot;flex items-center space-x-3&quot;>
+                <div class=&quot;w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center border-2 border-indigo-400/30 overflow-hidden&quot;>
+                    <img src=&quot;https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&quot; alt=&quot;User Avatar&quot;>
+                </div>
+                <div>
+                    <p class=&quot;text-xs text-slate-400&quot;>Account #MRX-67836</p>
+                    <div class=&quot;flex items-center space-x-2&quot;>
+                        <h2 class=&quot;text-sm font-semibold&quot;>Alex Richards</h2>
+                        <span class=&quot;bg-indigo-500/20 text-indigo-400 text-[8px] font-bold px-1.5 py-0.5 rounded border border-indigo-500/30 uppercase&quot;>Demo</span>
+                    </div>
+                </div>
+            </div>
+            <div class=&quot;flex space-x-3&quot;>
+                <button class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-headset text-slate-400&quot;></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Segmented Control Tabs -->
+        <div class=&quot;px-6 py-2&quot;>
+            <div class=&quot;bg-slate-800/50 p-1 rounded-2xl flex items-center&quot;>
+                <button class=&quot;flex-1 bg-indigo-600 py-2.5 rounded-xl text-xs font-bold transition-all&quot;>
+                    <i class=&quot;fa-solid fa-circle-plus mr-2&quot;></i>Deposit
+                </button>
+                <button class=&quot;flex-1 text-slate-400 py-2.5 rounded-xl text-xs font-bold&quot;>
+                    <i class=&quot;fa-solid fa-circle-minus mr-2&quot;></i>Withdraw
+                </button>
+                <button class=&quot;flex-1 text-slate-400 py-2.5 rounded-xl text-xs font-bold&quot;>
+                    <i class=&quot;fa-solid fa-clock-rotate-left mr-2&quot;></i>History
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Deposit Card -->
+        <section class=&quot;px-6 pt-4&quot;>
+            <div class=&quot;glass-card rounded-[32px] p-5&quot;>
+                <h3 class=&quot;text-lg font-bold mb-4&quot;>New Deposit Request</h3>
+                
+                <div class=&quot;space-y-4&quot;>
+                    <!-- Amount Input -->
+                    <div>
+                        <label class=&quot;text-[10px] uppercase font-bold text-slate-400 ml-2 mb-1 block tracking-wider&quot;>Amount (USD)</label>
+                        <div class=&quot;relative&quot;>
+                            <input type=&quot;number&quot; placeholder=&quot;e.g. 5000&quot; class=&quot;input-field pr-12 text-sm font-medium&quot;>
+                            <span class=&quot;absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xs&quot;>USD</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div>
+                        <label class=&quot;text-[10px] uppercase font-bold text-slate-400 ml-2 mb-1 block tracking-wider&quot;>Payment Method</label>
+                        <select class=&quot;input-field text-sm appearance-none&quot;>
+                            <option>Bank Transfer / IBAN</option>
+                            <option>Crypto (USDT-TRC20)</option>
+                            <option>Credit Card</option>
+                        </select>
+                    </div>
+
+                    <!-- Transfer Instructions -->
+                    <div class=&quot;bg-indigo-500/5 dashed-border rounded-2xl p-4&quot;>
+                        <div class=&quot;flex items-start space-x-3 mb-3&quot;>
+                            <i class=&quot;fa-solid fa-circle-info text-indigo-400 mt-0.5 text-xs&quot;></i>
+                            <h4 class=&quot;text-xs font-bold text-indigo-100 uppercase tracking-wide&quot;>Transfer Instructions</h4>
+                        </div>
+                        <div class=&quot;space-y-2&quot;>
+                            <div class=&quot;flex justify-between&quot;>
+                                <span class=&quot;text-[10px] text-slate-400&quot;>Bank Name</span>
+                                <span class=&quot;text-[10px] font-semibold&quot;>Global Merchant Bank</span>
+                            </div>
+                            <div class=&quot;flex justify-between&quot;>
+                                <span class=&quot;text-[10px] text-slate-400&quot;>Account Name</span>
+                                <span class=&quot;text-[10px] font-semibold&quot;>Mirrox Corporate</span>
+                            </div>
+                            <div class=&quot;mt-2 bg-slate-900/80 p-3 rounded-xl flex justify-between items-center border border-slate-700/50&quot;>
+                                <span class=&quot;text-[10px] font-mono text-indigo-400&quot;>PK00BANK00001234567890</span>
+                                <i class=&quot;fa-regular fa-copy text-indigo-400 text-xs&quot;></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reference Input -->
+                    <div>
+                        <label class=&quot;text-[10px] uppercase font-bold text-slate-400 ml-2 mb-1 block tracking-wider&quot;>Reference / Cheque No.</label>
+                        <input type=&quot;text&quot; placeholder=&quot;Bank Reference No.&quot; class=&quot;input-field text-sm&quot;>
+                        <p class=&quot;text-[9px] text-slate-500 mt-2 ml-1 leading-relaxed&quot;>Provide the confirmation number so Admin can verify your transfer.</p>
+                    </div>
+
+                    <!-- Action Button -->
+                    <button class=&quot;w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl text-sm shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition-all&quot;>
+                        Submit Deposit Request
+                    </button>
+
+                    <div class=&quot;flex items-center justify-center space-x-2 py-1&quot;>
+                        <i class=&quot;fa-solid fa-shield-halved text-[10px] text-slate-500&quot;></i>
+                        <span class=&quot;text-[9px] text-slate-500&quot;>All transactions are secure and encrypted</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Metrics Section -->
+        <section class=&quot;px-6 py-6&quot;>
+            <div class=&quot;bg-slate-800/30 rounded-3xl p-5 border border-slate-800&quot;>
+                <div class=&quot;flex items-center space-x-2 mb-4&quot;>
+                    <i class=&quot;fa-solid fa-chart-pie text-indigo-400 text-sm&quot;></i>
+                    <h3 class=&quot;text-xs font-bold uppercase tracking-wider&quot;>Account Metrics</h3>
+                </div>
+                <div class=&quot;space-y-4&quot;>
+                    <div class=&quot;flex justify-between items-center&quot;>
+                        <span class=&quot;text-xs text-slate-400&quot;>Equity</span>
+                        <span class=&quot;text-sm font-bold text-indigo-400&quot;>$3,173,963.426</span>
+                    </div>
+                    <div class=&quot;flex justify-between items-center&quot;>
+                        <span class=&quot;text-xs text-slate-400&quot;>Margin Used</span>
+                        <span class=&quot;text-sm font-bold text-red-400&quot;>$230.077</span>
+                    </div>
+                    <div class=&quot;flex justify-between items-center&quot;>
+                        <span class=&quot;text-xs text-slate-400&quot;>Free Margin</span>
+                        <span class=&quot;text-sm font-bold text-emerald-400&quot;>$3,173,733.349</span>
+                    </div>
+                    <div class=&quot;flex justify-between items-center&quot;>
+                        <span class=&quot;text-xs text-slate-400&quot;>Margin Level</span>
+                        <span class=&quot;text-sm font-bold text-orange-400&quot;>1379522.26%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Card -->
+        <section class=&quot;px-6 pb-6&quot;>
+            <div class=&quot;bg-indigo-600/10 rounded-3xl p-5 border border-indigo-500/20 text-center&quot;>
+                <h4 class=&quot;text-sm font-bold mb-1&quot;>Need Help?</h4>
+                <p class=&quot;text-[10px] text-slate-400 mb-4 leading-relaxed px-4&quot;>Our support team is available 24/5 to assist with your funding and withdrawal needs.</p>
+                <button class=&quot;w-full bg-slate-900 border border-slate-700 text-indigo-400 font-bold py-2.5 rounded-xl text-xs&quot;>
+                    Contact Support
+                </button>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Finances.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-wallet text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Finances</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">Verification Center page</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Verification Center</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .step-active { background: #6366F1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+        .upload-area { border: 2px dashed rgba(99, 102, 241, 0.3); }
+        .active-tab { color: #6366F1; }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container (375x812 Optimization) -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-28 overflow-x-hidden&quot;>
+        
+        <!-- Header -->
+        <header class=&quot;flex items-center justify-between px-6 pt-8 pb-4 sticky top-0 bg-[#0F172A]/80 backdrop-blur-lg z-50&quot;>
+            <div class=&quot;flex items-center space-x-4&quot;>
+                <a href=&quot;Profile.html&quot; class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                    <i class=&quot;fa-solid fa-chevron-left text-slate-400&quot;></i>
+                </a>
+                <h2 class=&quot;text-lg font-bold&quot;>Verification Center</h2>
+            </div>
+            <div class=&quot;w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20&quot;>
+                <i class=&quot;fa-solid fa-shield-halved text-amber-500 text-sm&quot;></i>
+            </div>
+        </header>
+
+        <!-- Progress Tracker -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;glass-card rounded-3xl p-5 mb-6&quot;>
+                <div class=&quot;flex justify-between items-center mb-4&quot;>
+                    <span class=&quot;text-xs font-semibold text-slate-400 uppercase tracking-wider&quot;>Verification Status</span>
+                    <span class=&quot;text-xs font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded-lg uppercase&quot;>Unverified</span>
+                </div>
+                <div class=&quot;flex items-center justify-between relative px-2&quot;>
+                    <div class=&quot;absolute h-0.5 bg-slate-700 w-full left-0 top-1/2 -translate-y-1/2 z-0&quot;></div>
+                    <div class=&quot;relative z-10 w-8 h-8 rounded-full step-active flex items-center justify-center text-xs font-bold&quot;>1</div>
+                    <div class=&quot;relative z-10 w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-500&quot;>2</div>
+                    <div class=&quot;relative z-10 w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-500&quot;>3</div>
+                </div>
+                <div class=&quot;flex justify-between mt-2 text-[10px] font-medium text-slate-400 px-0 text-center&quot;>
+                    <span class=&quot;w-12 text-indigo-400&quot;>Identity</span>
+                    <span class=&quot;w-12&quot;>Residence</span>
+                    <span class=&quot;w-12&quot;>Selfie</span>
+                </div>
+            </div>
+            <p class=&quot;text-sm text-slate-400 leading-relaxed px-1&quot;>
+                Verify your identity to unlock live trading, higher limits and fast withdrawals.
+            </p>
+        </section>
+
+        <!-- Verification Steps (Vertical Stack) -->
+        <div class=&quot;px-6 space-y-6&quot;>
+            
+            <!-- Step 1: Identity -->
+            <div class=&quot;glass-card rounded-[32px] p-6 border-indigo-500/20&quot;>
+                <div class=&quot;flex items-start justify-between mb-4&quot;>
+                    <div class=&quot;w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500&quot;>
+                        <i class=&quot;fa-solid fa-id-card text-xl&quot;></i>
+                    </div>
+                    <span class=&quot;text-[10px] font-bold text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded-full uppercase&quot;>Step 01</span>
+                </div>
+                <h3 class=&quot;text-lg font-bold mb-2&quot;>Proof of Identity Required</h3>
+                <p class=&quot;text-xs text-slate-400 leading-relaxed mb-6&quot;>Upload a government ID card, driving license, or passport. Your photo must match your registration details.</p>
+                
+                <div class=&quot;space-y-4&quot;>
+                    <div>
+                        <label class=&quot;text-[10px] font-bold text-slate-400 uppercase ml-1&quot;>Document Type</label>
+                        <div class=&quot;relative mt-1.5&quot;>
+                            <select class=&quot;w-full bg-slate-800/50 border border-slate-700 rounded-2xl py-3.5 px-4 text-sm appearance-none outline-none focus:border-indigo-500&quot;>
+                                <option>National ID Card</option>
+                                <option>Passport</option>
+                                <option>Driving License</option>
+                            </select>
+                            <i class=&quot;fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none&quot;></i>
+                        </div>
+                    </div>
+
+                    <div class=&quot;upload-area rounded-2xl p-8 flex flex-col items-center justify-center bg-indigo-500/5 group active:bg-indigo-500/10 transition-colors&quot;>
+                        <div class=&quot;w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center mb-3 shadow-lg shadow-indigo-500/20&quot;>
+                            <i class=&quot;fa-solid fa-cloud-arrow-up text-white&quot;></i>
+                        </div>
+                        <p class=&quot;text-sm font-semibold&quot;>Click to upload file</p>
+                        <p class=&quot;text-[10px] text-slate-500 mt-1&quot;>PNG, JPG or PDF (Max 10MB)</p>
+                    </div>
+
+                    <button class=&quot;w-full bg-slate-800 text-slate-500 font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 border border-slate-700&quot;>
+                        Submit Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Residence -->
+            <div class=&quot;glass-card rounded-[32px] p-6 opacity-60&quot;>
+                <div class=&quot;flex items-start justify-between mb-4&quot;>
+                    <div class=&quot;w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400&quot;>
+                        <i class=&quot;fa-solid fa-house-user text-xl&quot;></i>
+                    </div>
+                    <span class=&quot;text-[10px] font-bold text-slate-500 bg-slate-500/10 px-2 py-1 rounded-full uppercase&quot;>Locked</span>
+                </div>
+                <h3 class=&quot;text-lg font-bold mb-2&quot;>Proof of Residence</h3>
+                <p class=&quot;text-xs text-slate-400 leading-relaxed&quot;>Complete identity verification first to unlock this section.</p>
+            </div>
+
+            <!-- Guidelines -->
+            <section class=&quot;pb-8&quot;>
+                <h4 class=&quot;text-sm font-bold mb-4 ml-1&quot;>Document Guidelines</h4>
+                <div class=&quot;glass-card rounded-3xl p-5 space-y-4&quot;>
+                    <div class=&quot;flex items-start space-x-3&quot;>
+                        <div class=&quot;mt-1 w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center&quot;>
+                            <i class=&quot;fa-solid fa-check text-[8px] text-emerald-500&quot;></i>
+                        </div>
+                        <p class=&quot;text-xs text-slate-300&quot;><span class=&quot;font-bold text-white&quot;>Clear and Readable:</span> Ensure all text and the photo are clearly visible without blur.</p>
+                    </div>
+                    <div class=&quot;flex items-start space-x-3&quot;>
+                        <div class=&quot;mt-1 w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center&quot;>
+                            <i class=&quot;fa-solid fa-check text-[8px] text-emerald-500&quot;></i>
+                        </div>
+                        <p class=&quot;text-xs text-slate-300&quot;><span class=&quot;font-bold text-white&quot;>Valid Document:</span> Must not be expired. Use a government-issued ID.</p>
+                    </div>
+                    <div class=&quot;flex items-start space-x-3&quot;>
+                        <div class=&quot;mt-1 w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center&quot;>
+                            <i class=&quot;fa-solid fa-xmark text-[8px] text-red-500&quot;></i>
+                        </div>
+                        <p class=&quot;text-xs text-slate-300&quot;><span class=&quot;font-bold text-white&quot;>No Flash Glare:</span> Avoid taking photos with direct flash that obscures information.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Support Floating Button -->
+        <button class=&quot;fixed right-6 bottom-24 w-12 h-12 bg-indigo-600 rounded-full shadow-2xl shadow-indigo-500/40 flex items-center justify-center z-50&quot;>
+            <i class=&quot;fa-solid fa-comment-dots text-white&quot;></i>
+        </button>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">Affiliate Partnership page</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Affiliate Partnership</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { color: #6366F1; }
+        .copy-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(99, 102, 241, 0.2); }
+        .gradient-border { position: relative; }
+        .gradient-border::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.5), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-32 overflow-x-hidden&quot;>
+        
+        <!-- Top Navigation -->
+        <header class=&quot;px-6 pt-8 pb-4 flex items-center justify-between&quot;>
+            <a href=&quot;Profile.html&quot; class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                <i class=&quot;fa-solid fa-chevron-left text-slate-400&quot;></i>
+            </a>
+            <h1 class=&quot;text-sm font-bold uppercase tracking-widest text-slate-300&quot;>Partnership</h1>
+            <button class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                <i class=&quot;fa-solid fa-circle-question text-slate-400&quot;></i>
+            </button>
+        </header>
+
+        <!-- Hero Section / Partner Level -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;glass-card rounded-3xl p-6 relative overflow-hidden&quot;>
+                <div class=&quot;absolute -right-4 -top-4 w-32 h-32 bg-indigo-600/20 rounded-full blur-3xl&quot;></div>
+                <div class=&quot;relative z-10&quot;>
+                    <p class=&quot;text-[10px] text-indigo-400 font-bold uppercase tracking-wider mb-1&quot;>Partner Level</p>
+                    <h2 class=&quot;text-3xl font-black mb-1&quot;>Silver Agent</h2>
+                    <p class=&quot;text-xs text-slate-400&quot;>Grow the network and earn rewards</p>
+                    
+                    <div class=&quot;mt-6 flex items-center space-x-2&quot;>
+                        <div class=&quot;flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden&quot;>
+                            <div class=&quot;h-full bg-indigo-500 w-1/3&quot;></div>
+                        </div>
+                        <span class=&quot;text-[10px] font-bold text-slate-500&quot;>Tier 1/3</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section class=&quot;px-6 grid grid-cols-2 gap-4 py-2&quot;>
+            <div class=&quot;glass-card rounded-2xl p-5 flex flex-col items-center&quot;>
+                <div class=&quot;w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-3&quot;>
+                    <i class=&quot;fa-solid fa-users text-blue-500&quot;></i>
+                </div>
+                <p class=&quot;text-[10px] text-slate-400 uppercase font-bold mb-1&quot;>Total Invites</p>
+                <p class=&quot;text-xl font-bold&quot;>0</p>
+            </div>
+            <div class=&quot;glass-card rounded-2xl p-5 flex flex-col items-center&quot;>
+                <div class=&quot;w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3&quot;>
+                    <i class=&quot;fa-solid fa-sack-dollar text-emerald-500&quot;></i>
+                </div>
+                <p class=&quot;text-[10px] text-slate-400 uppercase font-bold mb-1&quot;>Total Earnings</p>
+                <p class=&quot;text-xl font-bold text-emerald-400&quot;>$0</p>
+            </div>
+        </section>
+
+        <!-- Referral Link Section -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;glass-card rounded-3xl p-6&quot;>
+                <h3 class=&quot;text-sm font-bold mb-2&quot;>Invite your friends</h3>
+                <p class=&quot;text-[11px] text-slate-400 leading-relaxed mb-4&quot;>Your friends get a premium trading experience, and you earn <span class=&quot;text-emerald-400 font-bold&quot;>$25</span> for every successful signup.</p>
+                
+                <div class=&quot;relative flex items-center&quot;>
+                    <div class=&quot;w-full h-12 rounded-xl copy-input px-4 flex items-center text-slate-400 text-[10px] font-medium overflow-hidden whitespace-nowrap&quot;>
+                        https://mirrox.vercel.app/register?ref=0CJN3VEM
+                    </div>
+                    <button class=&quot;absolute right-1 top-1 bottom-1 px-4 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold transition-all active:scale-95&quot;>
+                        Copy Link
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Referral Network Table -->
+        <section class=&quot;px-6 py-2&quot;>
+            <div class=&quot;flex items-center justify-between mb-4 px-1&quot;>
+                <h3 class=&quot;font-bold text-sm&quot;>Referral Network</h3>
+                <i class=&quot;fa-solid fa-filter text-slate-500 text-xs&quot;></i>
+            </div>
+            
+            <div class=&quot;glass-card rounded-3xl p-2 min-h-[200px] flex flex-col items-center justify-center&quot;>
+                <div class=&quot;w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mb-4&quot;>
+                    <i class=&quot;fa-solid fa-user-plus text-slate-600 text-xl&quot;></i>
+                </div>
+                <p class=&quot;text-xs text-slate-400 font-medium text-center px-8&quot;>No referrals found yet. Share your link to start earning!</p>
+                
+                <!-- Table Headers (Faded in mobile context) -->
+                <div class=&quot;w-full mt-8 grid grid-cols-4 px-4 opacity-30&quot;>
+                    <span class=&quot;text-[9px] font-bold uppercase&quot;>Client</span>
+                    <span class=&quot;text-[9px] font-bold uppercase text-center&quot;>Date</span>
+                    <span class=&quot;text-[9px] font-bold uppercase text-center&quot;>Status</span>
+                    <span class=&quot;text-[9px] font-bold uppercase text-right&quot;>Reward</span>
+                </div>
+                <div class=&quot;w-full h-px bg-slate-800/50 mt-2 mx-4&quot;></div>
+            </div>
+        </section>
+
+        <!-- Quick Info -->
+        <section class=&quot;px-6 py-4&quot;>
+            <div class=&quot;bg-indigo-600/10 border border-indigo-600/20 rounded-2xl p-4 flex items-start space-x-3&quot;>
+                <i class=&quot;fa-solid fa-circle-info text-indigo-400 mt-0.5&quot;></i>
+                <div>
+                    <p class=&quot;text-[10px] font-bold text-indigo-300 uppercase mb-1&quot;>Affiliate Tip</p>
+                    <p class=&quot;text-[11px] text-indigo-200/70 leading-tight&quot;>Share your link on social media to increase your chances of conversion by up to 40%.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-50&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+            <div class="device-container">
+                <div class="label">Help  Support Center page</div>
+                <div class="mockup">
+                    <div class="notch"></div>
+                    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+    <title>My Mobile App - Help & Support</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;>
+    <link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap&quot; rel=&quot;stylesheet&quot;>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { color: #6366F1; }
+        .faq-card { transition: all 0.3s ease; }
+        .faq-card:active { transform: scale(0.98); background: rgba(99, 102, 241, 0.1); }
+    </style>
+</head>
+<body class=&quot;bg-[#0F172A] text-white&quot;>
+
+    <!-- Mobile Container (375x812 Optimization) -->
+    <div class=&quot;max-w-[375px] mx-auto min-h-screen relative pb-24 overflow-x-hidden&quot;>
+        
+        <!-- Header -->
+        <header class=&quot;flex items-center justify-between px-6 pt-8 pb-4 sticky top-0 bg-[#0F172A]/80 backdrop-blur-lg z-50&quot;>
+            <a href=&quot;Profile.html&quot; class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                <i class=&quot;fa-solid fa-chevron-left text-slate-400&quot;></i>
+            </a>
+            <h1 class=&quot;text-sm font-bold uppercase tracking-wider&quot;>Support Center</h1>
+            <button class=&quot;w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700&quot;>
+                <i class=&quot;fa-solid fa-headset text-indigo-400&quot;></i>
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <section class=&quot;px-6 py-6 text-center&quot;>
+            <h2 class=&quot;text-2xl font-bold mb-2&quot;>Help & Support Center</h2>
+            <p class=&quot;text-xs text-slate-400 leading-relaxed max-w-[280px] mx-auto&quot;>
+                We're here to help you navigate the platform and answer any questions you might have.
+            </p>
+        </section>
+
+        <!-- Search Bar -->
+        <section class=&quot;px-6 mb-8&quot;>
+            <div class=&quot;relative&quot;>
+                <i class=&quot;fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm&quot;></i>
+                <input type=&quot;text&quot; placeholder=&quot;Search for help articles...&quot; class=&quot;w-full bg-slate-800/50 border border-slate-700 rounded-2xl py-3.5 pl-11 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition-colors&quot;>
+            </div>
+        </section>
+
+        <!-- Support Channels -->
+        <section class=&quot;px-6 space-y-4 mb-10&quot;>
+            <!-- Email Support Card -->
+            <div class=&quot;glass-card rounded-3xl p-5 border-indigo-500/20&quot;>
+                <div class=&quot;flex items-center space-x-3 mb-3&quot;>
+                    <div class=&quot;w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400&quot;>
+                        <i class=&quot;fa-solid fa-envelope&quot;></i>
+                    </div>
+                    <h3 class=&quot;font-bold text-sm&quot;>Direct Email Support</h3>
+                </div>
+                <p class=&quot;text-[11px] text-slate-400 mb-4 leading-relaxed&quot;>
+                    Our dedicated account managers and technical support team aim to reply within 1-2 hours during market open times.
+                </p>
+                <a href=&quot;mailto:support@mirrox.com&quot; class=&quot;block w-full bg-indigo-600 text-center py-3 rounded-xl text-xs font-bold transition-transform active:scale-95 shadow-lg shadow-indigo-500/20&quot;>
+                    Email support@mirrox.com
+                </a>
+            </div>
+
+            <!-- Live Chat Card -->
+            <div class=&quot;glass-card rounded-3xl p-5 border-emerald-500/20&quot;>
+                <div class=&quot;flex items-center space-x-3 mb-3&quot;>
+                    <div class=&quot;w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400&quot;>
+                        <i class=&quot;fa-brands fa-whatsapp&quot;></i>
+                    </div>
+                    <h3 class=&quot;font-bold text-sm&quot;>Live Chat & WhatsApp</h3>
+                </div>
+                <p class=&quot;text-[11px] text-slate-400 mb-4 leading-relaxed&quot;>
+                    Have an urgent request regarding deposits, withdrawals, or an active margin call? Reach out instantly.
+                </p>
+                <button class=&quot;block w-full bg-emerald-500 text-center py-3 rounded-xl text-xs font-bold text-slate-900 transition-transform active:scale-95 shadow-lg shadow-emerald-500/20&quot;>
+                    <i class=&quot;fa-solid fa-comment-dots mr-2&quot;></i>Start Live Chat
+                </button>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class=&quot;px-6 pb-12&quot;>
+            <div class=&quot;flex items-center justify-between mb-4&quot;>
+                <h3 class=&quot;font-bold text-lg&quot;>Frequently Asked Questions</h3>
+            </div>
+            
+            <div class=&quot;space-y-3&quot;>
+                <!-- FAQ Item 1 -->
+                <div class=&quot;glass-card rounded-2xl p-4 faq-card&quot;>
+                    <div class=&quot;flex justify-between items-center mb-2&quot;>
+                        <h4 class=&quot;text-xs font-bold text-indigo-100&quot;>How long do withdrawals take to process?</h4>
+                        <i class=&quot;fa-solid fa-plus text-[10px] text-slate-500&quot;></i>
+                    </div>
+                    <p class=&quot;text-[10px] text-slate-400 leading-relaxed&quot;>
+                        Crypto and Bank Transfer withdrawals are usually reviewed and processed within 24 hours. Depending on the payment provider, it may take 1-3 business days.
+                    </p>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class=&quot;glass-card rounded-2xl p-4 faq-card&quot;>
+                    <div class=&quot;flex justify-between items-center mb-2&quot;>
+                        <h4 class=&quot;text-xs font-bold text-indigo-100&quot;>What is &quot;Free Margin&quot;?</h4>
+                        <i class=&quot;fa-solid fa-plus text-[10px] text-slate-500&quot;></i>
+                    </div>
+                    <p class=&quot;text-[10px] text-slate-400 leading-relaxed&quot;>
+                        Free Margin is the amount in your account available for opening new positions. It is calculated by subtracting your Used Margin from your current Equity.
+                    </p>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class=&quot;glass-card rounded-2xl p-4 faq-card&quot;>
+                    <div class=&quot;flex justify-between items-center mb-2&quot;>
+                        <h4 class=&quot;text-xs font-bold text-indigo-100&quot;>What happens during a Margin Call?</h4>
+                        <i class=&quot;fa-solid fa-plus text-[10px] text-slate-500&quot;></i>
+                    </div>
+                    <p class=&quot;text-[10px] text-slate-400 leading-relaxed&quot;>
+                        If your Margin Level drops below 50%, the system will automatically begin closing your open positions to protect your account balance.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links -->
+        <section class=&quot;px-6 pb-32&quot;>
+            <div class=&quot;grid grid-cols-2 gap-3&quot;>
+                <a href=&quot;Verification.html&quot; class=&quot;glass-card rounded-2xl p-4 flex flex-col items-center justify-center text-center&quot;>
+                    <i class=&quot;fa-solid fa-id-card text-indigo-400 mb-2&quot;></i>
+                    <span class=&quot;text-[10px] font-semibold&quot;>Verification</span>
+                </a>
+                <a href=&quot;Finances.html&quot; class=&quot;glass-card rounded-2xl p-4 flex flex-col items-center justify-center text-center&quot;>
+                    <i class=&quot;fa-solid fa-wallet text-indigo-400 mb-2&quot;></i>
+                    <span class=&quot;text-[10px] font-semibold&quot;>Payments</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class=&quot;fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] h-20 glass-card !bg-slate-900/90 rounded-t-[40px] flex items-center justify-around px-4 border-t-0 z-[100]&quot;>
+            <a href=&quot;Home.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-house-chimney text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Home</span>
+            </a>
+            <a href=&quot;Trade.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-line text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Trade</span>
+            </a>
+            <div class=&quot;relative -top-8&quot;>
+                <button class=&quot;w-14 h-14 bg-indigo-600 rounded-full shadow-lg shadow-indigo-500/40 flex items-center justify-center border-4 border-[#0F172A]&quot;>
+                    <i class=&quot;fa-solid fa-plus text-white text-xl&quot;></i>
+                </button>
+            </div>
+            <a href=&quot;Analytics.html&quot; class=&quot;flex flex-col items-center space-y-1 text-slate-500&quot;>
+                <i class=&quot;fa-solid fa-chart-pie text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Analytics</span>
+            </a>
+            <a href=&quot;Profile.html&quot; class=&quot;flex flex-col items-center space-y-1 active-tab&quot;>
+                <i class=&quot;fa-solid fa-user-gear text-lg&quot;></i>
+                <span class=&quot;text-[10px] font-medium&quot;>Profile</span>
+            </a>
+        </nav>
+
+        <!-- iOS Home Indicator -->
+        <div class=&quot;fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none&quot;></div>
+
+    </div>
+
+</body>
+</html>" loading="lazy"></iframe>
+                </div>
+            </div>
+        
+    </div>
+</body>
+</html>
