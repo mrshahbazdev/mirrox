@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 import { useModal } from '../context/ModalContext';
