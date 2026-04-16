@@ -86,25 +86,25 @@ const Explore = () => {
   if (isMobile) {
     return (
       <div className="mobile-explore no-scrollbar">
-        <header className="px-2 pt-4 pb-2">
-            <h1 className="text-2xl font-black text-white mb-6">Explore</h1>
-            <div className="relative">
-                <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+        <header className="m-explore-header">
+            <h1>Explore</h1>
+            <div className="m-search-wrapper">
+                <i className="fa-solid fa-magnifying-glass m-search-icon"></i>
                 <input 
                   type="text" 
                   placeholder="Search markets, assets, news..." 
-                  className="w-full bg-slate-800/40 border border-slate-700/50 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-indigo-500/50 transition-all text-white"
+                  className="m-search-input"
                 />
             </div>
         </header>
 
         {/* Categories */}
-        <div className="flex space-x-3 overflow-x-auto py-4 no-scrollbar">
+        <div className="m-categories-scroller no-scrollbar">
             {categories.map(cat => (
               <button 
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`flex-shrink-0 px-6 py-2.5 rounded-xl text-xs font-bold transition-all border ${activeCategory === cat ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-slate-800/40 text-slate-400 border-slate-700'}`}
+                className={`m-category-pill ${activeCategory === cat ? 'active' : ''}`}
               >
                 {cat}
               </button>
@@ -112,29 +112,29 @@ const Explore = () => {
         </div>
 
         {/* Trending Section */}
-        <section className="py-4">
-            <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className="font-bold text-lg text-white">Trending in <span className="text-indigo-400">FX</span></h3>
+        <section className="py-2">
+            <div className="m-section-header">
+                <h3>Trending in <span>FX</span></h3>
                 <i className="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
             </div>
-            <div className="glass-card p-4 space-y-4">
+            <div className="m-asset-list-card">
                 {trendingFX.slice(0, 3).map(item => (
-                  <div key={item.symbol} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
+                  <div key={item.symbol} className="m-trending-item">
+                      <div className="m-asset-info-row">
                           <img 
                             src={`https://flagcdn.com/w40/${item.symbol.substring(0,2).toLowerCase()}.png`} 
-                            className="w-8 h-8 rounded-full border border-slate-700/50"
+                            className="m-asset-flag"
                             alt="" 
                             onError={(e) => { e.target.src = 'https://flagcdn.com/w40/eu.png'; }}
                           />
-                          <div>
-                              <p className="text-xs font-bold text-white uppercase">{item.symbol}</p>
-                              <p className="text-[10px] text-slate-500">Euro / US Dollar</p>
+                          <div className="m-asset-name-group">
+                              <p className="m-symbol">{item.symbol}</p>
+                              <p className="m-label">Euro / US Dollar</p>
                           </div>
                       </div>
-                      <div className="text-right">
-                          <p className="text-xs font-bold text-white font-mono">{item.price}</p>
-                          <p className={`text-[10px] font-bold ${item.up ? 'text-emerald-400' : 'text-rose-400'}`}>{item.change}</p>
+                      <div className="m-asset-price-group">
+                          <p className="m-price">{item.price}</p>
+                          <p className={`m-change ${item.up ? 'text-emerald-400' : 'text-rose-400'}`}>{item.change}</p>
                       </div>
                   </div>
                 ))}
@@ -143,20 +143,21 @@ const Explore = () => {
 
         {/* Sentiment Section */}
         <section className="py-4">
-            <h3 className="font-bold text-lg text-white mb-4 px-1">Global Trader Sentiment</h3>
-            <div className="glass-card p-5 space-y-6">
+            <div className="m-section-header">
+               <h3>Trader Sentiment</h3>
+            </div>
+            <div className="m-asset-list-card" style={{ padding: '24px' }}>
                 {sentiment.slice(0, 3).map(item => (
-                  <div key={item.symbol}>
-                      <div className="flex justify-between items-center mb-2">
-                          <div className="flex items-center space-x-2">
-                              <i className={`fa-solid ${item.icon} text-indigo-400 text-xs`}></i>
-                              <span className="text-xs font-bold text-white">{item.symbol}</span>
+                  <div key={item.symbol} className="m-sentiment-item">
+                      <div className="m-sentiment-meta">
+                          <div className="m-sentiment-symbol">
+                              <i className={`fa-solid ${item.icon}`}></i>
+                              <span>{item.symbol}</span>
                           </div>
-                          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">{item.buy}% Bullish</span>
+                          <span className="m-sentiment-pct">{item.buy}% Bullish</span>
                       </div>
-                      <div className="w-full bg-slate-900/50 rounded-full h-1.5 overflow-hidden flex">
-                          <div className="h-full bg-indigo-500" style={{ width: `${item.buy}%` }}></div>
-                          <div className="h-full bg-slate-700/50 flex-1"></div>
+                      <div className="m-sentiment-rail">
+                          <div className="m-sentiment-fill" style={{ width: `${item.buy}%` }}></div>
                       </div>
                   </div>
                 ))}
@@ -165,39 +166,26 @@ const Explore = () => {
 
         {/* Market Movers */}
         <section className="py-4 pb-8">
-            <h3 className="font-bold text-lg text-white mb-4 px-1">Market <span className="text-indigo-400">Movers</span></h3>
-            <div className="space-y-3">
+            <div className="m-section-header">
+                <h3>Market <span>Movers</span></h3>
+            </div>
+            <div className="m-movers-list">
                 {topMovers.slice(0, 3).map(item => (
-                  <div key={item.symbol} className={`glass-card p-4 flex items-center justify-between border-l-4 ${item.upD ? 'border-l-emerald-500' : 'border-l-rose-500'}`}>
-                      <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-400 text-sm">{item.icon}</div>
+                  <div key={item.symbol} className={`m-mover-card ${item.upD ? 'positive' : 'negative'}`}>
+                      <div className="m-asset-info-row">
+                          <div className="m-mover-icon">{item.icon}</div>
                           <div>
-                              <p className="text-xs font-bold text-white uppercase">{item.symbol}</p>
-                              <p className="text-[9px] text-slate-500">Range: {item.low} - {item.high}</p>
+                              <p className="m-symbol">{item.symbol}</p>
+                              <p className="m-mover-range">Range: {item.low} - {item.high}</p>
                           </div>
                       </div>
                       <div className="text-right">
-                          <span className={`font-bold text-sm ${item.upD ? 'text-emerald-400' : 'text-rose-400'}`}>{item.daily}</span>
+                          <span className={`m-mover-pct ${item.upD ? 'text-emerald-400' : 'text-rose-400'}`}>{item.daily}</span>
                       </div>
                   </div>
                 ))}
             </div>
         </section>
-
-        <style>{`
-          .mobile-explore {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-bottom: 20px;
-          }
-          .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-          }
-        `}</style>
       </div>
     );
   }

@@ -159,70 +159,66 @@ const Finances = () => {
     return (
       <div className="mobile-finances no-scrollbar" style={{ paddingBottom: '80px' }}>
         {/* Modern Mobile Wallet Header */}
-        <header className="pt-4 pb-2">
-            <div className="flex justify-between items-center mb-5">
-                <div>
-                   <h2 className="text-xl font-black text-white tracking-tight">My Wallet</h2>
-                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Account #MRX-{currentClientExtended?.id}</p>
-                </div>
-                <div className="flex space-x-2">
-                   <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-                      <i className="fa-solid fa-bell"></i>
-                   </div>
-                </div>
+        <header className="m-finance-header">
+            <div className="m-finance-title-group">
+               <h2>My Wallet</h2>
+               <p>Account #MRX-{currentClientExtended?.id}</p>
             </div>
-
-            {/* Premium Digital Wallet Card (Powered by Raw CSS) */}
-            <div className="premium-wallet-card-v2">
-               <div className="relative z-10 flex flex-col h-full justify-between">
-                  <div className="flex justify-between items-start">
-                     <div>
-                        <p className="wallet-card-subtitle">Available Funds</p>
-                        <h3 className="wallet-card-title">
-                           ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </h3>
-                     </div>
-                     <div className="wallet-card-badge">
-                        <span>{currentClientExtended?.accountType || 'DEMO'}</span>
-                     </div>
-                  </div>
-                  
-                  <div className="mt-8 flex items-center justify-between">
-                     <div className="flex -space-x-2">
-                        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-indigo-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-md">M</div>
-                        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-indigo-300 uppercase shadow-md">X</div>
-                     </div>
-                     <p className="wallet-card-account">**** 2026</p>
-                  </div>
+            <div className="m-header-actions">
+               <div className="m-action-btn">
+                  <i className="fa-solid fa-bell"></i>
                </div>
             </div>
         </header>
 
+        {/* Premium Digital Wallet Card */}
+        <div className="premium-wallet-card-v2">
+           <div className="relative z-10 flex flex-col h-full justify-between">
+              <div className="flex justify-between items-start">
+                 <div>
+                    <p className="wallet-card-subtitle">Available Funds</p>
+                    <h3 className="wallet-card-title">
+                       ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </h3>
+                 </div>
+                 <div className="wallet-card-badge">
+                    <span>{currentClientExtended?.accountType || 'DEMO'}</span>
+                 </div>
+              </div>
+              
+              <div className="mt-8 flex items-center justify-between">
+                 <div className="flex -space-x-2">
+                    <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-indigo-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-md">M</div>
+                    <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-indigo-300 uppercase shadow-md">X</div>
+                 </div>
+                 <p className="wallet-card-account">**** 2026</p>
+              </div>
+           </div>
+        </div>
+
         {/* Action Grid */}
-        <div className="py-5">
-            <div className="grid grid-cols-3 gap-3">
-                <button 
-                  onClick={() => setActiveTab('deposit')}
-                  className={`py-4 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all border ${activeTab === 'deposit' ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-800/40 border-slate-700/50 text-slate-400'}`}
-                >
-                    <i className="fa-solid fa-circle-plus text-lg"></i>
-                    <span className="text-[10px] font-bold uppercase">Deposit</span>
-                </button>
-                <button 
-                  onClick={() => setActiveTab('withdrawal')}
-                  className={`py-4 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all border ${activeTab === 'withdrawal' ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-800/40 border-slate-700/50 text-slate-400'}`}
-                >
-                    <i className="fa-solid fa-circle-minus text-lg"></i>
-                    <span className="text-[10px] font-bold uppercase">Withdraw</span>
-                </button>
-                <button 
-                  onClick={() => setActiveTab('history')}
-                  className={`py-4 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all border ${activeTab === 'history' ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-800/40 border-slate-700/50 text-slate-400'}`}
-                >
-                    <i className="fa-solid fa-clock-rotate-left text-lg"></i>
-                    <span className="text-[10px] font-bold uppercase">History</span>
-                </button>
-            </div>
+        <div className="m-action-grid">
+            <button 
+              onClick={() => setActiveTab('deposit')}
+              className={`m-action-tab-btn ${activeTab === 'deposit' ? 'active' : ''}`}
+            >
+                <i className="fa-solid fa-circle-plus"></i>
+                <span>Deposit</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab('withdrawal')}
+              className={`m-action-tab-btn ${activeTab === 'withdrawal' ? 'active' : ''}`}
+            >
+                <i className="fa-solid fa-circle-minus"></i>
+                <span>Withdraw</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab('history')}
+              className={`m-action-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
+            >
+                <i className="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </button>
         </div>
 
         {/* Dynamic Content Area */}
@@ -303,7 +299,7 @@ const Finances = () => {
            )}
 
            {activeTab === 'withdrawal' && (
-             <div className="glass-card p-6 space-y-6">
+             <div className="finance-glass-card">
                 <div className="flex justify-between items-center">
                    <h4 className="font-bold text-white text-lg">Instant Payout</h4>
                    <div className="px-3 py-1 bg-indigo-500/10 text-indigo-400 text-[9px] font-black uppercase rounded-lg border border-indigo-500/20">Secure</div>
@@ -311,36 +307,36 @@ const Finances = () => {
 
                 <div className="space-y-5">
                    <div className="space-y-2">
-                      <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Withdrawal Amount</label>
-                      <div className="relative">
-                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                         <input 
-                           type="number" 
-                           value={amount} 
-                           onChange={(e) => setAmount(e.target.value)}
-                           placeholder="0.00"
-                           className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl pl-8 pr-4 py-4 text-white text-xl font-black outline-none focus:border-indigo-500/50 transition-all"
-                         />
-                      </div>
-                      <p className="text-[10px] text-rose-400/80 font-bold ml-1">Available: ${(tm.balance || 0).toLocaleString()}</p>
+                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Withdrawal Amount</label>
+                       <div className="relative">
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                          <input 
+                            type="number" 
+                            value={amount} 
+                            onChange={(e) => setAmount(e.target.value)}
+                            placeholder="0.00"
+                            className="finance-input-large"
+                          />
+                       </div>
+                       <p className="text-[10px] text-rose-400/80 font-bold ml-1">Available: ${(tm.balance || 0).toLocaleString()}</p>
                    </div>
                    
                    <div className="space-y-2">
-                      <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Security Pin</label>
-                      <input 
-                        type="password" 
-                        maxLength="4"
-                        value={withdrawalPin} 
-                        onChange={(e) => setWithdrawalPin(e.target.value)}
-                        placeholder="••••"
-                        className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl p-4 text-white text-center text-3xl font-black tracking-[0.5em] outline-none"
-                      />
+                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Security Pin</label>
+                       <input 
+                         type="password" 
+                         maxLength="4"
+                         value={withdrawalPin} 
+                         onChange={(e) => setWithdrawalPin(e.target.value)}
+                         placeholder="••••"
+                         className="finance-input-large text-center text-3xl tracking-[0.5em]"
+                       />
                    </div>
                    
                    <button 
                     onClick={handleWithdrawal}
                     disabled={isSubmitting}
-                    className="w-full py-4 bg-slate-100 text-slate-900 font-black rounded-2xl shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                    className="finance-submit-btn dark"
                    >
                      {isSubmitting ? 'Verifying...' : 'Initialize Payout'}
                    </button>
@@ -349,36 +345,36 @@ const Finances = () => {
            )}
 
            {activeTab === 'history' && (
-              <div className="space-y-4">
-                 <div className="flex items-center justify-between px-1">
-                    <h4 className="font-bold text-white text-lg">Activity</h4>
+              <div className="m-history-section">
+                 <div className="m-section-header">
+                    <h4>Global Ledger</h4>
                     <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{history.length} Transactions</span>
                  </div>
                  <div className="space-y-3">
                     {history.length === 0 ? (
-                       <div className="glass-card p-10 text-center opacity-40">
+                       <div className="finance-glass-card p-10 text-center opacity-40">
                           <i className="fa-solid fa-box-open text-3xl mb-3"></i>
                           <p className="text-xs font-bold uppercase tracking-widest">No Recent Activity</p>
                        </div>
                     ) : (
                        history.map((tx, i) => (
-                          <div key={i} className="glass-card p-4 flex items-center justify-between transition-transform active:scale-[0.98]">
-                             <div className="flex items-center space-x-4">
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-sm shadow-inner ${tx.type === 'Deposit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                          <div key={i} className="m-transaction-card">
+                             <div className="m-asset-info-row">
+                                <div className={`m-tx-icon ${tx.type.toLowerCase()}`}>
                                    <i className={`fa-solid ${tx.type === 'Deposit' ? 'fa-arrow-down' : 'fa-arrow-up'}`}></i>
                                 </div>
-                                <div>
-                                   <p className="text-xs font-black text-white uppercase tracking-tight">{tx.type}</p>
-                                   <p className="text-[9px] text-slate-500 font-bold uppercase">{tx.date}</p>
+                                <div className="m-tx-details">
+                                   <p className="m-type">{tx.type}</p>
+                                   <p className="m-date">{tx.date}</p>
                                 </div>
                              </div>
-                             <div className="text-right">
-                                <p className={`text-sm font-black ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                             <div className="m-tx-amount-group">
+                                <p className={`m-tx-amount ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-rose-400'}`}>
                                    {tx.type === 'Deposit' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()}
                                 </p>
-                                <div className="flex items-center justify-end space-x-1 mt-1">
-                                    <div className={`w-1.5 h-1.5 rounded-full ${tx.status === 'approved' ? 'bg-emerald-500' : tx.status === 'pending' ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
-                                    <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">{tx.status}</span>
+                                <div className="m-tx-status-pill">
+                                    <div className={`m-status-dot ${tx.status}`}></div>
+                                    <span className="m-status-text">{tx.status}</span>
                                 </div>
                              </div>
                           </div>

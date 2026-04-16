@@ -63,28 +63,30 @@ const Dashboard = () => {
         </section>
 
         {/* Market Watch Horizontal */}
-        <section className="pt-4">
-          <div className="flex items-center justify-between px-2 mb-4">
-            <h3 className="font-bold text-lg text-white">Market Watch</h3>
-            <Link to="/app/explore" className="text-indigo-400 text-xs font-semibold">See All</Link>
+        <section className="m-market-watch-section">
+          <div className="m-market-watch-header">
+            <h3>Market Watch</h3>
+            <Link to="/app/explore" className="m-see-all-link">See All</Link>
           </div>
           <div className="m-asset-row no-scrollbar">
             {prices.slice(0, 5).map(sym => (
               <div 
                 key={sym.id} 
-                className={`m-asset-card ${selectedSymbolId === sym.id ? 'border-indigo-500/50 bg-indigo-500/10' : ''}`}
+                className={`m-asset-mini-card ${selectedSymbolId === sym.id ? 'selected' : ''}`}
                 onClick={() => setSelectedSymbolId(sym.id)}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+                <div className="m-mini-card-top">
+                  <div className="m-mini-icon">
                     <i className="fa-solid fa-coins"></i>
                   </div>
-                  <span className={`text-[10px] font-bold ${parseFloat(sym.change) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  <span className={`m-mini-change ${parseFloat(sym.change) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {parseFloat(sym.change) >= 0 ? '+' : ''}{sym.change}%
                   </span>
                 </div>
-                <p className="text-xs font-bold text-white uppercase">{sym.name}</p>
-                <p className="text-[10px] text-slate-400 font-mono">{parseFloat(sym.price).toFixed(selectedSymbolId === sym.id ? 5 : 2)}</p>
+                <div className="m-mini-card-bottom">
+                  <p className="m-symbol">{sym.name}</p>
+                  <p className="m-price">{parseFloat(sym.price).toFixed(selectedSymbolId === sym.id ? 5 : 2)}</p>
+                </div>
               </div>
             ))}
           </div>
