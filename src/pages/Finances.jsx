@@ -138,15 +138,6 @@ const Finances = () => {
   const history = [...deposits.map(d => ({...d, type: 'Deposit'})), ...withdrawals.map(w => ({...w, type: 'Withdrawal'}))]
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-  if (loading) {
-    return (
-      <div style={{ padding: '40px', color: '#94a3b8', textAlign: 'center' }}>
-        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '32px', marginBottom: '16px' }}></i>
-        <p>Syncing Wallet...</p>
-      </div>
-    );
-  }
-
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   useEffect(() => {

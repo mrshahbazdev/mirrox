@@ -17,6 +17,8 @@ const Dashboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const [selectedSymbolId, setSelectedSymbolId] = useState(prices?.[0]?.id || 1);
+
   if (!prices || prices.length === 0) {
     return (
       <div style={{ padding: 40, color: '#94a3b8' }}>
@@ -26,7 +28,6 @@ const Dashboard = () => {
     );
   }
 
-  const [selectedSymbolId, setSelectedSymbolId] = useState(prices[0]?.id || 1);
   const selectedSymbol = prices.find(s => s.id === selectedSymbolId) || prices[0];
   const isVerified = currentClientExtended?.kyc?.status === 'verified' || currentClientExtended?.accountType === 'live';
 
