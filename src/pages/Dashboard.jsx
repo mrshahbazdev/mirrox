@@ -37,6 +37,22 @@ const Dashboard = () => {
   if (isMobile) {
     return (
       <div className="mobile-dashboard-content w-full overflow-x-hidden">
+        {/* Verification Alert */}
+        {!isVerified && (
+          <section className="px-4 pt-2">
+              <div className="verification-banner">
+                  <div className="banner-icon">
+                      <i className="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <div className="banner-content">
+                      <p className="banner-title">Verify Account</p>
+                      <p className="banner-desc">Verification is required for real trading.</p>
+                  </div>
+                  <Link to="/app/documents" className="banner-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>VERIFY</Link>
+              </div>
+          </section>
+        )}
+
         {/* Equity Section */}
         <section className="px-4">
           <div className="dashboard-equity-card">

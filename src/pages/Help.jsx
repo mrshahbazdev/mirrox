@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTrading } from '../context/TradingContext';
 import { useModal } from '../context/ModalContext';
+import { Link } from 'react-router-dom';
 
 const Help = () => {
   const { currentClientExtended } = useTrading();
@@ -53,7 +54,7 @@ const Help = () => {
                     <p className="banner-title">Verify Identity</p>
                     <p className="banner-desc">Unlock real trading and withdrawals by verifying your ID.</p>
                 </div>
-                <button className="banner-btn">VERIFY</button>
+                <Link to="/app/documents" className="banner-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>VERIFY</Link>
             </div>
         </section>
 
