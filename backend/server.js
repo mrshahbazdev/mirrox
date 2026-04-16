@@ -29,12 +29,31 @@ cloudinary.config({
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const app = express();
+
+// Hardened CORS Protection
+const allowedOrigins = [
+  'https://mirrox.vercel.app',
+  'https://mirrox-production.up.railway.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Cache-Control'],
+  credentials: true,
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 }));
+
 app.use(express.json());
 
 // Root route for health check
@@ -43,8 +62,9 @@ app.get('/', (req, res) => res.send('Mirrox Backend is alive and running!'));
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
   }
 });
 
@@ -930,11 +950,14 @@ app.get('/api/support/tickets/:ticketId', verifyClientToken, async (req, res) =>
 
 // GET my open ticket (client — returns existing open or null)
 app.get('/api/support/my-ticket', verifyClientToken, async (req, res) => {
+  console.log(`[DIAGNOSTIC] GET /api/support/my-ticket - User ID: ${req.user.id}`);
   try {
     const ticket = await SupportTicket.findOne({ clientId: req.user.id, status: { $in: ['open', 'blocked'] } }).lean();
+    console.log(`[DIAGNOSTIC] Found ticket: ${ticket ? ticket.id : 'NONE'}`);
     res.json(ticket || null);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch your ticket' });
+    console.error('[DIAGNOSTIC] Error in /api/support/my-ticket:', err.message);
+    res.status(500).json({ error: 'Failed to fetch your ticket', details: err.message });
   }
 });
 
@@ -1158,6 +1181,22 @@ app.get('/api/trades/history/all', verifyAdminToken, async (req, res) => {
 
 // Setup WebSockets
 setupSockets(io);
+
+// --- GLOBAL ERROR HANDLER ---
+app.use((err, req, res, next) => {
+  console.error('[FATAL ERROR HANDLER]:', err.stack);
+  
+  // Custom handling for CORS specific errors
+  if (err.message && err.message.includes('CORS policy')) {
+    return res.status(403).json({ error: err.message });
+  }
+
+  res.status(500).json({ 
+    error: 'Internal Server Error', 
+    message: err.message,
+    path: req.path
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => console.log(`Backend Server running on port ${PORT}`));
