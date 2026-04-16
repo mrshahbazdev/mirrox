@@ -39,25 +39,25 @@ const Dashboard = () => {
       <div className="mobile-dashboard-content w-full overflow-x-hidden">
         {/* Equity Section */}
         <section className="px-4">
-          <div className="bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-3xl p-4 shadow-xl shadow-indigo-500/20 w-full overflow-hidden relative">
-            <div className="flex justify-between items-start mb-4 gap-2">
+          <div className="dashboard-equity-card">
+            <div className="equity-card-header">
               <div className="min-w-0">
-                <p className="text-indigo-100 text-[10px] font-bold opacity-80 mb-1 uppercase tracking-wider">Total Equity</p>
-                <h1 className="text-xl font-bold tracking-tight text-white truncate">${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h1>
+                <p className="equity-card-subtitle">Total Equity</p>
+                <h1 className="equity-card-title">${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h1>
               </div>
-              <span className="bg-white/20 px-2 py-1 rounded-lg text-[10px] font-bold text-white uppercase shrink-0">
+              <span className="equity-card-badge">
                 {currentClientExtended?.accountType || 'DEMO'}
               </span>
             </div>
-            <div className={`flex items-center space-x-2 ${floatingPL >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+            <div className={`equity-card-pl ${floatingPL >= 0 ? 'positive' : 'negative'}`}>
               <i className={`fa-solid ${floatingPL >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'} text-xs`}></i>
-              <span className="text-sm font-semibold">
+              <span>
                 {floatingPL >= 0 ? '+' : ''}${floatingPL.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </div>
-            <div className="flex mt-6 gap-3">
-              <Link to="/app/finances" className="flex-1 min-w-0 bg-white text-indigo-600 font-bold py-3 rounded-2xl text-center text-sm transition-transform active:scale-95 shadow-lg">Deposit</Link>
-              <Link to="/app/finances" className="flex-1 min-w-0 bg-white/10 text-white font-bold py-3 rounded-2xl text-center text-sm backdrop-blur-sm transition-transform active:scale-95 border border-white/10">Withdraw</Link>
+            <div className="equity-card-actions">
+              <Link to="/app/finances" className="equity-btn-primary">Deposit</Link>
+              <Link to="/app/finances" className="equity-btn-secondary">Withdraw</Link>
             </div>
           </div>
         </section>
