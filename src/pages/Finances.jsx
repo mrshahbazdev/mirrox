@@ -278,6 +278,17 @@ const Finances = () => {
                        </div>
                    </div>
 
+                   <div className="space-y-2">
+                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Transaction Hash / Receipt</label>
+                       <input 
+                         type="text" 
+                         value={txHash} 
+                         onChange={(e) => setTxHash(e.target.value)}
+                         placeholder="Paste your hash here"
+                         className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl p-4 text-white text-xs outline-none focus:border-indigo-500/50 transition-all font-mono"
+                       />
+                   </div>
+
                    <button 
                     onClick={handleDeposit}
                     disabled={isSubmitting}
