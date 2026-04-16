@@ -68,7 +68,7 @@ body {
 }
 
 /* Responsive Grid Overrides */
-@media (max-width: 991px) {
+@media (max-width: 1023px) {
   .dashboard-layout {
     grid-template-areas:
       "header"
@@ -118,7 +118,7 @@ body {
   margin-top: auto;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1023px) {
   .sidebar {
     width: 100%;
     height: 60px;
@@ -190,7 +190,7 @@ body {
   transform: translateX(-50%);
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1023px) {
   .header { padding: 0 12px; }
   .header-center { display: none; } /* Hide center nav on small screens */
   .header-left, .header-right { gap: 12px; }
@@ -314,7 +314,7 @@ body {
   overflow: hidden;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1023px) {
   .dashboard-content {
      height: auto;
      overflow-y: auto;
@@ -681,7 +681,7 @@ body {
   font-family: 'Space Mono', monospace;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1023px) {
   .positions-footer {
     height: auto;
     flex-wrap: wrap;

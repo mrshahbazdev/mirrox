@@ -844,7 +844,6 @@ const Finances = () => {
       )}
     </div>
   </div>
-  </div>
   );
 };
 
