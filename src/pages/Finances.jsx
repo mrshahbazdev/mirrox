@@ -147,7 +147,6 @@ const Finances = () => {
     );
   }
 
-  return (
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   useEffect(() => {

@@ -4,6 +4,15 @@ import { useTrading } from '../context/TradingContext';
 
 const Affiliate = () => {
   const { currentClientExtended } = useTrading();
+  
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const [referrals, setReferrals] = useState([]);
   const [bonusAmount, setBonusAmount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -41,14 +50,6 @@ const Affiliate = () => {
   }
 
   const stats = currentClientExtended?.affiliateStats || { totalInvites: 0, totalEarnings: 0 };
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   if (isMobile) {
     return (

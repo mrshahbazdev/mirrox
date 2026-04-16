@@ -179,6 +179,11 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
   );
 };
 
+const Documents = () => {
+  const { currentClientExtended } = useTrading();
+
+  const isFullyVerified = currentClientExtended?.kyc?.status === 'verified' || currentClientExtended?.accountType === 'live';
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   useEffect(() => {
