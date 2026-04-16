@@ -378,22 +378,6 @@ const Finances = () => {
               </div>
            )}
         </section>
-
-        <style>{`
-           .mobile-finances {
-             display: flex;
-             flex-direction: column;
-             gap: 0;
-             padding-bottom: 80px;
-             max-width: 500px;
-             margin: 0 auto;
-           }
-           .premium-wallet-card {
-              background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
-              border: 1px solid rgba(255, 255, 255, 0.15);
-              min-height: 180px;
-           }
-        `}</style>
       </div>
     );
   }
@@ -734,5 +718,70 @@ const Finances = () => {
     </div>
   );
 };
+
+const financesStyles = `
+  .animate-fade {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .premium-wallet-card {
+    background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .premium-wallet-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.4);
+  }
+
+  .glass-card {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+  }
+
+  .mobile-finances {
+    background: var(--bg-deep);
+    min-height: 100vh;
+  }
+
+  .desktop-finances-container {
+    background: var(--bg-deep);
+    min-height: 100vh;
+  }
+
+  /* Custom Scrollbar for Transactions */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleId = 'finances-custom-styles';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = financesStyles;
+    document.head.appendChild(style);
+  }
+}
 
 export default Finances;
