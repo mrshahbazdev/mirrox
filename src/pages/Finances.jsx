@@ -228,7 +228,7 @@ const Finances = () => {
         {/* Dynamic Content Area */}
         <section className="pb-4 animate-fade">
            {activeTab === 'deposit' && (
-             <div className="glass-card p-6 space-y-6">
+             <div className="finance-glass-card">
                 <div className="flex justify-between items-center">
                    <h4 className="font-bold text-white text-lg">Deposit Funds</h4>
                    <div className="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase rounded-lg border border-emerald-500/20">Fast Processing</div>
@@ -240,7 +240,7 @@ const Finances = () => {
                       <select 
                         value={method} 
                         onChange={(e) => setMethod(e.target.value)}
-                        className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl p-4 text-white text-xs outline-none appearance-none"
+                        className="finance-input-standard"
                       >
                          <option value="crypto">USDT (TRC20)</option>
                          <option value="bank_transfer">Bank Transfer (IBAN)</option>
@@ -273,7 +273,8 @@ const Finances = () => {
                             value={amount} 
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="0.00"
-                            className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl pl-8 pr-4 py-4 text-white text-xl font-black outline-none focus:border-indigo-500/50 transition-all"
+                            className="finance-input-large text-xl pl-8"
+                            style={{ paddingLeft: '2rem' }}
                           />
                        </div>
                    </div>
@@ -285,14 +286,15 @@ const Finances = () => {
                          value={txHash} 
                          onChange={(e) => setTxHash(e.target.value)}
                          placeholder="Paste your hash here"
-                         className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl p-4 text-white text-xs outline-none focus:border-indigo-500/50 transition-all font-mono"
+                         className="finance-input-standard font-mono"
                        />
                    </div>
 
                    <button 
                     onClick={handleDeposit}
                     disabled={isSubmitting}
-                    className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/20 active:scale-95 transition-all disabled:opacity-50"
+                    className="finance-submit-btn"
+                    style={{ padding: '1rem', fontSize: '1rem' }}
                    >
                      {isSubmitting ? 'Processing...' : 'Confirm Deposit'}
                    </button>
