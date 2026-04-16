@@ -173,16 +173,16 @@ const Finances = () => {
             </div>
 
             {/* Premium Digital Wallet Card */}
-            <div className="premium-wallet-card relative overflow-hidden rounded-[2rem] p-6 shadow-2xl shadow-indigo-500/30">
+            <div className="relative overflow-hidden rounded-[2rem] p-6 shadow-2xl shadow-indigo-500/30 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 w-full shrink-0">
                <div className="relative z-10 flex flex-col h-full justify-between">
                   <div className="flex justify-between items-start">
                      <div>
-                        <p className="text-[10px] text-indigo-100/60 font-bold uppercase tracking-[0.2em] mb-1">Available Funds</p>
-                        <h3 className="text-3xl font-black text-white tracking-tight">
+                        <p className="text-[10px] text-indigo-100 font-bold uppercase tracking-widest mb-1">Available Funds</p>
+                        <h3 className="text-3xl font-black text-white tracking-tight truncate max-w-[200px]">
                            ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </h3>
                      </div>
-                     <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                     <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 shrink-0">
                         <span className="text-[10px] font-black text-white uppercase">{currentClientExtended?.accountType || 'DEMO'}</span>
                      </div>
                   </div>
@@ -192,12 +192,12 @@ const Finances = () => {
                         <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-indigo-400 flex items-center justify-center text-[10px] font-bold text-white uppercase">M</div>
                         <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-indigo-300 uppercase">X</div>
                      </div>
-                     <p className="text-[10px] text-indigo-100/40 font-mono tracking-widest uppercase">**** 2026</p>
+                     <p className="text-[10px] text-indigo-100/60 font-mono tracking-widest uppercase">**** 2026</p>
                   </div>
                </div>
                {/* Pattern / Mesh Overlays */}
-               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-               <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-400/10 rounded-full -ml-12 -mb-12 blur-2xl"></div>
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-xl"></div>
             </div>
         </header>
 
@@ -384,50 +384,55 @@ const Finances = () => {
 
   // Desktop View
   return (
-    <div className="desktop-finances-container p-6 xl:p-8 animate-fade" style={{ gridColumn: '1 / -1' }}>
-      <header className="mb-10 flex flex-wrap gap-6 justify-between items-start">
-        <div className="animate-slide-up">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-2 h-8 bg-indigo-600 rounded-full"></div>
-            <h1 className="text-4xl xl:text-5xl font-black text-white tracking-tighter">Finances</h1>
+    <div className="desktop-finances-container p-6 xl:p-8 animate-fade w-full h-full relative" style={{ gridColumn: '1 / -1', minWidth: '100%' }}>
+      <div className="max-w-7xl mx-auto">
+        <header className="mb-10 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+          <div className="animate-slide-up">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-2 h-8 bg-indigo-600 rounded-full"></div>
+              <h1 className="text-4xl xl:text-5xl font-black text-white tracking-tighter">Finances</h1>
+            </div>
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] ml-5">Institutional Grade Asset Management</p>
           </div>
-          <p className="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] ml-5">Institutional Grade Asset Management</p>
-        </div>
-        
-        {/* Dynamic Global Wallet Card */}
-        <div className="premium-wallet-card px-8 py-6 rounded-[2rem] shadow-2xl flex flex-col justify-between w-full sm:w-auto sm:min-w-[320px] xl:min-w-[380px] animate-slide-up" style={{ minHeight: '180px' }}>
-           <div className="flex justify-between items-start">
-              <div>
-                 <p className="text-indigo-100/60 text-[10px] font-black uppercase tracking-widest mb-1">Available Portfolio Balance</p>
-                 <h2 className="text-3xl xl:text-4xl font-black text-white tracking-tight">
-                    ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                 </h2>
-              </div>
-              <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
-                 <i className="fa-solid fa-wallet"></i>
-              </div>
-           </div>
-           
-           <div className="flex justify-between items-end border-t border-white/10 pt-4 mt-4">
-              <div className="space-y-1">
-                 <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest">Account ID</p>
-                 <p className="text-white text-xs font-mono">MRX-{currentClientExtended?.id?.toString().padStart(6, '0')}</p>
-              </div>
-              <div className="flex -space-x-3">
-                 <div className="w-10 h-10 rounded-full border-2 border-indigo-600 bg-indigo-500 flex items-center justify-center text-[10px] font-black text-white">VISA</div>
-                 <div className="w-10 h-10 rounded-full border-2 border-indigo-500 bg-slate-900 flex items-center justify-center text-[10px] font-black text-indigo-400">MC</div>
-              </div>
-           </div>
-        </div>
-      </header>
+          
+          {/* Dynamic Global Wallet Card */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-8 py-6 rounded-[2rem] shadow-2xl flex flex-col justify-between w-full md:w-[400px] animate-slide-up shrink-0 border border-white/10" style={{ minHeight: '180px' }}>
+             {/* Radial Glare */}
+             <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16 blur-2xl"></div>
+             
+             <div className="relative z-10 flex justify-between items-start">
+                <div>
+                   <p className="text-indigo-100 font-bold text-[10px] uppercase tracking-widest mb-1">Available Portfolio Balance</p>
+                   <h2 className="text-3xl xl:text-4xl font-black text-white tracking-tight truncate max-w-[220px]">
+                      ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                   </h2>
+                </div>
+                <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0">
+                   <i className="fa-solid fa-wallet"></i>
+                </div>
+             </div>
+             
+             <div className="relative z-10 flex justify-between items-end border-t border-white/20 pt-4 mt-6">
+                <div className="space-y-1">
+                   <p className="text-indigo-200 text-[9px] font-bold uppercase tracking-widest">Account ID</p>
+                   <p className="text-white text-xs font-mono">MRX-{currentClientExtended?.id?.toString().padStart(6, '0')}</p>
+                </div>
+                <div className="flex -space-x-3 shrink-0">
+                   <div className="w-10 h-10 rounded-full border-2 border-indigo-600 bg-indigo-500 flex items-center justify-center text-[10px] font-black text-white shadow-md">VISA</div>
+                   <div className="w-10 h-10 rounded-full border-2 border-indigo-500 bg-slate-900 flex items-center justify-center text-[10px] font-black text-indigo-400 shadow-md">MC</div>
+                </div>
+             </div>
+          </div>
+        </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
-        {/* Main Interaction Area */}
-        <div className="lg:col-span-8 space-y-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-           <div className="segmented-control p-1">
-              {[
-                { id: 'deposit', label: 'Fund Account', icon: 'fa-plus-circle' },
-                { id: 'withdrawal', label: 'Secure Payout', icon: 'fa-minus-circle' },
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
+          {/* Main Interaction Area */}
+          <div className="col-span-1 lg:col-span-8 space-y-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+             <div className="segmented-control p-1">
+                {[
+                  { id: 'deposit', label: 'Fund Account', icon: 'fa-plus-circle' },
+                  { id: 'withdrawal', label: 'Secure Payout', icon: 'fa-minus-circle' },
                 { id: 'history', label: 'Global Ledger', icon: 'fa-clock-rotate-left' }
               ].map(t => (
                 <button 
@@ -845,7 +850,8 @@ const Finances = () => {
         </div>
       )}
     </div>
-    </div>
+  </div>
+  </div>
   );
 };
 
