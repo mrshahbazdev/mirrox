@@ -92,19 +92,19 @@ const Dashboard = () => {
 
         {/* Simplified Asset Info / Quick Trade */}
         <section className="py-2">
-          <div className="glass-card p-4">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{selectedSymbol.name} LIVE</span>
+          <div className="mobile-chart-card">
+            <div className="chart-card-header">
+              <div className="chart-asset-info">
+                <div className="chart-status-dot animate-pulse"></div>
+                <span className="chart-symbol-label">{selectedSymbol.name} LIVE</span>
               </div>
-              <div className="flex space-x-1">
-                <button className="px-2 py-1 text-[10px] bg-indigo-500 rounded-lg text-white">1H</button>
-                <button className="px-2 py-1 text-[10px] text-slate-400">1D</button>
+              <div className="chart-timeframe-selector">
+                <button className="chart-pill-btn active">1H</button>
+                <button className="chart-pill-btn">1D</button>
               </div>
             </div>
             
-            <div className="h-56 w-full relative chart-gradient rounded-xl mb-4 overflow-hidden">
+            <div className="chart-viewport-mobile">
                <ErrorBoundary>
                  <TradingChart 
                   symbol={selectedSymbol} 

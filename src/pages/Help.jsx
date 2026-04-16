@@ -16,87 +16,75 @@ const Help = () => {
 
   if (isMobile) {
     return (
-      <div className="mobile-profile no-scrollbar pb-10">
+      <div className="mobile-help-page no-scrollbar">
         {/* Profile Header */}
-        <header className="flex items-center justify-between px-2 pt-6 pb-4">
-            <h1 className="text-2xl font-black text-white">Profile</h1>
-            <button className="w-10 h-10 rounded-2xl bg-slate-800 flex items-center justify-center border border-slate-700/50">
-                <i className="fa-solid fa-gear text-slate-400"></i>
+        <header className="help-header-v2">
+            <h1>Profile</h1>
+            <button className="header-icon-btn">
+                <i className="fa-solid fa-gear"></i>
             </button>
         </header>
 
         {/* User Identity */}
-        <section className="py-6 flex flex-col items-center">
-            <div className="relative mb-4">
-                <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-purple-500">
-                    <div className="w-full h-full rounded-full bg-slate-900 border-4 border-[#0F172A] overflow-hidden">
+        <section className="help-identity-card">
+            <div className="avatar-wrapper">
+                <div className="avatar-ring">
+                    <div className="avatar-inner">
                         <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentClientExtended?.name}`} alt="Avatar" className="w-full h-full object-cover" />
                     </div>
                 </div>
-                <div className="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 border-4 border-[#0F172A] rounded-full"></div>
+                <div className="avatar-status"></div>
             </div>
-            <h2 className="text-xl font-black text-white">{currentClientExtended?.name}</h2>
-            <p className="text-slate-400 text-xs mt-1 font-bold">Account ID: MRX-{currentClientExtended?.id}</p>
-            <div className="flex space-x-2 mt-3">
-                <span className="px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-[10px] font-black border border-indigo-500/20 uppercase tracking-widest">Demo Mode</span>
-                <span className="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black border border-slate-700/50 uppercase tracking-widest">Level 4</span>
+            <h2 className="user-name-label">{currentClientExtended?.name}</h2>
+            <p className="user-id-sub">Account ID: MRX-{currentClientExtended?.id}</p>
+            <div className="badge-flex">
+                <span className="help-badge primary">Demo Mode</span>
+                <span className="help-badge secondary">Level 4</span>
             </div>
         </section>
 
         {/* Verification Alert */}
-        <section className="py-2">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-3xl p-5 flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                    <i className="fa-solid fa-triangle-exclamation text-amber-500"></i>
+        <section className="px-2">
+            <div className="verification-banner">
+                <div className="banner-icon">
+                    <i className="fa-solid fa-triangle-exclamation"></i>
                 </div>
-                <div className="flex-1">
-                    <p className="text-xs font-black text-amber-500 uppercase tracking-tight">Verify Identity</p>
-                    <p className="text-[10px] text-slate-300 leading-tight mt-1">Unlock real trading and withdrawals by verifying your ID.</p>
+                <div className="banner-content">
+                    <p className="banner-title">Verify Identity</p>
+                    <p className="banner-desc">Unlock real trading and withdrawals by verifying your ID.</p>
                 </div>
-                <button className="bg-amber-500 text-slate-900 text-[10px] font-black px-4 py-2.5 rounded-xl whitespace-nowrap active:scale-95 transition-all">VERIFY</button>
+                <button className="banner-btn">VERIFY</button>
             </div>
         </section>
 
         {/* Management Menu */}
-        <section className="py-4 space-y-4">
-            <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.2em] ml-2">Management</h3>
+        <section className="menu-section">
+            <h3 className="menu-label">Management</h3>
             
-            <div className="space-y-3">
+            <div className="menu-list">
               {[
-                { label: 'Trading History', icon: 'fa-clock-rotate-left', color: 'indigo' },
-                { label: 'Payment Methods', icon: 'fa-wallet', color: 'emerald' },
-                { label: 'Security & 2FA', icon: 'fa-shield-halved', color: 'purple' },
-                { label: 'Support Center', icon: 'fa-headset', color: 'blue' },
+                { label: 'Trading History', icon: 'fa-clock-rotate-left', color: '#6366f1', bg: 'rgba(99, 102, 241, 0.1)' },
+                { label: 'Payment Methods', icon: 'fa-wallet', color: '#10b981', bg: 'rgba(16, 185, 129, 0.1)' },
+                { label: 'Security & 2FA', icon: 'fa-shield-halved', color: '#a855f7', bg: 'rgba(168, 85, 247, 0.1)' },
+                { label: 'Support Center', icon: 'fa-headset', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)' },
               ].map(item => (
-                <button key={item.label} className="w-full flex items-center justify-between glass-card p-4 rounded-3xl active:scale-[0.98] transition-all border border-white/5">
-                  <div className="flex items-center space-x-4">
-                      <div className={`w-10 h-10 rounded-2xl bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-400`}>
+                <button key={item.label} className="menu-item-card">
+                  <div className="item-left">
+                      <div className="item-icon-box" style={{ backgroundColor: item.bg, color: item.color }}>
                           <i className={`fa-solid ${item.icon}`}></i>
                       </div>
-                      <span className="text-sm font-bold text-white">{item.label}</span>
+                      <span className="item-label">{item.label}</span>
                   </div>
                   <i className="fa-solid fa-chevron-right text-slate-700 text-xs"></i>
                 </button>
               ))}
             </div>
 
-            <button className="w-full flex items-center justify-center space-x-2 py-8 text-rose-500 font-black text-sm uppercase tracking-widest">
+            <button className="signout-btn">
                 <i className="fa-solid fa-right-from-bracket"></i>
                 <span>Sign Out Account</span>
             </button>
         </section>
-
-        <style>{`
-          .mobile-profile {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-          }
-          .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-          }
-        `}</style>
       </div>
     );
   }
