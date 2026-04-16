@@ -40,7 +40,7 @@ const Layout = ({ currentUser, onLogout }) => {
         }
         .is-mobile .dashboard-content {
            margin-left: 0 !important;
-           padding: 0 20px 100px 20px !important;
+           padding: 0 16px 100px 16px !important;
            width: 100% !important;
         }
       `}</style>
