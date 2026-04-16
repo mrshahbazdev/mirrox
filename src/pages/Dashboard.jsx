@@ -128,6 +128,7 @@ const Dashboard = () => {
                   symbol={selectedSymbol} 
                   currentPrice={parseFloat(selectedSymbol.price)} 
                   isMobile={true}
+                  height={520}
                 />
                </ErrorBoundary>
             </div>
@@ -149,6 +150,14 @@ const Dashboard = () => {
             padding-top: 4px;
             width: 100%;
             overflow-x: hidden;
+            padding-bottom: 100px;
+          }
+          .chart-viewport-mobile {
+            min-height: 520px;
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            overflow: hidden;
           }
         `}</style>
       </div>

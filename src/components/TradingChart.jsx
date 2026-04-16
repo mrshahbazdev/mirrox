@@ -9,7 +9,7 @@ const timeframeMap = {
   'D': 86400
 };
 
-const TradingChart = ({ symbol, currentPrice, isMobile = false }) => {
+const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) => {
   const chartContainerRef = useRef();
   const chartRef = useRef();
   const seriesRef = useRef();
@@ -115,7 +115,7 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false }) => {
           pinch: true,
         },
         width: width,
-        height: 480,
+        height: height,
       });
 
       chartRef.current = chart;
