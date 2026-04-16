@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 
 const MobileHeader = ({ currentUser }) => {
@@ -6,6 +7,24 @@ const MobileHeader = ({ currentUser }) => {
   const user = currentClientExtended || currentUser;
   const displayName = user?.name || 'Trader';
   
+  const [showNotifs, setShowNotifs] = useState(false);
+  const [localNotifications, setLocalNotifications] = useState([]);
+
+  useEffect(() => {
+    setLocalNotifications(user?.notifications || []);
+  }, [user?.notifications]);
+
+  const unreadCount = localNotifications.filter(n => !n.read).length;
+
+  const markAsRead = async (notifId) => {
+     try {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/clients/${user.id}/notifications/${notifId}/read`);
+        setLocalNotifications(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
+     } catch (err) {
+        console.error('Failed to mark notification as read', err);
+     }
+  };
+
   return (
     <header className="mobile-header">
       <div className="m-header-user">
@@ -25,84 +44,51 @@ const MobileHeader = ({ currentUser }) => {
         <button className="m-action-btn">
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
-        <button className="m-action-btn relative">
+        <button className="m-action-btn" onClick={() => setShowNotifs(true)}>
           <i className="fa-solid fa-bell"></i>
-          <span className="m-notif-dot"></span>
+          {unreadCount > 0 && <span className="m-notif-dot"></span>}
         </button>
       </div>
 
-      <style>{`
-        .mobile-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 24px 20px 16px 20px;
-          background: #0f172a;
-          position: sticky;
-          top: 0;
-          z-index: 900;
-        }
-
-        .m-header-user {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .m-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: #6366f1;
-          border: 2px solid rgba(99, 102, 241, 0.3);
-          overflow: hidden;
-        }
-
-        .m-user-info .m-welcome {
-          font-size: 10px;
-          color: #94a3b8;
-          margin: 0;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          font-weight: 600;
-        }
-
-        .m-user-info .m-name {
-          font-size: 14px;
-          font-weight: 700;
-          color: white;
-          margin: 0;
-        }
-
-        .m-header-actions {
-          display: flex;
-          gap: 12px;
-        }
-
-        .m-action-btn {
-          width: 40px;
-          height: 40px;
-          border-radius: 12px;
-          background: #1e293b;
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          color: #94a3b8;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-        }
-
-        .m-notif-dot {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          width: 8px;
-          height: 8px;
-          background: #ef4444;
-          border-radius: 50%;
-          border: 2px solid #1e293b;
-        }
-      `}</style>
+      {showNotifs && (
+        <div className="mobile-notif-overlay">
+          <div className="notif-overlay-header">
+            <h2>Notifications</h2>
+            <button className="close-notif-btn" onClick={() => setShowNotifs(false)}>
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div className="notif-overlay-body no-scrollbar">
+            {localNotifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full opacity-40">
+                <i className="fa-solid fa-bell-slash text-4xl mb-4"></i>
+                <p className="text-sm font-bold">No notifications yet</p>
+              </div>
+            ) : (
+              [...localNotifications].reverse().map(n => (
+                <div 
+                  key={n.id} 
+                  className={`mobile-notif-item ${!n.read ? 'unread' : ''}`}
+                  onClick={() => !n.read && markAsRead(n.id)}
+                >
+                  <div className={`m-notif-icon ${n.type || 'info'}`}>
+                    <i className={
+                      n.type === 'success' ? 'fa-solid fa-check' : 
+                      n.type === 'alert' ? 'fa-solid fa-triangle-exclamation' : 
+                      'fa-solid fa-info'
+                    }></i>
+                  </div>
+                  <div className="m-notif-content">
+                    <p className="m-notif-message">{n.message}</p>
+                    <span className="m-notif-time">{new Date(n.date).toLocaleString()}</span>
+                  </div>
+                  {!n.read && <div className="m-unread-indicator"></div>}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };
