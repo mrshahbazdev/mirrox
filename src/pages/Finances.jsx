@@ -442,18 +442,15 @@ const Finances = () => {
                 <button 
                   key={t.id}
                   onClick={() => setActiveTab(t.id)}
-                  className={`flex-1 relative py-3 px-4 xl:py-4 xl:px-6 rounded-xl text-[10px] font-black transition-all flex items-center justify-center gap-2 xl:gap-3 uppercase tracking-[0.1em] xl:tracking-[0.2em] z-10 ${activeTab === t.id ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                  className={`finance-action-btn ${activeTab === t.id ? 'active' : ''}`}
                 >
-                  {activeTab === t.id && (
-                    <div className="absolute inset-0 bg-indigo-600 rounded-lg shadow-xl shadow-indigo-500/20 -z-10 animate-fade"></div>
-                  )}
-                  <i className={`fa-solid ${t.icon} ${activeTab === t.id ? 'text-white' : 'text-slate-600'} text-sm`}></i>
+                  <i className={`fa-solid ${t.icon} icon`}></i>
                   <span className="hidden sm:inline">{t.label}</span>
                 </button>
               ))}
            </div>
 
-           <div className="glass-card p-6 xl:p-10 relative overflow-hidden">
+           <div className="finance-glass-card">
               {/* Decorative Mesh background for content area */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/5 blur-[120px] -mr-32 -mt-32"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-600/5 blur-[120px] -ml-32 -mb-32"></div>
@@ -514,13 +511,13 @@ const Finances = () => {
                                     value={amount} 
                                     onChange={(e) => setAmount(e.target.value)}
                                     placeholder="5,000"
-                                    className="w-full input-premium rounded-2xl pl-10 pr-6 py-5 text-white text-2xl font-black outline-none"
+                                    className="finance-input-large"
                                     required
                                   />
                                </div>
                                <div className="flex gap-2">
                                   {[100, 500, 1000, 5000].map(v => (
-                                    <button key={v} type="button" onClick={() => setAmount(v.toString())} className="flex-1 py-2 bg-slate-900/60 border border-slate-800 rounded-lg text-[9px] font-black text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all uppercase">+${v}</button>
+                                    <button key={v} type="button" onClick={() => setAmount(v.toString())} className="finance-quick-btn">+${v}</button>
                                   ))}
                                </div>
                             </div>
@@ -583,7 +580,7 @@ const Finances = () => {
                       <button 
                          type="submit" 
                          disabled={isSubmitting}
-                         className="w-full py-6 bg-indigo-600 text-white font-black text-lg rounded-[1.5rem] shadow-[0_20px_40px_-10px_rgba(79,70,229,0.5)] hover:bg-indigo-500 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-4"
+                         className="finance-submit-btn"
                       >
                          {isSubmitting ? (
                            <>
