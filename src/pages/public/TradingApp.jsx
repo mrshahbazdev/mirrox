@@ -45,77 +45,79 @@ const TradingApp = () => {
     ];
 
     return (
-        <div className="bg-white min-h-screen font-['Outfit'] overflow-x-hidden">
+        <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
-            <section className="bg-[#FF4D5E] py-24 px-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
+            <section className="pub-content-hero">
                 <div className="relative z-10 max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter">How to Install the<br/>Firebase Test App</h1>
-                    <p className="text-rose-100 text-lg md:text-xl font-medium opacity-90 max-w-2xl mx-auto uppercase tracking-widest">
+                    <h1>How to Install the Firebase Test App</h1>
+                    <p>
                         Follow our step-by-step guide to get started with the Mirrox mobile experience.
                     </p>
                 </div>
             </section>
 
             {/* --- TIMELINE SECTION --- */}
-            <div className="max-w-7xl mx-auto px-6 py-32 relative">
-                
-                {/* Vertical Timeline Line */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-32 bottom-32 w-0.5 bg-red-100 hidden md:block"></div>
-
-                <div className="space-y-24 md:space-y-48">
+            <div className="lp-section">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '120px' }}>
                     {steps.map((step, i) => (
-                        <div key={i} className="relative group">
-                            {/* Step Number Circle */}
-                            <div className="absolute left-1/2 -translate-x-1/2 -top-12 md:top-1/2 md:-translate-y-1/2 w-16 h-16 bg-white border-4 border-red-50 rounded-full flex items-center justify-center text-[#FF4D5E] font-black text-xl z-10 shadow-xl group-hover:scale-110 transition-transform">
-                                {i + 1}
+                        <div key={i} style={{ 
+                            display: 'grid', 
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+                            gap: '64px', 
+                            alignItems: 'center' 
+                        }}>
+                            {/* Image Side (Left for even index, Right for odd) */}
+                            <div style={{ 
+                                order: step.side === 'right' ? 2 : 1,
+                                position: 'relative'
+                            }}>
+                                {step.image ? (
+                                    <img 
+                                        src={step.image} 
+                                        alt={step.title} 
+                                        style={{ 
+                                            width: '100%', 
+                                            borderRadius: '32px', 
+                                            boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
+                                            aspectRatio: '9/16',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
+                                ) : (
+                                    <div style={{ 
+                                        width: '100%', 
+                                        aspectRatio: '9/16', 
+                                        background: '#f1f5f9', 
+                                        borderRadius: '32px', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'center',
+                                        color: 'var(--pub-red)'
+                                    }}>
+                                        <Smartphone size={64} />
+                                    </div>
+                                )}
                             </div>
 
-                            <div className={`grid md:grid-cols-2 gap-12 md:gap-32 items-center ${step.side === 'right' ? 'md:rtl' : ''}`}>
-                                {/* Content Side */}
-                                <div className={`space-y-8 ${step.side === 'right' ? 'md:ltr text-left' : 'text-right'}`}>
-                                    <div className={`inline-block px-4 py-1.5 bg-red-50 text-[#FF4D5E] font-black text-[10px] rounded-full uppercase tracking-widest ${step.side === 'right' ? '' : 'ml-auto'}`}>
-                                        Step {i + 1}
+                            {/* Content Side */}
+                            <div className="lp-content-side" style={{ order: step.side === 'right' ? 1 : 2 }}>
+                                <div style={{ display: 'inline-block', background: '#fff1f2', color: 'var(--pub-red)', padding: '6px 16px', borderRadius: '100px', fontSize: '12px', fontWeight: '900', marginBottom: '24px', letterSpacing: '0.1em' }}>
+                                    STEP {i + 1}
+                                </div>
+                                <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: '900', color: '#1a1a1a', lineHeight: '1.2', marginBottom: '24px' }}>
+                                    {step.title}
+                                </h2>
+                                <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.6', marginBottom: '32px' }}>
+                                    {step.desc}
+                                </p>
+                                {i === 0 && (
+                                    <div style={{ display: 'flex', gap: '16px' }}>
+                                        <button className="lp-btn-primary">Visit Firebase</button>
+                                        <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                                            <QrCode size={24} style={{ color: '#94a3b8' }} />
+                                        </div>
                                     </div>
-                                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight uppercase tracking-tighter">
-                                        {step.title}
-                                    </h2>
-                                    <p className="text-gray-500 text-lg font-medium leading-relaxed">
-                                        {step.desc}
-                                    </p>
-                                    {i === 0 && (
-                                        <div className="flex gap-4 pt-4 justify-end">
-                                            <button className="bg-[#FF4D5E] text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 shadow-lg shadow-red-100">
-                                                Visit Firebase
-                                            </button>
-                                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
-                                                <QrCode size={20} />
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Image Side */}
-                                <div className={`relative ${step.image ? '' : 'min-h-[200px] md:min-h-0'}`}>
-                                    {step.image ? (
-                                        <div className="relative">
-                                            <div className={`absolute -inset-4 bg-gray-50 rounded-[3rem] ${i % 2 === 0 ? 'rotate-3' : '-rotate-3'} group-hover:rotate-0 transition-transform duration-500`}></div>
-                                            <div className="relative bg-white p-4 rounded-[3rem] shadow-2xl border border-gray-100">
-                                                <img 
-                                                    src={step.image} 
-                                                    alt={step.title} 
-                                                    className="w-full h-auto rounded-[2.5rem] object-cover aspect-[9/16]"
-                                                />
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center h-full">
-                                            <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center text-[#FF4D5E] animate-pulse">
-                                                <Smartphone size={40} />
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -123,22 +125,15 @@ const TradingApp = () => {
             </div>
 
             {/* --- FINAL CTA --- */}
-            <section className="px-6 py-24">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group shadow-[0_40px_100px_rgba(255,77,94,0.3)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                    <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl md:text-8xl font-black text-white leading-tight tracking-tighter uppercase whitespace-pre-line">Join Mirrox and{"\n"}Start Trading</h2>
-                        <div className="flex flex-col md:flex-row justify-center gap-6">
-                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform group">
-                                Open Account <ArrowRight size={16} className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </div>
-                    </div>
+            <section className="lp-cta-block">
+                <h2>Join Mirrox and Start Trading</h2>
+                <div style={{ marginTop: '32px' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Get Started Now</button>
                 </div>
             </section>
 
-             <footer className="text-center pb-16 px-6">
-                <p className="max-w-4xl mx-auto text-[10px] font-black uppercase tracking-widest text-gray-400 opacity-80 decoration-dotted underline underline-offset-4">
+             <footer style={{ textAlign: 'center', paddingBottom: '64px' }}>
+                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                     RISK WARNING: TRADING CFDs INVOLVES SIGNIFICANT RISK TO YOUR INVESTED CAPITAL.
                 </p>
             </footer>

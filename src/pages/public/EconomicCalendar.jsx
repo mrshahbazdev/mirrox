@@ -3,49 +3,42 @@ import { Lock, ArrowRight, Globe, Shield, Zap, PlayCircle } from 'lucide-react';
 
 const EconomicCalendar = () => {
     return (
-        <div className="bg-white min-h-screen font-['Outfit'] overflow-x-hidden relative">
+        <div className="lp-wrapper">
             
             {/* --- BLURRED BACKGROUND MOCKUP --- */}
-            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none filter blur-sm">
-                <div className="max-w-7xl mx-auto px-6 py-24 space-y-12">
-                     <div className="h-24 bg-gray-100 rounded-3xl w-full animate-pulse"></div>
-                     <div className="grid grid-cols-4 gap-6">
-                        {[1,2,3,4,5,6,7,8,9,10,11,12].map(i=>(
-                            <div key={i} className="h-40 bg-gray-50 rounded-2xl animate-pulse"></div>
+            <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.1, pointerEvents: 'none', filter: 'blur(8px)', overflow: 'hidden' }}>
+                <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px' }}>
+                     <div style={{ height: '100px', background: '#e2e8f0', borderRadius: '32px', width: '100%', marginBottom: '48px' }}></div>
+                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+                        {[...Array(12)].map((_, i) => (
+                            <div key={i} style={{ height: '160px', background: '#f1f5f9', borderRadius: '24px' }}></div>
                         ))}
                      </div>
                 </div>
             </div>
 
             {/* --- LOCKED OVERLAY --- */}
-            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
-                <div className="max-w-xl w-full bg-white/80 backdrop-blur-xl p-12 rounded-[3.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.1)] border border-white text-center space-y-10 border-gray-100">
-                    <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center text-[#FF4D5E] mx-auto shadow-inner">
+            <div style={{ position: 'relative', zIndex: 10, minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px' }}>
+                <div style={{ maxWidth: '600px', width: '100%', padding: '64px', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(20px)', borderRadius: '56px', border: '1px solid white', boxShadow: '0 40px 100px rgba(0,0,0,0.05)', textAlign: 'center' }}>
+                    <div style={{ width: '96px', height: '96px', background: '#fff1f2', borderRadius: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--pub-red)', margin: '0 auto 40px auto' }}>
                         <Lock size={40} />
                     </div>
-                    <div className="space-y-4">
-                        <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter leading-none">Economic Calendar Is Locked</h1>
-                        <p className="text-gray-500 font-medium leading-relaxed">Sign up or log in to access our exclusive Economic Calendar and stay ahead of market-moving events.</p>
+                    <div style={{ marginBottom: '40px' }}>
+                        <h1 style={{ fontSize: 'clamp(32px, 5vw, 40px)', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase', lineHeight: '1.1', marginBottom: '24px' }}>Economic Calendar Is Locked</h1>
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '16px', lineHeight: '1.6' }}>Sign up or log in to access our exclusive Economic Calendar and stay ahead of market-moving events.</p>
                     </div>
-                    <div className="flex flex-col md:flex-row gap-4 justify-center">
-                        <button className="bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-red-100">Login</button>
-                        <button className="bg-white text-gray-900 border border-gray-200 px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-50 transition-all">Create Account</button>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+                        <button className="lp-btn-primary" onClick={() => navigate('/login')}>Login</button>
+                        <button className="lp-btn-secondary" onClick={() => navigate('/register')}>Create Account</button>
                     </div>
                 </div>
             </div>
 
-             {/* --- FINAL CTA --- */}
-             <section className="px-6 py-24 relative z-10">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group shadow-[0_45px_100px_rgba(255,77,94,0.35)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                    <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl md:text-8xl font-black text-white leading-tight tracking-tighter uppercase whitespace-pre-line text-center">Join Mirrox and{"\n"}Start Trading</h2>
-                        <div className="flex flex-col md:flex-row justify-center gap-6 text-center">
-                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform text-center mx-auto">
-                                Start Now
-                            </button>
-                        </div>
-                    </div>
+            {/* --- FINAL CTA --- */}
+            <section className="lp-cta-block">
+                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
+                <div style={{ marginTop: '40px', textAlign: 'center' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
                 </div>
             </section>
         </div>
