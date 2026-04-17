@@ -29,114 +29,104 @@ const AboutUs = () => {
     ];
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="pub-wrapper">
             {/* --- HERO SECTION --- */}
-            <section className="bg-[#FF4D5E] py-32 px-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
+            <section className="pub-content-hero">
                 <div className="relative z-10 max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter">Your Global Trading Partner</h1>
-                    <p className="text-rose-100 text-lg md:text-xl font-medium opacity-90 leading-relaxed max-w-2xl mx-auto">
+                    <h1>Your Global Trading Partner</h1>
+                    <p>
                         Empowering traders worldwide with innovation, transparency, and institutional-grade technology.
                     </p>
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-6 py-32 space-y-32">
+            <div className="pub-page-container">
                 {/* --- INTRO SECTION --- */}
-                <section className="grid md:grid-cols-2 gap-20 items-center">
-                    <div className="relative">
-                        <div className="absolute -inset-4 bg-red-50 rounded-3xl -rotate-2"></div>
+                <section className="pub-article" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '64px', alignItems: 'center' }}>
+                    <div style={{ position: 'relative' }}>
                         <img 
                             src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" 
                             alt="Mirrox Vision" 
-                            className="relative rounded-2xl shadow-2xl border border-gray-100"
+                            style={{ width: '100%', borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.1)' }}
                         />
                     </div>
-                    <div className="space-y-8">
-                        <div className="inline-block px-4 py-1.5 bg-red-50 text-[#FF4D5E] font-black text-[10px] rounded-full uppercase tracking-widest">Introducing Mirrox</div>
-                        <h2 className="text-4xl md:text-6xl font-black text-gray-900 leading-[1.1] tracking-tighter uppercase">Redefining the<br/>Standard of Trading</h2>
-                        <p className="text-gray-500 text-lg leading-relaxed font-medium">
+                    <div>
+                        <div className="asset-tag" style={{ display: 'inline-block', padding: '6px 16px', background: 'var(--pub-red-soft)', color: 'var(--pub-red)', fontWeight: '900', fontSize: '10px', borderRadius: '20px', textTransform: 'uppercase', marginBottom: '24px' }}>
+                           Introducing Mirrox
+                        </div>
+                        <h2 style={{ marginTop: 0 }}>Redefining the Standard of Trading</h2>
+                        <p>
                             Mirrox is a leading online trading platform, offering access to over 160+ CFDs on various assets, including Forex, commodities, and more. 
                         </p>
-                        <p className="text-gray-500">
+                        <p>
                             Founded on the principles of innovation and client satisfaction, Mirrox provides cutting-edge tools, educational resources, and exceptional support to help traders of all levels navigate the financial markets confidently.
                         </p>
-                        <div className="grid grid-cols-2 gap-8 pt-4">
+                        <div className="pub-info-grid" style={{ margin: '32px 0 0 0' }}>
                             <div>
-                                <h4 className="text-3xl font-black text-[#FF4D5E]">160+</h4>
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Tradeable Assets</p>
+                                <h4 style={{ color: 'var(--pub-red)', fontSize: '32px', fontWeight: '900', marginBottom: '4px' }}>160+</h4>
+                                <p style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', margin: 0 }}>Tradeable Assets</p>
                             </div>
                             <div>
-                                <h4 className="text-3xl font-black text-[#FF4D5E]">24/5</h4>
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Expert Support</p>
+                                <h4 style={{ color: 'var(--pub-red)', fontSize: '32px', fontWeight: '900', marginBottom: '4px' }}>24/5</h4>
+                                <p style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', margin: 0 }}>Expert Support</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                <hr style={{ border: 'none', borderTop: '1px solid #f1f5f9', margin: '80px 0' }} />
+
                 {/* --- VALUES SECTION --- */}
                 <section>
-                    <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter">Our Core Principles</h2>
-                        <div className="w-24 h-2 bg-[#FF4D5E] mx-auto mt-6 rounded-full"></div>
+                    <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+                        <h2 style={{ textTransform: 'uppercase', tracking: '-1px' }}>Our Core Principles</h2>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="pub-info-grid">
                         {values.map((val, i) => (
-                            <div key={i} className="bg-gray-50 p-10 rounded-[2.5rem] space-y-6 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-transparent hover:border-gray-100 group">
-                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#FF4D5E] shadow-sm group-hover:bg-[#FF4D5E] group-hover:text-white transition-colors">
+                            <div key={i} className="pub-info-card" style={{ textAlign: 'center' }}>
+                                <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto', color: 'var(--pub-red)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                                     {val.icon}
                                 </div>
-                                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">{val.title}</h3>
-                                <p className="text-gray-500 text-sm leading-relaxed">{val.desc}</p>
+                                <h4 style={{ textTransform: 'uppercase', fontSize: '16px' }}>{val.title}</h4>
+                                <p style={{ fontSize: '14px', margin: 0 }}>{val.desc}</p>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 {/* --- REGULATORY SECTION --- */}
-                <section className="bg-gray-900 rounded-[4rem] p-10 md:p-20 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#FF4D5E] opacity-[0.05] rounded-full blur-[100px] pointer-events-none"></div>
-                    <div className="relative z-10 grid md:grid-cols-2 gap-16 items-center">
+                <section style={{ background: '#0b0e14', borderRadius: '32px', padding: '64px', color: 'white', marginTop: '80px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'relative', z-10, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'center' }}>
                         <div className="space-y-8">
-                            <div className="w-16 h-16 bg-[#FF4D5E] rounded-2xl flex items-center justify-center text-white shadow-[0_0_30px_rgba(255,77,94,0.3)]">
+                            <div style={{ width: '64px', height: '64px', background: 'var(--pub-red)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', marginBottom: '24px' }}>
                                 <Award size={32} />
                             </div>
-                            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-tight">Regulatory Commitment<br/>& Security</h2>
-                            <div className="space-y-6 text-gray-400 font-medium leading-relaxed">
+                            <h2 style={{ color: 'white', fontSize: 'clamp(24px, 4vw, 40px)', textTransform: 'uppercase', marginTop: 0 }}>Regulatory Commitment & Security</h2>
+                            <div style={{ color: '#94a3b8', fontSize: '16px' }}>
                                 <p>
                                     Regulated by the Mwali International Services Authority (MISA), Mirrox ensures adherence to the highest standards of financial security and transparency.
                                 </p>
-                                <div className="space-y-3 pt-4">
-                                    <p className="flex items-center gap-3 text-white text-sm"><CheckCircle2 size={18} className="text-[#FF4D5E]" /> License: BFX2024064</p>
-                                    <p className="flex items-center gap-3 text-white text-sm"><CheckCircle2 size={18} className="text-[#FF4D5E]" /> Registration: HT00324037</p>
-                                    <p className="flex items-center gap-3 text-white text-sm"><CheckCircle2 size={18} className="text-[#FF4D5E]" /> Jurisdiction: Mwali - Comoros Union</p>
-                                </div>
+                                <ul style={{ listStyle: 'none', padding: 0, marginTop: '24px' }}>
+                                    <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'white', fontSize: '14px', marginBottom: '12px' }}><CheckCircle2 size={18} style={{ color: 'var(--pub-red)' }} /> License: BFX2024064</li>
+                                    <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'white', fontSize: '14px', marginBottom: '12px' }}><CheckCircle2 size={18} style={{ color: 'var(--pub-red)' }} /> Registration: HT00324037</li>
+                                    <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'white', fontSize: '14px', marginBottom: '12px' }}><CheckCircle2 size={18} style={{ color: 'var(--pub-red)' }} /> Jurisdiction: Mwali - Comoros Union</li>
+                                </ul>
                             </div>
                         </div>
-                        <div className="bg-white/5 border border-white/10 rounded-[3rem] p-10 space-y-8 backdrop-blur-sm">
-                            <h3 className="text-2xl font-black uppercase tracking-tight">Segregated Client Funds</h3>
-                            <p className="text-gray-400 font-medium leading-relaxed">
+                        <div style={{ padding: '40px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <h3 style={{ textTransform: 'uppercase', fontSize: '20px', fontWeight: '900', marginBottom: '16px' }}>Segregated Client Funds</h3>
+                            <p style={{ color: '#94a3b8', fontSize: '15px', lineHeight: '1.6' }}>
                                 At Mirrox, client funds are kept in segregated accounts, separate from company funds. This ensures added security and trust, protecting our clients' investments at all times.
                             </p>
-                            <div className="pt-4">
-                                <button className="bg-white text-gray-900 px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-100">
-                                    Learn More
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </section>
             </div>
 
             {/* --- FINAL CTA --- */}
-            <section className="px-6 pb-24 text-center">
-                <div className="max-w-4xl mx-auto space-y-12">
-                    <h2 className="text-4xl md:text-6xl font-black text-gray-900 uppercase tracking-tighter leading-tight">Start Your Journey with<br/>a Trusted Partner</h2>
-                    <div className="flex flex-col md:flex-row justify-center gap-6">
-                        <button className="bg-[#FF4D5E] text-white px-16 py-6 rounded-3xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform">Open Account</button>
-                    </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 opacity-60">Join 100,000+ traders around the globe</p>
-                </div>
+            <section style={{ padding: '80px 24px', textAlign: 'center' }}>
+                <h2 style={{ fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: '900', textTransform: 'uppercase', marginBottom: '32px' }}>Start Your Journey Today</h2>
+                <button className="lp-btn-primary" style={{ padding: '20px 64px' }}>Open Account</button>
             </section>
         </div>
     );

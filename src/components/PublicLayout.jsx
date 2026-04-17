@@ -45,41 +45,35 @@ const PublicLayout = () => {
     const getSingleLinkClass = ({ isActive }) => isActive ? 'single-link active red-text mb-1' : 'single-link mb-1';
 
     return (
-        <div className="bg-gray-50 min-h-screen text-[#1a1a1a] font-['Plus_Jakarta_Sans'] antialiased">
+        <div className="pub-layout">
             {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b flex items-center justify-between px-6 z-50">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-                    <div className="w-6 h-6 bg-[#FF4D5E] flex items-center justify-center rounded-sm">
-                        <span className="text-white font-bold text-[10px]">BV</span>
-                    </div>
-                    <span className="font-bold text-lg tracking-tighter">BULLVERA</span>
+            <header className="pub-mobile-header md:hidden">
+                <div className="logo-wrap" onClick={() => navigate('/')}>
+                    <div className="pub-logo-box">BV</div>
+                    <span className="pub-logo-text">BULLVERA</span>
                 </div>
-                <button onClick={toggleSidebar} className="p-2 text-[#FF4D5E]">
+                <button onClick={toggleSidebar} className="pub-menu-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-            </div>
+            </header>
 
-            <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
+            <div className={`pub-sidebar-overlay ${sidebarOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
 
             <div className="flex">
                 {/* Fixed Left Sidebar */}
-                <aside className={`public-sidebar fixed top-0 bottom-0 left-0 w-[280px] bg-white border-r z-50 flex flex-col overflow-y-auto transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="p-8 hidden md:block bg-white cursor-pointer" onClick={() => navigate('/')}>
-                        <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 bg-[#FF4D5E] flex items-center justify-center rounded-sm">
-                                <span className="text-white font-bold text-[12px]">BV</span>
-                            </div>
-                            <span className="font-bold text-xl tracking-tighter">BULLVERA</span>
-                        </div>
+                <aside className={`pub-sidebar ${sidebarOpen ? 'open' : ''}`}>
+                    <div className="pub-sidebar-logo hidden md:flex" onClick={() => navigate('/')}>
+                        <div className="pub-logo-box">BV</div>
+                        <span className="pub-logo-text">BULLVERA</span>
                     </div>
 
-                    <nav className="flex-1 pt-16 md:pt-2">
+                    <nav className="pub-nav">
                         <NavLink to="/" className={getSingleLinkClass}>Home</NavLink>
 
                         {/* Platforms Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.platforms ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.platforms ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('platforms')}>
                                 <span>Platforms</span>
                                 <div className="arrow"></div>
@@ -91,7 +85,7 @@ const PublicLayout = () => {
                         </div>
 
                         {/* Markets Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.markets ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.markets ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('markets')}>
                                 <span>Markets</span>
                                 <div className="arrow"></div>
@@ -109,7 +103,7 @@ const PublicLayout = () => {
                         <NavLink to="/trading-accounts" className={getSingleLinkClass}>Trading Accounts</NavLink>
 
                         {/* Trading Info Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.info ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.info ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('info')}>
                                 <span>Trading Info</span>
                                 <div className="arrow"></div>
@@ -123,7 +117,7 @@ const PublicLayout = () => {
                         </div>
 
                         {/* Trading Tools Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.tools ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.tools ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('tools')}>
                                 <span>Trading Tools</span>
                                 <div className="arrow"></div>
@@ -140,7 +134,7 @@ const PublicLayout = () => {
                         </div>
 
                         {/* Support Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.support ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.support ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('support')}>
                                 <span>Support</span>
                                 <div className="arrow"></div>
@@ -152,7 +146,7 @@ const PublicLayout = () => {
                         </div>
 
                         {/* Company Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.company ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.company ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('company')}>
                                 <span>Company</span>
                                 <div className="arrow"></div>
@@ -164,7 +158,7 @@ const PublicLayout = () => {
                         </div>
 
                         {/* Legal Dropdown */}
-                        <div className={`sidebar-group has-submenu ${openDropdowns.legal ? 'open' : ''}`}>
+                        <div className={`sidebar-group ${openDropdowns.legal ? 'open' : ''}`}>
                             <div className="sidebar-item-header" onClick={() => toggleDropdown('legal')}>
                                 <span>Legal</span>
                                 <div className="arrow"></div>
@@ -178,27 +172,27 @@ const PublicLayout = () => {
                     </nav>
 
                     {/* Registration Footer Area */}
-                    <div className="p-6 bg-white border-t">
+                    <div className="pub-sidebar-footer">
                         <button 
                             onClick={() => navigate('/register')}
-                            className="w-full bg-[#FF4D5E] text-white py-4 rounded-lg text-sm font-bold uppercase tracking-widest shadow-lg shadow-red-100 hover:opacity-90 transition-all">
+                            className="pub-reg-btn">
                             Registration
                         </button>
-                        <div className="text-center mt-4">
-                            <p className="text-xs text-gray-500">Already have an account? <span onClick={() => navigate('/login')} className="text-[#FF4D5E] font-bold cursor-pointer">Login</span></p>
+                        <div className="pub-login-hint">
+                            <p>Already have an account? <span onClick={() => navigate('/login')}>Login</span></p>
                         </div>
                     </div>
                 </aside>
 
                 {/* Main Content Area */}
-                <main className="main-content flex-1 md:ml-[280px] pt-16 md:pt-0">
+                <main className="pub-main flex-1">
                     <Outlet />
 
                     {/* Default Footer */}
-                    <footer className="bg-white border-t border-gray-200 py-16">
-                        <div className="max-w-4xl mx-auto px-8">
-                            <div className="text-[12px] text-gray-600 leading-relaxed mb-8 bg-gray-50 p-6 rounded-xl">
-                                <h5 className="font-bold text-gray-900 mb-2 uppercase">Risk Warning</h5>
+                    <footer className="pub-footer">
+                        <div className="pub-footer-container">
+                            <div className="risk-warning">
+                                <h5>Risk Warning</h5>
                                 Trading financial instruments involves significant risk. You should ensure you fully understand the risks and seek advice if necessary. Bullvera Group © 2026.
                             </div>
                         </div>

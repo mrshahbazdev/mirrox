@@ -14,224 +14,121 @@ const Forex = () => {
     ];
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="lp-wrapper">
             {/* HERO SECTION */}
-            <section className="bg-[#FF4D5E] py-24 px-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
+            <section className="pub-content-hero">
                 <div className="relative z-10">
-                    <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">Forex Trading With Mirrox</h1>
-                    <p className="text-rose-100 text-lg md:text-xl font-medium max-w-2xl mx-auto opacity-90 leading-relaxed">
+                    <h1>Forex Trading With Mirrox</h1>
+                    <p>
                         Navigate the world's most liquid market with professional tools and competitive spreads.
                     </p>
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-6 py-24 space-y-32">
+            <div className="lp-section" style={{ display: 'flex', flexDirection: 'column', gap: '120px' }}>
                 
                 {/* SECTION 1: WHAT IS FOREX */}
-                <section className="grid md:grid-cols-2 gap-16 items-center">
-                    <div className="relative">
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '64px', alignItems: 'center' }}>
+                    <div style={{ position: 'relative' }}>
                         <img 
                             src="https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=800" 
                             alt="Forex Trading" 
-                            className="rounded-3xl shadow-2xl border border-gray-100 transform -rotate-2 hover:rotate-0 transition-transform duration-500"
+                            style={{ width: '100%', borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.1)' }}
                         />
-                        <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl hidden md:block">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                                    <TrendingUp size={20} />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-400 font-bold uppercase">EUR/USD</p>
-                                    <p className="text-lg font-black">+1.24%</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div className="space-y-6">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">What is Forex Trading?</h2>
-                        <p className="text-gray-600 text-lg leading-relaxed font-medium">
+                    <div className="lp-content-side">
+                        <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: '900', color: '#1a1a1a', lineHeight: '1.2', marginBottom: '24px' }}>What is Forex Trading?</h2>
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.6', marginBottom: '24px' }}>
                             Forex trading, also known as currency trading, involves the exchange of currencies in the global market. It is the largest and most liquid financial market in the world, driven by geopolitical events and economic data.
                         </p>
-                        <p className="text-gray-600 text-base leading-relaxed">
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '16px', lineHeight: '1.6', marginBottom: '32px' }}>
                             With Mirrox, you can trade Forex CFDs (Contracts for Difference) to participate in price movements across major, minor, and exotic pairs, 24 hours a day, 5 days a week.
                         </p>
-                        <button className="bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all">
-                            Trade Now
-                        </button>
+                        <button className="lp-btn-primary">Trade Now</button>
                     </div>
                 </section>
 
                 {/* SECTION 2: BENEFITS */}
-                <section className="grid md:grid-cols-2 gap-16 items-center">
-                    <div className="order-2 md:order-1 space-y-6">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">Benefits of Trading Forex CFDs</h2>
-                        <p className="text-gray-600 text-lg leading-relaxed font-medium">
-                            Access over 45+ currency pairs with high leverage options up to 1:400 and professional analytical tools.
-                        </p>
-                        <ul className="space-y-4">
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '64px', alignItems: 'center' }}>
+                    <div className="lp-content-side" style={{ order: 2 }}>
+                        <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: '900', color: '#1a1a1a', lineHeight: '1.2', marginBottom: '24px' }}>Benefits of Trading Forex CFDs</h2>
+                        <ul className="lp-list" style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
                             {[
                                 "Competitive tight spreads starting from 0.0 pips",
                                 "Zero commission on deposits",
                                 "24/5 access to global markets",
                                 "Lightning-fast execution with minimal slippage"
                             ].map((benefit, i) => (
-                                <li key={i} className="flex items-start gap-3">
-                                    <div className="mt-1 flex-shrink-0 w-6 h-6 bg-red-50 rounded-full flex items-center justify-center text-[#FF4D5E]">
-                                        <CheckCircle2 size={16} />
-                                    </div>
-                                    <span className="text-gray-700 font-medium">{benefit}</span>
+                                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px', color: '#475569', fontWeight: '600' }}>
+                                    <CheckCircle2 size={20} style={{ color: 'var(--pub-red)', marginTop: '2px' }} />
+                                    <span>{benefit}</span>
                                 </li>
                             ))}
                         </ul>
-                        <button className="bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all">
-                            View Offer
-                        </button>
+                        <button className="lp-btn-primary">View Offer</button>
                     </div>
-                    <div className="order-1 md:order-2 relative flex justify-center">
-                         {/* Mobile Mockup Layout */}
-                         <div className="w-[300px] h-[600px] bg-gray-900 rounded-[3rem] border-[12px] border-gray-800 shadow-2xl relative overflow-hidden">
-                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-2xl z-20"></div>
-                             <img src="https://images.unsplash.com/photo-1611224885990-ab73b391cd2a?auto=format&fit=crop&q=80&w=600" className="w-full h-full object-cover opacity-80" />
-                             <div className="absolute inset-0 flex flex-col justify-end p-6 space-y-4">
-                                 <button className="w-full bg-[#22C55E] text-white py-4 rounded-xl font-black text-lg shadow-xl shadow-green-500/20">BUY</button>
-                                 <button className="w-full bg-[#EF4444] text-white py-4 rounded-xl font-black text-lg shadow-xl shadow-red-500/20">SELL</button>
+                    <div style={{ order: 1, display: 'flex', justifyContent: 'center' }}>
+                         <div style={{ width: '280px', height: '560px', background: '#0b0e14', borderRadius: '3rem', border: '12px solid #1e293b', boxShadow: '0 30px 60px rgba(0,0,0,0.2)', position: 'relative', overflow: 'hidden' }}>
+                             <img src="https://images.unsplash.com/photo-1611224885990-ab73b391cd2a?auto=format&fit=crop&q=80&w=600" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                             <div style={{ position: 'absolute', bottom: '0', left: '0', right: '0', padding: '24px', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                                 <button style={{ width: '100%', background: '#22C55E', color: 'white', border: 'none', padding: '16px', borderRadius: '12px', fontWeight: '900' }}>BUY</button>
+                                 <button style={{ width: '100%', background: '#EF4444', color: 'white', border: 'none', padding: '16px', borderRadius: '12px', fontWeight: '900' }}>SELL</button>
                              </div>
                          </div>
-                    </div>
-                </section>
-
-                {/* SECTION 3: HOW TO TRADE */}
-                <section className="grid md:grid-cols-2 gap-16 items-center">
-                    <div className="relative">
-                        <img 
-                            src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=800" 
-                            alt="Trading Tools" 
-                            className="rounded-3xl shadow-2xl border border-gray-100"
-                        />
-                    </div>
-                    <div className="space-y-6">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">How to Trade Forex with Mirrox</h2>
-                        <div className="space-y-10 mt-8">
-                            <div className="flex gap-6">
-                                <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-900 font-black shrink-0">1</div>
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">Choose Your Pair</h3>
-                                    <p className="text-gray-500">Pick from over 45+ currency pairs including majors like EUR/USD or minors like GBP/JPY.</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-6">
-                                <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-900 font-black shrink-0">2</div>
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">Analyze & Strategy</h3>
-                                    <p className="text-gray-500">Use our advanced analytical tools and real-time market data to plan your entry.</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-6">
-                                <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-900 font-black shrink-0">3</div>
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">Execute Trade</h3>
-                                    <p className="text-gray-500">Securely fund your account and place your trade with zero hidden commissions.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <button className="inline-block mt-8 bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90">
-                            Open Account
-                        </button>
                     </div>
                 </section>
             </div>
 
             {/* FOREX PAIRS TABLE */}
-            <section className="bg-gray-50 py-24 border-y border-gray-100">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-6">Forex Pairs Offered by Mirrox</h2>
-                        <p className="text-gray-500 text-lg">Explore our competitive spreads across global currency pairs</p>
+            <section style={{ background: '#f8fafc', padding: '120px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+                    <div className="lp-section-header">
+                        <h2>Forex Pairs Offering</h2>
+                        <p style={{ color: 'var(--pub-text-muted)', marginTop: '16px' }}>Explore our competitive spreads across global pairs</p>
                     </div>
 
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="bg-gray-50 border-b border-gray-100">
-                                        <th className="px-8 py-6 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Instrument</th>
-                                        <th className="px-8 py-6 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Type</th>
-                                        <th className="px-8 py-6 text-center text-xs font-black text-gray-400 uppercase tracking-widest">Average Spread</th>
-                                        <th className="px-8 py-6 text-right text-xs font-black text-gray-400 uppercase tracking-widest">Action</th>
+                    <div className="lp-table-wrapper">
+                        <table className="lp-table">
+                            <thead>
+                                <tr>
+                                    <th>Instrument</th>
+                                    <th>Type</th>
+                                    <th style={{ textAlign: 'center' }}>Avg Spread</th>
+                                    <th style={{ textAlign: 'right' }}>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {forexPairs.map((pair, idx) => (
+                                    <tr key={idx}>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                <div className="asset-badge">{pair.symbol.slice(0,3)}</div>
+                                                <div>
+                                                    <div style={{ fontWeight: '800' }}>{pair.symbol}</div>
+                                                    <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700' }}>{pair.name}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span style={{ fontSize: '10px', background: '#f1f5f9', padding: '4px 8px', borderRadius: '20px', fontWeight: '900' }}>{pair.category}</span>
+                                        </td>
+                                        <td style={{ textAlign: 'center', fontWeight: '800', color: '#475569' }}>{pair.spread}</td>
+                                        <td style={{ textAlign: 'right' }}>
+                                            <button style={{ padding: '8px 16px', borderRadius: '8px', background: 'var(--pub-red)', color: 'white', border: 'none', fontSize: '11px', fontWeight: '900' }}>TRADE</button>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {forexPairs.map((pair, idx) => (
-                                        <tr key={idx} className="hover:bg-gray-50 transition-colors group">
-                                            <td className="px-8 py-6 text-left">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-[#FF4D5E] font-bold text-xs ring-4 ring-red-50/50">
-                                                        {pair.symbol.slice(0,3)}
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-black text-gray-900">{pair.symbol}</p>
-                                                        <p className="text-xs text-gray-400 font-bold">{pair.name}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-8 py-6 text-left">
-                                                <span className="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-black text-gray-500 uppercase tracking-tight">{pair.category}</span>
-                                            </td>
-                                            <td className="px-8 py-6 text-center font-bold text-gray-700">{pair.spread}</td>
-                                            <td className="px-8 py-6 text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    <button className="px-4 py-2 bg-green-500 text-white text-[10px] font-black rounded-lg hover:bg-green-600 transition-colors uppercase tracking-widest">Buy</button>
-                                                    <button className="px-4 py-2 bg-red-500 text-white text-[10px] font-black rounded-lg hover:bg-red-600 transition-colors uppercase tracking-widest">Sell</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="p-8 bg-gray-50 border-t border-gray-100 text-center">
-                            <button className="text-[#FF4D5E] font-black text-xs uppercase tracking-widest flex items-center gap-2 mx-auto hover:gap-4 transition-all group">
-                                View Full List <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* LEARN FOREX SECTION */}
-            <section className="py-24 px-6 overflow-hidden">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
-                    <div className="flex-1 space-y-6">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">Learn CFD Forex Trading with Mirrox</h2>
-                        <p className="text-gray-600 text-lg leading-relaxed">
-                            Education is essential in forex trading, and Mirrox offers a free Education Center to help you master the currency markets. Gain knowledge to make informed decisions, manage risks, and protect your capital.
-                        </p>
-                        <button className="flex items-center gap-2 bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90">
-                            Learn More <ArrowRight size={16} />
-                        </button>
-                    </div>
-                    <div className="flex-1 relative">
-                        {/* Abstract Graphic View */}
-                        <div className="relative w-full aspect-square flex items-center justify-center">
-                           <div className="absolute inset-0 bg-[#FF4D5E]/5 rounded-full animate-pulse"></div>
-                           <div className="absolute w-3/4 h-3/4 bg-[#FF4D5E]/10 rounded-full border border-[#FF4D5E]/20"></div>
-                           <BarChart2 size={120} className="text-[#FF4D5E] relative z-10" />
-                        </div>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
 
             {/* FINALE CTA BANNER */}
-            <section className="px-6 py-24">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                    <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl md:text-7xl font-black text-white leading-tight">Join Mirrox and<br/>Start Trading</h2>
-                        <div className="flex flex-col md:flex-row justify-center gap-6">
-                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform">Get Started Now</button>
-                        </div>
-                    </div>
+            <section className="lp-cta-block">
+                <h2>Join Mirrox and Start Trading</h2>
+                <div style={{ marginTop: '32px' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Get Started Now</button>
                 </div>
             </section>
         </div>
