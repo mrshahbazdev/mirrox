@@ -18,7 +18,7 @@ const NotFound = () => {
       <div style={{
         fontSize: '120px',
         fontWeight: 900,
-        background: 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)',
+        background: 'linear-gradient(135deg, #FF4D5E 0%, #ff7582 100%)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         marginBottom: '20px',
@@ -35,10 +35,10 @@ const NotFound = () => {
         to="/" 
         style={{
           padding: '16px 32px',
-          background: 'rgba(50,145,255,0.1)',
-          border: '1px solid rgba(50,145,255,0.3)',
+          background: 'rgba(255,77,94,0.1)',
+          border: '1px solid rgba(255,77,94,0.3)',
           borderRadius: '12px',
-          color: '#3291ff',
+          color: '#FF4D5E',
           textDecoration: 'none',
           fontWeight: 700,
           transition: 'all 0.2s',

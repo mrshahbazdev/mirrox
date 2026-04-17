@@ -104,7 +104,7 @@ function App() {
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       textAlign: 'center', padding: '20px', color: '#fff'
     }}>
-      <div className="m-icon" style={{ fontSize: '80px', color: '#3291ff', marginBottom: '24px', opacity: 0.8 }}>
+      <div className="m-icon" style={{ fontSize: '80px', color: '#FF4D5E', marginBottom: '24px', opacity: 0.8 }}>
          <i className="fa-solid fa-screwdriver-wrench fa-bounce" />
       </div>
       <h1 style={{ fontSize: '32px', marginBottom: '16px', fontWeight: 800 }}>Platform Upgrading</h1>
@@ -112,8 +112,8 @@ function App() {
         We are currently performing scheduled maintenance to enhance your trading experience. 
         Bullvera will be back online shortly. Thank you for your patience.
       </p>
-      <div style={{ marginTop: '40px', padding: '12px 24px', background: 'rgba(50,145,255,0.1)', borderRadius: '12px', border: '1px solid rgba(50,145,255,0.2)' }}>
-         <span style={{ fontSize: '12px', letterSpacing: '1px', fontWeight: 700, color: '#3291ff' }}>ESTIMATED UPTIME: 15 MINUTES</span>
+      <div style={{ marginTop: '40px', padding: '12px 24px', background: 'rgba(255, 77, 94, 0.1)', borderRadius: '12px', border: '1px solid rgba(255, 77, 94, 0.2)' }}>
+         <span style={{ fontSize: '12px', letterSpacing: '1px', fontWeight: 700, color: '#FF4D5E' }}>ESTIMATED UPTIME: 15 MINUTES</span>
       </div>
     </div>
   );

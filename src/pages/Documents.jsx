@@ -116,7 +116,7 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
                 onClick={() => !file && fileInputRef.current?.click()}
                 style={{ 
                   border: file ? '2px solid var(--accent)' : '2px dashed rgba(255,255,255,0.15)', 
-                  background: file ? 'rgba(50, 145, 255, 0.05)' : 'rgba(0,0,0,0.2)',
+                  background: file ? 'rgba(255, 77, 94, 0.05)' : 'rgba(0,0,0,0.2)',
                   padding: '32px 20px', textAlign: 'center', borderRadius: '12px', 
                   position: 'relative', cursor: file ? 'default' : 'pointer',
                   transition: 'all 0.2s'
@@ -147,9 +147,9 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
                    </div>
                  ) : (
                    <>
-                     <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(50, 145, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                       <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: '24px', color: '#3291ff' }}></i>
-                     </div>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255, 77, 94, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                        <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: '24px', color: '#FF4D5E' }}></i>
+                      </div>
                      <p style={{ margin: '0 0 8px 0', color: '#fff', fontSize: '15px', fontWeight: 600 }}>Click to upload file</p>
                    </>
                  )}
@@ -163,7 +163,7 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
                 background: (!file || loading) ? 'rgba(255,255,255,0.1)' : 'var(--accent)', 
                 color: (!file || loading) ? '#64748b' : '#fff',
                 width: '100%', padding: '16px', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: 700, cursor: (!file || loading) ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s', boxShadow: file ? '0 4px 12px rgba(50, 145, 255, 0.3)' : 'none'
+                transition: 'all 0.2s', boxShadow: file ? '0 4px 12px rgba(255, 77, 94, 0.3)' : 'none'
               }}
             >
               {loading ? (

@@ -39,8 +39,8 @@ function buildSystemPrompt(varCount, brand, techTarget) {
   return `You are a Senior UI/UX Engineer. Generate ${varCount} stunning, production-ready layouts.
 BRAND IDENTITY (STRICT):
 Name: ${brand.name || 'Visionary'}
-Primary Color: ${brand.primary || '#6366F1'}
-Logo URL: ${brand.logo || 'https://v2ui.pro/logo.png'}
+Primary Color: ${brand.primary || '#FF4D5E'}
+Logo URL: ${brand.logo || 'https://bullvera.com/logo.png'}
 Font: ${brand.font || 'Inter'}
 
 Tech Stack: Tailwind CSS (CDN), FontAwesome 6, Google Font (${brand.font || 'Inter'}).
@@ -56,10 +56,10 @@ Style: High-end, precise spacing (8px grid), 100% responsive.`;
 export default function Tool() {
 
   // --- Persistent Settings ---
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('v2ui_api_key') || '');
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('bull_studio_api_key') || '');
   const [brand, setBrand] = useState(() => {
-    const saved = localStorage.getItem('v2ui_brand');
-    return saved ? JSON.parse(saved) : { name: '', logo: '', primary: '#6366F1', font: 'Plus Jakarta Sans' };
+    const saved = localStorage.getItem('bull_studio_brand');
+    return saved ? JSON.parse(saved) : { name: 'Bullvera Finance', logo: '', primary: '#FF4D5E', font: 'Outfit' };
   });
   
   const [showSettings, setShowSettings] = useState(false);
@@ -101,9 +101,9 @@ export default function Tool() {
   const currentHTML   = variations[activeIndex]?.html || '';
 
   // Persistence Effects
-  useEffect(() => { localStorage.setItem('v2ui_api_key', apiKey); }, [apiKey]);
-  useEffect(() => { localStorage.setItem('v2ui_brand', JSON.stringify(brand)); }, [brand]);
-  useEffect(() => { localStorage.setItem('v2ui_last_variations', JSON.stringify(variations)); }, [variations]);
+  useEffect(() => { localStorage.setItem('bull_studio_api_key', apiKey); }, [apiKey]);
+  useEffect(() => { localStorage.setItem('bull_studio_brand', JSON.stringify(brand)); }, [brand]);
+  useEffect(() => { localStorage.setItem('bull_studio_last_vars', JSON.stringify(variations)); }, [variations]);
 
   // Sync Live Styles with Brand when brand changes
   useEffect(() => { setLiveStyles(s => ({ ...s, primary: brand.primary, font: brand.font })); }, [brand]);
@@ -119,9 +119,9 @@ export default function Tool() {
         tag.innerHTML = `
           :root { --p: ${liveStyles.primary}; --r: ${liveStyles.radius}px; --f: '${liveStyles.font}', sans-serif; }
           * { font-family: var(--f) !important; }
-          .rounded-xl, .rounded-2xl, .bg-indigo-600, .bg-blue-600, .bg-primary { border-radius: var(--r) !important; }
-          .bg-indigo-600, .bg-blue-600, .bg-primary, .bg-indigo-500 { background-color: var(--p) !important; }
-          .text-indigo-600, .text-primary, .text-indigo-400 { color: var(--p) !important; }
+          .rounded-xl, .rounded-2xl, .bg-brand, .bg-primary { border-radius: var(--r) !important; }
+          .bg-brand, .bg-primary, .bg-accent { background-color: var(--p) !important; }
+          .text-brand, .text-primary, .text-accent { color: var(--p) !important; }
         `;
       }
     }
@@ -190,19 +190,19 @@ export default function Tool() {
     <div className="min-h-screen bg-[#050507] text-slate-300 flex flex-col font-sans overflow-hidden">
       
       {/* ── Dynamic Blobs ── */}
-      <div className="fixed top-[-100px] left-[-100px] w-[500px] h-[500px] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none z-0" />
-      <div className="fixed bottom-[-100px] right-[-100px] w-[500px] h-[500px] bg-violet-600/10 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="fixed top-[-100px] left-[-100px] w-[500px] h-[500px] bg-[#FF4D5E]/10 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="fixed bottom-[-100px] right-[-100px] w-[500px] h-[500px] bg-[#FF4D5E]/10 blur-[120px] rounded-full pointer-events-none z-0" />
 
       {/* ── Header ── */}
       <header className="h-16 border-b border-white/[0.04] bg-black/40 backdrop-blur-3xl flex items-center justify-between px-8 z-50">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-600/20 active:scale-95 transition-all">
+          <div className="w-10 h-10 bg-[#FF4D5E] rounded-2xl flex items-center justify-center shadow-xl shadow-[#FF4D5E]/20 active:scale-95 transition-all">
             <Sparkles size={20} className="text-white fill-white/20" />
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <span className="text-white font-black tracking-tighter text-2xl uppercase italic leading-none">Vision2UI</span>
-              <span className="px-2 py-0.5 bg-indigo-500/10 rounded-md text-[9px] font-black text-indigo-400 border border-indigo-500/20 uppercase tracking-widest">Master Studio</span>
+              <span className="text-white font-black tracking-tighter text-2xl uppercase italic leading-none">STUDIO</span>
+              <span className="px-2 py-0.5 bg-[#FF4D5E]/10 rounded-md text-[9px] font-black text-[#FF4D5E] border border-[#FF4D5E]/20 uppercase tracking-widest">Bullvera Creative</span>
             </div>
             {brand.name && <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1 opacity-60">Syncing with {brand.name}</p>}
           </div>
@@ -237,7 +237,7 @@ export default function Tool() {
             {/* Presets Grid */}
             <div className="grid grid-cols-3 gap-2">
               {PRESETS.map(p => (
-                <button key={p.id} onClick={() => { setPreset(p.id); setPrompt(p.prompt); }} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${preset === p.id ? 'bg-indigo-600/10 border-indigo-500/50' : 'bg-white/[0.02] border-white/5 grayscale opacity-50 hover:grayscale-0 hover:opacity-100'}`}>
+                <button key={p.id} onClick={() => { setPreset(p.id); setPrompt(p.prompt); }} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${preset === p.id ? 'bg-[#FF4D5E]/10 border-[#FF4D5E]/50' : 'bg-white/[0.02] border-white/5 grayscale opacity-50 hover:grayscale-0 hover:opacity-100'}`}>
                   <span className="text-xl">{p.emoji}</span>
                   <span className="text-[9px] font-black uppercase tracking-tight text-white">{p.label}</span>
                 </button>
@@ -247,7 +247,7 @@ export default function Tool() {
             {/* Prompt */}
             <div className="space-y-3">
               <Label icon={<Terminal size={12}/>}>Project Constraints</Label>
-              <textarea value={prompt} onChange={e => setPrompt(e.target.value)} className="w-full h-32 bg-white/5 border border-white/5 rounded-3xl p-4 text-sm text-white outline-none focus:border-indigo-500/50 transition-all resize-none shadow-inner" placeholder="Analyze and build the future..." />
+              <textarea value={prompt} onChange={e => setPrompt(e.target.value)} className="w-full h-32 bg-white/5 border border-white/5 rounded-3xl p-4 text-sm text-white outline-none focus:border-[#FF4D5E]/50 transition-all resize-none shadow-inner" placeholder="Analyze and build the future..." />
             </div>
 
             {/* Components */}
@@ -256,7 +256,7 @@ export default function Tool() {
                <div className="flex flex-wrap gap-2">
                  {COMPONENT_SHORTCUTS.map(c => (
                    <button key={c.id} onClick={() => setPrompt(p => p + (p ? ' ' : '') + c.prompt)} className="flex items-center gap-2 px-3 py-2 bg-white/[0.02] border border-white/5 rounded-xl text-[10px] font-bold text-slate-400 hover:text-white hover:border-white/20 transition-all">
-                     <span className="text-indigo-500">{c.icon}</span> {c.label}
+                     <span className="text-[#FF4D5E]">{c.icon}</span> {c.label}
                    </button>
                  ))}
                </div>
@@ -264,14 +264,14 @@ export default function Tool() {
 
             {/* Vision Upload */}
             {inputMode === 'convert' && (
-              <div onClick={() => fileInputRef.current?.click()} className={`aspect-video rounded-3xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${image ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-white/5 bg-white/5 hover:border-white/10'}`}>
+              <div onClick={() => fileInputRef.current?.click()} className={`aspect-video rounded-3xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${image ? 'border-[#FF4D5E]/50 bg-[#FF4D5E]/5' : 'border-white/5 bg-white/5 hover:border-white/10'}`}>
                 <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
                 {image ? <img src={image} className="w-full h-full object-contain p-4" /> : <div className="text-center text-slate-700 font-black uppercase text-[10px] tracking-widest"><ImageIcon size={24} className="mx-auto mb-2 opacity-50" />Upload UI Source</div>}
               </div>
             )}
 
             {/* Run */}
-            <button onClick={generateUI} disabled={isLoading} className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-base rounded-3xl shadow-2xl shadow-indigo-600/30 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-3">
+            <button onClick={generateUI} disabled={isLoading} className="w-full py-5 bg-[#FF4D5E] hover:bg-[#ff7582] text-white font-black text-base rounded-3xl shadow-2xl shadow-[#FF4D5E]/30 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-3">
               {isLoading ? <Loader2 className="animate-spin" size={20}/> : <Sparkles size={20}/>}
               {isLoading ? 'THINKING...' : 'RUN GENERATION'}
             </button>
@@ -287,7 +287,7 @@ export default function Tool() {
                     </div>
                     <div>
                       <div className="flex items-center justify-between text-[10px] font-black text-slate-500 uppercase mb-3">Radius <span>{liveStyles.radius}px</span></div>
-                      <input type="range" min="0" max="32" value={liveStyles.radius} onChange={e => setLiveStyles({...liveStyles, radius: e.target.value})} className="w-full h-1 bg-white/10 rounded-full appearance-none accent-indigo-500 cursor-pointer" />
+                      <input type="range" min="0" max="32" value={liveStyles.radius} onChange={e => setLiveStyles({...liveStyles, radius: e.target.value})} className="w-full h-1 bg-white/10 rounded-full appearance-none accent-[#FF4D5E] cursor-pointer" />
                     </div>
                  </div>
               </div>
@@ -307,14 +307,14 @@ export default function Tool() {
                 {variations.length > 0 && activeTab === 'preview' && (
                   <div className="flex gap-1.5 p-1 bg-white/5 rounded-2xl border border-white/5">
                     {variations.map((v, i) => (
-                      <button key={i} onClick={() => { setActiveIndex(i); setPreviewKey(k=>k+1); }} className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${activeIndex === i ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}>V{i+1}</button>
+                      <button key={i} onClick={() => { setActiveIndex(i); setPreviewKey(k=>k+1); }} className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${activeIndex === i ? 'bg-[#FF4D5E] text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}>V{i+1}</button>
                     ))}
                   </div>
                 )}
              </div>
              <div className="flex bg-white/5 p-1.5 rounded-2xl border border-white/5 gap-1">
                {[{ id:'mobile', icon: Smartphone, label: '390px' }, { id:'tablet', icon: Tablet, label: '768px' }, { id:'desktop', icon: MonitorDot, label: 'Full Display' }].map(pm => (
-                 <button key={pm.id} onClick={() => setPreviewMode(pm.id)} className={`p-2.5 rounded-xl transition-all ${previewMode === pm.id ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-600 hover:bg-white/5'}`}><pm.icon size={16}/></button>
+                 <button key={pm.id} onClick={() => setPreviewMode(pm.id)} className={`p-2.5 rounded-xl transition-all ${previewMode === pm.id ? 'bg-[#FF4D5E] text-white shadow-lg' : 'text-slate-600 hover:bg-white/5'}`}><pm.icon size={16}/></button>
                ))}
              </div>
           </div>
@@ -322,14 +322,14 @@ export default function Tool() {
           <div className="flex-1 p-10 flex items-center justify-center relative overflow-hidden">
              {isLoading && <div className="absolute inset-0 bg-[#050507]/90 z-20 flex flex-col items-center justify-center transition-all backdrop-blur-xl animate-in fade-in duration-500">
                <div className="relative">
-                 <div className="w-24 h-24 border-[3px] border-white/5 border-t-indigo-500 rounded-full animate-spin" />
-                 <Sparkles size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-indigo-400 animate-pulse" />
+                 <div className="w-24 h-24 border-[3px] border-white/5 border-t-[#FF4D5E] rounded-full animate-spin" />
+                 <Sparkles size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#FF4D5E] animate-pulse" />
                </div>
                <h2 className="text-xl font-black uppercase tracking-widest text-white mt-8 italic italic">Synthesizing Creative</h2>
              </div>}
 
              {activeTab === 'code' && (
-               <div className="absolute inset-0 bg-[#070709] p-12 overflow-auto scrollbar-thin scrollbar-thumb-white/10 font-mono text-xs text-indigo-300 leading-relaxed">{currentHTML}</div>
+               <div className="absolute inset-0 bg-[#070709] p-12 overflow-auto scrollbar-thin scrollbar-thumb-white/10 font-mono text-xs text-[#FF4D5E]/80 leading-relaxed">{currentHTML}</div>
              )}
              
              {activeTab === 'preview' && variations.length > 0 && (
@@ -344,9 +344,9 @@ export default function Tool() {
 
           {variations.length > 0 && (
             <div className="h-16 border-t border-white/[0.04] bg-black/40 backdrop-blur-xl flex items-center px-8 gap-5 shrink-0">
-               <div className="text-[10px] font-black uppercase text-slate-600 tracking-widest border-r border-white/5 pr-6 h-8 flex items-center gap-2"><Fingerprint size={12} className="text-indigo-400"/> Refine Design</div>
+               <div className="text-[10px] font-black uppercase text-slate-600 tracking-widest border-r border-white/5 pr-6 h-8 flex items-center gap-2"><Fingerprint size={12} className="text-[#FF4D5E]"/> Refine Design</div>
                <input value={iterInput} onChange={e => setIterInput(e.target.value)} onKeyDown={e => e.key==='Enter' && iterate(iterInput)} placeholder="Describe any micro-adjustment..." className="flex-1 bg-transparent text-sm text-white outline-none placeholder:opacity-30" />
-               <button onClick={() => iterate(iterInput)} disabled={isIterating || !iterInput.trim()} className="w-10 h-10 flex items-center justify-center bg-indigo-600 rounded-2xl text-white active:scale-90 transition-all shadow-xl shadow-indigo-600/30">{isIterating ? <Loader2 className="animate-spin" size={16}/> : <ChevronRight size={22}/>}</button>
+               <button onClick={() => iterate(iterInput)} disabled={isIterating || !iterInput.trim()} className="w-10 h-10 flex items-center justify-center bg-[#FF4D5E] rounded-2xl text-white active:scale-90 transition-all shadow-xl shadow-[#FF4D5E]/30">{isIterating ? <Loader2 className="animate-spin" size={16}/> : <ChevronRight size={22}/>}</button>
             </div>
           )}
         </section>
@@ -359,7 +359,7 @@ export default function Tool() {
            <div className="w-[500px] bg-[#0d0d12] border border-white/10 rounded-[3rem] p-10 relative z-10 shadow-3xl animate-in zoom-in-95">
               <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5 mb-8">
                 {['api', 'brand'].map(t => (
-                  <button key={t} onClick={()=>setSettingsTab(t)} className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${settingsTab === t ? 'bg-indigo-600 text-white shadow-xl' : 'text-slate-500'}`}>{t === 'api' ? 'Intelligence Core' : 'Brand Identity'}</button>
+                  <button key={t} onClick={()=>setSettingsTab(t)} className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${settingsTab === t ? 'bg-[#FF4D5E] text-white shadow-xl' : 'text-slate-500'}`}>{t === 'api' ? 'Intelligence Core' : 'Brand Identity'}</button>
                 ))}
               </div>
 
@@ -367,7 +367,7 @@ export default function Tool() {
                 <div className="space-y-6">
                   <div>
                     <Label>Gemini Pro API Key</Label>
-                    <input type="password" value={apiKey} onChange={e => setApiKey(e.target.value)} className="w-full bg-white/5 border border-white/5 rounded-2xl p-4 text-white font-mono text-sm focus:ring-1 focus:ring-indigo-600 outline-none" placeholder="AIZA..." />
+                    <input type="password" value={apiKey} onChange={e => setApiKey(e.target.value)} className="w-full bg-white/5 border border-white/5 rounded-2xl p-4 text-white font-mono text-sm focus:ring-1 focus:ring-[#FF4D5E] outline-none" placeholder="AIZA..." />
                     <p className="text-[10px] text-slate-500 mt-3 uppercase tracking-widest leading-loose">Saved locally. Powers the entire design synthesis engine.</p>
                   </div>
                 </div>
@@ -405,7 +405,7 @@ export default function Tool() {
                 </div>
               )}
 
-              <button onClick={() => setShowSettings(false)} className="w-full mt-10 py-5 bg-indigo-600 rounded-2xl text-white font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-500 shadow-2xl shadow-indigo-600/30 transition-all">Synchronize Studio</button>
+              <button onClick={() => setShowSettings(false)} className="w-full mt-10 py-5 bg-[#FF4D5E] rounded-2xl text-white font-black text-xs uppercase tracking-[0.2em] hover:bg-[#ff7582] shadow-2xl shadow-[#FF4D5E]/30 transition-all">Synchronize Studio</button>
            </div>
         </div>
       )}

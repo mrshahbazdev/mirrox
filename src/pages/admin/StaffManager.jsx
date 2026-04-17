@@ -145,7 +145,7 @@ const StaffManager = ({ onAdminLogout }) => {
           {admins.map(admin => (
             <div key={admin._id} className="staff-card">
               <div className="staff-card-header">
-                <div className="staff-avatar">
+                <div className="staff-avatar" style={{ background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E' }}>
                    <i className="fa-solid fa-user-shield" />
                 </div>
                 <div className="staff-info">
@@ -159,7 +159,7 @@ const StaffManager = ({ onAdminLogout }) => {
               <div className="staff-quick-stats">
                       <div className="stat-item">
                           <label>ROLE:</label>
-                          <span className={`role-text ${admin.role}`}>{admin.role.toUpperCase()}</span>
+                          <span className={`role-text ${admin.role}`} style={{ color: '#FF4D5E' }}>{admin.role.toUpperCase()}</span>
                       </div>
                       <div className="stat-item">
                           <label>SESSIONS:</label>

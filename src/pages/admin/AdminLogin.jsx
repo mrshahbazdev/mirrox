@@ -187,15 +187,15 @@ const AdminLogin = ({ onAdminLogin }) => {
         .adm-login-bg { position: absolute; inset: 0; overflow: hidden; }
         .adm-grid-lines {
           position: absolute; inset: 0;
-          background-image: linear-gradient(rgba(50,145,255,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(50,145,255,0.04) 1px, transparent 1px);
+          background-image: linear-gradient(rgba(255, 77, 94, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 77, 94, 0.04) 1px, transparent 1px);
           background-size: 60px 60px;
         }
         .adm-glow-orb {
           position: absolute; border-radius: 50%;
           filter: blur(100px); opacity: 0.15;
         }
-        .orb1 { width: 600px; height: 600px; background: #3291ff; top: -200px; right: -200px; }
+        .orb1 { width: 600px; height: 600px; background: #FF4D5E; top: -200px; right: -200px; }
         .orb2 { width: 400px; height: 400px; background: #a855f7; bottom: -150px; left: -150px; }
 
         .adm-login-card {
@@ -203,7 +203,7 @@ const AdminLogin = ({ onAdminLogin }) => {
           width: 420px; padding: 48px 40px;
           background: rgba(21, 26, 36, 0.85);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(50,145,255,0.15);
+          border: 1px solid rgba(255, 77, 94, 0.15);
           border-radius: 20px;
           box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
           animation: adminFadeIn 0.6s ease-out;
@@ -216,17 +216,17 @@ const AdminLogin = ({ onAdminLogin }) => {
         .adm-login-badge {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 4px 12px; border-radius: 20px;
-          background: rgba(50,145,255,0.1);
-          border: 1px solid rgba(50,145,255,0.25);
+          background: rgba(255, 77, 94, 0.1);
+          border: 1px solid rgba(255, 77, 94, 0.25);
           font-size: 11px; font-weight: 700;
-          color: #3291ff; letter-spacing: 1.5px;
+          color: #FF4D5E; letter-spacing: 1.5px;
           text-transform: uppercase; margin-bottom: 28px;
         }
 
         .adm-login-logo { text-align: center; margin-bottom: 36px; }
         .adm-login-logo i {
-          font-size: 40px; color: #3291ff;
-          filter: drop-shadow(0 0 20px rgba(50,145,255,0.5));
+          font-size: 40px; color: #FF4D5E;
+          filter: drop-shadow(0 0 20px rgba(255, 77, 94, 0.5));
           display: block; margin-bottom: 12px;
         }
         .adm-login-logo h1 {
@@ -246,9 +246,9 @@ const AdminLogin = ({ onAdminLogin }) => {
           transition: all 0.2s;
         }
         .adm-input-wrap:focus-within {
-          border-color: rgba(50,145,255,0.5);
-          background: rgba(50,145,255,0.04);
-          box-shadow: 0 0 0 3px rgba(50,145,255,0.08);
+          border-color: rgba(255, 77, 94, 0.5);
+          background: rgba(255, 77, 94, 0.04);
+          box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.08);
         }
         .adm-inp-icon {
           position: absolute; left: 16px; top: 50%;
@@ -273,16 +273,16 @@ const AdminLogin = ({ onAdminLogin }) => {
 
         .adm-login-btn {
           padding: 14px; border-radius: 12px; border: none;
-          background: linear-gradient(135deg, #3291ff 0%, #1a6fd4 100%);
+          background: linear-gradient(135deg, #FF4D5E 0%, #D43A4A 100%);
           color: #fff; font-size: 15px; font-weight: 700;
           cursor: pointer; display: flex; align-items: center;
           justify-content: center; gap: 10px; margin-top: 6px;
           transition: all 0.25s; font-family: 'Inter', sans-serif;
-          box-shadow: 0 4px 20px rgba(50,145,255,0.3);
+          box-shadow: 0 4px 20px rgba(255, 77, 94, 0.3);
         }
         .adm-login-btn:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(50,145,255,0.45);
+          box-shadow: 0 8px 30px rgba(255, 77, 94, 0.45);
         }
         .adm-login-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 

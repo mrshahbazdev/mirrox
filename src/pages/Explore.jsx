@@ -200,7 +200,7 @@ const Explore = () => {
       width: '100%'
     }}>
       {/* Top Panel: Upcoming Events */}
-      <div className="upcoming-events-panel" style={{ background: 'rgba(50,145,255,0.02)', border: '1px solid rgba(50,145,255,0.05)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
+      <div className="upcoming-events-panel" style={{ background: 'rgba(255, 77, 94, 0.02)', border: '1px solid rgba(255, 77, 94, 0.05)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
         <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800 }}>Upcoming Events</h3>
           <div className="panel-tools" style={{ display: 'flex', gap: '8px' }}>
@@ -223,7 +223,7 @@ const Explore = () => {
         {/* Trending in FX */}
         <div className="explore-m-card glass" style={{ borderRadius: '16px', padding: '20px' }}>
           <div className="card-top" style={{ marginBottom: '20px' }}>
-            <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800 }}>Trending in <span style={{ color: '#3291ff' }}>FX</span></h4>
+            <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800 }}>Trending in <span style={{ color: '#FF4D5E' }}>FX</span></h4>
           </div>
           <table className="m-ref-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -264,7 +264,7 @@ const Explore = () => {
             {sentiment.map(item => (
               <div key={item.symbol} className="sentiment-row">
                 <div className="sent-info" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <i className={`fa-solid ${item.icon}`} style={{ color: '#3291ff', width: '16px', fontSize: '13px' }}></i>
+                  <i className={`fa-solid ${item.icon}`} style={{ color: '#FF4D5E', width: '16px', fontSize: '13px' }}></i>
                   <span style={{ fontSize: '13px', fontWeight: 700 }}>{item.symbol}</span>
                 </div>
                 <div className="sent-bar-layout" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -297,7 +297,7 @@ const Explore = () => {
                 <tr key={item.symbol} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
                   <td style={{ padding: '10px 8px' }}>
                     <div className="td-mover-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div className="mover-icon" style={{ width: '28px', height: '28px', background: 'rgba(50,145,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, color: '#3291ff' }}>{item.icon}</div>
+                        <div className="mover-icon" style={{ width: '28px', height: '28px', background: 'rgba(255, 77, 94, 0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, color: '#FF4D5E' }}>{item.icon}</div>
                         <span className="mover-name" style={{ fontSize: '13px', fontWeight: 700 }}>{item.symbol}</span>
                     </div>
                   </td>

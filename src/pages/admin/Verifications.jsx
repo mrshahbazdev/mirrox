@@ -166,10 +166,10 @@ const Verifications = ({ onAdminLogout }) => {
                   <div className="kyc-doc-info">
                     <div className="doc-label">Document Type</div>
                     <div className="doc-type" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <i className={`fa-solid ${req.category === 'selfie' ? 'fa-camera-retro' : 'fa-file-lines'}`} style={{ color: req.category === 'poi' ? '#3291ff' : (req.category === 'por' ? '#f59e0b' : '#10b981') }} /> 
+                      <i className={`fa-solid ${req.category === 'selfie' ? 'fa-camera-retro' : 'fa-file-lines'}`} style={{ color: req.category === 'poi' ? '#FF4D5E' : (req.category === 'por' ? '#f59e0b' : '#10b981') }} /> 
                       <strong style={{ color: '#fff' }}>{req.type}</strong>
                       {req.data.url && (
-                        <a href={req.data.url} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#3291ff', fontSize: 11, textDecoration: 'none', background: 'rgba(50,145,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                        <a href={req.data.url} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#FF4D5E', fontSize: 11, textDecoration: 'none', background: 'rgba(255, 77, 94, 0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
                           <i className="fa-solid fa-external-link-alt" /> View Image
                         </a>
                       )}
@@ -248,7 +248,7 @@ const Verifications = ({ onAdminLogout }) => {
 
         .adm-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
         .adm-page-title { font-size: 22px; font-weight: 800; color: #e0e6ed; display: flex; align-items: center; gap: 10px; }
-        .adm-page-title i { color: #3291ff; }
+        .adm-page-title i { color: #FF4D5E; }
         .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
         
         .adm-stat-pill {
@@ -269,8 +269,8 @@ const Verifications = ({ onAdminLogout }) => {
           border-radius: 10px; color: #94a3b8; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .kyc-tab:hover { background: rgba(50,145,255,0.05); color: #e0e6ed; }
-        .kyc-tab.active { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.4); color: #3291ff; }
+        .kyc-tab:hover { background: rgba(255, 77, 94, 0.05); color: #e0e6ed; }
+        .kyc-tab.active { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.4); color: #FF4D5E; }
         
         .kyc-badge {
           background: #ff4d4d; color: #fff; padding: 2px 6px;
@@ -299,8 +299,8 @@ const Verifications = ({ onAdminLogout }) => {
 
         .kyc-card-left { display: flex; align-items: center; gap: 24px; flex: 1; }
         .kyc-avatar {
-          width: 48px; height: 48px; border-radius: 10px; background: rgba(50,145,255,0.1);
-          color: #3291ff; display: flex; align-items: center; justify-content: center;
+          width: 48px; height: 48px; border-radius: 10px; background: rgba(255, 77, 94, 0.1);
+          color: #FF4D5E; display: flex; align-items: center; justify-content: center;
           font-size: 20px; font-weight: 800;
         }
         .kyc-user-info h4 { margin: 0 0 4px 0; color: #e0e6ed; font-size: 15px; }
@@ -339,7 +339,7 @@ const Verifications = ({ onAdminLogout }) => {
           padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
           display: flex; align-items: center; gap: 8px; transition: all 0.2s;
         }
-        .kyc-pagination button:hover:not(:disabled) { background: #2a3341; border-color: #3291ff; color: #3291ff; }
+        .kyc-pagination button:hover:not(:disabled) { background: #2a3341; border-color: #FF4D5E; color: #FF4D5E; }
         .kyc-pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
         .page-indicator { color: #94a3b8; font-size: 13px; font-weight: 600; }
       `}</style>

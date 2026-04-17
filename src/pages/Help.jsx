@@ -37,7 +37,7 @@ const Help = () => {
                 <div className="avatar-status"></div>
             </div>
             <h2 className="user-name-label">{currentClientExtended?.name}</h2>
-            <p className="user-id-sub">Account ID: MRX-{currentClientExtended?.id}</p>
+            <p className="user-id-sub">Account ID: BLV-{currentClientExtended?.id}</p>
             <div className="badge-flex">
                 <span className="help-badge primary">Demo Mode</span>
                 <span className="help-badge secondary">Level 4</span>
@@ -64,10 +64,10 @@ const Help = () => {
             
             <div className="menu-list">
               {[
-                { label: 'Trading History', icon: 'fa-clock-rotate-left', color: '#6366f1', bg: 'rgba(99, 102, 241, 0.1)' },
+                { label: 'Trading History', icon: 'fa-clock-rotate-left', color: '#FF4D5E', bg: 'rgba(255, 77, 94, 0.1)' },
                 { label: 'Payment Methods', icon: 'fa-wallet', color: '#10b981', bg: 'rgba(16, 185, 129, 0.1)' },
                 { label: 'Security & 2FA', icon: 'fa-shield-halved', color: '#a855f7', bg: 'rgba(168, 85, 247, 0.1)' },
-                { label: 'Support Center', icon: 'fa-headset', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)' },
+                { label: 'Support Center', icon: 'fa-headset', color: '#FF4D5E', bg: 'rgba(255, 77, 94, 0.1)' },
               ].map(item => (
                 <button key={item.label} className="menu-item-card">
                   <div className="item-left">
@@ -103,8 +103,8 @@ const Help = () => {
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <header style={{ marginBottom: '40px', textAlign: 'center' }}>
           <div style={{
-            width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(50,145,255,0.1)',
-            color: '#3291ff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(255, 77, 94, 0.1)',
+            color: '#FF4D5E', display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '28px', margin: '0 auto 20px auto'
           }}>
             <i className="fa-solid fa-headset"></i>
@@ -117,14 +117,14 @@ const Help = () => {
 
         <div className="help-cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }}>
           
-          <div className="card glass animate-fade" style={{ background: 'linear-gradient(145deg, rgba(50,145,255,0.1), rgba(0,0,0,0.2))', border: '1px solid rgba(50,145,255,0.2)', padding: '32px', borderRadius: '20px' }}>
+          <div className="card glass animate-fade" style={{ background: 'linear-gradient(145deg, rgba(255, 77, 94, 0.1), rgba(0,0,0,0.2))', border: '1px solid rgba(255, 77, 94, 0.2)', padding: '32px', borderRadius: '20px' }}>
             <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <i className="fa-solid fa-envelope" style={{ color: '#3291ff' }}></i> Direct Email Support
+              <i className="fa-solid fa-envelope" style={{ color: '#FF4D5E' }}></i> Direct Email Support
             </h3>
             <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 20px 0' }}>
               Our dedicated account managers and technical support team aim to reply within 1-2 hours during market open times.
             </p>
-            <a href="mailto:support@bullvera.com" style={{ display: 'inline-block', background: '#3291ff', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 700, transition: 'all 0.2s' }}>
+            <a href="mailto:support@bullvera.com" style={{ display: 'inline-block', background: '#FF4D5E', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 700, transition: 'all 0.2s' }}>
               Email support@bullvera.com
             </a>
           </div>

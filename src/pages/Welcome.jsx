@@ -177,7 +177,7 @@ const Welcome = () => {
           align-items: center;
           gap: 12px;
         }
-        .nav-logo i { color: #3291ff; }
+        .nav-logo i { color: #FF4D5E; }
 
         /* Ticker */
         .market-ticker-bar {
@@ -202,13 +202,13 @@ const Welcome = () => {
         }
         .nav-btn-login:hover { color: #fff; }
         .nav-btn-signup {
-          background: #3291ff; color: #fff; border: none;
+          background: #FF4D5E; color: #fff; border: none;
           padding: 10px 24px; border-radius: 8px; font-weight: 700;
           font-size: 15px; cursor: pointer; transition: all 0.2s;
         }
         .nav-btn-signup:hover {
-          background: #257ae6; transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(50, 145, 255, 0.3);
+          background: #D43A4A; transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(255, 77, 94, 0.3);
         }
 
         /* Hero */
@@ -225,7 +225,7 @@ const Welcome = () => {
         .hero-background-glow {
           position: absolute;
           width: 600px; height: 600px;
-          background: radial-gradient(circle, rgba(50,145,255,0.15) 0%, rgba(10,14,23,0) 70%);
+          background: radial-gradient(circle, rgba(255, 77, 94, 0.15) 0%, rgba(10, 14, 23, 0) 70%);
           top: -100px; left: -100px; z-index: 0; pointer-events: none;
         }
         .hero-content { position: relative; z-index: 1; }
@@ -235,7 +235,7 @@ const Welcome = () => {
           color: #fff;
         }
         .text-gradient {
-          background: linear-gradient(135deg, #3291ff, #a855f7);
+          background: linear-gradient(135deg, #FF4D5E, #a855f7);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -245,14 +245,14 @@ const Welcome = () => {
         }
         .hero-cta-group { display: flex; gap: 20px; margin-bottom: 60px; }
         .cta-primary {
-          background: linear-gradient(135deg, #3291ff, #257ae6);
+          background: linear-gradient(135deg, #FF4D5E, #D43A4A);
           color: #fff; border: none; padding: 16px 32px;
           border-radius: 12px; font-weight: 700; font-size: 16px;
           cursor: pointer; display: flex; align-items: center; gap: 12px;
           transition: all 0.2s; box-shadow: 0 8px 24px rgba(50,145,255,0.3);
         }
         .cta-primary:hover {
-          transform: translateY(-2px); box-shadow: 0 12px 32px rgba(50,145,255,0.4);
+          transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255, 77, 94, 0.4);
         }
         .cta-secondary {
           background: rgba(255,255,255,0.05); color: #fff;
@@ -276,7 +276,7 @@ const Welcome = () => {
         /* Visuals */
         .hero-visual {
           position: relative; height: 500px;
-          background: radial-gradient(circle at center, rgba(50,145,255,0.1) 0%, transparent 60%);
+          background: radial-gradient(circle at center, rgba(255, 77, 94, 0.1) 0%, transparent 60%);
         }
         .glass-card {
           background: rgba(15, 21, 32, 0.6);
@@ -317,8 +317,8 @@ const Welcome = () => {
         }
         .feature-card:hover { transform: translateY(-5px); border-color: rgba(50,145,255,0.3); }
         .feature-icon {
-          width: 64px; height: 64px; background: rgba(50,145,255,0.1);
-          color: #3291ff; font-size: 24px; display: flex; align-items: center; justify-content: center;
+          width: 64px; height: 64px; background: rgba(255, 77, 94, 0.1);
+          color: #FF4D5E; font-size: 24px; display: flex; align-items: center; justify-content: center;
           border-radius: 16px; margin: 0 auto 24px;
         }
         .feature-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 16px; color: #fff; }

@@ -144,21 +144,21 @@ const Admin2FA = ({ onAdminLogout }) => {
       <style>{`
         .two-factor-card {
           max-width: 600px; margin: 40px auto;
-          background: #0f1520; border: 1px solid rgba(50,145,255,0.1);
+          background: #0f1520; border: 1px solid rgba(255, 77, 94, 0.1);
           border-radius: 24px; padding: 48px; text-align: center;
         }
         .security-icon-big {
-           font-size: 64px; color: #3291ff; margin-bottom: 24px;
+           font-size: 64px; color: #FF4D5E; margin-bottom: 24px;
            opacity: 0.8;
         }
         .setup-intro h3, .setup-success h3 { color: #fff; font-size: 22px; margin-bottom: 16px; }
         .setup-intro p, .setup-success p { color: #64748b; font-size: 14px; line-height: 1.6; margin-bottom: 32px; }
         
         .setup-start-btn {
-          background: #3291ff; color: #fff; border: none; padding: 14px 32px;
+          background: #FF4D5E; color: #fff; border: none; padding: 14px 32px;
           border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
-        .setup-start-btn:hover { background: #1a6fd4; transform: scale(1.02); }
+        .setup-start-btn:hover { background: #e03e4d; transform: scale(1.02); }
 
         .setup-success i { font-size: 64px; color: #00cc88; margin-bottom: 24px; }
 
@@ -166,7 +166,7 @@ const Admin2FA = ({ onAdminLogout }) => {
         .wizard-step { text-align: left; background: #080c14; padding: 24px; border-radius: 16px; position: relative; }
         .step-num { 
           position: absolute; top: -15px; left: -15px; width: 30px; height: 30px; 
-          background: #3291ff; color: #fff; border-radius: 50%; 
+          background: #FF4D5E; color: #fff; border-radius: 50%; 
           display: flex; align-items: center; justify-content: center; font-weight: 800;
         }
         .wizard-step p { font-size: 14px; color: #e2e8f0; margin-bottom: 20px; font-weight: 500; }

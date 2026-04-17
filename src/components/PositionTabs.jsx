@@ -245,7 +245,7 @@ const PositionTabs = () => {
                       </div>
                       <div>
                         <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Market</div>
-                        <div className="text-xs text-indigo-400 font-mono">{p?.price || '...'}</div>
+                        <div className="text-xs text-[#FF4D5E] font-mono">{p?.price || '...'}</div>
                       </div>
                     </div>
 

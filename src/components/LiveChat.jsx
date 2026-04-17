@@ -490,7 +490,7 @@ export default function LiveChat({ currentUser }) {
                         {formatTime(msg.timestamp)}
                         {isUser && (
                           <i className={`fa-solid fa-check${msg.read ? '-double' : ''} chat-read-icon`}
-                            style={{ color: msg.read ? '#3291ff' : '#64748b' }} />
+                            style={{ color: msg.read ? 'var(--accent)' : '#64748b' }} />
                         )}
                       </div>
                     </div>
@@ -540,7 +540,7 @@ export default function LiveChat({ currentUser }) {
             )}
             <div><i className="fa-solid fa-lock" /> This chat has been closed by support.</div>
             <button onClick={startNewChat} style={{
-              background: '#3291ff', color: '#fff', border: 'none', borderRadius: '6px', 
+              background: '#FF4D5E', color: '#fff', border: 'none', borderRadius: '6px', 
               padding: '8px 12px', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
             }}>

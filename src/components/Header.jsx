@@ -99,7 +99,7 @@ const Header = ({ currentUser }) => {
             <span style={{ color: realTimeClient?.accountType === 'live' ? 'var(--accent)' : '#f59e0b', fontWeight: 700 }}>
               {realTimeClient?.accountType === 'live' ? 'LIVE' : 'DEMO'}
             </span>
-            <span style={{ color: 'var(--text-main)', opacity: 0.8 }}>{realTimeClient?.uid || 'MRX-0000'}</span>
+            <span style={{ color: 'var(--text-main)', opacity: 0.8 }}>{realTimeClient?.uid || 'BLV-0000'}</span>
             <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', color: 'var(--text-muted)' }}></i>
           </div>
         </div>
@@ -174,15 +174,15 @@ const Header = ({ currentUser }) => {
         .notif-body { max-height: 400px; overflow-y: auto; }
         .notif-item { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.02); cursor: pointer; transition: background 0.2s; align-items: flex-start; }
         .notif-item:hover { background: rgba(255,255,255,0.03); }
-        .notif-item.unread { background: rgba(50,145,255,0.03); }
+        .notif-item.unread { background: rgba(255, 77, 94, 0.03); }
         
         .notif-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-        .notif-icon.info { background: rgba(50,145,255,0.1); color: #3291ff; }
+        .notif-icon.info { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
         .notif-icon.success { background: rgba(0,204,136,0.1); color: #00cc88; }
         .notif-icon.alert { background: rgba(239,68,68,0.1); color: #ef4444; }
         
         .notif-content { flex: 1; }
-        .unread-dot { width: 8px; height: 8px; background: #3291ff; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 8px #3291ff; }
+        .unread-dot { width: 8px; height: 8px; background: #FF4D5E; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 8px #FF4D5E; }
 
         @media (max-width: 900px) {
            .header-center { display: none; }

@@ -61,18 +61,18 @@ const Affiliate = () => {
 
         {/* Affiliate Link Card */}
         <section className="py-4">
-            <div className="glass-card p-6 bg-gradient-to-br from-indigo-500/10 to-transparent">
+            <div className="glass-card p-6 bg-gradient-to-br from-[#FF4D5E]/10 to-transparent">
                 <h3 className="text-lg font-black text-white mb-2">Invite Friends</h3>
                 <p className="text-[10px] text-slate-400 leading-relaxed mb-6 font-bold uppercase tracking-tight">Earn <span className="text-emerald-400">${bonusAmount}</span> for every successful signup through your network.</p>
                 
                 <div className="space-y-3">
                    <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 overflow-hidden">
-                      <code className="text-[10px] text-indigo-300 font-mono break-all">{referralLink}</code>
+                      <code className="text-[10px] text-[#FF4D5E] font-mono break-all">{referralLink}</code>
                    </div>
-                   <button 
-                     onClick={handleCopy}
-                     className={`w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${copied ? 'bg-emerald-500 text-white' : 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'}`}
-                   >
+                    <button 
+                      onClick={handleCopy}
+                      className={`w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${copied ? 'bg-emerald-500 text-white' : 'bg-[#FF4D5E] text-white shadow-lg shadow-[#FF4D5E]/20'}`}
+                    >
                        {copied ? 'Copied to Clipboard' : 'Copy referral link'}
                    </button>
                 </div>
@@ -103,7 +103,7 @@ const Affiliate = () => {
                    {referrals.map((r, i) => (
                       <div key={i} className="glass-card p-4 flex items-center justify-between">
                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-black text-indigo-400 text-xs">{r.name.charAt(0)}</div>
+                            <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-black text-[#FF4D5E] text-xs">{r.name.charAt(0)}</div>
                             <div>
                                <p className="text-xs font-bold text-white uppercase">{r.name}</p>
                                <p className="text-[9px] text-slate-500 tracking-tighter">{new Date(r.createdAt).toLocaleDateString()}</p>
@@ -156,7 +156,7 @@ const Affiliate = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '32px' }}>
          {/* Referral Link Card */}
-         <div className="card glass" style={{ gridColumn: '1 / -1', padding: '32px', borderRadius: '24px', background: 'linear-gradient(135deg, rgba(50,145,255,0.05), rgba(0,0,0,0))' }}>
+         <div className="card glass" style={{ gridColumn: '1 / -1', padding: '32px', borderRadius: '24px', background: 'linear-gradient(135deg, rgba(255, 77, 94, 0.05), rgba(0, 0, 0, 0))' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
                <div style={{ flex: 1 }}>
                   <h3 style={{ margin: '0 0 8px 0', fontSize: '18px' }}>Invite your friends</h3>
@@ -165,15 +165,15 @@ const Affiliate = () => {
                   </p>
                   
                   <div style={{ display: 'flex', gap: '12px', background: 'rgba(0,0,0,0.3)', padding: '8px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                     <code style={{ flex: 1, padding: '12px', fontSize: '14px', color: '#3291ff', overflowX: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{referralLink}</code>
-                     <button onClick={handleCopy} style={{ background: copied ? '#00cc88' : '#3291ff', color: '#fff', border: 'none', borderRadius: '10px', padding: '0 24px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
+                     <code style={{ flex: 1, padding: '12px', fontSize: '14px', color: '#FF4D5E', overflowX: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{referralLink}</code>
+                     <button onClick={handleCopy} style={{ background: copied ? '#00cc88' : '#FF4D5E', color: '#fff', border: 'none', borderRadius: '10px', padding: '0 24px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
                         {copied ? 'Copied!' : 'Copy Link'}
                      </button>
                   </div>
                </div>
                
-               <div style={{ background: 'rgba(50,145,255,0.1)', padding: '24px', borderRadius: '20px', textAlign: 'center', minWidth: '180px' }}>
-                  <div style={{ fontSize: '11px', color: '#3291ff', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Partner Level</div>
+               <div style={{ background: 'rgba(255, 77, 94, 0.1)', padding: '24px', borderRadius: '20px', textAlign: 'center', minWidth: '180px' }}>
+                  <div style={{ fontSize: '11px', color: '#FF4D5E', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Partner Level</div>
                   <div style={{ fontSize: '24px', fontWeight: 900 }}>Silver Agent</div>
                </div>
             </div>
@@ -181,7 +181,7 @@ const Affiliate = () => {
 
          {/* Stats */}
          <div className="card glass" style={{ padding: '24px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(50,145,255,0.1)', color: '#3291ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
                <i className="fa-solid fa-users" />
             </div>
             <div>

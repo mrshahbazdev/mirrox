@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 import { useModal } from '../context/ModalContext';
+import { 
+    Wallet, PlusCircle, MinusCircle, History, Shield, 
+    ArrowDownLeft, ArrowUpRight, Copy, CheckCircle2, 
+    CreditCard, Building2, Landmark, Smartphone, 
+    Zap, Headphones, Info, ExternalLink, RefreshCw,
+    Lock, Key, Send, AlertCircle
+} from 'lucide-react';
 
 const Finances = () => {
   const { currentClientExtended, socket } = useTrading();
@@ -88,7 +95,6 @@ const Finances = () => {
       setOldPin('');
       setNewPin('');
       setShowSetupPin(false);
-      // Optional: trigger reload of client context if needed
     } catch(err) {
       showAlert(err.response?.data?.error || 'Failed to setup PIN', 'Error', 'error');
     } finally {
@@ -139,718 +145,675 @@ const Finances = () => {
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (loading) {
+  const formatCurrency = (val) => (val || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
     return (
-      <div style={{ padding: '40px', color: '#94a3b8', textAlign: 'center' }}>
-        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '32px', marginBottom: '16px' }}></i>
-        <p>Syncing Wallet...</p>
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500">
+        <RefreshCw className="animate-spin mb-4 text-[#FF4D5E]" size={40} />
+        <p className="font-bold uppercase tracking-widest text-xs">Syncing Financial Node...</p>
       </div>
     );
-  }
 
-  if (isMobile) {
-    return (
-      <div className="mobile-finances no-scrollbar" style={{ paddingBottom: '80px' }}>
-        {/* Modern Mobile Wallet Header */}
-        <header className="m-finance-header">
-            <div className="m-finance-title-group">
-               <h2>My Wallet</h2>
-               <p>Account #MRX-{currentClientExtended?.id}</p>
-            </div>
-            <div className="m-header-actions">
-               <div className="m-action-btn">
-                  <i className="fa-solid fa-bell"></i>
-               </div>
-            </div>
-        </header>
-
-        {/* Premium Digital Wallet Card */}
-        <div className="premium-wallet-card-v2">
-           <div className="relative z-10 flex flex-col h-full justify-between">
-              <div className="flex justify-between items-start">
-                 <div>
-                    <p className="wallet-card-subtitle">Available Funds</p>
-                    <h3 className="wallet-card-title">
-                       ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </h3>
-                 </div>
-                 <div className="wallet-card-badge">
-                    <span>{currentClientExtended?.accountType || 'DEMO'}</span>
-                 </div>
-              </div>
-              
-              <div className="mt-8 flex items-center justify-between">
-                 <div className="flex -space-x-2">
-                    <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-indigo-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-md">M</div>
-                    <div className="w-8 h-8 rounded-full border-2 border-indigo-600 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-indigo-300 uppercase shadow-md">X</div>
-                 </div>
-                 <p className="wallet-card-account">**** 2026</p>
-              </div>
-           </div>
-        </div>
-
-        {/* Action Grid */}
-        <div className="m-action-grid">
-            <button 
-              onClick={() => setActiveTab('deposit')}
-              className={`m-action-tab-btn ${activeTab === 'deposit' ? 'active' : ''}`}
-            >
-                <i className="fa-solid fa-circle-plus"></i>
-                <span>Deposit</span>
-            </button>
-            <button 
-              onClick={() => setActiveTab('withdrawal')}
-              className={`m-action-tab-btn ${activeTab === 'withdrawal' ? 'active' : ''}`}
-            >
-                <i className="fa-solid fa-circle-minus"></i>
-                <span>Withdraw</span>
-            </button>
-            <button 
-              onClick={() => setActiveTab('history')}
-              className={`m-action-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
-            >
-                <i className="fa-solid fa-clock-rotate-left"></i>
-                <span>History</span>
-            </button>
-        </div>
-
-        {/* Dynamic Content Area */}
-        <section className="pb-4 animate-fade">
-           {activeTab === 'deposit' && (
-             <div className="finance-glass-card">
-                <div className="flex justify-between items-center">
-                   <h4 className="font-bold text-white text-lg">Deposit Funds</h4>
-                   <div className="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase rounded-lg border border-emerald-500/20">Fast Processing</div>
-                </div>
-
-                <div className="space-y-5">
-                   <div className="space-y-2">
-                      <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Select Method</label>
-                      <select 
-                        value={method} 
-                        onChange={(e) => setMethod(e.target.value)}
-                        className="finance-input-standard"
-                      >
-                         <option value="crypto">USDT (TRC20)</option>
-                         <option value="bank_transfer">Bank Transfer (IBAN)</option>
-                      </select>
-                   </div>
-                   
-                   <div className="p-4 bg-indigo-500/5 border border-dashed border-indigo-500/20 rounded-2xl shadow-inner">
-                      <p className="text-[9px] font-bold text-indigo-400 uppercase mb-3 flex items-center"><i className="fa-solid fa-credit-card mr-2"></i> Destination Details</p>
-                      {method === 'crypto' ? (
-                        <div className="space-y-3">
-                           <div className="bg-black/40 p-3 rounded-xl border border-white/5">
-                              <code className="block text-[11px] text-emerald-400 break-all font-mono leading-relaxed">{platformConfig.usdt_address}</code>
-                           </div>
-                           <button onClick={() => navigator.clipboard.writeText(platformConfig.usdt_address)} className="w-full py-3 bg-white/5 text-slate-300 text-[10px] font-black uppercase rounded-xl border border-white/5 active:scale-95 transition-all">Copy Address</button>
-                        </div>
-                      ) : (
-                        <div className="text-[11px] space-y-2 text-slate-300">
-                           <div className="flex justify-between border-b border-white/5 pb-2"><span>Bank</span> <span className="text-white font-bold">{platformConfig.bank_name}</span></div>
-                           <div className="flex flex-col space-y-1"><span>IBAN</span> <span className="text-white font-mono break-all text-[10px] bg-black/20 p-2 rounded-lg">{platformConfig.bank_iban}</span></div>
-                        </div>
-                      )}
-                   </div>
-
-                   <div className="space-y-2">
-                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Amount to Fund</label>
-                       <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                          <input 
-                            type="number" 
-                            value={amount} 
-                            onChange={(e) => setAmount(e.target.value)}
-                            placeholder="0.00"
-                            className="finance-input-large text-xl pl-8"
-                            style={{ paddingLeft: '2rem' }}
-                          />
-                       </div>
-                   </div>
-
-                   <div className="space-y-2">
-                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Transaction Hash / Receipt</label>
-                       <input 
-                         type="text" 
-                         value={txHash} 
-                         onChange={(e) => setTxHash(e.target.value)}
-                         placeholder="Paste your hash here"
-                         className="finance-input-standard font-mono"
-                       />
-                   </div>
-
-                   <button 
-                    onClick={handleDeposit}
-                    disabled={isSubmitting}
-                    className="finance-submit-btn"
-                    style={{ padding: '1rem', fontSize: '1rem' }}
-                   >
-                     {isSubmitting ? 'Processing...' : 'Confirm Deposit'}
-                   </button>
-                </div>
-             </div>
-           )}
-
-           {activeTab === 'withdrawal' && (
-             <div className="finance-glass-card">
-                <div className="flex justify-between items-center">
-                   <h4 className="font-bold text-white text-lg">Instant Payout</h4>
-                   <div className="px-3 py-1 bg-indigo-500/10 text-indigo-400 text-[9px] font-black uppercase rounded-lg border border-indigo-500/20">Secure</div>
-                </div>
-
-                <div className="space-y-5">
-                   <div className="space-y-2">
-                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Withdrawal Amount</label>
-                       <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                          <input 
-                            type="number" 
-                            value={amount} 
-                            onChange={(e) => setAmount(e.target.value)}
-                            placeholder="0.00"
-                            className="finance-input-large"
-                          />
-                       </div>
-                       <p className="text-[10px] text-rose-400/80 font-bold ml-1">Available: ${(tm.balance || 0).toLocaleString()}</p>
-                   </div>
-                   
-                   <div className="space-y-2">
-                       <label className="text-[9px] text-slate-500 uppercase font-black ml-1 tracking-widest">Security Pin</label>
-                       <input 
-                         type="password" 
-                         maxLength="4"
-                         value={withdrawalPin} 
-                         onChange={(e) => setWithdrawalPin(e.target.value)}
-                         placeholder="••••"
-                         className="finance-input-large text-center text-3xl tracking-[0.5em]"
-                       />
-                   </div>
-                   
-                   <button 
-                    onClick={handleWithdrawal}
-                    disabled={isSubmitting}
-                    className="finance-submit-btn dark"
-                   >
-                     {isSubmitting ? 'Verifying...' : 'Initialize Payout'}
-                   </button>
-                </div>
-             </div>
-           )}
-
-           {activeTab === 'history' && (
-              <div className="m-history-section">
-                 <div className="m-section-header">
-                    <h4>Global Ledger</h4>
-                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{history.length} Transactions</span>
-                 </div>
-                 <div className="space-y-3">
-                    {history.length === 0 ? (
-                       <div className="finance-glass-card p-10 text-center opacity-40">
-                          <i className="fa-solid fa-box-open text-3xl mb-3"></i>
-                          <p className="text-xs font-bold uppercase tracking-widest">No Recent Activity</p>
-                       </div>
-                    ) : (
-                       history.map((tx, i) => (
-                          <div key={i} className="m-transaction-card">
-                             <div className="m-asset-info-row">
-                                <div className={`m-tx-icon ${tx.type.toLowerCase()}`}>
-                                   <i className={`fa-solid ${tx.type === 'Deposit' ? 'fa-arrow-down' : 'fa-arrow-up'}`}></i>
-                                </div>
-                                <div className="m-tx-details">
-                                   <p className="m-type">{tx.type}</p>
-                                   <p className="m-date">{tx.date}</p>
-                                </div>
-                             </div>
-                             <div className="m-tx-amount-group">
-                                <p className={`m-tx-amount ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                   {tx.type === 'Deposit' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()}
-                                </p>
-                                <div className="m-tx-status-pill">
-                                    <div className={`m-status-dot ${tx.status}`}></div>
-                                    <span className="m-status-text">{tx.status}</span>
-                                </div>
-                             </div>
-                          </div>
-                       ))
-                    )}
-                 </div>
-              </div>
-           )}
-        </section>
-      </div>
-    );
-  }
-
-  // Desktop View
   return (
-    <div className="desktop-finances-container p-6 xl:p-8 animate-fade w-full h-full relative" style={{ gridColumn: '1 / -1', minWidth: '100%' }}>
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-10 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
-          <div className="animate-slide-up">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-8 bg-indigo-600 rounded-full"></div>
-              <h1 className="text-4xl xl:text-5xl font-black text-white tracking-tighter">Finances</h1>
-            </div>
-            <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] ml-5">Institutional Grade Asset Management</p>
+    <div className="finances-page-v3 animate-fade-in no-scrollbar">
+      {/* --- BACKGROUND DECORATION --- */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FF4D5E]/5 blur-[120px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pub-red/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div className="finances-container max-w-[1400px] mx-auto p-4 md:p-8 xl:p-12">
+        {/* --- HEADER --- */}
+        <header className="mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-2">
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter flex items-center gap-4">
+              <span className="w-2 h-10 bg-[#FF4D5E] rounded-full"></span>
+              Wallet
+            </h1>
+            <p className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-[0.3em] ml-6">
+              Institutional Asset Management • Bullvera
+            </p>
           </div>
-          
-          {/* Dynamic Global Wallet Card (Powered by Raw CSS) */}
-          <div className="premium-wallet-card-v2 animate-slide-up" style={{ minHeight: '180px' }}>
-             <div className="relative z-10 flex justify-between items-start">
-                <div>
-                   <p className="wallet-card-subtitle">Available Portfolio Balance</p>
-                   <h2 className="wallet-card-title lg">
-                      ${(tm.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                   </h2>
-                </div>
-                <div className="wallet-card-icon">
-                   <i className="fa-solid fa-wallet"></i>
-                </div>
-             </div>
-             
-             <div className="relative z-10 flex justify-between items-end border-t border-white/20 pt-4 mt-6">
-                <div className="space-y-1">
-                   <p className="text-indigo-200 text-[9px] font-bold uppercase tracking-widest">Account ID</p>
-                   <p className="text-white text-xs font-mono">MRX-{currentClientExtended?.id?.toString().padStart(6, '0')}</p>
-                </div>
-                <div className="flex -space-x-3 shrink-0">
-                   <div className="w-10 h-10 rounded-full border-2 border-indigo-600 bg-indigo-500 flex items-center justify-center text-[10px] font-black text-white shadow-md">VISA</div>
-                   <div className="w-10 h-10 rounded-full border-2 border-indigo-500 bg-slate-900 flex items-center justify-center text-[10px] font-black text-indigo-400 shadow-md">MC</div>
-                </div>
-             </div>
+
+          <div className="premium-wallet-card-v3">
+            <div className="card-top">
+              <div className="balance-group">
+                <span className="label">Portfolio Balance</span>
+                <h2 className="balance">${formatCurrency(tm.balance)}</h2>
+              </div>
+              <div className="wallet-chip">
+                <Wallet size={24} strokeWidth={1.5} />
+              </div>
+            </div>
+            <div className="card-bottom">
+              <div className="account-info">
+                <span className="label">Account Node</span>
+                <span className="value">BVR-{currentClientExtended?.id?.toString().padStart(6, '0')}</span>
+              </div>
+              <div className="network-labels">
+                <span className="network">USDT</span>
+                <span className="network">BANK</span>
+              </div>
+            </div>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
-          {/* Main Interaction Area */}
-          <div className="col-span-1 lg:col-span-8 space-y-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-             <div className="segmented-control p-1">
-                {[
-                  { id: 'deposit', label: 'Fund Account', icon: 'fa-plus-circle' },
-                  { id: 'withdrawal', label: 'Secure Payout', icon: 'fa-minus-circle' },
-                { id: 'history', label: 'Global Ledger', icon: 'fa-clock-rotate-left' }
-              ].map(t => (
-                <button 
-                  key={t.id}
-                  onClick={() => setActiveTab(t.id)}
-                  className={`finance-action-btn ${activeTab === t.id ? 'active' : ''}`}
+        {/* --- MAIN CONTENT GRID --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT: ACTIONS & LEDGER */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* SEGMENTED TABS */}
+            <div className="segmented-tabs-v3 p-1.5 flex bg-black/40 border border-white/5 rounded-2xl backdrop-blur-xl">
+              {[
+                { id: 'deposit', label: 'Deposit', icon: <PlusCircle size={18} /> },
+                { id: 'withdrawal', label: 'Withdraw', icon: <MinusCircle size={18} /> },
+                { id: 'history', label: 'History', icon: <History size={18} /> }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
                 >
-                  <i className={`fa-solid ${t.icon} icon`}></i>
-                  <span className="hidden sm:inline">{t.label}</span>
+                  {tab.icon}
+                  {tab.label}
                 </button>
               ))}
-           </div>
+            </div>
 
-           <div className="finance-glass-card">
-              {/* Decorative Mesh background for content area */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/5 blur-[120px] -mr-32 -mt-32"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-600/5 blur-[120px] -ml-32 -mb-32"></div>
-              
-              <div className="relative z-10">
-              {activeTab === 'deposit' && (
-                <div className="animate-fade">
-                   <div className="flex items-center gap-4 mb-8">
-                      <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
-                         <i className="fa-solid fa-cloud-arrow-up text-xl"></i>
+            {/* DYNAMIC FORM AREA */}
+            <div className="fin-action-card-v3 bg-black/40 border border-white/5 rounded-[2.5rem] p-8 md:p-12 backdrop-blur-3xl relative overflow-hidden group">
+              {/* CONTENT */}
+              <div className="relative z-10 transition-all duration-500 animate-slide-up">
+                {activeTab === 'deposit' && (
+                  <div className="space-y-10">
+                    <div className="flex items-center gap-4 border-b border-white/5 pb-8">
+                      <div className="w-14 h-14 bg-[#FF4D5E]/10 text-[#FF4D5E] rounded-2xl flex items-center justify-center border border-[#FF4D5E]/20">
+                        <PlusCircle size={32} />
                       </div>
                       <div>
-                         <h3 className="text-2xl font-black text-white">Deposit Request</h3>
-                         <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Select your funding source</p>
+                        <h3 className="text-2xl font-black text-white uppercase tracking-tight">Fund Account</h3>
+                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Select methodology & amount</p>
                       </div>
-                   </div>
-                   <form onSubmit={handleDeposit} className="space-y-8">
-                      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                         <div className="space-y-6">
-                            <div className="space-y-3">
-                               <label className="text-[10px] text-slate-500 uppercase font-black ml-1 tracking-[0.2em]">Select Payment Methodology</label>
-                               <div className="grid grid-cols-2 gap-4">
-                                  <button 
-                                   type="button" 
-                                   onClick={() => setMethod('crypto')}
-                                   className={`method-card p-5 rounded-2xl border flex flex-col items-center justify-center gap-3 text-center ${method === 'crypto' ? 'active' : 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60'}`}
-                                  >
-                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${method === 'crypto' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-600'}`}>
-                                        <i className="fa-brands fa-bitcoin"></i>
-                                     </div>
-                                     <div className="space-y-1">
-                                        <span className="text-[10px] font-black uppercase tracking-widest block">USDT (TRC20)</span>
-                                        <span className="text-[8px] font-bold text-slate-500 uppercase">Instant Crypto</span>
-                                     </div>
-                                  </button>
-                                  <button 
-                                   type="button" 
-                                   onClick={() => setMethod('bank_transfer')}
-                                   className={`method-card p-5 rounded-2xl border flex flex-col items-center justify-center gap-3 text-center ${method === 'bank_transfer' ? 'active' : 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60'}`}
-                                  >
-                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${method === 'bank_transfer' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-600'}`}>
-                                        <i className="fa-solid fa-building-columns"></i>
-                                     </div>
-                                     <div className="space-y-1">
-                                        <span className="text-[10px] font-black uppercase tracking-widest block">Bank Wire</span>
-                                        <span className="text-[8px] font-bold text-slate-500 uppercase">SWIFT / SEPA / IBAN</span>
-                                     </div>
-                                  </button>
-                               </div>
-                            </div>
+                    </div>
 
-                            <div className="space-y-3">
-                               <label className="text-[10px] text-slate-500 uppercase font-black ml-1 tracking-[0.2em]">Deposit Amount (USD)</label>
-                               <div className="relative group">
-                                  <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xl group-focus-within:text-indigo-500 transition-colors">$</div>
-                                  <input 
-                                    type="number" 
-                                    value={amount} 
-                                    onChange={(e) => setAmount(e.target.value)}
-                                    placeholder="5,000"
-                                    className="finance-input-large"
-                                    required
-                                  />
-                               </div>
-                               <div className="flex gap-2">
-                                  {[100, 500, 1000, 5000].map(v => (
-                                    <button key={v} type="button" onClick={() => setAmount(v.toString())} className="finance-quick-btn">+${v}</button>
-                                  ))}
-                               </div>
-                            </div>
-                         </div>
+                    <form onSubmit={handleDeposit} className="space-y-12">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        {/* LEFT COLUMN: METHOD & AMOUNT */}
+                        <div className="space-y-8">
+                          <div className="space-y-4">
+                            <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] ml-1">Payment Methodology</label>
+                            <div className="grid grid-cols-2 gap-4">
+                              <button
+                                type="button"
+                                onClick={() => setMethod('crypto')}
+                                className={`p-6 rounded-3xl border text-left transition-all relative overflow-hidden group/method ${method === 'crypto' ? 'bg-[#FF4D5E]/10 border-[#FF4D5E]/40 text-white' : 'bg-white/5 border-white/5 text-slate-500 hover:border-white/10'}`}
+                                >
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${method === 'crypto' ? 'bg-[#FF4D5E] text-white' : 'bg-white/5 text-slate-600'}`}>
+                                  <Zap size={20} />
+                                </div>
+                                <span className="block text-xs font-black uppercase tracking-widest">USDT (TRC20)</span>
+                                <span className="text-[9px] font-bold text-slate-600 block mt-1">Instant Crypto</span>
+                                {method === 'crypto' && <div className="absolute top-3 right-3 w-2 h-2 bg-[#FF4D5E] rounded-full animate-pulse"></div>}
+                              </button>
 
-                         <div className="space-y-4">
-                            <div className="p-6 bg-indigo-600/5 border border-dashed border-indigo-500/20 rounded-3xl relative overflow-hidden backdrop-blur-sm">
-                               <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-6 flex items-center gap-3">
-                                  <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
-                                  Payment Instructions
-                               </h4>
-                               
-                               {method === 'crypto' ? (
-                                  <div className="space-y-4">
-                                     <div className="p-4 bg-black/40 rounded-2xl border border-white/5 space-y-3">
-                                        <div className="flex justify-between items-center">
-                                           <p className="text-[9px] text-slate-500 font-black uppercase">TRC20 Wallet Address</p>
-                                           <span className="text-[8px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-black">Active</span>
-                                        </div>
-                                        <div className="flex items-start gap-3 bg-slate-900 border border-white/5 p-3 rounded-xl">
-                                           <code className="flex-1 text-xs text-emerald-400 font-mono break-all leading-relaxed">{platformConfig.usdt_address}</code>
-                                           <button type="button" onClick={() => {
-                                             navigator.clipboard.writeText(platformConfig.usdt_address);
-                                             showAlert('Address copied to clipboard', 'Copied', 'success');
-                                           }} className="w-8 h-8 shrink-0 rounded-lg bg-white/5 flex items-center justify-center text-indigo-400 hover:bg-white/10 transition-all"><i className="fa-regular fa-copy text-xs"></i></button>
-                                        </div>
-                                     </div>
-                                     <p className="text-[10px] text-slate-500 font-bold leading-relaxed">
-                                        <i className="fa-solid fa-circle-info mr-2 text-indigo-500"></i>
-                                        Only send <strong className="text-indigo-400">USDT via TRC20</strong> network.
-                                     </p>
+                              <button
+                                type="button"
+                                onClick={() => setMethod('bank_transfer')}
+                                className={`p-6 rounded-3xl border text-left transition-all relative overflow-hidden group/method ${method === 'bank_transfer' ? 'bg-[#FF4D5E]/10 border-[#FF4D5E]/40 text-white' : 'bg-white/5 border-white/5 text-slate-500 hover:border-white/10'}`}
+                                >
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${method === 'bank_transfer' ? 'bg-[#FF4D5E] text-white' : 'bg-white/5 text-slate-600'}`}>
+                                  <Landmark size={20} />
+                                </div>
+                                <span className="block text-xs font-black uppercase tracking-widest">Bank Wire</span>
+                                <span className="text-[9px] font-bold text-slate-600 block mt-1">Global IBAN</span>
+                                {method === 'bank_transfer' && <div className="absolute top-3 right-3 w-2 h-2 bg-[#FF4D5E] rounded-full animate-pulse"></div>}
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] ml-1">Deposit Amplitude (USD)</label>
+                            <div className="relative group">
+                              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-2xl group-focus-within:text-[#FF4D5E] transition-colors">$</span>
+                              <input
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                placeholder="0.00"
+                                className="w-full bg-white/5 border border-white/5 rounded-[2rem] pl-12 pr-8 py-8 text-white text-4xl font-black outline-none focus:border-[#FF4D5E]/40 focus:bg-[#FF4D5E]/5 transition-all"
+                                required
+                              />
+                            </div>
+                            <div className="flex gap-2">
+                              {[500, 1000, 5000].map(v => (
+                                <button key={v} type="button" onClick={() => setAmount(v.toString())} className="px-4 py-2 bg-white/5 rounded-xl text-[10px] font-black text-slate-400 hover:bg-white/10 hover:text-white transition-all">+${v.toLocaleString()}</button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* RIGHT COLUMN: INSTRUCTIONS */}
+                        <div className="space-y-6">
+                          <div className="instructions-card p-8 rounded-[2rem] bg-[#FF4D5E]/5 border border-dashed border-[#FF4D5E]/20">
+                            <h4 className="flex items-center gap-3 text-[10px] font-black text-[#FF4D5E] uppercase tracking-widest mb-6">
+                              <Info size={14} />
+                              Transfer Protocol
+                            </h4>
+
+                            {method === 'crypto' ? (
+                              <div className="space-y-6">
+                                <div className="space-y-3">
+                                  <div className="flex justify-between items-center px-1">
+                                    <span className="text-[9px] text-slate-500 uppercase font-black">Destination Wallet</span>
+                                    <span className="text-[8px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-black">Active</span>
                                   </div>
-                               ) : (
-                                  <div className="space-y-3 text-xs text-slate-400">
-                                     <div className="flex justify-between bg-slate-900/40 p-3 rounded-xl border border-white/5"><span>Bank Name</span> <strong className="text-white uppercase font-black">{platformConfig.bank_name}</strong></div>
-                                     <div className="flex justify-between bg-slate-900/40 p-3 rounded-xl border border-white/5"><span>Beneficiary</span> <strong className="text-white uppercase font-black">{platformConfig.account_name}</strong></div>
-                                     <div className="space-y-2">
-                                        <p className="text-[9px] text-slate-500 font-black uppercase">IBAN / Account Number</p>
-                                        <div className="bg-slate-900 p-4 rounded-2xl border border-indigo-500/20 font-mono text-indigo-400 text-xs break-all shadow-inner">
-                                           {platformConfig.bank_iban}
-                                        </div>
-                                     </div>
+                                  <div className="flex items-center gap-3 bg-black/40 border border-white/5 p-4 rounded-2xl group/copy">
+                                    <code className="flex-1 text-xs text-emerald-400 font-mono break-all leading-relaxed">{platformConfig.usdt_address}</code>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(platformConfig.usdt_address);
+                                        showAlert('Address copied to clipboard', 'Copied', 'success');
+                                      }}
+                                      className="shrink-0 w-10 h-10 bg-white/5 hover:bg-white/10 text-[#FF4D5E] rounded-xl transition-all flex items-center justify-center"
+                                    >
+                                      <Copy size={16} />
+                                    </button>
                                   </div>
-                               )}
-                            </div>
-                         </div>
+                                </div>
+                                <p className="text-[10px] text-slate-500 leading-relaxed font-bold">
+                                  <AlertCircle size={10} className="inline mr-1 text-[#FF4D5E]" />
+                                  Only transmit <strong className="text-white">USDT via the TRC20 (Tron)</strong> network. Assets sent over other bridges will be permanently lost.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="space-y-4">
+                                <div className="space-y-2">
+                                  <div className="flex justify-between text-[11px] p-3 rounded-xl bg-black/20 border border-white/5">
+                                    <span className="text-slate-500 uppercase font-black">Bank</span>
+                                    <span className="text-white font-bold">{platformConfig.bank_name}</span>
+                                  </div>
+                                  <div className="flex justify-between text-[11px] p-3 rounded-xl bg-black/20 border border-white/5">
+                                    <span className="text-slate-500 uppercase font-black">Holder</span>
+                                    <span className="text-white font-bold">{platformConfig.account_name}</span>
+                                  </div>
+                                </div>
+                                <div className="space-y-2">
+                                  <span className="text-[9px] text-slate-500 uppercase font-black ml-1">Transfer IBAN</span>
+                                  <div className="p-4 bg-black/50 border border-[#FF4D5E]/20 rounded-2xl text-[#FF4D5E] font-mono text-xs break-all shadow-inner">
+                                    {platformConfig.bank_iban}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="space-y-3">
-                         <label className="text-[10px] text-slate-500 uppercase font-black ml-1 tracking-[0.2em]">Transaction Hash / Digital Receipt</label>
-                         <input 
-                           type="text" 
-                           value={txHash} 
-                           onChange={(e) => setTxHash(e.target.value)}
-                           placeholder="e.g. 0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
-                           className="w-full input-premium rounded-2xl p-5 text-white text-sm outline-none font-mono"
-                           required
-                         />
+                      <div className="space-y-4">
+                        <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] ml-1">Transaction Proof / Hash</label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={txHash}
+                            onChange={(e) => setTxHash(e.target.value)}
+                            placeholder="Paste your transaction hash or reference here..."
+                            className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 text-white text-sm outline-none font-mono focus:border-[#FF4D5E]/40 transition-all"
+                            required
+                          />
+                        </div>
                       </div>
-                      <button 
-                         type="submit" 
-                         disabled={isSubmitting}
-                         className="finance-submit-btn"
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-8 bg-[#FF4D5E] hover:bg-[#ff7582] text-white rounded-[2.5rem] font-black text-lg tracking-widest shadow-2xl shadow-[#FF4D5E]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-4 group"
                       >
-                         {isSubmitting ? (
-                           <>
-                             <i className="fa-solid fa-circle-notch fa-spin"></i>
-                             VALIDATING...
-                           </>
-                         ) : (
-                           <>
-                             <i className="fa-solid fa-shield-check"></i>
-                             INITIATE DEPOSIT REQUEST
-                           </>
-                         )}
+                        {isSubmitting ? (
+                          <>
+                            <RefreshCw className="animate-spin" size={24} />
+                            Validating Transmission...
+                          </>
+                        ) : (
+                          <>
+                            <Send size={24} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            Submit Funding Request
+                          </>
+                        )}
                       </button>
-                   </form>
-                </div>
-              )}
+                    </form>
+                  </div>
+                )}
 
-              {activeTab === 'withdrawal' && (
-                <div className="animate-fade max-w-2xl mx-auto py-12">
-                   <div className="text-center space-y-6 mb-16 px-4">
-                      <div className="w-24 h-24 rounded-[3rem] bg-rose-500/10 flex items-center justify-center text-rose-500 border border-rose-500/20 mx-auto shadow-2xl shadow-rose-500/10">
-                         <i className="fa-solid fa-vault text-4xl"></i>
+                {activeTab === 'withdrawal' && (
+                  <div className="max-w-2xl mx-auto py-10 space-y-12">
+                    <div className="text-center space-y-6">
+                      <div className="w-24 h-24 rounded-[2.5rem] bg-[#FF4D5E]/10 text-[#FF4D5E] flex items-center justify-center border border-[#FF4D5E]/20 mx-auto shadow-2xl shadow-[#FF4D5E]/10">
+                        <Shield size={44} />
                       </div>
                       <div className="space-y-2">
-                         <h3 className="text-4xl font-black text-white tracking-tight">Withdrawal Hub</h3>
-                         <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">Authorized Secure Payout Gateway</p>
+                        <h3 className="text-4xl font-black text-white uppercase tracking-tight">Withdraw Assets</h3>
+                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em]">Authorized Secure Payout Gateway</p>
                       </div>
-                   </div>
+                    </div>
 
-                   <form onSubmit={handleWithdrawal} className="space-y-12 bg-slate-900/40 p-10 rounded-[3rem] border border-white/5 relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-2 bg-slate-900 border border-white/10 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest shadow-xl">Verification Required</div>
-                      
-                      <div className="space-y-4">
-                         <label className="text-[10px] text-slate-500 uppercase font-black ml-1 tracking-[0.2em] text-center block">Capital Amount for Payout</label>
-                         <div className="relative max-w-md mx-auto group">
-                            <span className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-3xl group-focus-within:text-rose-500 transition-colors">$</span>
-                            <input 
-                              type="number" 
-                              value={amount} 
-                              onChange={(e) => setAmount(e.target.value)}
-                              placeholder="0.00"
-                              className="w-full input-premium rounded-[2.5rem] pl-16 pr-8 py-8 text-white text-5xl font-black outline-none text-center shadow-2xl transition-all"
-                              required
-                            />
-                         </div>
-                         <div className="flex justify-center items-center gap-3">
-                            <div className="h-px w-8 bg-slate-800"></div>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Available: <span className="text-rose-400">${(tm.balance || 0).toLocaleString()}</span></p>
-                            <div className="h-px w-8 bg-slate-800"></div>
-                         </div>
+                    <form onSubmit={handleWithdrawal} className="space-y-12 bg-black/40 p-10 rounded-[3rem] border border-white/5 relative">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black border border-white/10 px-6 py-2 rounded-full shadow-2xl">
+                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Digital Authentication Required</span>
                       </div>
 
-                      <div className="space-y-4">
-                         <label className="text-[10px] text-slate-500 uppercase font-black ml-1 tracking-[0.2em] text-center block">Security Access Pin</label>
-                         <div className="flex flex-col items-center gap-6">
-                            <div className="relative max-w-sm w-full">
-                               <input 
-                                 type="password" 
-                                 maxLength="4"
-                                 value={withdrawalPin} 
-                                 onChange={(e) => setWithdrawalPin(e.target.value.replace(/\D/g, ''))}
-                                 placeholder="••••"
-                                 className="w-full input-premium rounded-2xl p-6 text-white text-5xl font-black outline-none text-center tracking-[0.8em] shadow-xl"
-                                 required
-                               />
-                               <button type="button" onClick={() => setShowSetupPin(true)} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-white/5 text-slate-500 hover:text-white transition-all flex items-center justify-center"><i className="fa-solid fa-key text-xs"></i></button>
-                            </div>
-                            <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest leading-relaxed text-center max-w-xs transition-opacity hover:opacity-100 opacity-60">
-                               Forgotten your PIN? Click the key icon to reset your secure withdrawal access.
-                            </p>
-                         </div>
+                      <div className="space-y-5 text-center">
+                        <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Capital Amount (USD)</label>
+                        <div className="relative max-w-sm mx-auto group">
+                          <span className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-4xl group-focus-within:text-white transition-colors">$</span>
+                          <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            placeholder="0.00"
+                            className="w-full bg-white/5 border border-white/5 rounded-[2.5rem] text-center text-5xl font-black text-white py-10 outline-none focus:bg-white/10 focus:border-white/10 transition-all"
+                            required
+                          />
+                        </div>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                          Liquid Balance: <span className="text-[#FF4D5E]">${formatCurrency(tm.balance)}</span>
+                        </p>
                       </div>
 
-                      <button 
-                        type="submit" 
+                      <div className="space-y-5 text-center">
+                        <div className="flex items-center justify-center gap-3">
+                          <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Access Key</label>
+                          <button type="button" onClick={() => setShowSetupPin(true)} className="text-[10px] text-[#FF4D5E] font-black uppercase hover:underline">Reset PIN</button>
+                        </div>
+                        <input
+                          type="password"
+                          maxLength="4"
+                          value={withdrawalPin}
+                          onChange={(e) => setWithdrawalPin(e.target.value.replace(/\D/g, ''))}
+                          placeholder="••••"
+                          className="w-48 bg-white/5 border border-white/5 rounded-2xl mx-auto block text-center text-5xl font-black text-white tracking-[0.6em] py-6 outline-none focus:border-[#FF4D5E]/40 transition-all"
+                          required
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
                         disabled={isSubmitting}
-                        className="w-full py-8 bg-white text-slate-950 font-black text-xl rounded-[2.5rem] shadow-2xl shadow-rose-500/10 hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4"
+                        className="w-full py-8 bg-white text-black rounded-[2.5rem] font-black text-xl flex items-center justify-center gap-4 hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-white/5"
                       >
-                         {isSubmitting ? (
-                           <>
-                             <i className="fa-solid fa-spinner-third fa-spin"></i>
-                             ENCRYPTING PAYOUT...
-                           </>
-                         ) : (
-                           <>
-                             <i className="fa-solid fa-paper-plane-top"></i>
-                             AUTHORIZE INSTANT WITHDRAWAL
-                           </>
-                         )}
+                        {isSubmitting ? (
+                          <>
+                            <RefreshCw className="animate-spin" size={24} />
+                            Encrypting Payout...
+                          </>
+                        ) : (
+                          <>
+                            <Lock size={24} />
+                            Initialize Payout
+                          </>
+                        )}
                       </button>
-                   </form>
-                </div>
-              )}
+                    </form>
+                  </div>
+                )}
 
-              {activeTab === 'history' && (
-                <div className="animate-fade">
-                   <div className="flex items-center justify-between mb-12 border-b border-white/5 pb-8">
+                {activeTab === 'history' && (
+                  <div className="space-y-10">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/5 pb-10">
                       <div className="flex items-center gap-4">
-                         <div className="w-12 h-12 rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-500 border border-indigo-500/20">
-                            <i className="fa-solid fa-list-timeline text-xl"></i>
-                         </div>
-                         <div>
-                            <h3 className="text-3xl font-black text-white tracking-tight">Financial Ledger</h3>
-                            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">Global Activity Records</p>
-                         </div>
+                        <div className="w-14 h-14 bg-[#FF4D5E]/10 text-[#FF4D5E] rounded-2xl flex items-center justify-center border border-[#FF4D5E]/20">
+                          <History size={32} />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl font-black text-white uppercase tracking-tight">Ledger Matrix</h3>
+                          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Historical Asset Activity</p>
+                        </div>
                       </div>
-                      <div className="flex gap-3">
-                         <button className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black text-slate-400 uppercase tracking-widest border border-white/5 transition-all">Filter by Date</button>
-                         <button className="px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-600/20 transition-all">Export Archive</button>
+                      <div className="flex gap-4 w-full md:w-auto">
+                        <button className="flex-1 md:flex-none px-6 py-4 bg-white/5 text-slate-400 text-[10px] font-black uppercase rounded-xl border border-white/5 hover:bg-white/10 transition-all tracking-widest">Export Ledger</button>
                       </div>
-                   </div>
+                    </div>
 
-                   <div className="space-y-2 max-h-[600px] overflow-y-auto no-scrollbar pr-2">
+                    <div className="ledger-rows-v3 space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-2">
                       {history.length === 0 ? (
-                        <div className="py-32 text-center opacity-20">
-                           <i className="fa-solid fa-receipt text-8xl mb-8"></i>
-                           <p className="text-xl font-black uppercase tracking-[0.4em]">Vault Archive Empty</p>
+                        <div className="py-32 flex flex-col items-center opacity-30">
+                          <AlertCircle size={80} className="mb-6" />
+                          <p className="text-xl font-black uppercase tracking-[0.4em]">Vault Uninitialized</p>
                         </div>
                       ) : (
-                        history.map((tx, i) => (
-                          <div key={i} className="transaction-row p-6 flex items-center justify-between group rounded-2xl hover:border-white/10 border border-transparent">
-                             <div className="flex items-center space-x-8">
-                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl shadow-inner relative ${tx.type === 'Deposit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                                   <i className={`fa-solid ${tx.type === 'Deposit' ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}`}></i>
-                                   <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-[#0f172a] ${tx.status === 'approved' ? 'bg-emerald-500' : tx.status === 'pending' ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
+                        history.map((tx, idx) => (
+                          <div key={idx} className="tx-row-v3 group flex items-center justify-between p-6 bg-white/[0.02] border border-white/5 rounded-3xl hover:bg-white/[0.05] hover:border-white/10 transition-all">
+                            <div className="flex items-center gap-6">
+                              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center relative shadow-inner ${tx.type === 'Deposit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-pub-red/10 text-pub-red'}`}>
+                                {tx.type === 'Deposit' ? <ArrowDownLeft size={24} /> : <ArrowUpRight size={24} />}
+                                <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-black ${tx.status === 'approved' ? 'bg-emerald-500' : tx.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'}`}></div>
+                              </div>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-3">
+                                  <h4 className="text-lg font-black text-white uppercase tracking-tight">{tx.type}</h4>
+                                  <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-slate-800 text-slate-500 rounded">{tx.method.replace('_', ' ')}</span>
                                 </div>
-                                <div className="space-y-1.5">
-                                   <div className="flex items-center gap-3">
-                                      <h4 className="font-black text-white uppercase text-lg tracking-tight">{tx.type}</h4>
-                                      <span className="text-[8px] bg-slate-800 text-slate-500 px-2 py-0.5 rounded uppercase font-black">{tx.method.replace('_', ' ')}</span>
-                                   </div>
-                                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-2">
-                                      <i className="fa-regular fa-calendar text-[8px]"></i>
-                                      {tx.date}
-                                      <span className="w-1 h-1 bg-slate-700 rounded-full"></span>
-                                      ID: MRX-{tx._id?.substring(0,6).toUpperCase()}
-                                   </p>
+                                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2">
+                                  {tx.date}
+                                  <span className="w-1 h-1 bg-slate-700 rounded-full"></span>
+                                  BVR-{tx._id?.substring(0, 8).toUpperCase() || 'EXTERNAL'}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="text-right flex items-center gap-8">
+                              <div className="space-y-1.5">
+                                <p className={`text-2xl font-black font-mono leading-none ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-pub-red'}`}>
+                                  {tx.type === 'Deposit' ? '+' : '-'}${formatCurrency(tx.amount)}
+                                </p>
+                                <div className={`status-badge-v3 ${tx.status}`}>
+                                  <div className="dot"></div>
+                                  <span>{tx.status}</span>
                                 </div>
-                             </div>
-                             <div className="text-right flex items-center space-x-12">
-                                <div className="space-y-1.5">
-                                   <p className={`text-2xl font-black ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-rose-400'} font-mono leading-none`}>
-                                      {tx.type === 'Deposit' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                                   </p>
-                                   <div className={`status-pill ${tx.status === 'approved' ? 'status-approved' : tx.status === 'pending' ? 'status-pending' : 'status-rejected'}`}>
-                                      {tx.status}
-                                   </div>
-                                </div>
-                                <div className="w-12 h-12 rounded-xl bg-slate-800/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-slate-500 cursor-pointer hover:text-white hover:bg-indigo-600 transition-all border border-white/5 active:scale-95">
-                                   <i className="fa-solid fa-chevron-right"></i>
-                                </div>
-                             </div>
+                              </div>
+                              <button className="w-12 h-12 rounded-xl bg-white/5 text-slate-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:text-white hover:bg-white/10">
+                                <ExternalLink size={16} />
+                              </button>
+                            </div>
                           </div>
                         ))
                       )}
-                   </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT: METRICS & SUPPORT */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* PORTFOLIO METRICS */}
+            <div className="glass-metric-card-v3 p-10 bg-black/40 border border-white/5 rounded-[2.5rem] relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF4D5E]/5 blur-[80px] -mr-16 -mt-16 group-hover:bg-[#FF4D5E]/10 transition-all duration-700"></div>
+              
+              <div className="relative z-10 space-y-8">
+                <div className="flex items-center gap-4 border-b border-white/5 pb-8">
+                  <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-slate-400 border border-white/5 shadow-inner">
+                    <Shield size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-1">Risk Assessment</h4>
+                    <p className="text-[8px] text-slate-700 font-black uppercase">Institutional Grade Metrics</p>
+                  </div>
                 </div>
-              )}
-           </div>
-        </div>
 
-        <div className="lg:col-span-4 space-y-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-           <div className="glass-card p-10 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-[80px] -mr-16 -mt-16 group-hover:bg-indigo-500/20 transition-all duration-700"></div>
-              
-              <div className="relative z-10">
-                 <div className="flex items-center gap-3 mb-10 pb-6 border-b border-white/5">
-                    <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-slate-400 border border-white/5 shadow-inner">
-                       <i className="fa-solid fa-chart-line-up text-sm"></i>
-                    </div>
-                    <div>
-                       <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Capital Metrics</h4>
-                       <p className="text-[8px] text-slate-600 font-bold uppercase">Real-time valuation</p>
-                    </div>
-                 </div>
-
-                 <div className="space-y-4">
-                    {[
-                      { label: 'Portfolio Equity', value: tm.equity || 0, color: 'text-indigo-400', icon: 'fa-layer-group' },
-                      { label: 'Utilized Margin', value: tm.marginUsed || 0, color: 'text-rose-400', icon: 'fa-shield-halved' },
-                      { label: 'Liquidity Available', value: tm.freeMargin || 0, color: 'text-emerald-400', icon: 'fa-droplet' },
-                      { label: 'Security Level', value: (tm.marginLevel || 0).toFixed(2) + '%', color: 'text-amber-400', icon: 'fa-gauge-high', isPercent: true }
-                    ].map(m => (
-                      <div key={m.label} className="flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-indigo-500/20 hover:bg-slate-900/80 transition-all group/metric">
-                         <div className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center text-xs text-slate-500 group-hover/metric:${m.color} transition-colors`}>
-                               <i className={`fa-solid ${m.icon}`}></i>
-                            </div>
-                            <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">{m.label}</span>
-                         </div>
-                         <span className={`text-xl font-black ${m.color} font-mono tracking-tighter`}>
-                            {m.isPercent ? m.value : '$' + m.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                         </span>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Total Equity', value: tm.equity, color: 'text-[#FF4D5E]', icon: <Wallet size={14} /> },
+                    { label: 'Utilized Margin', value: tm.marginUsed, color: 'text-pub-red', icon: <CreditCard size={14} /> },
+                    { label: 'Free Liquidity', value: tm.freeMargin, color: 'text-emerald-400', icon: <zap size={14} /> },
+                    { label: 'Security Level', value: (tm.marginLevel || 0).toFixed(2) + '%', color: 'text-amber-400', icon: <Shield size={14} />, isPercent: true }
+                  ].map(metric => (
+                    <div key={metric.label} className="metric-row-v3 flex justify-between items-center p-6 bg-black/30 border border-white/5 rounded-2xl hover:border-white/10 transition-all group/m">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-600 group-hover/m:${metric.color} transition-colors`}>
+                          {metric.icon}
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{metric.label}</span>
                       </div>
-                    ))}
-                 </div>
+                      <span className={`text-xl font-black font-mono tracking-tighter ${metric.color}`}>
+                        {metric.isPercent ? metric.value : '$' + formatCurrency(metric.value)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-           </div>
+            </div>
 
-           <div className="glass-card p-10 bg-gradient-to-br from-indigo-600/10 via-transparent to-fuchsia-600/5 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-500/10 blur-[100px] -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-1000"></div>
+            {/* QUICK SUPPORT */}
+            <div className="support-promo-v3 p-10 bg-[#FF4D5E] rounded-[2.5rem] relative overflow-hidden group shadow-2xl shadow-[#FF4D5E]/20">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 blur-[100px] -mr-20 -mt-20 group-hover:scale-125 transition-transform duration-1000"></div>
               
-              <div className="relative z-10 flex flex-col h-full">
-                 <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl shadow-xl shadow-indigo-600/20 mb-8 transform group-hover:rotate-6 transition-transform">
-                    <i className="fa-solid fa-headset"></i>
-                 </div>
-                 <h4 className="text-2xl font-black text-white mb-4 tracking-tight">Institutional Support</h4>
-                 <p className="text-xs text-slate-400 leading-relaxed font-medium mb-10">
-                    Access our dedicated financial engineering desk for prioritized withdrawal facilitation and capital deployment assistance.
-                 </p>
-                 <button className="w-full py-5 bg-indigo-600 text-white hover:bg-indigo-500 rounded-2xl shadow-xl shadow-indigo-600/20 transition-all font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3">
-                    <i className="fa-solid fa-messages"></i>
-                    Open Priority Ticket
-                 </button>
+              <div className="relative z-10 space-y-8 flex flex-col h-full">
+                <div className="w-16 h-16 bg-white text-[#FF4D5E] rounded-2xl flex items-center justify-center text-2xl shadow-xl transform group-hover:rotate-6 transition-transform">
+                  <Headphones size={32} />
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-3xl font-black text-white uppercase tracking-tight leading-none">Financial Desk</h4>
+                  <p className="text-white/60 text-xs font-bold leading-relaxed">
+                    Prioritized assistance for high-volume capital deployments and expedited payout verification cycles.
+                  </p>
+                </div>
+                <button className="w-full py-5 bg-black text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:bg-slate-900 transition-all flex items-center justify-center gap-3">
+                  <Smartphone size={14} />
+                  Connect With Specialist
+                </button>
               </div>
-           </div>
+            </div>
+          </div>
         </div>
       </div>
-      
-      {/* SHARED MODAL STYLES & PIN SETUP */}
+
+      {/* --- SETUP PIN MODAL --- */}
       {showSetupPin && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[9999] p-4 animate-fade">
-           <div className="glass-card w-full max-w-md p-10 space-y-8 animate-scale-up">
-              <div className="text-center">
-                 <div className="w-16 h-16 rounded-[1.5rem] bg-indigo-500/10 flex items-center justify-center text-indigo-500 border border-indigo-500/20 mx-auto mb-6">
-                    <i className="fa-solid fa-lock-keyhole text-2xl"></i>
-                 </div>
-                 <h3 className="text-2xl font-black text-white">Security PIN</h3>
-                 <p className="text-xs text-slate-400 font-bold mt-2">Protect your withdrawals with a secret 4-digit code</p>
-              </div>
-              
-              <form onSubmit={handleSetupPin} className="space-y-6">
-                 {currentClientExtended?.hasPin && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 backdrop-blur-3xl bg-black/60 animate-fade-in">
+          <div className="w-full max-w-lg bg-[#0b0e14] border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF4D5E]/10 blur-[80px] -mr-16 -mt-16"></div>
+             
+             <div className="relative z-10">
+                <div className="text-center space-y-6 mb-12">
+                   <div className="w-20 h-20 rounded-[1.8rem] bg-[#FF4D5E]/10 text-[#FF4D5E] flex items-center justify-center border border-[#FF4D5E]/20 mx-auto">
+                      <Key size={36} />
+                   </div>
                    <div className="space-y-2">
-                      <label className="text-[10px] text-slate-500 uppercase font-black ml-1 block text-center">Existing PIN</label>
-                      <input 
-                        type="password" 
+                      <h3 className="text-3xl font-black text-white uppercase tracking-tight">Security Access</h3>
+                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Platform Withdrawal Credentials</p>
+                   </div>
+                </div>
+
+                <form onSubmit={handleSetupPin} className="space-y-8">
+                   <div className="space-y-4">
+                      <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] ml-2">Define New 4-Digit PIN</label>
+                      <input
+                        type="password"
                         maxLength="4"
-                        value={oldPin} 
-                        onChange={(e) => setOldPin(e.target.value.replace(/\D/g, ''))}
+                        value={newPin}
+                        onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl text-center text-4xl font-black text-white py-6 tracking-[0.8em] outline-none focus:border-[#FF4D5E]/40 transition-all"
                         placeholder="••••"
-                        className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 text-white text-3xl font-black text-center tracking-[1em] outline-none"
                         required
                       />
                    </div>
-                 )}
-                 <div className="space-y-2">
-                    <label className="text-[10px] text-slate-500 uppercase font-black ml-1 block text-center">Set New PIN</label>
-                    <input 
-                      type="password" 
-                      maxLength="4"
-                      value={newPin} 
-                      onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
-                      placeholder="••••"
-                      className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 text-white text-3xl font-black text-center tracking-[1em] outline-none"
-                      required
-                    />
-                 </div>
-                 
-                 <div className="flex gap-4 pt-4">
-                    <button type="button" disabled={isSubmitting} onClick={() => setShowSetupPin(false)} className="flex-1 py-4 bg-slate-800 text-slate-400 hover:text-white font-black rounded-2xl transition-all uppercase text-xs">Cancel</button>
-                    <button type="submit" disabled={isSubmitting || newPin.length !== 4} className="flex-1 py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/30 transition-all uppercase text-xs">
-                       {isSubmitting ? 'Saving...' : 'Lock Access'}
-                    </button>
-                 </div>
-              </form>
-           </div>
+
+                   <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-6 bg-[#FF4D5E] text-white rounded-[1.8rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-[#FF4D5E]/20 hover:bg-[#ff7582] transition-all"
+                   >
+                     {isSubmitting ? 'Securing Access...' : 'Commit Security PIN'}
+                   </button>
+                   
+                   <button
+                    type="button"
+                    onClick={() => setShowSetupPin(false)}
+                    className="w-full text-[10px] text-slate-500 font-black uppercase tracking-widest hover:text-white transition-colors"
+                   >
+                     Cancel
+                   </button>
+                </form>
+             </div>
+          </div>
         </div>
       )}
+
+      {/* --- STYLES --- */}
+      <style>{`
+        .finances-page-v3 {
+          min-height: 100vh;
+          background: #0b0e14;
+          color: white;
+          font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        .premium-wallet-card-v3 {
+          width: 100%;
+          max-width: 440px;
+          padding: 32px;
+          background: linear-gradient(135deg, #FF4D5E 0%, #ff7582 100%);
+          border-radius: 2.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+          box-shadow: 0 40px 100px -20px rgba(255, 77, 94, 0.4);
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          animation: float 6s ease-in-out infinite;
+        }
+
+        .premium-wallet-card-v3::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent);
+          pointer-events: none;
+        }
+
+        .premium-wallet-card-v3 .card-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          position: relative;
+          z-index: 10;
+        }
+
+        .premium-wallet-card-v3 .balance-group .label {
+          display: block;
+          font-size: 10px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.2rem;
+          color: rgba(255, 255, 255, 0.6);
+          margin-bottom: 8px;
+        }
+
+        .premium-wallet-card-v3 .balance-group .balance {
+          font-size: 40px;
+          font-weight: 950;
+          letter-spacing: -2px;
+          line-height: 1;
+        }
+
+        .premium-wallet-card-v3 .wallet-chip {
+          width: 56px;
+          height: 56px;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 1.25rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+        }
+
+        .premium-wallet-card-v3 .card-bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          padding-top: 24px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          position: relative;
+          z-index: 10;
+        }
+
+        .premium-wallet-card-v3 .account-info .label {
+          display: block;
+          font-size: 8px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.15rem;
+          color: rgba(255, 255, 255, 0.4);
+          margin-bottom: 4px;
+        }
+
+        .premium-wallet-card-v3 .account-info .value {
+          font-family: 'Space Mono', monospace;
+          font-size: 14px;
+          font-weight: 700;
+          color: white;
+        }
+
+        .premium-wallet-card-v3 .network-labels {
+          display: flex;
+          gap: 8px;
+        }
+
+        .premium-wallet-card-v3 .network {
+          font-size: 8px;
+          font-weight: 900;
+          padding: 4px 10px;
+          background: white;
+          color: #FF4D5E;
+          border-radius: 100px;
+          text-transform: uppercase;
+        }
+
+        .status-badge-v3 {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 12px;
+          border-radius: 100px;
+          font-size: 9px;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 0.1rem;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-badge-v3 .dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 100px;
+        }
+
+        .status-badge-v3.approved { color: #10b981; }
+        .status-badge-v3.approved .dot { background: #10b981; }
+        .status-badge-v3.pending { color: #f59e0b; }
+        .status-badge-v3.pending .dot { background: #f59e0b; }
+        .status-badge-v3.rejected { color: #ef4444; }
+        .status-badge-v3.rejected .dot { background: #ef4444; }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+        .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+
+        @media (max-width: 768px) {
+          .premium-wallet-card-v3 {
+            max-width: 100%;
+            padding: 24px;
+          }
+          .premium-wallet-card-v3 .balance { font-size: 32px; }
+          .fin-action-card-v3 { padding: 32px 24px; border-radius: 2rem; }
+        }
+      `}</style>
     </div>
-  </div>
-  </div>
   );
 };
 

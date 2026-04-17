@@ -141,7 +141,7 @@ const ActiveTraders = ({ onAdminLogout }) => {
       <style>{`
         .adm-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
         .adm-page-title { font-size: 22px; font-weight: 800; color: #e0e6ed; display: flex; align-items: center; gap: 10px; }
-        .adm-page-title i { color: #3291ff; }
+        .adm-page-title i { color: #FF4D5E; }
         .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
         
         .adm-live-pulse-badge {
@@ -163,7 +163,7 @@ const ActiveTraders = ({ onAdminLogout }) => {
         .risk-icon {
           width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;
         }
-        .risk-icon.users { background: rgba(50,145,255,0.1); color: #3291ff; }
+        .risk-icon.users { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
         .risk-icon.docs { background: rgba(168,85,247,0.1); color: #a855f7; }
         .risk-icon.money { background: rgba(245,158,11,0.1); color: #f59e0b; }
         .risk-label { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -174,19 +174,19 @@ const ActiveTraders = ({ onAdminLogout }) => {
           border-radius: 14px; overflow: hidden;
         }
         .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr { background: rgba(50,145,255,0.05); border-bottom: 1px solid rgba(50,145,255,0.1); }
+        .adm-table thead tr { background: rgba(255, 77, 94, 0.05); border-bottom: 1px solid rgba(255, 77, 94, 0.1); }
         .adm-table th { padding: 14px 18px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; }
         .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(50,145,255,0.03); }
+        .adm-table-row:hover { background: rgba(255, 77, 94, 0.03); }
         .adm-table-row:last-child { border-bottom: none; }
         .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
         
         .trader-name-cell { display: flex; align-items: center; gap: 12px; }
         .trader-avatar {
           width: 36px; height: 36px; border-radius: 8px;
-          background: rgba(50,145,255,0.15); border: 1px solid rgba(50,145,255,0.25);
+          background: rgba(255, 77, 94, 0.15); border: 1px solid rgba(255, 77, 94, 0.25);
           display: flex; align-items: center; justify-content: center;
-          color: #3291ff; font-size: 14px; font-weight: 800; text-transform: uppercase;
+          color: #FF4D5E; font-size: 14px; font-weight: 800; text-transform: uppercase;
         }
         
         .trade-count-badge {
@@ -204,8 +204,8 @@ const ActiveTraders = ({ onAdminLogout }) => {
           display: flex; align-items: center; justify-content: center;
           border: 1px solid transparent; cursor: pointer; font-size: 12px; transition: all 0.2s;
         }
-        .adm-act-btn.view { background: rgba(50,145,255,0.1); color: #3291ff; border-color: rgba(50,145,255,0.2); }
-        .adm-act-btn.view:hover { background: #3291ff; color: #fff; }
+        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; border-color: rgba(255, 77, 94, 0.2); }
+        .adm-act-btn.view:hover { background: #FF4D5E; color: #fff; }
       `}</style>
     </AdminLayout>
   );

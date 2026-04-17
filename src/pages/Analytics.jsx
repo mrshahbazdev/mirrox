@@ -49,7 +49,7 @@ const Analytics = () => {
           </div>
           <div className="period-pill-nav">
              <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginRight: '8px' }}>History:</span>
-             <span className="adm-uid-badge" style={{ background: 'rgba(50,145,255,0.1)', color: '#3291ff', border: 'none' }}>Live Account History</span>
+             <span className="adm-uid-badge" style={{ background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E', border: 'none' }}>Live Account History</span>
           </div>
         </div>
 
@@ -63,7 +63,7 @@ const Analytics = () => {
           ) : (
              <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifycontent: 'center' }}>
                 <div style={{ width: '80%', height: '2px', background: 'rgba(255,255,255,0.05)', position: 'relative' }}>
-                   <div style={{ position: 'absolute', left: 0, top: '-10px', width: '10px', height: '10px', borderRadius: '50%', background: '#3291ff' }}></div>
+                   <div style={{ position: 'absolute', left: 0, top: '-10px', width: '10px', height: '10px', borderRadius: '50%', background: '#FF4D5E' }}></div>
                    <div style={{ position: 'absolute', right: 0, top: '-40px', width: '10px', height: '10px', borderRadius: '50%', background: s.roi >= 0 ? '#00cc88' : '#ef4444' }}></div>
                    <svg style={{ position: 'absolute', top: -50, left: 0, width: '100%', height: 100 }}>
                       <path d={`M 0 50 Q 50 ${s.roi >= 0 ? 10 : 90} 100 50`} fill="none" stroke={s.roi >= 0 ? '#00cc88' : '#ef4444'} strokeWidth="3" strokeDasharray="300" strokeDashoffset="0" style={{ transition: 'all 2s cubic-bezier(0.4, 0, 0.2, 1)' }} />
@@ -99,7 +99,7 @@ const Analytics = () => {
 
         <div className="metric-card-premium glass">
           <div className="m-premium-header">
-            <i className="fa-solid fa-list-check" style={{ color: '#3291ff' }}></i>
+            <i className="fa-solid fa-list-check" style={{ color: '#FF4D5E' }}></i>
             <h4>Distribution</h4>
           </div>
           <div className="m-premium-body">

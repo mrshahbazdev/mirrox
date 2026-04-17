@@ -190,11 +190,11 @@ const Settings = ({ onAdminLogout }) => {
             <div className="setting-card" style={{ marginBottom: '16px' }}>
               <label className="setting-label">Support Team Avatar (Custom Image)</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid var(--accent)' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid #FF4D5E' }}>
                   {configs.support_avatar ? (
                     <img src={configs.support_avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
-                    <i className={configs.support_icon || 'fa-solid fa-headset'} style={{ fontSize: '20px', color: 'var(--accent)' }} />
+                    <i className={configs.support_icon || 'fa-solid fa-headset'} style={{ fontSize: '20px', color: '#FF4D5E' }} />
                   )}
                 </div>
                 <div style={{ flex: 1 }}>
@@ -252,7 +252,7 @@ const Settings = ({ onAdminLogout }) => {
                 <div style={{ background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <p style={{ fontSize: '11px', fontWeight: 600, marginBottom: '8px' }}>Admin Dashboard Sound</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <i className="fa-solid fa-bell" style={{ color: 'var(--accent)' }} />
+                    <i className="fa-solid fa-bell" style={{ color: '#FF4D5E' }} />
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {configs.admin_notification_sound ? 'Custom Sound Set' : 'Default Beep'}
                     </span>
@@ -381,7 +381,7 @@ const Settings = ({ onAdminLogout }) => {
       <style>{`
         .settings-section { margin-bottom: 32px; }
         .section-title {
-          font-size: 15px; font-weight: 800; color: #3291ff;
+          font-size: 15px; font-weight: 800; color: #FF4D5E;
           display: flex; align-items: center; gap: 8px;
           margin-bottom: 16px;
           text-transform: uppercase; letter-spacing: 0.5px;
@@ -406,16 +406,16 @@ const Settings = ({ onAdminLogout }) => {
           outline: none; transition: border-color 0.2s;
           font-family: 'Inter', sans-serif;
         }
-        .setting-input:focus { border-color: #3291ff; }
+        .setting-input:focus { border-color: #FF4D5E; }
         .setting-help { font-size: 12px; color: #4a5568; margin-top: 8px; }
 
         .save-settings-btn {
-          background: #3291ff; color: #fff;
+          background: #FF4D5E; color: #fff;
           border: none; border-radius: 12px;
           padding: 16px 32px; font-size: 15px; font-weight: 800;
           cursor: pointer; transition: all 0.2s;
           display: flex; align-items: center; gap: 10px;
-          box-shadow: 0 4px 14px rgba(50, 145, 255, 0.2);
+          box-shadow: 0 4px 14px rgba(255, 77, 94, 0.2);
         }
         .save-settings-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
         .save-settings-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -432,14 +432,14 @@ const Settings = ({ onAdminLogout }) => {
         .adm-toast.warn { background: #2a1a0a; border: 1px solid #f59e0b; color: #f59e0b; }
 
         .qr-add-btn {
-          background: rgba(50, 145, 255, 0.1); color: #3291ff;
-          border: 1px dashed #3291ff; border-radius: 8px;
+          background: rgba(255, 77, 94, 0.1); color: #FF4D5E;
+          border: 1px dashed #FF4D5E; border-radius: 8px;
           padding: 10px; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: all 0.2s;
           display: flex; align-items: center; justify-content: center; gap: 8px;
           margin-top: 8px;
         }
-        .qr-add-btn:hover { background: rgba(50, 145, 255, 0.15); }
+        .qr-add-btn:hover { background: rgba(255, 77, 94, 0.15); }
       `}</style>
     </AdminLayout>
   );

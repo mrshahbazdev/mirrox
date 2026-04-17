@@ -111,7 +111,7 @@ const Reports = ({ onAdminLogout }) => {
     },
     {
       label: 'Total Deposits', value: `$${totalDeposits.toLocaleString()}`,
-      icon: 'fa-download', color: '#3291ff',
+      icon: 'fa-download', color: '#FF4D5E',
       sub: `${allDeposits.filter(d => d.status === 'approved').length} approved transactions`,
     },
     {
@@ -200,7 +200,7 @@ const Reports = ({ onAdminLogout }) => {
         {/* Client Status Breakdown */}
         <div className="rpt-panel">
           <div className="rpt-panel-header">
-            <span><i className="fa-solid fa-users" style={{ color: '#3291ff', marginRight: 8 }} />Client Status</span>
+            <span><i className="fa-solid fa-users" style={{ color: '#FF4D5E', marginRight: 8 }} />Client Status</span>
           </div>
           <div className="rpt-status-list">
             {statusBreakdown.map((s) => {
@@ -339,10 +339,10 @@ const Reports = ({ onAdminLogout }) => {
         <div className="rpt-panel">
           <div className="rpt-panel-header">
             <span>
-              <i className="fa-solid fa-hourglass" style={{ color: '#3291ff', marginRight: 8 }} />
+              <i className="fa-solid fa-hourglass" style={{ color: '#FF4D5E', marginRight: 8 }} />
               Pending Deposits
             </span>
-            <span className="rpt-count-badge" style={{ background: 'rgba(50,145,255,0.1)', color: '#3291ff', border: '1px solid rgba(50,145,255,0.2)' }}>
+            <span className="rpt-count-badge" style={{ background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E', border: '1px solid rgba(255, 77, 94, 0.2)' }}>
               {pendingDeposits.length}
             </span>
           </div>
@@ -400,7 +400,7 @@ const Reports = ({ onAdminLogout }) => {
                   </td>
                   <td className="adm-mono">{t.lots}</td>
                   <td className="adm-mono">{t.openPrice}</td>
-                  <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#3291ff' : '#64748b' }}>
+                  <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#FF4D5E' : '#64748b' }}>
                     {(() => {
                         if (t.status === 'Closed') return t.closePrice ? parseFloat(t.closePrice).toFixed(2) : '---';
                         return t.selectedPrice ? parseFloat(t.selectedPrice).toFixed(2) : '---';
@@ -442,16 +442,16 @@ const Reports = ({ onAdminLogout }) => {
 
         .adm-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
         .adm-page-title { font-size: 22px; font-weight: 800; color: #e0e6ed; display: flex; align-items: center; gap: 10px; }
-        .adm-page-title i { color: #3291ff; }
+        .adm-page-title i { color: #FF4D5E; }
         .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
         .adm-export-btn {
           display: flex; align-items: center; gap: 8px;
           padding: 10px 20px; border-radius: 10px;
-          background: rgba(50,145,255,0.1); border: 1px solid rgba(50,145,255,0.25);
-          color: #3291ff; font-size: 13px; font-weight: 700; cursor: pointer;
+          background: rgba(255, 77, 94, 0.1); border: 1px solid rgba(255, 77, 94, 0.25);
+          color: #FF4D5E; font-size: 13px; font-weight: 700; cursor: pointer;
           transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-export-btn:hover { background: rgba(50,145,255,0.2); }
+        .adm-export-btn:hover { background: rgba(255, 77, 94, 0.2); }
 
         /* KPI Cards */
         .rpt-kpi-grid {
@@ -463,7 +463,7 @@ const Reports = ({ onAdminLogout }) => {
           border-radius: 14px; padding: 20px;
           transition: all 0.25s; cursor: default;
         }
-        .rpt-kpi-card:hover { border-color: rgba(50,145,255,0.15); transform: translateY(-2px); }
+        .rpt-kpi-card:hover { border-color: rgba(255, 77, 94, 0.15); transform: translateY(-2px); }
         .rpt-kpi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .rpt-kpi-icon {
           width: 44px; height: 44px; border-radius: 10px; font-size: 18px;
@@ -529,8 +529,8 @@ const Reports = ({ onAdminLogout }) => {
         .rpt-client-mini { display: flex; align-items: center; gap: 8px; }
         .rpt-mini-avatar {
           width: 28px; height: 28px; border-radius: 7px;
-          background: rgba(50,145,255,0.15); border: 1px solid rgba(50,145,255,0.25);
-          color: #3291ff; font-size: 12px; font-weight: 800;
+          background: rgba(255, 77, 94, 0.15); border: 1px solid rgba(255, 77, 94, 0.25);
+          color: #FF4D5E; font-size: 12px; font-weight: 800;
           display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
 
@@ -548,10 +548,10 @@ const Reports = ({ onAdminLogout }) => {
 
         /* Trades table styling */
         .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr { background: rgba(50,145,255,0.04); border-bottom: 1px solid rgba(50,145,255,0.08); }
+        .adm-table thead tr { background: rgba(255, 77, 94, 0.04); border-bottom: 1px solid rgba(255, 77, 94, 0.08); }
         .adm-table th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; }
         .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.02); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(50,145,255,0.03); }
+        .adm-table-row:hover { background: rgba(255, 77, 94, 0.03); }
         .adm-table-row:last-child { border-bottom: none; }
         .adm-table td { padding: 12px 16px; font-size: 13px; color: #94a3b8; }
         .adm-uid-badge {
@@ -566,7 +566,7 @@ const Reports = ({ onAdminLogout }) => {
         .cd-type-badge.buy { background: rgba(16,185,129,0.15); color: #10b981; }
         .cd-type-badge.sell { background: rgba(239,68,68,0.15); color: #ef4444; }
         .cd-trade-status { padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: capitalize; }
-        .cd-trade-status.open { background: rgba(50,145,255,0.1); color: #3291ff; }
+        .cd-trade-status.open { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
         .cd-trade-status.closed { background: rgba(100,116,139,0.1); color: #64748b; }
       `}</style>
     </AdminLayout>

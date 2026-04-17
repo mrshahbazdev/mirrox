@@ -40,14 +40,14 @@ const Sidebar = ({ currentUser, onLogout }) => {
       </div>
       <style>{`
         .nav-item.active {
-          background: rgba(50,145,255,0.1) !important;
-          color: #3291ff !important;
+          background: rgba(255, 77, 94, 0.1) !important;
+          color: #FF4D5E !important;
         }
         .active-indicator-bar {
           position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px;
-          background: #3291ff; border-radius: 0 4px 4px 0;
+          background: #FF4D5E; border-radius: 0 4px 4px 0;
           opacity: 0; transition: 0.2s;
-          box-shadow: 0 0 10px rgba(50,145,255,0.5);
+          box-shadow: 0 0 10px rgba(255, 77, 94, 0.5);
         }
         .nav-item.active .active-indicator-bar {
           opacity: 1;

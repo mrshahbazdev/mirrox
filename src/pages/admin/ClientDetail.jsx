@@ -411,7 +411,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   const st = statusConfig[client.status];
 
   const tradingMetricCards = [
-    { num: '①', label: 'Balance', value: `$${(tm?.balance || 0).toLocaleString()}`, color: '#3291ff' },
+    { num: '①', label: 'Balance', value: `$${(tm?.balance || 0).toLocaleString()}`, color: '#FF4D5E' },
     { num: '②', label: 'Credit Deposit', value: `$${(tm?.creditDeposit || 0).toLocaleString()}`, color: '#a855f7' },
     { num: '③', label: 'Equity', value: `$${(tm?.equity || 0).toLocaleString()}`, color: '#06b6d4' },
     { num: '④', label: 'Margin', value: `$${(tm?.marginUsed || 0).toLocaleString()}`, color: '#ef4444' },
@@ -559,7 +559,7 @@ const ClientDetail = ({ onAdminLogout }) => {
                        <img src={item.data.url} alt={item.id} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                       <a href={item.data.url} target="_blank" rel="noreferrer" className="adm-mini-act" style={{ background: 'rgba(50,145,255,0.1)', color: '#3291ff', textDecoration: 'none', textAlign: 'center', flex: 1, padding: '8px', borderRadius: '8px', fontSize: '12px', fontWeight: 600 }}>
+                       <a href={item.data.url} target="_blank" rel="noreferrer" className="adm-mini-act" style={{ background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E', textDecoration: 'none', textAlign: 'center', flex: 1, padding: '8px', borderRadius: '8px', fontSize: '12px', fontWeight: 600 }}>
                           <i className="fa-solid fa-expand" style={{ marginRight: '6px' }} /> View
                        </a>
                        {(item.data.status === 'pending' || item.data.status === 'rejected') && (
@@ -635,7 +635,7 @@ const ClientDetail = ({ onAdminLogout }) => {
       </div>
 
       <div className="cd-section">
-        <div className="cd-section-label" style={{ color: '#3291ff' }}>Trading Metrics</div>
+        <div className="cd-section-label" style={{ color: '#FF4D5E' }}>Trading Metrics</div>
         <div className="cd-metrics-grid">
           {tradingMetricCards.map((card) => (
             <div className="cd-metric-card" key={card.num}>
@@ -690,7 +690,7 @@ const ClientDetail = ({ onAdminLogout }) => {
                       <td className="adm-mono">{t.lots}</td>
                       <td className="adm-mono">{t.openPrice}</td>
                       <td className="adm-mono">{prices.find(p=>p.symbol===t.symbol)?.price || '...'}</td>
-                      <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#3291ff' : '#64748b' }}>
+                      <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#FF4D5E' : '#64748b' }}>
                         {(() => {
                            const precision = prices.find(p=>p.symbol===t.symbol)?.precision || 2;
                            if (t.status === 'Closed') {
@@ -718,9 +718,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                           {t.status !== 'Closed' && (
                             <>
-                              <button onClick={() => handleEditPL(t)} style={{ background: 'rgba(50,145,255,0.2)', border: 'none', color: '#3291ff', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>EDIT P/L</button>
+                              <button onClick={() => handleEditPL(t)} style={{ background: 'rgba(255, 77, 94, 0.2)', border: 'none', color: '#FF4D5E', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>EDIT P/L</button>
                               <button onClick={() => handleForceClose(t.id)} style={{ background: 'rgba(239,68,68,0.2)', border: 'none', color: '#ef4444', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>CLOSE</button>
-                              <button onClick={() => handleEditLimit(t)} style={{ background: 'rgba(50,145,255,0.1)', border: '1px solid rgba(50,145,255,0.2)', color: '#3291ff', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>SEL PRICE</button>
+                              <button onClick={() => handleEditLimit(t)} style={{ background: 'rgba(255, 77, 94, 0.1)', border: '1px solid rgba(255, 77, 94, 0.2)', color: '#FF4D5E', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>SEL PRICE</button>
                             </>
                           )}
                           <button
@@ -877,11 +877,11 @@ const ClientDetail = ({ onAdminLogout }) => {
         .adm-back-btn {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 8px 16px; border-radius: 8px; margin-bottom: 20px;
-          background: rgba(50,145,255,0.08); border: 1px solid rgba(50,145,255,0.2);
-          color: #3291ff; font-size: 13px; font-weight: 600; cursor: pointer;
+          background: rgba(255, 77, 94, 0.08); border: 1px solid rgba(255, 77, 94, 0.2);
+          color: #FF4D5E; font-size: 13px; font-weight: 600; cursor: pointer;
           transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-back-btn:hover { background: rgba(50,145,255,0.15); }
+        .adm-back-btn:hover { background: rgba(255, 77, 94, 0.15); }
 
         .cd-section { background: #0f1520; border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
         .cd-section-label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00cc88; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
@@ -889,21 +889,21 @@ const ClientDetail = ({ onAdminLogout }) => {
 
         .cd-profile-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: start; }
         .cd-profile-main { display: flex; align-items: center; gap: 16px; }
-        .cd-avatar-lg { width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(50,145,255,0.15), rgba(50,145,255,0.3)); border: 2px solid rgba(50,145,255,0.3); color: #3291ff; font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .cd-avatar-lg { width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(255, 77, 94, 0.15), rgba(255, 77, 94, 0.3)); border: 2px solid rgba(255, 77, 94, 0.3); color: #FF4D5E; font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .cd-client-name { font-size: 22px; font-weight: 800; color: #e0e6ed; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
         .adm-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
         .adm-status-dot { width: 6px; height: 6px; border-radius: 50%; }
 
         .cd-profile-fields { display: flex; flex-direction: column; gap: 12px; }
         .cd-field { display: flex; align-items: center; gap: 12px; }
-        .cd-field-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(50,145,255,0.1); color: #3291ff; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .cd-field-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 77, 94, 0.1); color: #FF4D5E; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .cd-field-label { font-size: 11px; color: #64748b; font-weight: 600; }
         .cd-field-value { font-size: 14px; color: #e0e6ed; font-weight: 600; margin-top: 1px; }
 
         .cd-profile-actions { display: flex; flex-direction: column; gap: 8px; }
         .cd-act-btn { padding: 10px 18px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid transparent; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
-        .cd-act-btn.primary { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.25); color: #3291ff; }
-        .cd-act-btn.primary:hover { background: #3291ff; color: #fff; }
+        .cd-act-btn.primary { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.25); color: #FF4D5E; }
+        .cd-act-btn.primary:hover { background: #FF4D5E; color: #fff; }
         .cd-act-btn.success { background: rgba(0,204,136,0.1); border-color: rgba(0,204,136,0.25); color: #00cc88; }
         .cd-act-btn.success:hover { background: #00cc88; color: #fff; }
         .cd-act-btn.danger { background: rgba(255,77,77,0.1); border-color: rgba(255,77,77,0.25); color: #ff4d4d; }
@@ -923,7 +923,8 @@ const ClientDetail = ({ onAdminLogout }) => {
 
         .cd-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 4px; margin-bottom: 16px; width: fit-content; }
         .cd-tab { display: flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 7px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 700; color: #64748b; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-        .cd-tab.active { background: rgba(50,145,255,0.12); color: #3291ff; border: 1px solid rgba(50,145,255,0.2); }
+        .cd-tab:hover { background: rgba(255, 77, 94, 0.05); color: #e0e6ed; }
+        .cd-tab.active { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.3); color: #FF4D5E; }
 
         .cd-trade-table-wrap { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
         .adm-table { width: 100%; border-collapse: collapse; }
@@ -941,7 +942,7 @@ const ClientDetail = ({ onAdminLogout }) => {
         .cd-modal-footer { padding: 20px 24px; background: rgba(0,0,0,0.2); display: flex; gap: 12px; }
         .cd-modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
         .cd-modal-btn.cancel { background: rgba(255,255,255,0.05); color: #94a3b8; }
-        .cd-modal-btn.confirm { background: #3291ff; color: #fff; }
+        .cd-modal-btn.confirm { background: #FF4D5E; color: #fff; }
 
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10001; }
         .custom-modal-content { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 440px; border-radius: 28px; padding: 28px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); }
@@ -949,11 +950,12 @@ const ClientDetail = ({ onAdminLogout }) => {
         .close-x { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; }
         .modal-footer { display: flex; gap: 12px; justify-content: flex-end; }
         .modal-btn { padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
-        .modal-btn.primary { background: #3291ff; color: white; }
+        .modal-btn.primary { background: #FF4D5E; color: white; }
         .modal-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
         .bias-options { display: grid; gap: 12px; margin-bottom: 24px; }
         .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #94a3b8; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; cursor: pointer; }
-        .bias-btn.active { background: rgba(50, 145, 255, 0.1); border-color: #3291ff; color: #3291ff; }
+        .bias-btn.active { background: rgba(255, 77, 94, 0.1); border-color: #FF4D5E; color: #FF4D5E; }
+        .kyc-pagination button:hover:not(:disabled) { background: #2a3341; border-color: #FF4D5E; color: #FF4D5E; }
         .intensity-group { background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
 
         .cd-select {
@@ -1099,7 +1101,7 @@ const ClientDetail = ({ onAdminLogout }) => {
           <div className="custom-modal-content animate-pop">
             <div className="modal-header">
               <h3 style={{ color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fa-solid fa-chart-line" style={{ color: '#3291ff' }} /> Trade Bias Control
+                <i className="fa-solid fa-chart-line" style={{ color: '#FF4D5E' }} /> Trade Bias Control
               </h3>
               <button className="close-x" onClick={() => setShowModal(false)}>&times;</button>
             </div>
@@ -1120,7 +1122,7 @@ const ClientDetail = ({ onAdminLogout }) => {
                   <i className="fa-solid fa-arrow-down" style={{ color: '#ff4d4d' }} /> Forced Loss (Red)
                 </button>
                 <button className={`bias-btn ${modalMode === 'lock' ? 'active' : ''}`} onClick={() => setModalMode('lock')}>
-                   <i className="fa-solid fa-lock" style={{ color: '#3291ff' }} /> Fixed Profit Lock
+                   <i className="fa-solid fa-lock" style={{ color: '#FF4D5E' }} /> Fixed Profit Lock
                 </button>
               </div>
 

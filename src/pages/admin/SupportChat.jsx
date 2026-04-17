@@ -626,7 +626,7 @@ export default function SupportChat({ onAdminLogout }) {
                             {isAdmin && (
                               <>
                                 <i className={`fa-solid fa-check${msg.read ? '-double' : ''} chat-read-icon`}
-                                  style={{ color: msg.read ? '#3291ff' : '#64748b' }} />
+                                  style={{ color: msg.read ? '#FF4D5E' : '#64748b' }} />
                                 <span style={{ marginLeft: 8, cursor: 'pointer', color: '#ff4d4d' }} onClick={() => deleteMessage(msg.timestamp)} title="Unsend Message">
                                   <i className="fa-solid fa-trash-can" />
                                 </span>
@@ -693,11 +693,11 @@ export default function SupportChat({ onAdminLogout }) {
                     
                     {/* Admin Presence Indicator */}
                     {otherPresence.length > 0 && (
-                      <div className="presence-indicator" style={{ background: 'rgba(50,145,255,0.05)', padding: '6px 14px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div className="presence-indicator" style={{ background: 'rgba(255, 77, 94, 0.05)', padding: '6px 14px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                          <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b' }}>ONLINE STAFF:</span>
                          <div className="presence-avatars" style={{ display: 'flex', gap: '4px' }}>
                             {otherPresence.map(adm => (
-                               <div key={adm.id} className="presence-badge" style={{ width: '24px', height: '24px', background: '#3291ff', color: '#fff', borderRadius: '50%', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                               <div key={adm.id} className="presence-badge" style={{ width: '24px', height: '24px', background: '#FF4D5E', color: '#fff', borderRadius: '50%', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
                                   {adm.name.charAt(0)}
                                </div>
                             ))}

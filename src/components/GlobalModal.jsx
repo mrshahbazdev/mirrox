@@ -13,7 +13,7 @@ const GlobalModal = () => {
       case 'error': return '#ff4d4d';
       case 'warning': return '#f59e0b';
       case 'info':
-      default: return '#3291ff';
+      default: return '#FF4D5E';
     }
   };
 
@@ -119,7 +119,7 @@ const GlobalModal = () => {
             padding: 14px; border-radius: 12px; color: #fff; font-family: inherit; font-size: 14px;
             outline: none; transition: 0.2s;
           }
-          .glb-prompt-input:focus { border-color: #3291ff; box-shadow: 0 0 0 4px rgba(50, 145, 255, 0.1); }
+          .glb-prompt-input:focus { border-color: #FF4D5E; box-shadow: 0 0 0 4px rgba(255, 77, 94, 0.1); }
 
           .glb-modal-footer { display: flex; gap: 12px; }
           .glb-btn {

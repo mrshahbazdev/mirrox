@@ -104,7 +104,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     { icon: 'fa-solid fa-address-card', path: '/admin/verifications', label: 'Verifications', badge: pendingKycCount, badgeColor: '#ff4d4d' },
     { icon: 'fa-solid fa-coins', path: '/admin/symbols', label: 'Symbols' },
     { icon: 'fa-solid fa-chart-pie', path: '/admin/reports', label: 'Reports', badge: pendingFinanceCount, badgeColor: '#f59e0b' },
-    { icon: 'fa-solid fa-comments', path: '/admin/support', label: 'Support', badge: supportUnreadCount, badgeColor: '#3291ff' },
+    { icon: 'fa-solid fa-comments', path: '/admin/support', label: 'Support', badge: supportUnreadCount, badgeColor: '#FF4D5E' },
     { icon: 'fa-solid fa-user-gear', path: '/admin/staff', label: 'Team' },
     { icon: 'fa-solid fa-shield-halved', path: '/admin/security', label: 'Security' },
     { icon: 'fa-solid fa-gears', path: '/admin/settings', label: 'Settings' },
@@ -159,7 +159,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
         <header className="adm-header">
           <div className="adm-header-left">
             <div className="adm-header-title">
-              <i className="fa-solid fa-shield-halved" style={{ color: '#3291ff' }} />
+              <i className="fa-solid fa-shield-halved" style={{ color: '#FF4D5E' }} />
               <span>Bullvera Admin Panel</span>
             </div>
           </div>
@@ -197,9 +197,9 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
           width: 90%; max-width: 800px; padding: 16px 24px;
           background: rgba(15, 21, 32, 0.95); backdrop-filter: blur(10px);
-          border: 1px solid #3291ff; border-radius: 16px; 
+          border: 1px solid #FF4D5E; border-radius: 16px; 
           display: flex; align-items: center; gap: 20px; z-index: 10000;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(50,145,255,0.2);
+          box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255, 77, 94, 0.2);
           animation: bannerSlideIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
         @keyframes bannerSlideIn { 
@@ -207,7 +207,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           to { transform: translateX(-50%) translateY(0); opacity: 1; }
         }
         .admin-broadcast-banner.warning { border-color: #f59e0b; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(245,158,11,0.2); }
-        .admin-broadcast-banner i { font-size: 24px; color: #3291ff; }
+        .admin-broadcast-banner i { font-size: 24px; color: #FF4D5E; }
         .admin-broadcast-banner.warning i { color: #f59e0b; }
         .broadcast-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
         .broadcast-content strong { font-size: 10px; font-weight: 800; color: #64748b; letter-spacing: 1px; }
@@ -230,7 +230,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
         .adm-sidebar {
           width: 68px;
           background: #0f1520;
-          border-right: 1px solid rgba(50,145,255,0.1);
+          border-right: 1px solid rgba(255, 77, 94, 0.1);
           display: flex; flex-direction: column;
           align-items: center;
           padding: 16px 0;
@@ -240,13 +240,13 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
         .adm-sidebar-logo {
           position: relative;
-          color: #3291ff; font-size: 22px;
+          color: #FF4D5E; font-size: 22px;
           margin-bottom: 32px;
         }
         .adm-logo-badge {
           position: absolute; top: -6px; right: -10px;
           font-size: 7px; font-weight: 800; letter-spacing: 0.5px;
-          background: #3291ff; color: #fff;
+          background: #FF4D5E; color: #fff;
           padding: 1px 4px; border-radius: 4px;
         }
 
@@ -267,18 +267,18 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           font-size: 16px;
         }
         .adm-nav-item:hover, .adm-nav-item.active {
-          background: rgba(50,145,255,0.08);
-          color: #3291ff;
+          background: rgba(255, 77, 94, 0.08);
+          color: #FF4D5E;
         }
         .adm-nav-item.active {
-          background: rgba(50,145,255,0.12) !important;
-          box-shadow: 0 0 20px rgba(50,145,255,0.1);
+          background: rgba(255, 77, 94, 0.12) !important;
+          box-shadow: 0 0 20px rgba(255, 77, 94, 0.1);
         }
         .adm-active-bar {
           position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
-          background: #3291ff; border-radius: 0 4px 4px 0;
+          background: #FF4D5E; border-radius: 0 4px 4px 0;
           opacity: 0; transition: all 0.2s;
-          box-shadow: 0 0 10px #3291ff;
+          box-shadow: 0 0 10px #FF4D5E;
         }
         .adm-nav-item.active .adm-active-bar {
           opacity: 1;
@@ -316,7 +316,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
         .adm-header {
           height: 56px; background: #0f1520;
-          border-bottom: 1px solid rgba(50,145,255,0.1);
+          border-bottom: 1px solid rgba(255, 77, 94, 0.1);
           display: flex; align-items: center; justify-content: space-between;
           padding: 0 28px; flex-shrink: 0;
         }
@@ -346,10 +346,10 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
         .adm-avatar {
           display: flex; align-items: center; gap: 8px;
-          background: rgba(50,145,255,0.1);
-          border: 1px solid rgba(50,145,255,0.2);
+          background: rgba(255, 77, 94, 0.1);
+          border: 1px solid rgba(255, 77, 94, 0.2);
           border-radius: 8px; padding: 6px 14px;
-          font-size: 13px; font-weight: 600; color: #3291ff;
+          font-size: 13px; font-weight: 600; color: #FF4D5E;
         }
 
         /* Content Area */

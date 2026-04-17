@@ -4,7 +4,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import { useModal } from '../../context/ModalContext';
 
 const categoryColors = {
-  Forex: { color: '#3291ff', bg: 'rgba(50,145,255,0.1)' },
+  Forex: { color: '#FF4D5E', bg: 'rgba(255, 77, 94, 0.1)' },
   Metals: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
   Crypto: { color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
   Indices: { color: '#06b6d4', bg: 'rgba(6,182,212,0.1)' },
@@ -367,7 +367,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
 
         .adm-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
         .adm-page-title { font-size: 22px; font-weight: 800; color: #e0e6ed; display: flex; align-items: center; gap: 10px; }
-        .adm-page-title i { color: #3291ff; }
+        .adm-page-title i { color: #FF4D5E; }
         .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
 
         .adm-filter-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
@@ -376,7 +376,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
           background: #0f1520; border: 1px solid #2a3341; border-radius: 10px;
           display: flex; align-items: center; transition: all 0.2s;
         }
-        .adm-search-wrap:focus-within { border-color: rgba(50,145,255,0.4); }
+        .adm-search-wrap:focus-within { border-color: rgba(255, 77, 94, 0.4); }
         .adm-search-wrap i { position: absolute; left: 14px; color: #4a5568; font-size: 13px; }
         .adm-search-wrap input {
           width: 100%; padding: 11px 14px 11px 40px;
@@ -393,17 +393,17 @@ const SymbolsManager = ({ onAdminLogout }) => {
           cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
         .adm-filter-pill:hover { color: #e0e6ed; }
-        .adm-filter-pill.active { background: rgba(50,145,255,0.12); border-color: rgba(50,145,255,0.35); color: #3291ff; }
+        .adm-filter-pill.active { background: rgba(255, 77, 94, 0.12); border-color: rgba(255, 77, 94, 0.35); color: #FF4D5E; }
 
         .adm-table-wrap {
           background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
           border-radius: 14px; overflow: hidden; margin-bottom: 0;
         }
         .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr { background: rgba(50,145,255,0.05); border-bottom: 1px solid rgba(50,145,255,0.1); }
+        .adm-table thead tr { background: rgba(255, 77, 94, 0.05); border-bottom: 1px solid rgba(255, 77, 94, 0.1); }
         .adm-table th { padding: 14px 18px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; }
         .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(50,145,255,0.03); }
+        .adm-table-row:hover { background: rgba(255, 77, 94, 0.03); }
         .adm-table-row:last-child { border-bottom: none; }
         .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
 
@@ -422,21 +422,21 @@ const SymbolsManager = ({ onAdminLogout }) => {
 
         .sym-edit-input {
           width: 80px; padding: 6px 10px;
-          background: rgba(50,145,255,0.08);
-          border: 1px solid rgba(50,145,255,0.3);
+          background: rgba(255, 77, 94, 0.08);
+          border: 1px solid rgba(255, 77, 94, 0.3);
           border-radius: 6px; color: #e0e6ed;
           font-size: 13px; font-family: 'Space Mono', monospace;
           outline: none;
         }
-        .sym-edit-input:focus { border-color: #3291ff; box-shadow: 0 0 0 2px rgba(50,145,255,0.15); }
+        .sym-edit-input:focus { border-color: #FF4D5E; box-shadow: 0 0 0 2px rgba(255, 77, 94, 0.15); }
 
         .adm-act-btn {
           width: 30px; height: 30px; border-radius: 7px;
           display: flex; align-items: center; justify-content: center;
           border: 1px solid transparent; cursor: pointer; font-size: 12px; transition: all 0.2s;
         }
-        .adm-act-btn.view { background: rgba(50,145,255,0.1); color: #3291ff; border-color: rgba(50,145,255,0.2); }
-        .adm-act-btn.view:hover { background: #3291ff; color: #fff; }
+        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; border-color: rgba(255, 77, 94, 0.2); }
+        .adm-act-btn.view:hover { background: #FF4D5E; color: #fff; }
         .adm-act-btn.approve { background: rgba(0,204,136,0.1); color: #00cc88; border-color: rgba(0,204,136,0.2); }
         .adm-act-btn.approve:hover { background: #00cc88; color: #fff; }
         .adm-act-btn.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; border-color: rgba(255,77,77,0.2); }
@@ -444,11 +444,11 @@ const SymbolsManager = ({ onAdminLogout }) => {
 
         .adm-btn-create {
           display: flex; align-items: center; gap: 8px;
-          background: #3291ff; color: #fff; border: none;
+          background: #FF4D5E; color: #fff; border: none;
           padding: 10px 18px; border-radius: 8px; font-weight: 700;
           font-size: 13px; cursor: pointer; transition: all 0.2s;
         }
-        .adm-btn-create:hover { transform: translateY(-1px); background: #257ae6; }
+        .adm-btn-create:hover { transform: translateY(-1px); background: #D43A4A; }
 
         .adm-modal-overlay {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -467,14 +467,14 @@ const SymbolsManager = ({ onAdminLogout }) => {
           border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
           color: #fff; font-size: 14px; outline: none; margin-bottom: 12px;
         }
-        .adm-btn-submit { background: #3291ff; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
-        .adm-btn-submit:hover { background: #257ae6; }
+        .adm-btn-submit { background: #FF4D5E; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+        .adm-btn-submit:hover { background: #D43A4A; }
 
         .cd-trade-status {
           padding: 3px 10px; border-radius: 20px;
           font-size: 11px; font-weight: 700;
         }
-        .cd-trade-status.open { background: rgba(50,145,255,0.1); color: #3291ff; }
+        .cd-trade-status.open { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
         .cd-trade-status.approved { background: rgba(0,204,136,0.1); color: #00cc88; }
 
         .adm-mono { font-family: 'Space Mono', monospace; }

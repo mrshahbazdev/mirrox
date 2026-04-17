@@ -184,7 +184,7 @@ const ClientsList = ({ onAdminLogout }) => {
       {/* Stats Row */}
       <div className="adm-stats-row">
         {[
-          { label: 'Total Clients', value: stats.total, icon: 'fa-users', color: '#3291ff' },
+          { label: 'Total Clients', value: stats.total, icon: 'fa-users', color: '#FF4D5E' },
           { label: 'Active', value: stats.active, icon: 'fa-circle-check', color: '#00cc88' },
           { label: 'Pending', value: stats.pending, icon: 'fa-clock', color: '#f59e0b' },
           { label: 'Suspended', value: stats.suspended, icon: 'fa-ban', color: '#ff4d4d' },
@@ -522,10 +522,10 @@ const ClientsList = ({ onAdminLogout }) => {
           border: 1px solid #2a3341; border-radius: 10px; color: #fff;
           font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: 0.2s;
         }
-        .adm-input:focus { border-color: #3291ff; }
+        .adm-input:focus { border-color: #FF4D5E; }
         .adm-modal-footer { padding: 20px 24px; background: rgba(0,0,0,0.1); display: flex; gap: 12px; }
         .adm-btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid #2a3341; border-radius: 10px; color: #64748b; font-weight: 700; cursor: pointer; }
-        .adm-btn-confirm { flex: 2; padding: 12px; background: #3291ff; border: none; border-radius: 10px; color: #fff; font-weight: 700; cursor: pointer; }
+        .adm-btn-confirm { flex: 2; padding: 12px; background: #FF4D5E; border: none; border-radius: 10px; color: #fff; font-weight: 700; cursor: pointer; }
         .adm-btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
         .adm-toast {
           position: fixed; top: 24px; right: 24px; z-index: 9999;
@@ -547,21 +547,21 @@ const ClientsList = ({ onAdminLogout }) => {
           font-size: 22px; font-weight: 800; color: #e0e6ed;
           display: flex; align-items: center; gap: 10px;
         }
-        .adm-page-title i { color: #3291ff; }
+        .adm-page-title i { color: #FF4D5E; }
         .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
 
         .adm-export-btn {
           display: flex; align-items: center; gap: 8px;
           padding: 10px 20px; border-radius: 10px;
-          background: rgba(50,145,255,0.1);
-          border: 1px solid rgba(50,145,255,0.25);
-          color: #3291ff; font-size: 13px; font-weight: 700;
+          background: rgba(255, 77, 94, 0.1);
+          border: 1px solid rgba(255, 77, 94, 0.25);
+          color: #FF4D5E; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: all 0.2s;
           font-family: 'Inter', sans-serif;
         }
         .adm-export-btn:hover {
-          background: rgba(50,145,255,0.2);
-          box-shadow: 0 0 15px rgba(50,145,255,0.15);
+          background: rgba(255, 77, 94, 0.2);
+          box-shadow: 0 0 15px rgba(255, 77, 94, 0.15);
         }
 
         .adm-stats-row {
@@ -576,7 +576,7 @@ const ClientsList = ({ onAdminLogout }) => {
           border-radius: 12px;
           transition: all 0.2s;
         }
-        .adm-stat-card:hover { border-color: rgba(50,145,255,0.15); transform: translateY(-1px); }
+        .adm-stat-card:hover { border-color: rgba(255, 77, 94, 0.15); transform: translateY(-1px); }
         .adm-stat-icon {
           width: 44px; height: 44px;
           border-radius: 10px; font-size: 18px;
@@ -597,8 +597,8 @@ const ClientsList = ({ onAdminLogout }) => {
           transition: all 0.2s;
         }
         .adm-search-wrap:focus-within {
-          border-color: rgba(50,145,255,0.4);
-          box-shadow: 0 0 0 3px rgba(50,145,255,0.08);
+          border-color: rgba(255, 77, 94, 0.4);
+          box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.08);
         }
         .adm-search-wrap i {
           position: absolute; left: 14px; color: #4a5568; font-size: 13px;
@@ -626,9 +626,9 @@ const ClientsList = ({ onAdminLogout }) => {
         }
         .adm-filter-pill:hover { color: #e0e6ed; border-color: #3a4555; }
         .adm-filter-pill.active {
-          background: rgba(50,145,255,0.12);
-          border-color: rgba(50,145,255,0.35);
-          color: #3291ff;
+          background: rgba(255, 77, 94, 0.12);
+          border-color: rgba(255, 77, 94, 0.35);
+          color: #FF4D5E;
         }
 
         .adm-table-wrap {
@@ -641,8 +641,8 @@ const ClientsList = ({ onAdminLogout }) => {
           width: 100%; border-collapse: collapse;
         }
         .adm-table thead tr {
-          background: rgba(50,145,255,0.05);
-          border-bottom: 1px solid rgba(50,145,255,0.1);
+          background: rgba(255, 77, 94, 0.05);
+          border-bottom: 1px solid rgba(255, 77, 94, 0.1);
         }
         .adm-table th {
           padding: 14px 20px; text-align: left;
@@ -653,16 +653,16 @@ const ClientsList = ({ onAdminLogout }) => {
           border-bottom: 1px solid rgba(255,255,255,0.03);
           transition: background 0.15s;
         }
-        .adm-table-row:hover { background: rgba(50,145,255,0.04); }
+        .adm-table-row:hover { background: rgba(255, 77, 94, 0.04); }
         .adm-table-row:last-child { border-bottom: none; }
         .adm-table td { padding: 16px 20px; font-size: 13px; color: #94a3b8; }
 
         .adm-client-cell { display: flex; align-items: center; gap: 12px; }
         .adm-avatar-circle {
           width: 36px; height: 36px; border-radius: 10px;
-          background: linear-gradient(135deg, #3291ff22, #3291ff44);
-          border: 1px solid rgba(50,145,255,0.3);
-          color: #3291ff; font-size: 15px; font-weight: 800;
+          background: linear-gradient(135deg, rgba(255, 77, 94, 0.1), rgba(255, 77, 94, 0.2));
+          border: 1px solid rgba(255, 77, 94, 0.3);
+          color: #FF4D5E; font-size: 15px; font-weight: 800;
           display: flex; align-items: center; justify-content: center;
           flex-shrink: 0;
         }
@@ -695,8 +695,8 @@ const ClientsList = ({ onAdminLogout }) => {
           border: 1px solid transparent; cursor: pointer;
           font-size: 12px; transition: all 0.2s;
         }
-        .adm-act-btn.view { background: rgba(50,145,255,0.1); color: #3291ff; border-color: rgba(50,145,255,0.2); }
-        .adm-act-btn.view:hover { background: #3291ff; color: #fff; }
+        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; border-color: rgba(255, 77, 94, 0.2); }
+        .adm-act-btn.view:hover { background: #FF4D5E; color: #fff; }
         .adm-act-btn.approve { background: rgba(0,204,136,0.1); color: #00cc88; border-color: rgba(0,204,136,0.2); }
         .adm-act-btn.approve:hover { background: #00cc88; color: #fff; }
         .adm-act-btn.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; border-color: rgba(255,77,77,0.2); }
@@ -720,8 +720,8 @@ const ClientsList = ({ onAdminLogout }) => {
           cursor: pointer; display: flex; align-items: center; justify-content: center;
           transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-pg-btn:hover:not(:disabled) { border-color: #3291ff; color: #3291ff; }
-        .adm-pg-btn.active { background: #3291ff; border-color: #3291ff; color: #fff; }
+        .adm-pg-btn:hover:not(:disabled) { border-color: #FF4D5E; color: #FF4D5E; }
+        .adm-pg-btn.active { background: #FF4D5E; border-color: #FF4D5E; color: #fff; }
         .adm-pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
       `}</style>
     </AdminLayout>
