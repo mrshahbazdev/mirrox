@@ -26,7 +26,32 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+// Fail fast if JWT_SECRET is not configured. Never fall back to a hardcoded
+// secret: a compromised fallback lets anyone forge admin/user tokens.
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('❌ FATAL: JWT_SECRET environment variable must be set');
+  process.exit(1);
+}
+
+// Generic upload (size-limited). Individual routes should prefer the safer
+// `imageUpload` (mimetype-restricted) when accepting KYC documents or chat
+// attachments.
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
+// Image-only multer instance for KYC documents / avatar uploads. Prevents
+// attackers from using the upload endpoint to host arbitrary files on the
+// platform's Cloudinary account.
+const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf']);
+const imageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (ALLOWED_IMAGE_MIMES.has(file.mimetype)) return cb(null, true);
+    cb(new Error('Only image/pdf uploads are allowed'));
+  }
+});
 
 const app = express();
 
@@ -83,11 +108,21 @@ const verifyClientToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Access Denied: No Token Provided' });
 
-  jwt.verify(token, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) return res.status(403).json({ error: 'Invalid or Expired Token' });
     req.user = decoded;
     next();
   });
+};
+
+// Middleware: ensure the authenticated caller either owns the requested
+// resource (req.params[paramName] === token user id) or is a staff member.
+// Mount AFTER verifyClientToken (or any middleware that sets req.user).
+const ensureSelfOrAdmin = (paramName = 'id') => (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated' });
+  if (req.user.role && req.user.role !== 'user') return next();
+  if (req.user.id && req.user.id === req.params[paramName]) return next();
+  return res.status(403).json({ error: 'Forbidden: this resource does not belong to you' });
 };
 
 // Middleware: Verify Admin Token (Hardened Session & IP Check)
@@ -96,7 +131,7 @@ const verifyAdminToken = async (req, res, next) => {
   if (!token) return res.status(401).json({ error: 'No admin token' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026');
+    const decoded = jwt.verify(token, JWT_SECRET);
     
     // Hardening: Verify session still exists in DB
     const admin = await Admin.findById(decoded.id);
@@ -217,7 +252,7 @@ app.post('/api/auth/register', async (req, res) => {
     const { password: p, withdrawalPin: wp, ...sanitizedClient } = newClient.toObject ? newClient.toObject() : newClient;
     sanitizedClient.hasPin = !!wp;
 
-    const token = jwt.sign({ id: newClient.id, role: 'user' }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
+    const token = jwt.sign({ id: newClient.id, role: 'user' }, JWT_SECRET, { expiresIn: '7d' });
     res.status(201).json({ success: true, token, client: sanitizedClient });
   } catch (err) {
     res.status(500).json({ error: 'Server error during registration' });
@@ -270,7 +305,7 @@ app.post('/api/auth/login', async (req, res) => {
           return res.json({ require2FA: true, id: adminUser._id, sessionId });
       }
 
-      const token = jwt.sign({ id: adminUser._id, role: adminUser.role, sessionId }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
+      const token = jwt.sign({ id: adminUser._id, role: adminUser.role, sessionId }, JWT_SECRET, { expiresIn: '7d' });
       return res.json({ role: adminUser.role, token, sessionId });
     }
   } catch (err) { console.error('Admin login err:', err); }
@@ -286,7 +321,7 @@ app.post('/api/auth/login', async (req, res) => {
   const { password: p, withdrawalPin: wp, ...sanitizedClient } = clientUser;
   sanitizedClient.hasPin = !!wp;
 
-  const token = jwt.sign({ id: clientUser.id, role: 'user' }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
+  const token = jwt.sign({ id: clientUser.id, role: 'user' }, JWT_SECRET, { expiresIn: '7d' });
   res.json({ success: true, token, client: sanitizedClient });
 });
 
@@ -308,7 +343,7 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
       const lastSession = admin.activeSessions[admin.activeSessions.length - 1];
       const sessionId = lastSession ? lastSession.sessionId : 'S' + Date.now().toString().slice(-6);
 
-      const token = jwt.sign({ id: admin._id, role: admin.role, sessionId }, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', { expiresIn: '7d' });
+      const token = jwt.sign({ id: admin._id, role: admin.role, sessionId }, JWT_SECRET, { expiresIn: '7d' });
       res.json({ role: admin.role, token, sessionId });
   } catch(err) { res.status(500).json({ error: 'Server error' }); }
 });
@@ -375,24 +410,16 @@ app.get('/api/admins/me', verifyAdminToken, async (req, res) => {
 app.post('/api/admins', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
   const { name, email, password, role, team, permissions } = req.body;
   try {
-      const aCount = await Admin.countDocuments();
-    if (aCount === 0) {
-      console.log('Seeding MongoDB with default Admin...');
-      const hashedPassword = await bcrypt.hash('admin', 10);
-      await Admin.create({ 
-        email: 'admin@mirrox.com', 
-        password: hashedPassword, 
-        name: 'Super Admin', 
-        role: 'super' // Changed from 'admin' to 'super'
-      });
-    }
+      if (!password || password.length < 8) {
+        return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      }
       const exists = await Admin.findOne({ email });
       if (exists) return res.status(400).json({ error: 'Email already registered' });
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const newAdmin = new Admin({ name, email, password: hashedPassword, role, team, permissions });
       await newAdmin.save();
-      
+
       await logAdminActivity(req, 'CREATE_ADMIN', 'Admin', newAdmin._id, { description: `Created new admin: ${name}` });
       res.status(201).json(newAdmin);
   } catch(err) { res.status(500).json({ error: 'Failed to create admin' }); }
@@ -568,7 +595,7 @@ app.delete('/api/symbols/:id', verifyAdminToken, (req, res) => {
 // --- CLIENT APIS ---
 app.get('/api/clients', verifyAdminToken, (req, res) => res.json(clients));
 
-app.get('/api/clients/:id', verifyClientToken, (req, res) => {
+app.get('/api/clients/:id', verifyClientToken, ensureSelfOrAdmin('id'), (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).send('Not Found');
   
@@ -579,7 +606,7 @@ app.get('/api/clients/:id', verifyClientToken, (req, res) => {
   res.json(sanitizedClient);
 });
 
-app.get('/api/clients/:id/referrals', verifyClientToken, (req, res) => {
+app.get('/api/clients/:id/referrals', verifyClientToken, ensureSelfOrAdmin('id'), (req, res) => {
   const referrals = clients.filter(c => c.referredBy === clients.find(me => me.id === req.params.id)?.refCode);
   res.json(referrals);
 });
@@ -646,7 +673,7 @@ app.delete('/api/clients/:id', verifyAdminToken, (req, res) => {
 
 
 // --- KYC APIS ---
-app.post('/api/clients/:id/kyc/submit', verifyClientToken, upload.single('document'), async (req, res) => {
+app.post('/api/clients/:id/kyc/submit', verifyClientToken, ensureSelfOrAdmin('id'), imageUpload.single('document'), async (req, res) => {
   const { id } = req.params;
   const { docCategory } = req.body;
   const client = clients.find(c => c.id === id);
@@ -734,17 +761,17 @@ const verifyAdminOrClient = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Auth required' });
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026');
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch(e) { res.status(401).json({ error: 'Invalid token' }); }
 };
 
-app.get('/api/deposits/:clientId', verifyAdminOrClient, (req, res) => {
+app.get('/api/deposits/:clientId', verifyAdminOrClient, ensureSelfOrAdmin('clientId'), (req, res) => {
   res.json(deposits.filter(d => d.clientId === req.params.clientId));
 });
 
-app.get('/api/withdrawals/:clientId', verifyAdminOrClient, (req, res) => {
+app.get('/api/withdrawals/:clientId', verifyAdminOrClient, ensureSelfOrAdmin('clientId'), (req, res) => {
   res.json(withdrawals.filter(w => w.clientId === req.params.clientId));
 });
 
@@ -785,7 +812,11 @@ app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
 });
 
 app.post('/api/withdrawals', verifyClientToken, async (req, res) => {
-  const { amount, clientId, pin } = req.body;
+  const { amount, pin } = req.body;
+  // SECURITY: always resolve client from the token, never from the request
+  // body. Taking clientId from the body allowed attackers to brute-force any
+  // user's 4-digit withdrawal PIN and drain that user's balance.
+  const clientId = req.user.id;
   const client = clients.find(c => c.id === clientId);
   if (!client) return res.status(404).json({ error: 'Client not found' });
 
@@ -845,15 +876,19 @@ app.put('/api/config', verifyAdminToken, (req, res) => {
 });
 
 // --- TRADES APIS ---
-app.get('/api/trades/:clientId', verifyClientToken, (req, res) => res.json(activeTrades[req.params.clientId] || []));
-app.get('/api/trades/:clientId/history', verifyClientToken, async (req, res) => {
+app.get('/api/trades/:clientId', verifyClientToken, ensureSelfOrAdmin('clientId'), (req, res) => res.json(activeTrades[req.params.clientId] || []));
+app.get('/api/trades/:clientId/history', verifyClientToken, ensureSelfOrAdmin('clientId'), async (req, res) => {
     const historical = await Trade.find({ clientId: req.params.clientId, status: 'Closed' }).sort({ closeTime: -1 }).limit(100);
     res.json(historical);
 });
 
 app.put('/api/trades/:id', verifyClientToken, (req, res) => {
-  const { clientId, stopLoss, takeProfit } = req.body;
+  const { stopLoss, takeProfit } = req.body;
   const { id } = req.params;
+  // SECURITY: resolve ownership from token, not from request body. Previously
+  // any authenticated user could modify any other user's SL/TP by passing a
+  // different clientId in the body.
+  const clientId = req.user.id;
 
   const trades = activeTrades[clientId];
   if (!trades) return res.status(404).json({ error: 'Client trades not found' });
@@ -895,7 +930,7 @@ app.get('/api/active-traders', verifyAdminToken, (req, res) => {
   res.json({ count: activeClients.length, clients: activeClients });
 });
 
-app.get('/api/clients/:id/analytics', verifyClientToken, (req, res) => {
+app.get('/api/clients/:id/analytics', verifyClientToken, ensureSelfOrAdmin('id'), (req, res) => {
   const { id } = req.params;
   const clientTrades = (activeTrades[id] || []).concat(); // In memory + could fetch historical if needed
   const client = clients.find(c => c.id === id);
@@ -942,6 +977,11 @@ app.get('/api/support/tickets/:ticketId', verifyClientToken, async (req, res) =>
   try {
     const ticket = await SupportTicket.findOne({ id: req.params.ticketId }).lean();
     if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+
+    // Ownership check: non-admin callers may only read their own ticket.
+    if (req.user.role === 'user' && ticket.clientId !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden: ticket does not belong to you' });
+    }
     res.json(ticket);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch ticket' });
@@ -1091,11 +1131,16 @@ app.put('/api/support/tickets/:ticketId/admin-note', verifyAdminToken, async (re
 // PUT update ticket category
 app.put('/api/support/tickets/:ticketId/category', verifyClientToken, async (req, res) => {
   try {
+    // Scope update to the authenticated user's ticket (or allow admins).
+    const filter = { id: req.params.ticketId };
+    if (req.user.role === 'user') filter.clientId = req.user.id;
+
     const ticket = await SupportTicket.findOneAndUpdate(
-      { id: req.params.ticketId },
+      filter,
       { category: req.body.category },
       { new: true }
     );
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
     io.emit('chat:ticket_update', { ticketId: ticket.id, category: ticket.category });
     res.json(ticket);
   } catch (err) {
@@ -1118,7 +1163,7 @@ app.put('/api/support/tickets/:ticketId/rate', verifyClientToken, async (req, re
 });
 
 // Notifications: Mark as read
-app.put('/api/clients/:clientId/notifications/:notifId/read', async (req, res) => {
+app.put('/api/clients/:clientId/notifications/:notifId/read', verifyClientToken, ensureSelfOrAdmin('clientId'), async (req, res) => {
   try {
     await Client.updateOne(
       { id: req.params.clientId, "notifications.id": req.params.notifId },
@@ -1131,10 +1176,10 @@ app.put('/api/clients/:clientId/notifications/:notifId/read', async (req, res) =
   }
 });
 
-// POST upload attachment
-app.post('/api/upload', upload.single('file'), (req, res) => {
+// POST upload attachment (authenticated clients + admins only; mime-restricted)
+app.post('/api/upload', verifyAdminOrClient, imageUpload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  
+
   const uploadStream = cloudinary.uploader.upload_stream(
     { folder: 'support_attachments' },
     (error, result) => {
@@ -1185,17 +1230,19 @@ setupSockets(io);
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {
   console.error('[FATAL ERROR HANDLER]:', err.stack);
-  
+
   // Custom handling for CORS specific errors
   if (err.message && err.message.includes('CORS policy')) {
     return res.status(403).json({ error: err.message });
   }
 
-  res.status(500).json({ 
-    error: 'Internal Server Error', 
-    message: err.message,
-    path: req.path
-  });
+  // Multer / image-filter rejections (e.g. wrong mimetype, oversized file).
+  if (err && (err.code === 'LIMIT_FILE_SIZE' || /Only image\/pdf uploads/.test(err.message))) {
+    return res.status(400).json({ error: err.message });
+  }
+
+  // Avoid leaking internal error details (stack, raw message, path) to clients.
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 const PORT = process.env.PORT || 3000;

@@ -33,10 +33,16 @@ async function createTables() {
 
     const aCount = await Admin.countDocuments();
     if (aCount === 0) {
-      console.log('⏳ Seeding default Admin user...');
-      const hashedPassword = await bcrypt.hash('admin', 10);
-      await Admin.create({ email: 'admin@mirrox.com', password: hashedPassword, name: 'Super Admin', role: 'admin' });
-      console.log('✔️ Admin user seeded successfully.');
+      const bootstrapPassword = process.env.DEFAULT_ADMIN_PASSWORD;
+      const bootstrapEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@mirrox.com';
+      if (!bootstrapPassword || bootstrapPassword.length < 8) {
+        console.warn('⚠️  DEFAULT_ADMIN_PASSWORD (>=8 chars) not set. Skipping admin bootstrap.');
+      } else {
+        console.log('⏳ Seeding bootstrap Admin from env...');
+        const hashedPassword = await bcrypt.hash(bootstrapPassword, 10);
+        await Admin.create({ email: bootstrapEmail, password: hashedPassword, name: 'Super Admin', role: 'admin' });
+        console.log('✔️ Admin user seeded successfully.');
+      }
     }
 
     console.log('🚀 All tables created successfully in MongoDB!');

@@ -26,3 +26,6 @@ dist-ssr
 # Protect credentials
 .env
 backend/.env
+
+# Local runtime snapshot - may contain plaintext user data (passwords, PII)
+backend/data.json
