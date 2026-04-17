@@ -33,7 +33,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
     // Forced Logout Listener (Session Revocation)
     socket.on('admin:force_logout', ({ adminId, sessionId }) => {
-      const currentSessionId = localStorage.getItem('mirrox_admin_session_id');
+      const currentSessionId = localStorage.getItem('bullvera_admin_session_id');
       if (currentSessionId === sessionId) {
          alert('Your session has been revoked by a Super Admin.');
          onAdminLogout();
@@ -160,7 +160,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           <div className="adm-header-left">
             <div className="adm-header-title">
               <i className="fa-solid fa-shield-halved" style={{ color: '#3291ff' }} />
-              <span>Mirrox Admin Panel</span>
+              <span>Bullvera Admin Panel</span>
             </div>
           </div>
           <div className="adm-header-right">

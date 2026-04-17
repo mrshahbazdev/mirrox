@@ -112,7 +112,7 @@ const RiskManagementTools = () => {
                     <div className="lp-content-side">
                         <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>Native <span style={{ color: 'var(--pub-red)' }}>Integration</span></h2>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '32px' }}>
-                            The Mirrox terminal embeds trailing stops and take-profit mechanisms directly into the trade-lifecycle, ensuring zero-latency protection.
+                            The Bullvera terminal embeds trailing stops and take-profit mechanisms directly into the trade-lifecycle, ensuring zero-latency protection.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7' }}>
                             Coupled with Negative Balance Protection and Dynamic Margin scaling, our environment provides the ultimate safety net for elite operations.
@@ -125,7 +125,7 @@ const RiskManagementTools = () => {
                      <div style={{ padding: '80px 56px', background: '#0b0e14', borderRadius: '64px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
                         <h3 style={{ fontSize: 'clamp(24px, 4vw, 40px)', fontWeight: '900', color: 'white', textTransform: 'uppercase', marginBottom: '32px', letterSpacing: '0.05em' }}>Perpetual <span style={{ color: 'var(--pub-red)' }}>Vigilance</span></h3>
                         <p style={{ color: '#94a3b8', fontSize: '18px', lineHeight: '1.8', maxWidth: '1000px', margin: '0 auto', fontWeight: '500' }}>
-                            Risk management is an iterative science. Mirrox delivers the analytical telemetry required to monitor exposures 24/7, enabling you to calibrate risk parameters as global market volatility evolves.
+                            Risk management is an iterative science. Bullvera delivers the analytical telemetry required to monitor exposures 24/7, enabling you to calibrate risk parameters as global market volatility evolves.
                         </p>
                      </div>
                 </section>

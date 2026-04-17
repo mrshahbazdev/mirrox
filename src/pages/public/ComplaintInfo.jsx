@@ -99,9 +99,9 @@ const ComplaintInfo = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
                         {[
                             { icon: <User size={24}/>, title: "Manager", val: "Complaints Officer" },
-                            { icon: <Mail size={24}/>, title: "Email", val: "complaints@mirrox.com" },
+                            { icon: <Mail size={24}/>, title: "Email", val: "complaints@bullvera.com" },
                             { icon: <MapPin size={24}/>, title: "Reg Office", val: "P.B. 1257 Bonovo Road, Comoros" },
-                            { icon: <Phone size={24}/>, title: "Phone No", val: "+1 (800) MIRROX" }
+                            { icon: <Phone size={24}/>, title: "Phone No", val: "+1 (800) BULLVERA" }
                         ].map((c, i) => (
                             <div key={i} style={{ background: 'white', padding: '48px', borderRadius: '48px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '24px', transition: 'all 0.3s' }}>
                                 <div style={{ width: '56px', height: '56px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -144,7 +144,7 @@ const ComplaintInfo = () => {
 
             {/* --- FINAL CTA --- */}
             <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
+                <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
                     <button className="lp-cta-white">Start Now</button>
                 </div>

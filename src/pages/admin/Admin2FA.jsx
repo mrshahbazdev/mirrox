@@ -11,7 +11,7 @@ const Admin2FA = ({ onAdminLogout }) => {
   const [config, setConfig] = useState(null);
 
   const API = import.meta.env.VITE_API_URL;
-  const token = localStorage.getItem('mirrox_admin_token');
+  const token = localStorage.getItem('bullvera_admin_token');
   const authHeader = { headers: { Authorization: `Bearer ${token}` } };
 
   useEffect(() => {

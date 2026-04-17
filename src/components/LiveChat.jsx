@@ -94,7 +94,7 @@ export default function LiveChat({ currentUser }) {
   // Load existing ticket on mount
   useEffect(() => {
     if (!currentUser?.id) return;
-    const token = localStorage.getItem('mirrox_token');
+    const token = localStorage.getItem('bullvera_token');
     const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
     axios.get(`${API}/api/support/my-ticket`, clientHeader)
       .then(r => {
@@ -141,7 +141,7 @@ export default function LiveChat({ currentUser }) {
         }
         if (isOpenRef.current) {
           // If open, notify admin that we read it immediately
-          const token = localStorage.getItem('mirrox_token');
+          const token = localStorage.getItem('bullvera_token');
           const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
           axios.put(`${API}/api/support/tickets/${ticket.id}/read-client`, {}, clientHeader).catch(() => {});
         }
@@ -281,7 +281,7 @@ export default function LiveChat({ currentUser }) {
 
   const submitRating = async (stars) => {
     try {
-      const token = localStorage.getItem('mirrox_token');
+      const token = localStorage.getItem('bullvera_token');
       const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
       const res = await axios.put(`${API}/api/support/tickets/${ticket.id}/rate`, { rating: stars }, clientHeader);
       setTicket(res.data);
@@ -293,7 +293,7 @@ export default function LiveChat({ currentUser }) {
   const selectCategory = async (cat) => {
     if (!ticket) return;
     try {
-      const token = localStorage.getItem('mirrox_token');
+      const token = localStorage.getItem('bullvera_token');
       const clientHeader = { headers: { Authorization: `Bearer ${token}` } };
       await axios.put(`${API}/api/support/tickets/${ticket.id}/category`, { category: cat }, clientHeader);
       setTicket(prev => ({ ...prev, category: cat }));
@@ -346,12 +346,12 @@ export default function LiveChat({ currentUser }) {
     return groups;
   }, {});
 
-  const supportName = systemConfig.support_name || 'Mirrox Support';
+  const supportName = systemConfig.support_name || 'Bullvera Support';
   const supportIcon = systemConfig.support_icon || 'fa-solid fa-headset';
 
   const downloadTranscript = () => {
     if (!messages.length) return;
-    const sName = systemConfig.support_name || 'Mirrox Support';
+    const sName = systemConfig.support_name || 'Bullvera Support';
     const text = messages.map(m => `[${formatTime(m.timestamp)}] ${m.senderRole === 'user' ? 'You' : sName}: ${m.text || (m.attachment ? '[Image Attachment]' : '')}`).join('\n');
     
     const header = `--- ${sName} Chat Transcript ---\nTicket ID: ${ticket?.id || 'N/A'}\nDate: ${new Date().toLocaleString()}\n---------------------------------------\n\n`;

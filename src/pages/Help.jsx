@@ -124,8 +124,8 @@ const Help = () => {
             <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 20px 0' }}>
               Our dedicated account managers and technical support team aim to reply within 1-2 hours during market open times.
             </p>
-            <a href="mailto:support@mirrox.com" style={{ display: 'inline-block', background: '#3291ff', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 700, transition: 'all 0.2s' }}>
-              Email support@mirrox.com
+            <a href="mailto:support@bullvera.com" style={{ display: 'inline-block', background: '#3291ff', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 700, transition: 'all 0.2s' }}>
+              Email support@bullvera.com
             </a>
           </div>
 

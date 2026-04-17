@@ -20,7 +20,7 @@ const Forex = () => {
             {/* HERO SECTION */}
             <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
                 <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-                    <h1 style={{ fontSize: 'clamp(40px, 8vw, 80px)' }}>Trade <span style={{ color: 'var(--pub-red)' }}>Forex</span> with Mirrox</h1>
+                    <h1 style={{ fontSize: 'clamp(40px, 8vw, 80px)' }}>Trade <span style={{ color: 'var(--pub-red)' }}>Forex</span> with Bullvera</h1>
                     <p style={{ margin: '24px auto 0', fontSize: '20px', maxWidth: '700px' }}>
                         Navigate the world's largest market with deep liquidity, institutional spreads, and elite execution.
                     </p>
@@ -44,7 +44,7 @@ const Forex = () => {
                             Forex trading involves the simultaneous buying of one currency and selling of another. It is the most liquid financial market globally, operating 24 hours a day.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            With Mirrox, you gain direct access to price movements across major, minor, and exotic pairs with razor-sharp execution.
+                            With Bullvera, you gain direct access to price movements across major, minor, and exotic pairs with razor-sharp execution.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>Launch Terminal</button>
                     </div>

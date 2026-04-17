@@ -45,7 +45,7 @@ const Legal = () => {
 
             {/* --- FINAL CTA --- */}
             <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
+                <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
                     <button className="lp-cta-white">Start Now</button>
                 </div>

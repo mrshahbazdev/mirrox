@@ -144,13 +144,13 @@ const CfdList = () => {
                 </div>
             </section>
 
-            {/* THE MIRROX EDGE */}
+            {/* THE BULLVERA EDGE */}
             <section style={{ background: '#f8fafc', padding: '160px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div className="lp-edge-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
                         <div className="lp-content-side">
                              <div className="accent-label" style={{ background: 'var(--pub-red-soft)', color: 'var(--pub-red)', padding: '8px 20px', borderRadius: '100px', display: 'inline-block', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '32px' }}>Institutional Grade</div>
-                             <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>The <span style={{ color: 'var(--pub-red)' }}>Mirrox</span> Edge</h2>
+                             <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>The <span style={{ color: 'var(--pub-red)' }}>Bullvera</span> Edge</h2>
                              <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '48px' }}>
                                 Experience a paradigm shift in financial execution. Our platform is architected for institutional speed and retail accessibility.
                              </p>
@@ -184,7 +184,7 @@ const CfdList = () => {
 
             {/* FINAL CTA */}
             <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
-                <h2>Deploy Your Capital with Mirrox</h2>
+                <h2>Deploy Your Capital with Bullvera</h2>
                 <div style={{ marginTop: '48px' }}>
                     <button className="lp-cta-white" onClick={() => navigate('/register')}>Launch Terminal</button>
                 </div>

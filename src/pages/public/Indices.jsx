@@ -44,7 +44,7 @@ const Indices = () => {
                             Stock indices track the performance of a specific sector or a country's entire economy. They provide a high-level view of market health and stability.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            With Mirrox, trade global benchmarks like the S&P 500, DAX, and Nikkei with institutional-grade liquidity and no requotes.
+                            With Bullvera, trade global benchmarks like the S&P 500, DAX, and Nikkei with institutional-grade liquidity and no requotes.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>View Index List</button>
                     </div>

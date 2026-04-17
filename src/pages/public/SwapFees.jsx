@@ -66,7 +66,7 @@ const SwapFees = () => {
                            Swap fees reflect the interest rate differential between currency components. They are credited or debited for positions maintained past the daily settlement time.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7' }}>
-                            At Mirrox, we deploy institutional-grade transparency. Monitor your rollover costs to optimize long-duration strategic exposure.
+                            At Bullvera, we deploy institutional-grade transparency. Monitor your rollover costs to optimize long-duration strategic exposure.
                         </p>
                     </div>
                 </section>
@@ -161,7 +161,7 @@ const SwapFees = () => {
 
             {/* FINAL CTA */}
             <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
-                <h2>Ready to Execute? Start with Mirrox</h2>
+                <h2>Ready to Execute? Start with Bullvera</h2>
                 <div style={{ marginTop: '48px' }}>
                     <button className="lp-cta-white" onClick={() => navigate('/register')}>Activate Terminal</button>
                 </div>

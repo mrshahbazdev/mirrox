@@ -19,7 +19,7 @@ const AdminLogin = ({ onAdminLogin }) => {
 
     try {
       const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', { 
-        email: username.includes('@') ? username : 'admin@mirrox.com',
+        email: username.includes('@') ? username : 'admin@bullvera.com',
         password: password 
       });
 
@@ -31,7 +31,7 @@ const AdminLogin = ({ onAdminLogin }) => {
       }
 
       if (res.data.role) {
-        localStorage.setItem('mirrox_admin_session_id', res.data.sessionId);
+        localStorage.setItem('bullvera_admin_session_id', res.data.sessionId);
         onAdminLogin(res.data.token);
         navigate('/admin/clients');
       } else {
@@ -52,7 +52,7 @@ const AdminLogin = ({ onAdminLogin }) => {
         id: adminId,
         code: otpCode
       });
-      localStorage.setItem('mirrox_admin_session_id', res.data.sessionId);
+      localStorage.setItem('bullvera_admin_session_id', res.data.sessionId);
       onAdminLogin(res.data.token);
       navigate('/admin/clients');
     } catch (err) {
@@ -78,7 +78,7 @@ const AdminLogin = ({ onAdminLogin }) => {
 
         <div className="adm-login-logo">
           <i className="fa-solid fa-cube" />
-          <h1>mirrox</h1>
+          <h1>bullvera</h1>
           <p>Backend Control Panel</p>
         </div>
 
@@ -125,7 +125,7 @@ const AdminLogin = ({ onAdminLogin }) => {
             <button
               type="button"
               className="adm-demo-btn"
-              onClick={() => { setUsername('admin@mirrox.com'); setPassword('admin'); setError(''); }}
+              onClick={() => { setUsername('admin@bullvera.com'); setPassword('admin'); setError(''); }}
             >
               <i className="fa-solid fa-wand-magic-sparkles" /> Fill Demo Credentials
             </button>

@@ -6,7 +6,7 @@ const Education = () => {
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
                 <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>Mirrox <span style={{ color: 'var(--pub-red)' }}>Education</span> Center</h1>
+                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>Bullvera <span style={{ color: 'var(--pub-red)' }}>Education</span> Center</h1>
                     <p style={{ fontSize: '20px', marginTop: '24px' }}>Master the financial markets with our curated professional learning resources.</p>
                 </div>
             </section>
@@ -72,7 +72,7 @@ const Education = () => {
                 <div style={{ maxWidth: '1000px', margin: '0 auto', background: 'white', padding: '64px', borderRadius: '64px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
                     <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#111', textTransform: 'uppercase', marginBottom: '40px' }}>Global Compliance</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', color: 'var(--pub-text-muted)', lineHeight: '1.8', fontSize: '16px' }}>
-                        <p>Education is the foundation of disciplined trading. Mirrox provides the resources, but success depends on strategy and risk management.</p>
+                        <p>Education is the foundation of disciplined trading. Bullvera provides the resources, but success depends on strategy and risk management.</p>
                         <p>Our platform adheres to strict regulatory standards. Please verify your eligibility in your jurisdiction before trading with real funds.</p>
                         <div style={{ height: '1px', background: '#e2e8f0', margin: '16px 0' }}></div>
                         <p style={{ color: 'var(--pub-red)', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '14px' }}>HIGH RISK WARNING: CFDs ARE COMPLEX INSTRUMENTS AND COME WITH A HIGH RISK OF LOSING MONEY RAPIDLY DUE TO LEVERAGE.</p>
@@ -84,7 +84,7 @@ const Education = () => {
             <section className="lp-cta-block" style={{ marginBottom: '120px' }}>
                 <h2 style={{ textAlign: 'center' }}>Ready to Begin Your Journey?</h2>
                 <div style={{ marginTop: '60px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Join Mirrox University</button>
+                    <button className="lp-cta-white">Join Bullvera University</button>
                 </div>
             </section>
         </div>

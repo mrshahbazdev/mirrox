@@ -87,7 +87,7 @@ export default function SupportChat({ onAdminLogout }) {
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
   const selectedTicketRef = useRef(null);
-  const adminToken = localStorage.getItem('mirrox_admin_token');
+  const adminToken = localStorage.getItem('bullvera_admin_token');
   const authHeader = { headers: { Authorization: `Bearer ${adminToken}` } };
 
   useEffect(() => { selectedTicketRef.current = selectedTicket; }, [selectedTicket]);
@@ -318,7 +318,7 @@ export default function SupportChat({ onAdminLogout }) {
 
   const downloadTranscript = () => {
     if (!messages.length || !selectedTicket) return;
-    const sName = systemConfig.support_name || 'Mirrox Support';
+    const sName = systemConfig.support_name || 'Bullvera Support';
     const content = messages.map(m => {
        const time = formatTime(m.timestamp);
        const sender = m.senderRole === 'admin' ? 'You' : (m.senderName || 'Client');

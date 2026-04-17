@@ -40,7 +40,7 @@ const Register = ({ onRegister }) => {
       <div className="auth-card animate-fade">
         <div className="auth-logo-area">
           <i className="fa-solid fa-cube main-logo"></i>
-          <h1>Join mirrox</h1>
+          <h1>Join Bullvera</h1>
           <p>Start your premium trading journey today.</p>
         </div>
         

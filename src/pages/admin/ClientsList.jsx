@@ -146,7 +146,7 @@ const ClientsList = ({ onAdminLogout }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'mirrox_clients.csv';
+    a.download = 'bullvera_clients.csv';
     a.click();
     showToast('CSV exported!');
   };

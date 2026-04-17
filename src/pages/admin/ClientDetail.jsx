@@ -19,7 +19,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   const { allTrades, prices, socket, allClients } = useTrading();
   const { showAlert, showConfirm, showPrompt } = useModal();
   
-  const adminToken = localStorage.getItem('mirrox_admin_token');
+  const adminToken = localStorage.getItem('bullvera_admin_token');
   const authHeader = { headers: { Authorization: `Bearer ${adminToken}` } };
 
   const [activeTab, setActiveTab] = useState('trades');

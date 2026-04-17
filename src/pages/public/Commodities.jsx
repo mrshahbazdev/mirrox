@@ -44,7 +44,7 @@ const Commodities = () => {
                             Commodities—energies, metals, and agricultural products—are the lifeblood of the global economy. They offer unique hedging opportunities against inflation.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            With Mirrox, speculated on price movements without physical storage. Trade oil, gold, and gas with premium conditions.
+                            With Bullvera, speculated on price movements without physical storage. Trade oil, gold, and gas with premium conditions.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>See All Markets</button>
                     </div>

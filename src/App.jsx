@@ -75,7 +75,7 @@ const AdminRoute = ({ children, isAdminLoggedIn }) => {
 
 function App() {
   const { clientId, setClientId, currentClientExtended } = useTrading();
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(!!localStorage.getItem('mirrox_admin_token'));
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(!!localStorage.getItem('bullvera_admin_token'));
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [checkingMaintenance, setCheckingMaintenance] = useState(true);
 
@@ -110,7 +110,7 @@ function App() {
       <h1 style={{ fontSize: '32px', marginBottom: '16px', fontWeight: 800 }}>Platform Upgrading</h1>
       <p style={{ maxWidth: '500px', color: '#64748b', lineHeight: 1.6, fontSize: '16px' }}>
         We are currently performing scheduled maintenance to enhance your trading experience. 
-        Mirrox will be back online shortly. Thank you for your patience.
+        Bullvera will be back online shortly. Thank you for your patience.
       </p>
       <div style={{ marginTop: '40px', padding: '12px 24px', background: 'rgba(50,145,255,0.1)', borderRadius: '12px', border: '1px solid rgba(50,145,255,0.2)' }}>
          <span style={{ fontSize: '12px', letterSpacing: '1px', fontWeight: 700, color: '#3291ff' }}>ESTIMATED UPTIME: 15 MINUTES</span>
@@ -206,7 +206,7 @@ function App() {
             isAdminLoggedIn
               ? <Navigate to="/admin/clients" replace />
               : <AdminLogin onAdminLogin={(token) => { 
-                  localStorage.setItem('mirrox_admin_token', token);
+                  localStorage.setItem('bullvera_admin_token', token);
                   setIsAdminLoggedIn(true); 
                   setClientId('admin', token); 
                 }} />
@@ -216,7 +216,7 @@ function App() {
           path="/admin/clients"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <ClientsList onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <ClientsList onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -224,7 +224,7 @@ function App() {
           path="/admin/client/:id"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <ClientDetail onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <ClientDetail onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -232,7 +232,7 @@ function App() {
           path="/admin/symbols"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <SymbolsManager onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <SymbolsManager onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -240,7 +240,7 @@ function App() {
           path="/admin/reports"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <Reports onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <Reports onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -248,7 +248,7 @@ function App() {
           path="/admin/verifications"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <Verifications onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <Verifications onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -256,7 +256,7 @@ function App() {
           path="/admin/active-traders"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <ActiveTraders onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <ActiveTraders onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -264,7 +264,7 @@ function App() {
           path="/admin/settings"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <Settings onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <Settings onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -272,7 +272,7 @@ function App() {
           path="/admin/staff"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <StaffManager onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <StaffManager onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -280,7 +280,7 @@ function App() {
           path="/admin/security"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <Admin2FA onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <Admin2FA onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />
@@ -288,7 +288,7 @@ function App() {
           path="/admin/support"
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
-              <SupportChat onAdminLogout={() => { localStorage.removeItem('mirrox_admin_token'); setIsAdminLoggedIn(false); }} />
+              <SupportChat onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />

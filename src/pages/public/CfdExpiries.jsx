@@ -66,7 +66,7 @@ const CfdExpiries = () => {
                 </div>
             </section>
 
-            {/* THE MIRROX EDGE GRID */}
+            {/* THE BULLVERA EDGE GRID */}
             <section style={{ background: '#f8fafc', padding: '160px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '100px' }}>

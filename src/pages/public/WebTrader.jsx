@@ -34,7 +34,7 @@ const WebTrader = () => {
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
                 <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>Mirrox <span style={{ color: 'var(--pub-red)' }}>WebTrader</span></h1>
+                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>Bullvera <span style={{ color: 'var(--pub-red)' }}>WebTrader</span></h1>
                     <p style={{ fontSize: '20px', marginTop: '24px' }}>Institutional-grade trading from any browser. No downloads required.</p>
                 </div>
             </section>
@@ -107,7 +107,7 @@ const WebTrader = () => {
             <section className="lp-cta-block" style={{ marginBottom: '120px' }}>
                 <h2>Ready for the Next Level?</h2>
                 <div style={{ marginTop: '48px' }}>
-                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Join Mirrox Now</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Join Bullvera Now</button>
                 </div>
             </section>
 

@@ -35,7 +35,7 @@ const Settings = ({ onAdminLogout }) => {
     setSaving(true);
     try {
       await axios.put(import.meta.env.VITE_API_URL + '/api/config', configs, {
-         headers: { Authorization: `Bearer ${localStorage.getItem('mirrox_admin_token')}` }
+         headers: { Authorization: `Bearer ${localStorage.getItem('bullvera_admin_token')}` }
       });
       showToast('Settings saved successfully');
     } catch (err) {
@@ -172,7 +172,7 @@ const Settings = ({ onAdminLogout }) => {
                   className="setting-input"
                   value={configs.support_name || ''} 
                   onChange={(e) => handleChange('support_name', e.target.value)}
-                  placeholder="Mirrox Support"
+                  placeholder="Bullvera Support"
                 />
               </div>
               <div className="setting-card">

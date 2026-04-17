@@ -75,7 +75,7 @@ const Login = ({ onLogin }) => {
       <div className="auth-card animate-fade">
         <div className="auth-logo-area">
           <i className="fa-solid fa-cube main-logo"></i>
-          <h1>mirrox</h1>
+          <h1>Bullvera</h1>
           <p>{resetMode ? 'Recover your account.' : 'The Future of Trade, Simplified.'}</p>
         </div>
         
@@ -191,7 +191,7 @@ const Login = ({ onLogin }) => {
         </div>
 
         <p className="auth-footer-link">
-          New to Mirrox? <a href="/register">Create account</a>
+          New to Bullvera? <a href="/register">Create account</a>
         </p>
       </div>
     </div>

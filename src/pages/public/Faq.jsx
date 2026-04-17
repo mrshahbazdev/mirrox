@@ -1,84 +1,94 @@
 import React, { useState } from 'react';
-import { Plus, Minus, ArrowRight, UserPlus, Wallet, PlayCircle } from 'lucide-react';
+import { 
+    Plus, Minus, ArrowRight, UserPlus, Wallet, PlayCircle,
+    Search, HelpCircle, MessageSquare, ShieldCheck, Zap
+} from 'lucide-react';
 
 const FAQ_DATA = {
     "Account Details": [
-        { q: "How do I register for an account with Mirrox?", a: "To sign up with Mirrox, complete the registration form with your personal information. Your details will be securely stored and kept confidential." },
-        { q: "What is the cost of opening an account with Mirrox?", a: "Opening an account with Mirrox is free of charge." },
-        { q: "How do I verify My Mirrox trading account?", a: "To verify your Mirrox trading account, you need to submit: Valid Proof of ID (passport, ID card, or driver’s license) and a clear selfie, and Valid Proof of Residence (utility bill or bank statement issued within the last six months)." },
-        { q: "How can I log in to My account?", a: "Click on the “Login” button at the top right of the Mirrox website and enter your username and password to access your account." },
-        { q: "When can I start trading?", a: "You can start trading once your account is verified and you have deposited funds." }
+        { q: "How do I register for an account with Bullvera?", a: "To sign up with Bullvera, complete the simplified registration form with your institutional or personal details. Your identity is protected by 256-bit encryption throughout the process." },
+        { q: "What is the cost of opening an account with Bullvera?", a: "Account initialization with Bullvera is free of charge, providing immediate access to our global liquidity network." },
+        { q: "How do I verify My Bullvera trading account?", a: "To verify your account, submit a valid Government-issued ID and a Proof of Residence (utility bill or bank statement) via our secure document portal." },
+        { q: "How can I log in to My account?", a: "Access the 'Login' gateway at the top right of the terminal and authenticate using your secure credentials." },
+        { q: "When can I start trading?", a: "You can execute initial trades immediately following account verification and successful capitalization." }
     ],
     "Trading Accounts": [
-        { q: "What types of trading accounts does Mirrox offer?", a: "Mirrox offers five different account types to suit various trading needs. Details are available on the Account Types page of our website." },
-        { q: "What is the maximum leverage available at Mirrox?", a: "The maximum leverage available at Mirrox is 1:400 across all account types." },
-        { q: "Does Mirrox offer a demo account?", a: "Yes, Mirrox offers a demo trading account with a virtual balance of 100,000 USD to practice trading in a risk-free environment." },
-        { q: "Is My personal information secure with Mirrox?", a: "Mirrox uses advanced security technologies, including 128-bit SSL encryption, to protect your personal information." }
+        { q: "What types of trading accounts does Bullvera offer?", a: "Bullvera offers five distinct account tiers—from Classic to VIP—tailored to various levels of market expertise and volume requirements." },
+        { q: "What is the maximum leverage available at Bullvera?", a: "We provide institutional-grade leverage of up to 1:400 across all verified account types." },
+        { q: "Does Bullvera offer a demo account?", a: "Yes, we provide an elite practice environment with a 100,000 USD virtual balance to refine institutional strategies." },
+        { q: "Is My personal information secure with Bullvera?", a: "Bullvera utilizes multi-layered security protocols, including SSL encryption and segregated data silos, to protect client integrity." }
     ],
     "Deposits": [
-        { q: "What is the minimum deposit amount?", a: "The minimum deposit is 250 USD or equivalent in other currencies." },
-        { q: "How can I deposit funds into My account?", a: "You can deposit funds via credit/debit cards, wire transfers, and various alternative payment methods." },
-        { q: "Does Mirrox charge any deposit fees?", a: "Mirrox does not charge any deposit fees. However, your payment provider may apply processing fees or exchange rate adjustments." }
+        { q: "What is the minimum deposit amount?", a: "The standard initialization deposit is 250 USD or currency equivalent." },
+        { q: "How can I deposit funds into My account?", a: "Capitalization is available via global credit/debit networks, institutional wire transfers, and verified e-gateways." },
+        { q: "Does Bullvera charge any deposit fees?", a: "Bullvera does not apply capitalization fees. Please note that external payment providers may apply independent processing margins." }
     ],
     "Withdrawals": [
-        { q: "How do I request a withdrawal?", a: "To request a withdrawal, log in to your account, go to the 'Withdrawal' section, enter the amount, and submit the request." },
-        { q: "What is the minimum withdrawal amount?", a: "The minimum withdrawal amount is 10 USD for credit cards and 100 USD for wire transfers." },
-        { q: "How long does it take to process a withdrawal?", a: "Withdrawals typically take 8 to 10 business days, depending on your bank’s processing time." }
+        { q: "How do I request a withdrawal?", a: "Initiate a disbursement request via the 'Financial Operations' section of your secure terminal." },
+        { q: "What is the minimum withdrawal amount?", a: "Minimum disbursement is 10 USD for card networks and 100 USD for institutional wire transfers." },
+        { q: "How long does it take to process a withdrawal?", a: "Standard processing time is 8 to 10 business days, optimized for global security and compliance checks." }
     ],
     "Fees": [
-        { q: "Are there any withdrawal fees?", a: "Withdrawal fees may apply depending on the method and circumstances. Refer to our General Fees for detailed information." },
-        { q: "Is there an inactivity fee?", a: "Yes, a maintenance fee of 10 USD is charged monthly. Additional inactivity fees apply if the account remains unused for over a month." }
+        { q: "Are there any withdrawal fees?", a: "Disbursement fees may apply depending on the method and volume. Detailed structures are available in our General Fees schedule." },
+        { q: "Is there an inactivity fee?", a: "A nominal maintenance fee of 10 USD is applied to accounts that remain dormant without active trades for over 30 days." }
     ],
     "Legal & Compliance": [
-        { q: "Is Mirrox a regulated broker?", a: "Yes, Mirrox is regulated by the Mwali International Services Authority (MISA). Our license number is BFX2024064." },
-        { q: "Are My funds protected?", a: "Yes, client funds are held in segregated accounts to protect your investments." },
-        { q: "What is the minimum age to trade with Mirrox?", a: "You must be at least 18 years old to open an account and trade with Mirrox." }
+        { q: "Is Bullvera a regulated broker?", a: "Yes, Bullvera is regulated by the Mwali International Services Authority (MISA). License: BFX2024064." },
+        { q: "Are My funds protected?", a: "Client capital is held in strictly segregated institutional accounts, ensuring total fund sovereignty." },
+        { q: "What is the minimum age to trade with Bullvera?", a: "All account holders must be 18 years of age or older to satisfy global compliance standards." }
     ],
     "Trading": [
-        { q: "Is negative balance protection provided?", a: "Yes, negative balance protection is provided to prevent you from losing more than your initial investment." },
-        { q: "Can I trade on weekends?", a: "Major financial markets are closed on weekends, but Cryptocurrency trading remains available 24/7." },
-        { q: "What is a pip?", a: "A pip (percentage in point) is the smallest price change in the value of a currency pair." }
+        { q: "Is negative balance protection provided?", a: "Yes, institutional-grade negative balance protection is a standard feature on all Bullvera accounts." },
+        { q: "Can I trade on weekends?", a: "While traditional markets close, Cryptocurrency execution remains available 24/7 on the Bullvera terminal." },
+        { q: "What is a pip?", a: "A pip (Percentage in Point) is the standardized unit of price movement in financial asset evaluation." }
     ],
     "General": [
-        { q: "How can I contact customer support?", a: "Contact our support team via email, phone, or live chat for immediate assistance." },
-        { q: "Do you provide educational resources for beginners?", a: "Yes, we provide extensive resources, including an Education Center, to help beginners get started." }
+        { q: "How can I contact customer support?", a: "Reach our Elite Support Network via live chat, secure email, or direct priority phone access." },
+        { q: "Do you provide educational resources for beginners?", a: "Yes, we provide an extensive Knowledge Base and Institutional Training Center for all account tiers." }
     ]
 };
 
 const Faq = () => {
     const [activeTab, setActiveTab] = useState("Account Details");
     const [openIndex, setOpenIndex] = useState(0);
+    const navigate = (path) => { window.location.href = path; };
 
     return (
         <div className="lp-wrapper">
             {/* HERO SECTION */}
-            <section className="pub-content-hero">
-                <div className="relative z-10 max-w-4xl mx-auto text-center">
-                    <h1>Mirrox <span style={{ color: 'var(--pub-red)' }}>Help Center</span></h1>
-                    <p style={{ margin: '0 auto', maxWidth: '800px' }}>
-                        All the information you need to master your trading experience in one place.
+            <section className="pub-content-hero" style={{ padding: '160px 24px' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 20px', background: 'rgba(255,255,255,0.05)', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '32px' }}>
+                        <HelpCircle size={14} style={{ color: 'var(--pub-red)' }} /> Knowledge Repository
+                    </div>
+                    <h1 style={{ fontSize: 'clamp(48px, 9vw, 90px)', lineHeight: '0.9', marginBottom: '32px' }}>
+                        Bullvera <span style={{ color: 'var(--pub-red)' }}>Help Center</span>
+                    </h1>
+                    <p style={{ margin: '0 auto', fontSize: '20px', maxWidth: '750px', color: '#94a3b8', lineHeight: '1.6' }}>
+                        The centralized nexus for all institutional inquiries and platform expertise.
                     </p>
                 </div>
                 
-                {/* Horizontal Tabs Area */}
-                <div style={{ marginTop: '64px', maxWidth: '1200px', margin: '64px auto 0 auto', padding: '0 24px' }}>
-                    <div style={{ display: 'flex', overflowX: 'auto', gap: '8px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }} className="no-scrollbar">
+                {/* Horizontal Navigation Area */}
+                <div style={{ marginTop: '80px', maxWidth: '1200px', margin: '80px auto 0 auto', padding: '0 24px' }}>
+                    <div style={{ display: 'flex', overflowX: 'auto', gap: '12px', padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.05)', scrollbarWidth: 'none' }} className="no-scrollbar">
                         {Object.keys(FAQ_DATA).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => { setActiveTab(tab); setOpenIndex(0); }}
                                 style={{ 
-                                    padding: '12px 24px', 
-                                    borderRadius: '16px', 
-                                    fontSize: '12px', 
+                                    padding: '16px 32px', 
+                                    borderRadius: '20px', 
+                                    fontSize: '11px', 
                                     fontWeight: '900', 
                                     textTransform: 'uppercase', 
                                     whiteSpace: 'nowrap', 
-                                    border: 'none',
+                                    border: activeTab === tab ? 'none' : '1px solid rgba(255,255,255,0.05)',
                                     cursor: 'pointer',
-                                    transition: 'all 0.3s',
+                                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                     background: activeTab === tab ? 'white' : 'transparent',
-                                    color: activeTab === tab ? 'var(--pub-red)' : 'white'
+                                    color: activeTab === tab ? 'var(--pub-red)' : '#94a3b8',
+                                    letterSpacing: '0.1em'
                                 }}
                             >
                                 {tab}
@@ -88,23 +98,25 @@ const Faq = () => {
                 </div>
             </section>
 
-            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '80px' }}>
+            <div className="lp-section" style={{ display: 'flex', flexDirection: 'column', gap: '120px', padding: '120px 24px' }}>
                 {/* ACCORDION SECTION */}
-                <section style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
-                    <h2 style={{ fontSize: '32px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '48px', color: '#1a1a1a', textAlign: 'center' }}>
-                        {activeTab}
-                    </h2>
+                <section style={{ maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
+                        <h2 style={{ fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.3em', color: 'var(--pub-red)', marginBottom: '16px' }}>Category Results</h2>
+                        <h3 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: '900', color: '#111', textTransform: 'uppercase', letterSpacing: '-1px' }}>{activeTab}</h3>
+                    </div>
                     
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         {FAQ_DATA[activeTab].map((item, idx) => (
                             <div 
                                 key={idx} 
                                 style={{ 
-                                    borderRadius: '24px', 
-                                    border: openIndex === idx ? '1px solid var(--pub-red)' : '1px solid #e2e8f0',
+                                    borderRadius: '32px', 
+                                    border: '1px solid #e2e8f0',
                                     background: 'white',
                                     overflow: 'hidden',
-                                    transition: 'all 0.3s'
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: openIndex === idx ? '0 30px 60px rgba(0,0,0,0.08)' : '0 10px 30px rgba(0,0,0,0.02)'
                                 }}
                             >
                                 <button 
@@ -112,7 +124,7 @@ const Faq = () => {
                                     style={{ 
                                         width: '100%', 
                                         textAlign: 'left', 
-                                        padding: '24px 32px', 
+                                        padding: '32px 40px', 
                                         display: 'flex', 
                                         alignItems: 'center', 
                                         justifyContent: 'space-between', 
@@ -126,27 +138,30 @@ const Faq = () => {
                                         fontWeight: '900', 
                                         textTransform: 'uppercase', 
                                         transition: 'color 0.3s',
-                                        color: openIndex === idx ? 'var(--pub-red)' : '#1a1a1a'
+                                        color: openIndex === idx ? 'var(--pub-red)' : '#111',
+                                        letterSpacing: '-0.5px'
                                     }}>
                                         {item.q}
                                     </span>
                                     <div style={{ 
-                                        width: '40px', 
-                                        height: '40px', 
+                                        width: '48px', 
+                                        height: '48px', 
                                         background: openIndex === idx ? 'var(--pub-red)' : '#f8fafc',
-                                        color: openIndex === idx ? 'white' : '#94a3b8',
-                                        borderRadius: '100px',
+                                        color: openIndex === idx ? 'white' : '#111',
+                                        borderRadius: '16px',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        transition: 'all 0.3s'
+                                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        transform: openIndex === idx ? 'rotate(180deg)' : 'rotate(0)'
                                     }}>
                                         {openIndex === idx ? <Minus size={20} /> : <Plus size={20} />}
                                     </div>
                                 </button>
                                 
                                 {openIndex === idx && (
-                                    <div style={{ padding: '0 32px 32px 32px', color: 'var(--pub-text-muted)', fontSize: '16px', lineHeight: '1.6' }}>
+                                    <div style={{ padding: '0 40px 40px 40px', color: '#64748b', fontSize: '16px', lineHeight: '1.8', animation: 'fadeIn 0.5s ease out' }}>
+                                        <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '32px' }}></div>
                                         {item.a}
                                     </div>
                                 )}
@@ -155,46 +170,53 @@ const Faq = () => {
                     </div>
                 </section>
 
-                {/* HAVE MORE QUESTIONS SECTION */}
+                {/* SEARCH CTA */}
                 <section>
-                    <div style={{ background: 'var(--pub-red)', borderRadius: '48px', padding: '80px', display: 'flex', flexDirection: 'column', gap: '32px', textAlign: 'center', color: 'white', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ background: '#0b0e14', borderRadius: '64px', padding: '100px 80px', display: 'flex', flexDirection: 'column', gap: '40px', textAlign: 'center', color: 'white', position: 'relative', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '400px', height: '400px', background: 'var(--pub-red)', opacity: 0.1, filter: 'blur(100px)', borderRadius: '100%' }}></div>
+                        
                         <div style={{ position: 'relative', zIndex: 10 }}>
-                            <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', textTransform: 'uppercase', lineHeight: '1.1', marginBottom: '24px' }}>Have More Questions?</h2>
-                            <p style={{ opacity: 0.8, fontSize: '18px', maxWidth: '600px', margin: '0 auto 48px auto' }}>Our support team is available 24/5. Get in touch with us anytime for dedicated assistance.</p>
-                            <button className="lp-cta-white" style={{ padding: '20px 48px' }}>Get In Touch</button>
+                            <div style={{ width: '80px', height: '80px', background: 'var(--pub-red)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', margin: '0 auto 40px auto' }}>
+                                <MessageSquare size={40} />
+                            </div>
+                            <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', textTransform: 'uppercase', lineHeight: '1.1', marginBottom: '32px', letterSpacing: '-2px' }}>Still Have <span style={{ color: 'var(--pub-red)' }}>Questions</span>?</h2>
+                            <p style={{ opacity: 0.6, fontSize: '20px', maxWidth: '650px', margin: '0 auto 64px auto', lineHeight: '1.6' }}>Our elite support nodes are synchronized 24/5 to provide immediate resolution for any inquiries.</p>
+                            <button className="lp-btn-primary" style={{ padding: '24px 80px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/contact')}>Open Dynamic Ticket</button>
                         </div>
-                        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'rgba(255,255,255,0.05)', borderRadius: '100%' }}></div>
                     </div>
                 </section>
 
                 {/* 3 EASY STEPS */}
-                <section style={{ background: '#f8fafc', padding: '80px 48px', borderRadius: '48px', border: '1px solid #e2e8f0' }}>
+                <section style={{ background: '#f8fafc', padding: '100px 64px', borderRadius: '64px', border: '1px solid #e2e8f0' }}>
                     <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
-                        <h2>Open Account in 3 Steps</h2>
-                        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase' }}>Join the Mirrox community today</p>
+                        <h2 style={{ fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.3em', color: '#94a3b8', marginBottom: '16px' }}>Onboarding Protocol</h2>
+                        <h3 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: '900', color: '#111', textTransform: 'uppercase', letterSpacing: '-1px' }}>Institutional Deployment in <span style={{ color: 'var(--pub-red)' }}>3 Steps</span></h3>
                     </div>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '48px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '64px' }}>
                         {[
-                            { s: "1", t: "Sign Up", d: "Fill out the registration form and submit verification documents." },
-                            { s: "2", t: "Deposit", d: "Choose your payment method and fund your trading account." },
-                            { s: "3", t: "Trade", d: "Begin your journey and explore endless financial opportunities." }
+                            { s: "01", t: "Registration", d: "Complete our institutional-grade secure onboarding form." },
+                            { s: "02", t: "Capitalization", d: "Deploy your initial trade capital via our verified global gateways." },
+                            { s: "03", t: "Execution", d: "Launch your terminal and begin executing across 160+ assets." }
                         ].map((item, i)=>(
                             <div key={i} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                                <div style={{ width: '64px', height: '64px', borderRadius: '100px', background: 'white', color: 'var(--pub-red)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: '900', margin: '0 auto', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>{item.s}</div>
-                                <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase' }}>{item.t}</h3>
-                                <p style={{ color: 'var(--pub-text-muted)', lineHeight: '1.6' }}>{item.d}</p>
+                                <div style={{ fontSize: '80px', fontWeight: '900', color: 'var(--pub-red)', opacity: 0.1, fontStyle: 'italic', lineHeight: '1', marginBottom: '-40px' }}>{item.s}</div>
+                                <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#111', textTransform: 'uppercase', letterSpacing: '-1px', position: 'relative' }}>{item.t}</h3>
+                                <p style={{ color: '#64748b', lineHeight: '1.7', fontSize: '15px' }}>{item.d}</p>
                             </div>
                         ))}
                     </div>
                 </section>
             </div>
 
-            {/* FINALE CTA */}
+            {/* FINAL CTA */}
             <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
-                <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Get Started Now</button>
+                <div style={{ position: 'relative', zIndex: 10 }}>
+                    <h2 style={{ textTransform: 'uppercase' }}>Initialize Your <span style={{ color: 'var(--pub-red)' }}>Trading Node</span> Today</h2>
+                    <p style={{ marginTop: '24px', color: 'var(--pub-text-muted)', fontSize: '18px' }}>Join the global benchmark for institutional trading.</p>
+                    <div style={{ marginTop: '64px' }}>
+                        <button className="lp-btn-primary" style={{ padding: '24px 80px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/register')}>Launch Terminal</button>
+                    </div>
                 </div>
             </section>
         </div>

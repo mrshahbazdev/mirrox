@@ -37,7 +37,7 @@ const ChartAnalysis = () => {
             <section className="lp-cta-block" style={{ marginTop: '0' }}>
                 <h2 style={{ textAlign: 'center' }}>Ready to Unlock Full Potential?</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Join Mirrox Now</button>
+                    <button className="lp-cta-white">Join Bullvera Now</button>
                 </div>
             </section>
         </div>

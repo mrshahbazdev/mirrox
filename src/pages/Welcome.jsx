@@ -44,7 +44,7 @@ const Welcome = () => {
       <nav className="landing-nav">
         <div className="nav-logo">
           <i className="fa-solid fa-layer-group" />
-          <span>Mirrox.</span>
+          <span>Bullvera.</span>
         </div>
         <div className="nav-actions">
           <button className="nav-btn-login" onClick={() => navigate('/login')}>Log In</button>
@@ -59,7 +59,7 @@ const Welcome = () => {
           <div className="hero-content">
             <h1 className="hero-title">
               Trade the Future with <br />
-              <span className="text-gradient">Mirrox Intelligence</span>
+              <span className="text-gradient">Bullvera Intelligence</span>
             </h1>
             <p className="hero-subtitle">
               Experience lightning-fast execution, zero-spread accounts, and a premium trading dashboard engineered for professional traders.
@@ -115,7 +115,7 @@ const Welcome = () => {
 
         {/* FEATURES SECTION */}
         <section className="features-section">
-          <h2 className="section-title">Why Choose Mirrox?</h2>
+          <h2 className="section-title">Why Choose Bullvera?</h2>
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon"><i className="fa-solid fa-bolt" /></div>
@@ -140,9 +140,9 @@ const Welcome = () => {
         <div className="footer-content">
           <div className="nav-logo">
             <i className="fa-solid fa-layer-group" />
-            <span>Mirrox.</span>
+            <span>Bullvera.</span>
           </div>
-          <p>&copy; 2026 Mirrox Trading platform. All rights reserved.</p>
+          <p>&copy; 2026 Bullvera Trading platform. All rights reserved.</p>
         </div>
       </footer>
 

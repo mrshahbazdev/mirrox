@@ -13,7 +13,7 @@ const TradingCentral = () => {
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero" style={{ padding: '120px 24px', textAlign: 'left', minHeight: '60vh' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                    <h1 style={{ textAlign: 'left', maxWidth: '900px', fontSize: 'clamp(36px, 6vw, 72px)' }}>Mirrox <span style={{ color: 'var(--pub-red)' }}>Trading Central</span></h1>
+                    <h1 style={{ textAlign: 'left', maxWidth: '900px', fontSize: 'clamp(36px, 6vw, 72px)' }}>Bullvera <span style={{ color: 'var(--pub-red)' }}>Trading Central</span></h1>
                     <p style={{ maxWidth: '800px', textAlign: 'left', fontSize: '20px' }}>
                         Access world-class technical analysis and automated pattern recognition tools directly in your terminal.
                     </p>
@@ -71,10 +71,10 @@ const TradingCentral = () => {
                     </div>
                 </section>
 
-                {/* THE MIRROX EDGE GRID */}
+                {/* THE BULLVERA EDGE GRID */}
                 <section>
                     <div className="lp-section-header" style={{ marginBottom: '80px' }}>
-                        <h2 style={{ textTransform: 'uppercase' }}>The Mirrox <span style={{ color: 'var(--pub-red)' }}>Advantage</span></h2>
+                        <h2 style={{ textTransform: 'uppercase' }}>The Bullvera <span style={{ color: 'var(--pub-red)' }}>Advantage</span></h2>
                         <div className="accent-line"></div>
                     </div>
                     <div className="lp-grid">
@@ -154,7 +154,7 @@ const TradingCentral = () => {
 
             <footer style={{ textAlign: 'center', padding: '0 24px 80px 24px' }}>
                 <p style={{ maxWidth: '900px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', lineHeight: '2' }}>
-                    RISK DISCLAIMER: TRADING CENTRAL IS A THIRD-PARTY RESEARCH PROVIDER. MIRROX DOES NOT WARRANT THE ACCURACY OF EXTERNAL MARKET DATA. TRADING INVOLVES RISK.
+                    RISK DISCLAIMER: TRADING CENTRAL IS A THIRD-PARTY RESEARCH PROVIDER. BULLVERA DOES NOT WARRANT THE ACCURACY OF EXTERNAL MARKET DATA. TRADING INVOLVES RISK.
                 </p>
             </footer>
         </div>

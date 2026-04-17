@@ -5,7 +5,7 @@ import { useModal } from './ModalContext';
 
 // Global Axios Interceptor for JWT Authentication
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('mirrox_token') || localStorage.getItem('mirrox_admin_token');
+  const token = localStorage.getItem('bullvera_token') || localStorage.getItem('bullvera_admin_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -27,21 +27,21 @@ export const TradingProvider = ({ children }) => {
   const { showAlert } = useModal();
   
   // Initialize clientId and token from localStorage if available
-  const [clientId, setClientIdState] = useState(() => localStorage.getItem('mirrox_client_id'));
-  const [token, setTokenState] = useState(() => localStorage.getItem('mirrox_token') || localStorage.getItem('mirrox_admin_token'));
+  const [clientId, setClientIdState] = useState(() => localStorage.getItem('bullvera_client_id'));
+  const [token, setTokenState] = useState(() => localStorage.getItem('bullvera_token') || localStorage.getItem('bullvera_admin_token'));
 
   const setClientId = (id, newToken = null) => {
     if (id) {
-      localStorage.setItem('mirrox_client_id', id);
+      localStorage.setItem('bullvera_client_id', id);
     } else {
-      localStorage.removeItem('mirrox_client_id');
+      localStorage.removeItem('bullvera_client_id');
     }
     
     if (newToken) {
-      localStorage.setItem('mirrox_token', newToken);
+      localStorage.setItem('bullvera_token', newToken);
       setTokenState(newToken);
     } else if (id === null) {
-      localStorage.removeItem('mirrox_token');
+      localStorage.removeItem('bullvera_token');
       setTokenState(null);
     }
 

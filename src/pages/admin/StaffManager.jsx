@@ -11,7 +11,7 @@ const StaffManager = ({ onAdminLogout }) => {
   const [maintenance, setMaintenance] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState('');
   const API = import.meta.env.VITE_API_URL;
-  const token = localStorage.getItem('mirrox_admin_token');
+  const token = localStorage.getItem('bullvera_admin_token');
   const authHeader = { headers: { Authorization: `Bearer ${token}` } };
   const socket = window.socket; 
 

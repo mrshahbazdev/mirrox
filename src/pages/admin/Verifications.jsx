@@ -21,7 +21,7 @@ const Verifications = ({ onAdminLogout }) => {
 
   const fetchClients = async () => {
     try {
-      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/clients', { headers: { Authorization: `Bearer ${localStorage.getItem('mirrox_admin_token')}` }});
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/clients', { headers: { Authorization: `Bearer ${localStorage.getItem('bullvera_admin_token')}` }});
       setClients(res.data);
     } catch (err) {
       console.error('Failed to fetch clients:', err);
@@ -52,7 +52,7 @@ const Verifications = ({ onAdminLogout }) => {
         action,
         rejectionReason: reason,
         category
-      }, { headers: { Authorization: `Bearer ${localStorage.getItem('mirrox_admin_token')}` }});
+      }, { headers: { Authorization: `Bearer ${localStorage.getItem('bullvera_admin_token')}` }});
       showToast(`${category.toUpperCase()} successfully ${action}ed!`);
       fetchClients(); // Refresh list
     } catch (err) {

@@ -91,7 +91,7 @@ const MarketHolidays = () => {
                              <h4 style={{ fontSize: '14px', fontWeight: '900', color: 'white', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>Institutional Protocol</h4>
                              <p style={{ fontSize: '18px', color: '#94a3b8', lineHeight: '1.7', fontWeight: '500' }}>
                                 Market liquidity and execution spreads are subject to volatility during holiday cycles. 
-                                Mirrox provides these schedules as benchmark data; however, regional settlement conditions may fluctuate. 
+                                Bullvera provides these schedules as benchmark data; however, regional settlement conditions may fluctuate. 
                                 Verify real-time terminal hours for precise operational planning.
                              </p>
                         </div>

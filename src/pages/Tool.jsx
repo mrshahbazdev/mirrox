@@ -375,7 +375,7 @@ export default function Tool() {
                 <div className="space-y-5">
                    <div>
                      <Label>Brand Identity Name</Label>
-                     <input type="text" value={brand.name} onChange={e=>setBrand({...brand, name: e.target.value})} className="w-full bg-white/5 border border-white/5 rounded-2xl p-4 text-sm text-white outline-none" placeholder="E.g. Mirrox Finance" />
+                     <input type="text" value={brand.name} onChange={e=>setBrand({...brand, name: e.target.value})} className="w-full bg-white/5 border border-white/5 rounded-2xl p-4 text-sm text-white outline-none" placeholder="E.g. Bullvera Finance" />
                    </div>
                    <div className="grid grid-cols-2 gap-4">
                      <div>
