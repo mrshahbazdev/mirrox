@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { 
     CheckCircle2, ArrowRight, Shield, Zap, TrendingUp, 
     Globe, Wallet, BadgeCheck, Users, Headphones, BarChart,
