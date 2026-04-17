@@ -24,10 +24,10 @@ const Header = ({ currentUser }) => {
   const unreadCount = localNotifications.filter(n => !n.read).length;
 
   const getMarginLevelColor = (level) => {
-    if (level === 0) return '#94a3b8';
-    if (level < 100) return '#ff4d4d';
-    if (level < 300) return '#f59e0b';
-    return '#00cc88';
+    if (level === 0) return 'var(--text-muted)';
+    if (level < 100) return 'var(--danger)';
+    if (level < 300) return 'var(--warning)';
+    return 'var(--success)';
   };
 
   const markAsRead = async (notifId) => {
@@ -40,11 +40,11 @@ const Header = ({ currentUser }) => {
   };
 
   return (
-    <header className="header glass">
+    <header className="header">
       <div className="header-left">
         <div className="logo-group">
           <i className="fa-solid fa-cube" style={{ color: 'var(--accent)', fontSize: '22px' }}></i>
-          <span className="Bullvera-logo">Bullvera</span>
+          <span className="Bullvera-logo" style={{ color: 'var(--text-main)' }}>Bullvera</span>
         </div>
       </div>
 
@@ -96,7 +96,7 @@ const Header = ({ currentUser }) => {
           </div>
 
           <div className="account-selector">
-            <span style={{ color: realTimeClient?.accountType === 'live' ? 'var(--accent)' : '#f59e0b', fontWeight: 700 }}>
+            <span style={{ color: realTimeClient?.accountType === 'live' ? 'var(--accent)' : 'var(--warning)', fontWeight: 700 }}>
               {realTimeClient?.accountType === 'live' ? 'LIVE' : 'DEMO'}
             </span>
             <span style={{ color: 'var(--text-main)', opacity: 0.8 }}>{realTimeClient?.uid || 'BLV-0000'}</span>
@@ -108,20 +108,20 @@ const Header = ({ currentUser }) => {
 
         <div className="header-tools">
           <div style={{ position: 'relative' }}>
-             <div onClick={() => setShowNotifs(!showNotifs)} style={{ cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}>
-                <i className="fa-solid fa-bell" title="Notifications"></i>
+             <div onClick={() => setShowNotifs(!showNotifs)} style={{ cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-hover)' }}>
+                <i className="fa-solid fa-bell" title="Notifications" style={{ color: 'var(--text-dim)' }}></i>
                 {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
              </div>
              
              {showNotifs && (
-               <div className="notif-dropdown glass">
+               <div className="notif-dropdown">
                   <div className="notif-header">
-                     <h4 style={{ margin: 0, fontSize: '14px' }}>Notifications</h4>
-                     <button onClick={() => setShowNotifs(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}><i className="fa-solid fa-xmark"></i></button>
+                     <h4 style={{ margin: 0, fontSize: '14px', color: 'var(--text-main)' }}>Notifications</h4>
+                     <button onClick={() => setShowNotifs(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><i className="fa-solid fa-xmark"></i></button>
                   </div>
                   <div className="notif-body">
                      {localNotifications.length === 0 ? (
-                        <div style={{ padding: '24px', textAlign: 'center', color: '#64748b', fontSize: '12px' }}>
+                        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
                            No new notifications
                         </div>
                      ) : (
@@ -129,8 +129,8 @@ const Header = ({ currentUser }) => {
                            <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`} onClick={() => !n.read && markAsRead(n.id)}>
                               <div className={`notif-icon ${n.type}`}><i className={n.type === 'success' ? 'fa-solid fa-check' : n.type === 'alert' ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-info'}></i></div>
                               <div className="notif-content">
-                                 <p style={{ margin: 0, fontSize: '13px', lineHeight: '1.4', color: !n.read ? '#fff' : '#94a3b8' }}>{n.message}</p>
-                                 <span style={{ fontSize: '10px', color: '#64748b' }}>{new Date(n.date).toLocaleString()}</span>
+                                 <p style={{ margin: 0, fontSize: '13px', lineHeight: '1.4', color: !n.read ? 'var(--text-main)' : 'var(--text-dim)' }}>{n.message}</p>
+                                 <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{new Date(n.date).toLocaleString()}</span>
                               </div>
                               {!n.read && <div className="unread-dot"></div>}
                            </div>
@@ -143,7 +143,7 @@ const Header = ({ currentUser }) => {
         </div>
         
         <div className="user-profile">
-          <div className="avatar">
+          <div className="avatar" style={{ background: 'var(--bg-hover)', color: 'var(--text-main)' }}>
             {realTimeClient?.name ? realTimeClient.name.charAt(0).toUpperCase() : <i className="fa-solid fa-user" style={{ fontSize: '14px', color: 'var(--text-dim)' }}></i>}
           </div>
         </div>
@@ -153,36 +153,36 @@ const Header = ({ currentUser }) => {
         .header-stats { display: flex; align-items: center; gap: 12px; }
         .stat-pill { display: flex; flex-direction: column; align-items: flex-end; min-width: 80px; }
         .pill-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; opacity: 0.8; }
-        .pill-value { font-size: 13px; font-weight: 800; color: white; white-space: nowrap; }
-        .pill-value.up { color: #00cc88; }
-        .pill-value.down { color: #ff4d4d; }
+        .pill-value { font-size: 13px; font-weight: 800; color: var(--text-main); white-space: nowrap; }
+        .pill-value.up { color: var(--success); }
+        .pill-value.down { color: var(--danger); }
         
         .account-selector {
-          background: rgba(255,255,255,0.05);
+          background: var(--bg-hover);
           padding: 8px 12px;
           border-radius: 10px;
           display: flex;
           align-items: center;
           gap: 10px;
-          border: 1px solid rgba(255,255,255,0.05);
+          border: 1px solid var(--border);
           cursor: pointer;
         }
 
-        .notif-badge { position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-deep); }
-        .notif-dropdown { position: absolute; top: 40px; right: 0; width: 320px; background: #0f1520; border: 1px solid #1e293b; border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.5); z-index: 100; overflow: hidden; animation: scaleIn 0.2s ease; }
-        .notif-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #1e293b; background: rgba(255,255,255,0.02); }
+        .notif-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-deep); }
+        .notif-dropdown { position: absolute; top: 40px; right: 0; width: 320px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.1); z-index: 100; overflow: hidden; animation: scaleIn 0.2s ease; }
+        .notif-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); background: var(--bg-card-alt); }
         .notif-body { max-height: 400px; overflow-y: auto; }
-        .notif-item { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.02); cursor: pointer; transition: background 0.2s; align-items: flex-start; }
-        .notif-item:hover { background: rgba(255,255,255,0.03); }
+        .notif-item { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; align-items: flex-start; }
+        .notif-item:hover { background: var(--bg-hover); }
         .notif-item.unread { background: rgba(255, 77, 94, 0.03); }
         
         .notif-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-        .notif-icon.info { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
-        .notif-icon.success { background: rgba(0,204,136,0.1); color: #00cc88; }
-        .notif-icon.alert { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .notif-icon.info { background: var(--accent-muted); color: var(--accent); }
+        .notif-icon.success { background: var(--success-muted); color: var(--success); }
+        .notif-icon.alert { background: var(--danger-muted); color: var(--danger); }
         
         .notif-content { flex: 1; }
-        .unread-dot { width: 8px; height: 8px; background: #FF4D5E; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 8px #FF4D5E; }
+        .unread-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-top: 4px; box-shadow: 0 0 8px var(--accent-muted); }
 
         @media (max-width: 900px) {
            .header-center { display: none; }

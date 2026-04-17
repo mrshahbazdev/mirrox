@@ -44,7 +44,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
            </div>
            <div className="spec-item">
               <span className="label">Required Margin</span>
-              <span className="val" style={{ color: '#f59e0b', fontWeight: 800 }}>{marginReq.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
+              <span className="val" style={{ color: 'var(--warning)', fontWeight: 800 }}>{marginReq.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
               <small style={{ opacity: 0.6 }}>for {volume} lot(s)</small>
            </div>
            <div className="spec-item">

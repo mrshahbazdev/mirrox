@@ -54,7 +54,7 @@ const Help = () => {
                     <p className="banner-title">Verify Identity</p>
                     <p className="banner-desc">Unlock real trading and withdrawals by verifying your ID.</p>
                 </div>
-                <Link to="/app/documents" className="banner-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>VERIFY</Link>
+                <Link to="/app/documents" className="banner-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--accent)', color: '#fff' }}>VERIFY</Link>
             </div>
         </section>
 
@@ -64,10 +64,10 @@ const Help = () => {
             
             <div className="menu-list">
               {[
-                { label: 'Trading History', icon: 'fa-clock-rotate-left', color: '#FF4D5E', bg: 'rgba(255, 77, 94, 0.1)' },
-                { label: 'Payment Methods', icon: 'fa-wallet', color: '#10b981', bg: 'rgba(16, 185, 129, 0.1)' },
-                { label: 'Security & 2FA', icon: 'fa-shield-halved', color: '#a855f7', bg: 'rgba(168, 85, 247, 0.1)' },
-                { label: 'Support Center', icon: 'fa-headset', color: '#FF4D5E', bg: 'rgba(255, 77, 94, 0.1)' },
+                { label: 'Trading History', icon: 'fa-clock-rotate-left', color: 'var(--accent)', bg: 'var(--accent-muted)' },
+                { label: 'Payment Methods', icon: 'fa-wallet', color: 'var(--success)', bg: 'var(--success-muted)' },
+                { label: 'Security & 2FA', icon: 'fa-shield-halved', color: 'var(--warning)', bg: 'var(--warning-muted)' },
+                { label: 'Support Center', icon: 'fa-headset', color: 'var(--accent)', bg: 'var(--accent-muted)' },
               ].map(item => (
                 <button key={item.label} className="menu-item-card">
                   <div className="item-left">
@@ -98,46 +98,46 @@ const Help = () => {
       overflowY: 'auto',
       padding: '32px 24px',
       background: 'var(--bg-deep)',
-      color: '#e0e6ed'
+      color: 'var(--text-main)'
     }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <header style={{ marginBottom: '40px', textAlign: 'center' }}>
           <div style={{
-            width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(255, 77, 94, 0.1)',
-            color: '#FF4D5E', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '64px', height: '64px', borderRadius: '16px', background: 'var(--accent-muted)',
+            color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '28px', margin: '0 auto 20px auto'
           }}>
             <i className="fa-solid fa-headset"></i>
           </div>
           <h2 style={{ fontSize: '32px', fontWeight: 800, margin: 0, fontFamily: 'Outfit, sans-serif' }}>Help & Support Center</h2>
-          <p style={{ color: '#94a3b8', fontSize: '15px', marginTop: '12px', lineHeight: '1.6' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginTop: '12px', lineHeight: '1.6' }}>
             We're here to help you navigate the platform and answer any questions you might have.
           </p>
         </header>
 
         <div className="help-cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }}>
           
-          <div className="card glass animate-fade" style={{ background: 'linear-gradient(145deg, rgba(255, 77, 94, 0.1), rgba(0,0,0,0.2))', border: '1px solid rgba(255, 77, 94, 0.2)', padding: '32px', borderRadius: '20px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <i className="fa-solid fa-envelope" style={{ color: '#FF4D5E' }}></i> Direct Email Support
+          <div className="card glass animate-fade" style={{ background: 'linear-gradient(145deg, var(--accent-muted), transparent)', border: '1px solid var(--border)', padding: '32px', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-main)' }}>
+              <i className="fa-solid fa-envelope" style={{ color: 'var(--accent)' }}></i> Direct Email Support
             </h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 20px 0' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6', margin: '0 0 20px 0' }}>
               Our dedicated account managers and technical support team aim to reply within 1-2 hours during market open times.
             </p>
-            <a href="mailto:support@bullvera.com" style={{ display: 'inline-block', background: '#FF4D5E', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 700, transition: 'all 0.2s' }}>
+            <a href="mailto:support@bullvera.com" style={{ display: 'inline-block', background: 'var(--accent)', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 700, transition: 'all 0.2s' }}>
               Email support@bullvera.com
             </a>
           </div>
 
-          <div className="card glass animate-fade" style={{ animationDelay: '0.1s', background: 'linear-gradient(145deg, rgba(0,204,136,0.1), rgba(0,0,0,0.2))', border: '1px solid rgba(0,204,136,0.2)', padding: '32px', borderRadius: '20px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <i className="fa-brands fa-whatsapp" style={{ color: '#00cc88' }}></i> Live Chat & WhatsApp
+          <div className="card glass animate-fade" style={{ animationDelay: '0.1s', background: 'linear-gradient(145deg, var(--success-muted), transparent)', border: '1px solid var(--border)', padding: '32px', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-main)' }}>
+              <i className="fa-brands fa-whatsapp" style={{ color: 'var(--success)' }}></i> Live Chat & WhatsApp
             </h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 20px 0' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6', margin: '0 0 20px 0' }}>
               Have an urgent request regarding deposits, withdrawals, or an active margin call? Reach out instantly.
             </p>
             <button
-              style={{ background: '#00cc88', border: 'none', color: '#fff', padding: '12px 20px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
+              style={{ background: 'var(--success)', border: 'none', color: '#fff', padding: '12px 20px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
               onClick={() => document.getElementById('live-chat-bubble')?.click()}
             >
               <i className="fa-solid fa-message" style={{ marginRight: 8 }} />
@@ -149,21 +149,21 @@ const Help = () => {
         <h3 style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 20px 0', fontFamily: 'Outfit, sans-serif' }}>Frequently Asked Questions</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', animationDelay: '0.2s' }} className="animate-fade">
-          <div className="card glass" style={{ padding: '24px', borderRadius: '16px' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: '#e0e6ed' }}>How long do withdrawals take to process?</h4>
-            <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
+          <div className="card glass" style={{ padding: '24px', borderRadius: '16px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>How long do withdrawals take to process?</h4>
+            <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
               Crypto and Bank Transfer withdrawals are usually reviewed and processed within 24 hours. Depending on the payment provider, it may take an additional 1-3 business days to reflect in your account.
             </p>
           </div>
-          <div className="card glass" style={{ padding: '24px', borderRadius: '16px' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: '#e0e6ed' }}>What is "Free Margin"?</h4>
-            <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
+          <div className="card glass" style={{ padding: '24px', borderRadius: '16px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>What is "Free Margin"?</h4>
+            <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
               Free Margin is the amount in your account available for opening new positions. It is calculated by subtracting your Used Margin from your current Equity. If this drops below 0, you cannot open new trades.
             </p>
           </div>
-          <div className="card glass" style={{ padding: '24px', borderRadius: '16px' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: '#e0e6ed' }}>What happens during a Margin Call?</h4>
-            <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
+          <div className="card glass" style={{ padding: '24px', borderRadius: '16px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>What happens during a Margin Call?</h4>
+            <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
               If your Margin Level drops below 50%, the system will automatically begin closing your open positions, starting with the least profitable one, to protect your account balance from negative equity.
             </p>
           </div>

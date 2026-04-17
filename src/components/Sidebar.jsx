@@ -40,23 +40,23 @@ const Sidebar = ({ currentUser, onLogout }) => {
       </div>
       <style>{`
         .nav-item.active {
-          background: rgba(255, 77, 94, 0.1) !important;
-          color: #FF4D5E !important;
+          background: var(--accent-muted) !important;
+          color: var(--accent) !important;
         }
         .active-indicator-bar {
           position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px;
-          background: #FF4D5E; border-radius: 0 4px 4px 0;
+          background: var(--accent); border-radius: 0 4px 4px 0;
           opacity: 0; transition: 0.2s;
-          box-shadow: 0 0 10px rgba(255, 77, 94, 0.5);
+          box-shadow: 0 0 10px var(--accent-muted);
         }
         .nav-item.active .active-indicator-bar {
           opacity: 1;
         }
-        .admin-shortcut { color: #a855f7 !important; }
+        .admin-shortcut { color: var(--warning) !important; }
         .admin-shortcut:hover {
-          background-color: rgba(168,85,247,0.12) !important;
-          color: #c084fc !important;
-          box-shadow: 0 0 12px rgba(168,85,247,0.2);
+          background-color: var(--warning-muted) !important;
+          color: var(--warning) !important;
+          box-shadow: 0 0 12px var(--warning-muted);
         }
       `}</style>
     </aside>

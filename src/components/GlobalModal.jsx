@@ -9,11 +9,11 @@ const GlobalModal = () => {
 
   const getStatusColor = () => {
     switch (status) {
-      case 'success': return '#00cc88';
-      case 'error': return '#ff4d4d';
-      case 'warning': return '#f59e0b';
+      case 'success': return 'var(--success)';
+      case 'error': return 'var(--danger)';
+      case 'warning': return 'var(--warning)';
       case 'info':
-      default: return '#FF4D5E';
+      default: return 'var(--accent)';
     }
   };
 
@@ -87,15 +87,15 @@ const GlobalModal = () => {
         <style>{`
           .glb-modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(12px);
             display: flex; align-items: center; justify-content: center;
             z-index: 99999; animation: glbFadeIn 0.3s ease;
           }
           .glb-modal {
-            background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-card); border: 1px solid var(--border);
             width: 90%; max-width: 400px; border-radius: 28px;
             position: relative; overflow: hidden;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
             animation: glbPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           }
           .glb-modal-glow {
@@ -109,25 +109,25 @@ const GlobalModal = () => {
             display: flex; align-items: center; justify-content: center;
             font-size: 28px; margin-bottom: 16px;
           }
-          .glb-modal-header h3 { margin: 0; font-size: 22px; color: #fff; font-weight: 800; }
+          .glb-modal-header h3 { margin: 0; font-size: 22px; color: var(--text-main); font-weight: 800; }
           .glb-modal-body { text-align: center; margin-bottom: 32px; }
-          .glb-modal-body p { color: #94a3b8; line-height: 1.6; font-size: 15px; margin: 0; }
+          .glb-modal-body p { color: var(--text-muted); line-height: 1.6; font-size: 15px; margin: 0; }
           
           .glb-input-wrap { margin-top: 20px; }
           .glb-prompt-input {
-            width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px; border-radius: 12px; color: #fff; font-family: inherit; font-size: 14px;
+            width: 100%; background: var(--bg-hover); border: 1px solid var(--border);
+            padding: 14px; border-radius: 12px; color: var(--text-main); font-family: inherit; font-size: 14px;
             outline: none; transition: 0.2s;
           }
-          .glb-prompt-input:focus { border-color: #FF4D5E; box-shadow: 0 0 0 4px rgba(255, 77, 94, 0.1); }
+          .glb-prompt-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-muted); }
 
           .glb-modal-footer { display: flex; gap: 12px; }
           .glb-btn {
             flex: 1; padding: 14px; border-radius: 14px; border: none;
             font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px;
           }
-          .glb-btn-cancel { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
-          .glb-btn-cancel:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+          .glb-btn-cancel { background: var(--bg-hover); color: var(--text-muted); }
+          .glb-btn-cancel:hover { background: var(--border); color: var(--text-main); }
           .glb-btn-confirm { color: #fff; }
           .glb-btn-confirm:hover { filter: brightness(1.1); transform: translateY(-1px); }
 

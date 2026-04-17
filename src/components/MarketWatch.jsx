@@ -56,7 +56,7 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol }) => {
             <input 
               type="text" 
               className="market-search-input"
-              style={{ flex: 1, background: 'none', border: 'none', color: '#fff', fontSize: '13px', outline: 'none' }}
+              style={{ flex: 1, background: 'none', border: 'none', color: 'var(--text-main)', fontSize: '13px', outline: 'none' }}
               placeholder="Search assets..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

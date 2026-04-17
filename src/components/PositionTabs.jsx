@@ -43,10 +43,10 @@ const PositionTabs = () => {
 
   // Health indicator for Margin Level (Image notes: mini = 300)
   const getMarginLevelColor = () => {
-    if (marginLevel === 0) return '#94a3b8';
-    if (marginLevel < 300) return '#ef4444'; // Red
-    if (marginLevel < 500) return '#f59e0b'; // Orange/Yellow
-    return '#10b981'; // Green
+    if (marginLevel === 0) return 'var(--text-muted)';
+    if (marginLevel < 300) return 'var(--danger)';
+    if (marginLevel < 500) return 'var(--warning)';
+    return 'var(--success)';
   };
 
   // The definitive source for ALL trades for this client
@@ -149,7 +149,7 @@ const PositionTabs = () => {
                   return (
                     <tr key={trade.id}>
                       <td style={{ fontWeight: 600 }}>{trade.symbol}</td>
-                      <td style={{ color: trade.type === 'BUY' ? '#10b981' : '#ef4444' }}>{trade.type}</td>
+                      <td style={{ color: trade.type === 'BUY' ? 'var(--success)' : 'var(--danger)' }}>{trade.type}</td>
                       <td>{trade.lots}</td>
                       <td>{(trade.openPrice || 0).toFixed(2)}</td>
                       
@@ -172,10 +172,10 @@ const PositionTabs = () => {
 
                       {activeTab !== 'pending' && (
                         <>
-                          <td style={{ color: profit >= 0 ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>
+                          <td style={{ color: profit >= 0 ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold' }}>
                               {profit >= 0 ? '+' : ''}{profit.toFixed(2)} USD
                           </td>
-                          <td style={{ color: swap < 0 ? '#ef4444' : '#10b981', fontWeight: '500' }}>
+                          <td style={{ color: swap < 0 ? 'var(--danger)' : 'var(--success)', fontWeight: '500' }}>
                               {(() => {
                                 const tradeAgeMs = Date.now() - new Date(trade.openTime).getTime();
                                 const isOldEnough = tradeAgeMs >= 24 * 60 * 60 * 1000;
@@ -197,7 +197,7 @@ const PositionTabs = () => {
                         <td style={{ textAlign: 'right' }}>
                           {activeTab === 'pending' && (
                             <button 
-                              className="close-trade-btn" style={{ background: 'transparent', color: '#10b981', marginRight: '8px' }}
+                              className="close-trade-btn" style={{ background: 'transparent', color: 'var(--success)', marginRight: '8px' }}
                               onClick={() => handleOpenModify(trade)}
                             >
                               <i className="fa-solid fa-pen"></i>
@@ -223,29 +223,29 @@ const PositionTabs = () => {
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-white font-bold">{trade.symbol}</span>
-                          <span className={`text-[10px] font-black px-2 py-0.5 rounded ${trade.type === 'BUY' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                          <span className="text-[var(--text-main)] font-bold">{trade.symbol}</span>
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded ${trade.type === 'BUY' ? 'bg-[var(--success-muted)] text-[var(--success)]' : 'bg-[var(--danger-muted)] text-[var(--danger)]'}`}>
                             {trade.type}
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-500">Vol: <span className="text-slate-300 font-mono">{trade.lots}</span></div>
+                        <div className="text-[11px] text-[var(--text-muted)]">Vol: <span className="text-[var(--text-dim)] font-mono">{trade.lots}</span></div>
                       </div>
                       <div className="text-right">
-                        <div className={`text-base font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        <div className={`text-base font-bold ${profit >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
                            {profit >= 0 ? '+' : ''}{profit.toFixed(2)} <span className="text-[10px] opacity-60">USD</span>
                         </div>
-                        <div className="text-[10px] text-slate-500">Net Return</div>
+                        <div className="text-[10px] text-[var(--text-muted)]">Net Return</div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 p-3 bg-black/20 rounded-xl mb-3">
+                    <div className="grid grid-cols-2 gap-4 p-3 bg-[var(--bg-hover)] rounded-xl mb-3">
                       <div>
-                        <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Open Price</div>
-                        <div className="text-xs text-white font-mono">{(trade.openPrice || 0).toFixed(p?.precision || 2)}</div>
+                        <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Open Price</div>
+                        <div className="text-xs text-[var(--text-main)] font-mono">{(trade.openPrice || 0).toFixed(p?.precision || 2)}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Market</div>
-                        <div className="text-xs text-[#FF4D5E] font-mono">{p?.price || '...'}</div>
+                        <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Market</div>
+                        <div className="text-xs text-[var(--accent)] font-mono">{p?.price || '...'}</div>
                       </div>
                     </div>
 
@@ -253,14 +253,14 @@ const PositionTabs = () => {
                       <div className="flex gap-2">
                         {activeTab === 'pending' && (
                           <button 
-                            className="flex-1 bg-slate-800 text-slate-300 py-2.5 rounded-xl font-bold text-xs"
+                            className="flex-1 bg-[var(--bg-hover)] text-[var(--text-muted)] py-2.5 rounded-xl font-bold text-xs"
                             onClick={() => handleOpenModify(trade)}
                           >
                             Modify
                           </button>
                         )}
                         <button 
-                          className={`flex-1 ${activeTab === 'pending' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-rose-500 text-white'} py-2.5 rounded-xl font-bold text-xs shadow-lg`}
+                          className={`flex-1 ${activeTab === 'pending' ? 'bg-[var(--danger-muted)] text-[var(--danger)] border border-[var(--danger)]' : 'bg-[var(--danger)] text-white'} py-2.5 rounded-xl font-bold text-xs shadow-lg`}
                           onClick={() => handleOpenConfirm(trade)}
                         >
                           {activeTab === 'pending' ? 'Cancel Order' : 'Close Position'}
@@ -274,7 +274,7 @@ const PositionTabs = () => {
         )}
         
         {activeTab === 'closed' && isLoadingHistory && (
-           <div style={{ padding: '20px', textAlign: 'center', color: '#64748b' }}>
+           <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)' }}>
               <i className="fa-solid fa-spinner fa-spin"></i> Loading historical trades...
            </div>
         )}
@@ -308,7 +308,7 @@ const PositionTabs = () => {
         <div className="confirm-modal-overlay">
           <div className="confirm-modal-content animate-pop">
             <div className="modal-header-simple">
-              <i className="fa-solid fa-circle-exclamation" style={{ color: '#ef4444', fontSize: '24px' }}></i>
+              <i className="fa-solid fa-circle-exclamation" style={{ color: 'var(--danger)', fontSize: '24px' }}></i>
               <h3>Close Position?</h3>
             </div>
             <div className="modal-body-simple">
@@ -333,41 +333,41 @@ const PositionTabs = () => {
         <div className="confirm-modal-overlay">
           <div className="confirm-modal-content animate-pop" style={{ maxWidth: '400px' }}>
             <div className="modal-header-simple">
-              <i className="fa-solid fa-pen-to-square" style={{ color: '#10b981', fontSize: '24px' }}></i>
+              <i className="fa-solid fa-pen-to-square" style={{ color: 'var(--success)', fontSize: '24px' }}></i>
               <h3>Modify Order</h3>
             </div>
             <div className="modal-body-simple">
-              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#94a3b8' }}>
+              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--text-muted)' }}>
                 Modify Stop Loss and Take Profit for <strong>{modifyingTrade?.symbol}</strong> ({modifyingTrade?.type})
               </p>
               
               <div style={{ marginBottom: '16px', textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px', textTransform: 'uppercase' }}>Stop Loss Price</label>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>Stop Loss Price</label>
                 <input 
                   type="number" 
                   step="0.00001"
                   value={newSL} 
                   onChange={e => setNewSL(e.target.value)}
                   placeholder="0.00"
-                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '16px' }}
+                  style={{ width: '100%', padding: '12px', background: 'var(--bg-hover)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '16px' }}
                 />
               </div>
-
+ 
               <div style={{ marginBottom: '16px', textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px', textTransform: 'uppercase' }}>Take Profit Price</label>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>Take Profit Price</label>
                 <input 
                   type="number" 
                   step="0.00001"
                   value={newTP} 
                   onChange={e => setNewTP(e.target.value)}
                   placeholder="0.00"
-                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '16px' }}
+                  style={{ width: '100%', padding: '12px', background: 'var(--bg-hover)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '16px' }}
                 />
               </div>
             </div>
             <div className="modal-footer-simple">
                <button className="confirm-btn secondary" onClick={() => setShowModify(false)}>Cancel</button>
-               <button className="confirm-btn" style={{ background: '#10b981' }} onClick={submitModifyTrade} disabled={isModifying}>
+               <button className="confirm-btn" style={{ background: 'var(--success)', color: 'white' }} onClick={submitModifyTrade} disabled={isModifying}>
                  {isModifying ? 'Saving...' : 'Save Settings'}
                </button>
             </div>
@@ -377,9 +377,9 @@ const PositionTabs = () => {
 
       <style>{`
         .close-trade-btn {
-          background: rgba(239, 68, 68, 0.1);
-          color: #ef4444;
-          border: 1px solid rgba(239, 68, 68, 0.2);
+          background: var(--danger-muted);
+          color: var(--danger);
+          border: 1px solid var(--danger-muted);
           padding: 4px 12px;
           border-radius: 6px;
           font-size: 11px;
@@ -387,53 +387,53 @@ const PositionTabs = () => {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .close-trade-btn:hover { background: #ef4444; color: white; }
+        .close-trade-btn:hover { background: var(--danger); color: white; }
 
         /* Confirm Modal Styles */
         .confirm-modal-overlay {
           position: fixed;
           top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0, 0, 0, 0.88);
-          backdrop-filter: blur(12px);
+          background: rgba(0, 0, 0, 0.7);
+          backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 10000;
         }
         .confirm-modal-content {
-          background: #0f172a;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           width: 90%;
           max-width: 380px;
           border-radius: 28px;
           padding: 32px;
           text-align: center;
-          box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.7);
+          box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.1);
         }
-        .modal-header-simple h3 { margin: 16px 0 8px; font-size: 20px; color: white; font-weight: 800; }
-        .modal-body-simple p { color: #94a3b8; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+        .modal-header-simple h3 { margin: 16px 0 8px; font-size: 20px; color: var(--text-main); font-weight: 800; }
+        .modal-body-simple p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
         
         .confirm-profit-preview {
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-hover);
           border-radius: 16px;
           padding: 16px;
           display: flex;
           flex-direction: column;
           gap: 4px;
           margin-bottom: 32px;
-          border: 1px dashed rgba(255, 255, 255, 0.1);
+          border: 1px dashed var(--border);
         }
-        .confirm-profit-preview .label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 800; }
+        .confirm-profit-preview .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; }
         .confirm-profit-preview .value { font-size: 20px; font-weight: 800; }
-        .confirm-profit-preview .value.up { color: #10b981; }
-        .confirm-profit-preview .value.down { color: #ef4444; }
+        .confirm-profit-preview .value.up { color: var(--success); }
+        .confirm-profit-preview .value.down { color: var(--danger); }
 
         .modal-footer-simple { display: flex; gap: 12px; }
         .confirm-btn { flex: 1; padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; transition: all 0.2s; }
-        .confirm-btn.danger { background: #ef4444; color: white; }
+        .confirm-btn.danger { background: var(--danger); color: white; }
         .confirm-btn.danger:hover { background: #dc2626; transform: translateY(-2px); }
-        .confirm-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
-        .confirm-btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .confirm-btn.secondary { background: var(--bg-hover); color: var(--text-muted); }
+        .confirm-btn.secondary:hover { background: var(--border); }
 
         /* Mobile Card Styles */
         .mobile-trade-list {
@@ -441,22 +441,22 @@ const PositionTabs = () => {
           flex-direction: column;
           gap: 12px;
           padding: 12px;
-          background: #0f172a;
+          background: var(--bg-deep);
         }
         .mobile-trade-card {
-           background: rgba(30, 41, 59, 0.4);
+           background: var(--bg-card);
            backdrop-filter: blur(10px);
-           border: 1px solid rgba(255, 255, 255, 0.05);
+           border: 1px solid var(--border);
            border-radius: 20px;
            padding: 16px;
-           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
-        .text-emerald-400 { color: #34d399; }
-        .bg-emerald-500\/20 { background: rgba(16, 185, 129, 0.2); }
-        .text-rose-400 { color: #f87171; }
-        .bg-rose-500\/20 { background: rgba(239, 68, 68, 0.2); }
-        .text-slate-500 { color: #64748b; }
-        .text-slate-300 { color: #cbd5e1; }
+        .text-emerald-400 { color: var(--success); }
+        .bg-emerald-500\/20 { background: var(--success-muted); }
+        .text-rose-400 { color: var(--danger); }
+        .bg-rose-500\/20 { background: var(--danger-muted); }
+        .text-slate-500 { color: var(--text-muted); }
+        .text-slate-300 { color: var(--text-main); }
         .tracking-tight { letter-spacing: -0.025em; }
 
         @media (max-width: 600px) {

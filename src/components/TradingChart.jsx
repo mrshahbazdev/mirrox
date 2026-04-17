@@ -67,6 +67,11 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) 
     }, 500);
   }, [chartType, interval]);
 
+  // Helper to get CSS variables
+  const getThemeColor = (varName) => {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  };
+
   // Initialize Chart
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -80,26 +85,35 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) 
       const width = container.clientWidth;
       if (width === 0) return;
 
+      const colors = {
+        bg: 'transparent',
+        text: getThemeColor('--text-muted') || '#94a3b8',
+        border: getThemeColor('--border') || 'rgba(0, 0, 0, 0.1)',
+        accent: getThemeColor('--accent') || '#FF4D5E',
+        success: getThemeColor('--success') || '#10b981',
+        danger: getThemeColor('--danger') || '#ef4444',
+      };
+
       const chart = LC.createChart(container, {
         layout: {
-          background: { type: 'solid', color: 'transparent' },
-          textColor: '#94a3b8',
+          background: { type: 'solid', color: colors.bg },
+          textColor: colors.text,
           fontSize: 11,
         },
         grid: {
-          vertLines: { color: 'rgba(255, 255, 255, 0.02)' },
-          horzLines: { color: 'rgba(255, 255, 255, 0.02)' },
+          vertLines: { color: colors.border },
+          horzLines: { color: colors.border },
         },
         crosshair: {
           mode: LC.CrosshairMode.Normal,
-          vertLine: { color: '#6366f1', width: 0.5, style: LC.LineStyle.Dash },
-          horzLine: { color: '#6366f1', width: 0.5, style: LC.LineStyle.Dash },
+          vertLine: { color: colors.accent, width: 1, style: LC.LineStyle.Dash },
+          horzLine: { color: colors.accent, width: 1, style: LC.LineStyle.Dash },
         },
         rightPriceScale: {
-          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderColor: colors.border,
         },
         timeScale: {
-          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderColor: colors.border,
           timeVisible: true,
           secondsVisible: false,
         },
@@ -119,7 +133,7 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) 
       });
 
       chartRef.current = chart;
-      createSeries();
+      createSeries(colors);
       
       chart.subscribeCrosshairMove(param => {
         if (param.time && seriesRef.current) {
@@ -145,7 +159,7 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) 
       });
     };
 
-    const createSeries = () => {
+    const createSeries = (colors) => {
       const LC = window.LightweightCharts;
       if (!LC || !chartRef.current) return;
       
@@ -156,22 +170,22 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) 
       let series;
       if (chartType === 'candles') {
         series = chartRef.current.addSeries(LC.CandlestickSeries, {
-          upColor: '#10b981',
-          downColor: '#ef4444',
+          upColor: colors.success,
+          downColor: colors.danger,
           borderVisible: false,
-          wickUpColor: '#10b981',
-          wickDownColor: '#ef4444',
+          wickUpColor: colors.success,
+          wickDownColor: colors.danger,
         });
       } else if (chartType === 'area') {
         series = chartRef.current.addSeries(LC.AreaSeries, {
-          lineColor: '#00d2ff',
-          topColor: 'rgba(0, 210, 255, 0.3)',
-          bottomColor: 'rgba(0, 210, 255, 0.01)',
+          lineColor: colors.accent,
+          topColor: `${colors.accent}33`, // 20% opacity
+          bottomColor: `${colors.accent}01`,
           lineWidth: 2,
         });
       } else {
         series = chartRef.current.addSeries(LC.LineSeries, {
-          color: '#00d2ff',
+          color: colors.accent,
           lineWidth: 2,
         });
       }
@@ -350,7 +364,7 @@ const TradingChart = ({ symbol, currentPrice, isMobile = false, height = 480 }) 
           <span>H <small>{(legendData.h || 0).toFixed(5)}</small></span>
           <span>L <small>{(legendData.l || 0).toFixed(5)}</small></span>
           <span>C <small>{(legendData.c || 0).toFixed(5)}</small></span>
-          <span className={(legendData.ch || 0) >= 0 ? 'up' : 'down'}>
+          <span className={(legendData.ch || 0) >= 0 ? 'up-text' : 'down-text'}>
             {(legendData.ch || 0).toFixed(5)} ({(legendData.chp || 0).toFixed(2)}%)
           </span>
         </div>

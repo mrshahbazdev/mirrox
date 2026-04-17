@@ -399,9 +399,9 @@ export default function LiveChat({ currentUser }) {
               <div className="chat-header-name">{supportName}</div>
               <div className="chat-header-sub">
                 {chatStatus === 'closed' ? (
-                  <span style={{ color: '#ff4d4d' }}>Chat Closed</span>
+                  <span style={{ color: 'var(--danger)' }}>Chat Closed</span>
                 ) : chatStatus === 'blocked' ? (
-                  <span style={{ color: '#ff4d4d' }}>Chat Blocked</span>
+                  <span style={{ color: 'var(--danger)' }}>Chat Blocked</span>
                 ) : adminTyping ? (
                   <span style={{ color: 'var(--success)' }}>Typing...</span>
                 ) : (
@@ -490,7 +490,7 @@ export default function LiveChat({ currentUser }) {
                         {formatTime(msg.timestamp)}
                         {isUser && (
                           <i className={`fa-solid fa-check${msg.read ? '-double' : ''} chat-read-icon`}
-                            style={{ color: msg.read ? 'var(--accent)' : '#64748b' }} />
+                            style={{ color: msg.read ? 'var(--accent)' : 'var(--text-muted)' }} />
                         )}
                       </div>
                     </div>
@@ -528,7 +528,7 @@ export default function LiveChat({ currentUser }) {
                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', fontSize: '24px', cursor: 'pointer', color: 'var(--text-muted)' }}>
                   {[1, 2, 3, 4, 5].map(star => (
                     <i key={star} className="fa-solid fa-star csat-star" onClick={() => submitRating(star)} 
-                       onMouseEnter={(e) => { e.target.style.color = '#fbbf24'; }} 
+                       onMouseEnter={(e) => { e.target.style.color = 'var(--warning)'; }} 
                        onMouseLeave={(e) => { e.target.style.color = 'var(--text-muted)'; }} />
                   ))}
                 </div>
@@ -540,7 +540,7 @@ export default function LiveChat({ currentUser }) {
             )}
             <div><i className="fa-solid fa-lock" /> This chat has been closed by support.</div>
             <button onClick={startNewChat} style={{
-              background: '#FF4D5E', color: '#fff', border: 'none', borderRadius: '6px', 
+              background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: '6px', 
               padding: '8px 12px', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
             }}>
@@ -549,7 +549,7 @@ export default function LiveChat({ currentUser }) {
           </div>
         )}
         {chatStatus === 'blocked' && (
-          <div className="chat-closed-banner" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+          <div className="chat-closed-banner" style={{ background: 'var(--danger-muted)', color: 'var(--danger)', borderColor: 'var(--danger-muted)' }}>
             <i className="fa-solid fa-ban" /> You have been blocked from support chat.
           </div>
         )}
@@ -560,7 +560,7 @@ export default function LiveChat({ currentUser }) {
             {showEmoji && (
               <div className="chat-emoji-container">
                 <EmojiPicker 
-                  theme={Theme.DARK}
+                  theme={Theme.LIGHT}
                   onEmojiClick={onEmojiClick}
                   width="100%"
                   height={320}

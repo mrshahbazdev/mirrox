@@ -36,7 +36,7 @@ const Layout = ({ currentUser, onLogout }) => {
            display: block;
            height: auto;
            min-height: 100vh;
-           background: #0f172a;
+           background: var(--bg-deep);
         }
         .is-mobile .dashboard-content {
            margin-left: 0 !important;

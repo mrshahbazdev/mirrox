@@ -154,8 +154,8 @@ const Finances = () => {
   const formatCurrency = (val) => (val || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500">
-        <RefreshCw className="animate-spin mb-4 text-[#FF4D5E]" size={40} />
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--text-muted)]">
+        <RefreshCw className="animate-spin mb-4 text-[var(--accent)]" size={40} />
         <p className="font-bold uppercase tracking-widest text-xs">Syncing Financial Node...</p>
       </div>
     );
@@ -163,18 +163,18 @@ const Finances = () => {
   return (
     <div className="finances-page-v3 animate-fade-in no-scrollbar">
       {/* --- BACKGROUND DECORATION --- */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FF4D5E]/5 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pub-red/5 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--accent-muted)] blur-[120px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--accent-muted)] blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="finances-container max-w-[1400px] mx-auto p-4 md:p-8 xl:p-12">
         {/* --- HEADER --- */}
         <header className="mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter flex items-center gap-4">
-              <span className="w-2 h-10 bg-[#FF4D5E] rounded-full"></span>
+            <h1 className="text-4xl md:text-5xl font-black text-[var(--text-main)] tracking-tighter flex items-center gap-4">
+              <span className="w-2 h-10 bg-[var(--accent)] rounded-full"></span>
               Wallet
             </h1>
-            <p className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-[0.3em] ml-6">
+            <p className="text-[var(--text-muted)] text-[10px] md:text-xs font-black uppercase tracking-[0.2em] ml-6">
               Institutional Asset Management • Bullvera
             </p>
           </div>
@@ -463,18 +463,18 @@ const Finances = () => {
 
                 {activeTab === 'history' && (
                   <div className="space-y-10">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/5 pb-10">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-200 pb-10">
                       <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-[#FF4D5E]/10 text-[#FF4D5E] rounded-2xl flex items-center justify-center border border-[#FF4D5E]/20">
+                        <div className="w-14 h-14 bg-[#FF4D5E]/10 text-[#FF4D5E] rounded-2xl flex items-center justify-center border border-[#FF4D5E]/10">
                           <History size={32} />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-black text-white uppercase tracking-tight">Ledger Matrix</h3>
+                          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Ledger Matrix</h3>
                           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Historical Asset Activity</p>
                         </div>
                       </div>
                       <div className="flex gap-4 w-full md:w-auto">
-                        <button className="flex-1 md:flex-none px-6 py-4 bg-white/5 text-slate-400 text-[10px] font-black uppercase rounded-xl border border-white/5 hover:bg-white/10 transition-all tracking-widest">Export Ledger</button>
+                        <button className="flex-1 md:flex-none px-6 py-4 bg-slate-100 text-slate-500 text-[10px] font-black uppercase rounded-xl border border-slate-200 hover:bg-slate-200 transition-all tracking-widest">Export Ledger</button>
                       </div>
                     </div>
 
@@ -486,20 +486,20 @@ const Finances = () => {
                         </div>
                       ) : (
                         history.map((tx, idx) => (
-                          <div key={idx} className="tx-row-v3 group flex items-center justify-between p-6 bg-white/[0.02] border border-white/5 rounded-3xl hover:bg-white/[0.05] hover:border-white/10 transition-all">
+                          <div key={idx} className="tx-row-v3 group flex items-center justify-between p-6 bg-white border border-slate-100 rounded-3xl hover:bg-slate-50 hover:border-slate-200 transition-all shadow-sm">
                             <div className="flex items-center gap-6">
-                              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center relative shadow-inner ${tx.type === 'Deposit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-pub-red/10 text-pub-red'}`}>
+                              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center relative shadow-sm ${tx.type === 'Deposit' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-pub-red/10 text-pub-red'}`}>
                                 {tx.type === 'Deposit' ? <ArrowDownLeft size={24} /> : <ArrowUpRight size={24} />}
-                                <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-black ${tx.status === 'approved' ? 'bg-emerald-500' : tx.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'}`}></div>
+                                <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${tx.status === 'approved' ? 'bg-emerald-500' : tx.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'}`}></div>
                               </div>
                               <div className="space-y-1.5">
                                 <div className="flex items-center gap-3">
-                                  <h4 className="text-lg font-black text-white uppercase tracking-tight">{tx.type}</h4>
-                                  <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-slate-800 text-slate-500 rounded">{tx.method.replace('_', ' ')}</span>
+                                  <h4 className="text-lg font-black text-slate-900 uppercase tracking-tight">{tx.type}</h4>
+                                  <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-slate-100 text-slate-500 rounded">{tx.method.replace('_', ' ')}</span>
                                 </div>
                                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2">
                                   {tx.date}
-                                  <span className="w-1 h-1 bg-slate-700 rounded-full"></span>
+                                  <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
                                   BVR-{tx._id?.substring(0, 8).toUpperCase() || 'EXTERNAL'}
                                 </p>
                               </div>
@@ -507,7 +507,7 @@ const Finances = () => {
 
                             <div className="text-right flex items-center gap-8">
                               <div className="space-y-1.5">
-                                <p className={`text-2xl font-black font-mono leading-none ${tx.type === 'Deposit' ? 'text-emerald-400' : 'text-pub-red'}`}>
+                                <p className={`text-2xl font-black font-mono leading-none ${tx.type === 'Deposit' ? 'text-emerald-600' : 'text-pub-red'}`}>
                                   {tx.type === 'Deposit' ? '+' : '-'}${formatCurrency(tx.amount)}
                                 </p>
                                 <div className={`status-badge-v3 ${tx.status}`}>
@@ -515,7 +515,7 @@ const Finances = () => {
                                   <span>{tx.status}</span>
                                 </div>
                               </div>
-                              <button className="w-12 h-12 rounded-xl bg-white/5 text-slate-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:text-white hover:bg-white/10">
+                              <button className="w-12 h-12 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:text-slate-900 hover:bg-slate-200">
                                 <ExternalLink size={16} />
                               </button>
                             </div>
@@ -532,17 +532,17 @@ const Finances = () => {
           {/* RIGHT: METRICS & SUPPORT */}
           <div className="lg:col-span-4 space-y-8">
             {/* PORTFOLIO METRICS */}
-            <div className="glass-metric-card-v3 p-10 bg-black/40 border border-white/5 rounded-[2.5rem] relative overflow-hidden group">
+            <div className="glass-metric-card-v3 p-10 bg-white border border-slate-200 rounded-[2.5rem] relative overflow-hidden group shadow-sm">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF4D5E]/5 blur-[80px] -mr-16 -mt-16 group-hover:bg-[#FF4D5E]/10 transition-all duration-700"></div>
               
               <div className="relative z-10 space-y-8">
-                <div className="flex items-center gap-4 border-b border-white/5 pb-8">
-                  <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-slate-400 border border-white/5 shadow-inner">
+                <div className="flex items-center gap-4 border-b border-slate-100 pb-8">
+                  <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-100 shadow-sm">
                     <Shield size={20} />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-1">Risk Assessment</h4>
-                    <p className="text-[8px] text-slate-700 font-black uppercase">Institutional Grade Metrics</p>
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Risk Assessment</h4>
+                    <p className="text-[8px] text-slate-300 font-black uppercase">Institutional Grade Metrics</p>
                   </div>
                 </div>
 
@@ -550,15 +550,15 @@ const Finances = () => {
                   {[
                     { label: 'Total Equity', value: tm.equity, color: 'text-[#FF4D5E]', icon: <Wallet size={14} /> },
                     { label: 'Utilized Margin', value: tm.marginUsed, color: 'text-pub-red', icon: <CreditCard size={14} /> },
-                    { label: 'Free Liquidity', value: tm.freeMargin, color: 'text-emerald-400', icon: <zap size={14} /> },
-                    { label: 'Security Level', value: (tm.marginLevel || 0).toFixed(2) + '%', color: 'text-amber-400', icon: <Shield size={14} />, isPercent: true }
+                    { label: 'Free Liquidity', value: tm.freeMargin, color: 'text-emerald-600', icon: <zap size={14} /> },
+                    { label: 'Security Level', value: (tm.marginLevel || 0).toFixed(2) + '%', color: 'text-amber-600', icon: <Shield size={14} />, isPercent: true }
                   ].map(metric => (
-                    <div key={metric.label} className="metric-row-v3 flex justify-between items-center p-6 bg-black/30 border border-white/5 rounded-2xl hover:border-white/10 transition-all group/m">
+                    <div key={metric.label} className="metric-row-v3 flex justify-between items-center p-6 bg-slate-50 border border-slate-100 rounded-2xl hover:border-slate-200 transition-all group/m">
                       <div className="flex items-center gap-4">
-                        <div className={`w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-600 group-hover/m:${metric.color} transition-colors`}>
+                        <div className={`w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 group-hover/m:${metric.color} transition-colors shadow-sm`}>
                           {metric.icon}
                         </div>
-                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{metric.label}</span>
+                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{metric.label}</span>
                       </div>
                       <span className={`text-xl font-black font-mono tracking-tighter ${metric.color}`}>
                         {metric.isPercent ? metric.value : '$' + formatCurrency(metric.value)}
@@ -595,30 +595,30 @@ const Finances = () => {
 
       {/* --- SETUP PIN MODAL --- */}
       {showSetupPin && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 backdrop-blur-3xl bg-black/60 animate-fade-in">
-          <div className="w-full max-w-lg bg-[#0b0e14] border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF4D5E]/10 blur-[80px] -mr-16 -mt-16"></div>
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 backdrop-blur-3xl bg-black/40 animate-fade-in">
+          <div className="w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border)] rounded-[3rem] p-12 relative overflow-hidden shadow-2xl">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-muted)] blur-[80px] -mr-16 -mt-16"></div>
              
              <div className="relative z-10">
                 <div className="text-center space-y-6 mb-12">
-                   <div className="w-20 h-20 rounded-[1.8rem] bg-[#FF4D5E]/10 text-[#FF4D5E] flex items-center justify-center border border-[#FF4D5E]/20 mx-auto">
+                   <div className="w-20 h-20 rounded-[1.8rem] bg-[var(--accent-muted)] text-[var(--accent)] flex items-center justify-center border border-[var(--accent-muted)] mx-auto">
                       <Key size={36} />
                    </div>
                    <div className="space-y-2">
-                      <h3 className="text-3xl font-black text-white uppercase tracking-tight">Security Access</h3>
-                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Platform Withdrawal Credentials</p>
+                      <h3 className="text-3xl font-black text-[var(--text-main)] uppercase tracking-tight">Security Access</h3>
+                      <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">Platform Withdrawal Credentials</p>
                    </div>
                 </div>
 
                 <form onSubmit={handleSetupPin} className="space-y-8">
                    <div className="space-y-4">
-                      <label className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] ml-2">Define New 4-Digit PIN</label>
+                      <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] ml-2">Define New 4-Digit PIN</label>
                       <input
                         type="password"
                         maxLength="4"
                         value={newPin}
                         onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
-                        className="w-full bg-white/5 border border-white/5 rounded-2xl text-center text-4xl font-black text-white py-6 tracking-[0.8em] outline-none focus:border-[#FF4D5E]/40 transition-all"
+                        className="w-full bg-[var(--bg-hover)] border border-[var(--border)] rounded-2xl text-center text-4xl font-black text-[var(--text-main)] py-6 tracking-[0.8em] outline-none focus:border-[var(--accent)] transition-all"
                         placeholder="••••"
                         required
                       />
@@ -627,7 +627,7 @@ const Finances = () => {
                    <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-6 bg-[#FF4D5E] text-white rounded-[1.8rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-[#FF4D5E]/20 hover:bg-[#ff7582] transition-all"
+                    className="w-full py-6 bg-[var(--accent)] text-white rounded-[1.8rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-[var(--accent-muted)] hover:filter hover:brightness-110 transition-all"
                    >
                      {isSubmitting ? 'Securing Access...' : 'Commit Security PIN'}
                    </button>
@@ -635,7 +635,7 @@ const Finances = () => {
                    <button
                     type="button"
                     onClick={() => setShowSetupPin(false)}
-                    className="w-full text-[10px] text-slate-500 font-black uppercase tracking-widest hover:text-white transition-colors"
+                    className="w-full text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest hover:text-[var(--text-main)] transition-colors"
                    >
                      Cancel
                    </button>
@@ -649,8 +649,8 @@ const Finances = () => {
       <style>{`
         .finances-page-v3 {
           min-height: 100vh;
-          background: #0b0e14;
-          color: white;
+          background: var(--bg-deep);
+          color: var(--text-main);
           font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
           position: relative;
           overflow-x: hidden;
@@ -665,7 +665,7 @@ const Finances = () => {
           display: flex;
           flex-direction: column;
           gap: 32px;
-          box-shadow: 0 40px 100px -20px rgba(255, 77, 94, 0.4);
+          box-shadow: 0 30px 60px -15px rgba(255, 77, 94, 0.3);
           position: relative;
           overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.1);
@@ -770,7 +770,7 @@ const Finances = () => {
           font-weight: 900;
           text-transform: uppercase;
           letter-spacing: 0.1rem;
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--bg-hover);
         }
 
         .status-badge-v3 .dot {
@@ -779,12 +779,12 @@ const Finances = () => {
           border-radius: 100px;
         }
 
-        .status-badge-v3.approved { color: #10b981; }
-        .status-badge-v3.approved .dot { background: #10b981; }
-        .status-badge-v3.pending { color: #f59e0b; }
-        .status-badge-v3.pending .dot { background: #f59e0b; }
-        .status-badge-v3.rejected { color: #ef4444; }
-        .status-badge-v3.rejected .dot { background: #ef4444; }
+        .status-badge-v3.approved { color: var(--success); }
+        .status-badge-v3.approved .dot { background: var(--success); }
+        .status-badge-v3.pending { color: var(--warning); }
+        .status-badge-v3.pending .dot { background: var(--warning); }
+        .status-badge-v3.rejected { color: var(--danger); }
+        .status-badge-v3.rejected .dot { background: var(--danger); }
 
         @keyframes float {
           0%, 100% { transform: translateY(0); }

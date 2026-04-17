@@ -180,20 +180,20 @@ const AdminLogin = ({ onAdminLogin }) => {
         .adm-login-wrap {
           width: 100vw; height: 100vh;
           display: flex; align-items: center; justify-content: center;
-          background: #060a12;
+          background: var(--bg-deep);
           position: fixed; top: 0; left: 0; z-index: 9999;
           font-family: 'Inter', sans-serif;
         }
         .adm-login-bg { position: absolute; inset: 0; overflow: hidden; }
         .adm-grid-lines {
           position: absolute; inset: 0;
-          background-image: linear-gradient(rgba(255, 77, 94, 0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 77, 94, 0.04) 1px, transparent 1px);
+          background-image: linear-gradient(rgba(255, 77, 94, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 77, 94, 0.03) 1px, transparent 1px);
           background-size: 60px 60px;
         }
         .adm-glow-orb {
           position: absolute; border-radius: 50%;
-          filter: blur(100px); opacity: 0.15;
+          filter: blur(100px); opacity: 0.06;
         }
         .orb1 { width: 600px; height: 600px; background: #FF4D5E; top: -200px; right: -200px; }
         .orb2 { width: 400px; height: 400px; background: #a855f7; bottom: -150px; left: -150px; }
@@ -201,11 +201,11 @@ const AdminLogin = ({ onAdminLogin }) => {
         .adm-login-card {
           position: relative; z-index: 1;
           width: 420px; padding: 48px 40px;
-          background: rgba(21, 26, 36, 0.85);
+          background: var(--glass);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 77, 94, 0.15);
+          border: 1px solid rgba(255, 77, 94, 0.1);
           border-radius: 20px;
-          box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+          box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.03);
           animation: adminFadeIn 0.6s ease-out;
         }
         @keyframes adminFadeIn {
@@ -216,8 +216,8 @@ const AdminLogin = ({ onAdminLogin }) => {
         .adm-login-badge {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 4px 12px; border-radius: 20px;
-          background: rgba(255, 77, 94, 0.1);
-          border: 1px solid rgba(255, 77, 94, 0.25);
+          background: rgba(255, 77, 94, 0.06);
+          border: 1px solid rgba(255, 77, 94, 0.15);
           font-size: 11px; font-weight: 700;
           color: #FF4D5E; letter-spacing: 1.5px;
           text-transform: uppercase; margin-bottom: 28px;
@@ -226,48 +226,48 @@ const AdminLogin = ({ onAdminLogin }) => {
         .adm-login-logo { text-align: center; margin-bottom: 36px; }
         .adm-login-logo i {
           font-size: 40px; color: #FF4D5E;
-          filter: drop-shadow(0 0 20px rgba(255, 77, 94, 0.5));
+          filter: drop-shadow(0 0 20px rgba(255, 77, 94, 0.2));
           display: block; margin-bottom: 12px;
         }
         .adm-login-logo h1 {
           font-size: 32px; font-weight: 800;
-          letter-spacing: -1.5px; color: #e0e6ed;
+          letter-spacing: -1.5px; color: var(--text-main);
           font-family: 'Outfit', sans-serif;
         }
-        .adm-login-logo p { font-size: 13px; color: #64748b; margin-top: 4px; }
+        .adm-login-logo p { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
 
         .adm-login-form { display: flex; flex-direction: column; gap: 14px; }
 
         .adm-input-wrap {
           position: relative;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid #2a3341;
+          background: var(--bg-hover);
+          border: 1px solid var(--border);
           border-radius: 12px;
           transition: all 0.2s;
         }
         .adm-input-wrap:focus-within {
           border-color: rgba(255, 77, 94, 0.5);
-          background: rgba(255, 77, 94, 0.04);
+          background: rgba(255, 77, 94, 0.03);
           box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.08);
         }
         .adm-inp-icon {
           position: absolute; left: 16px; top: 50%;
           transform: translateY(-50%);
-          color: #64748b; font-size: 14px;
+          color: var(--text-muted); font-size: 14px;
         }
         .adm-input-wrap input {
           width: 100%; padding: 14px 14px 14px 44px;
           background: transparent; border: none;
-          color: #e0e6ed; font-size: 14px;
+          color: var(--text-main); font-size: 14px;
           font-family: 'Inter', sans-serif; outline: none;
         }
-        .adm-input-wrap input::placeholder { color: #4a5568; }
+        .adm-input-wrap input::placeholder { color: var(--text-muted); }
 
         .adm-error-msg {
           display: flex; align-items: center; gap: 8px;
           color: #ff4d4d; font-size: 12px; font-weight: 500;
-          background: rgba(255,77,77,0.08);
-          border: 1px solid rgba(255,77,77,0.2);
+          background: rgba(255,77,77,0.05);
+          border: 1px solid rgba(255,77,77,0.15);
           border-radius: 8px; padding: 10px 14px;
         }
 
@@ -288,17 +288,17 @@ const AdminLogin = ({ onAdminLogin }) => {
 
         .adm-demo-btn {
           padding: 11px; border-radius: 10px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid #2a3341;
-          color: #94a3b8; font-size: 13px; cursor: pointer;
+          background: var(--bg-card-alt);
+          border: 1px solid var(--border);
+          color: var(--text-dim); font-size: 13px; cursor: pointer;
           display: flex; align-items: center; justify-content: center; gap: 8px;
           transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-demo-btn:hover { background: rgba(255,255,255,0.08); color: #e0e6ed; }
+        .adm-demo-btn:hover { background: var(--bg-hover); color: var(--text-main); }
 
         .adm-login-footer {
           margin-top: 28px; text-align: center;
-          font-size: 12px; color: #64748b;
+          font-size: 12px; color: var(--text-muted);
           display: flex; align-items: center; justify-content: center;
         }
       `}</style>

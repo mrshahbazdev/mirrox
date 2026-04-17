@@ -21,7 +21,7 @@ const Dashboard = () => {
 
   if (!prices || prices.length === 0) {
     return (
-      <div style={{ padding: 40, color: '#94a3b8' }}>
+      <div style={{ padding: 40, color: 'var(--text-muted)' }}>
         <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: 8 }}></i>
         Connecting to Trading Server...
       </div>
@@ -95,7 +95,7 @@ const Dashboard = () => {
                   <div className="m-mini-icon">
                     <i className="fa-solid fa-coins"></i>
                   </div>
-                  <span className={`m-mini-change ${parseFloat(sym.change) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  <span className={`m-mini-change ${parseFloat(sym.change) >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
                     {parseFloat(sym.change) >= 0 ? '+' : ''}{sym.change}%
                   </span>
                 </div>
@@ -155,7 +155,7 @@ const Dashboard = () => {
           .chart-viewport-mobile {
             min-height: 520px;
             width: 100%;
-            background: rgba(0,0,0,0.2);
+            background: var(--bg-hover);
             border-radius: 12px;
             overflow: hidden;
           }
@@ -177,13 +177,13 @@ const Dashboard = () => {
 
       <div className="main-column">
         {!isVerified && (
-          <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '12px 16px', borderRadius: '12px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-             <i className="fa-solid fa-triangle-exclamation" style={{ color: '#f59e0b', fontSize: '20px' }}></i>
+          <div style={{ background: 'var(--warning-muted)', border: '1px solid var(--warning)', padding: '12px 16px', borderRadius: '12px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+             <i className="fa-solid fa-triangle-exclamation" style={{ color: 'var(--warning)', fontSize: '20px' }}></i>
              <div style={{ flex: 1 }}>
-                <h4 style={{ color: '#f59e0b', margin: '0 0 4px 0', fontSize: '13px', fontWeight: 800 }}>DEMO ACCOUNT MODE</h4>
-                <p style={{ margin: 0, fontSize: '12px', color: '#fbbf24' }}>Please verify your identity with a valid ID card to unlock Real Trading.</p>
+                <h4 style={{ color: 'var(--warning)', margin: '0 0 4px 0', fontSize: '13px', fontWeight: 800 }}>DEMO ACCOUNT MODE</h4>
+                <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>Please verify your identity with a valid ID card to unlock Real Trading.</p>
              </div>
-             <Link to="/app/documents" style={{ background: '#f59e0b', color: '#fff', padding: '8px 16px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>Verify Now</Link>
+             <Link to="/app/documents" style={{ background: 'var(--warning)', color: '#fff', padding: '8px 16px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>Verify Now</Link>
           </div>
         )}
 
