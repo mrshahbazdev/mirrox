@@ -57,10 +57,11 @@ const CfdList = () => {
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     
                     {/* Tab Navigation */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px', marginBottom: '80px' }}>
+                    <div className="lp-tabs-row" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px', marginBottom: '80px' }}>
                         {tabs.map(tab => (
                             <button 
                                 key={tab.id}
+                                className="lp-tab-pill"
                                 onClick={() => setActiveTab(tab.id)}
                                 style={{ 
                                     padding: '16px 32px', 
@@ -83,7 +84,7 @@ const CfdList = () => {
                     </div>
 
                     {/* Search & Filter Bar */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '24px', marginBottom: '40px', alignItems: 'center' }}>
+                    <div className="lp-search-row" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '24px', marginBottom: '40px', alignItems: 'center' }}>
                          <div style={{ position: 'relative' }}>
                             <Search style={{ position: 'absolute', left: '24px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} size={20} />
                             <input 
@@ -146,7 +147,7 @@ const CfdList = () => {
             {/* THE MIRROX EDGE */}
             <section style={{ background: '#f8fafc', padding: '160px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
+                    <div className="lp-edge-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
                         <div className="lp-content-side">
                              <div className="accent-label" style={{ background: 'var(--pub-red-soft)', color: 'var(--pub-red)', padding: '8px 20px', borderRadius: '100px', display: 'inline-block', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '32px' }}>Institutional Grade</div>
                              <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>The <span style={{ color: 'var(--pub-red)' }}>Mirrox</span> Edge</h2>

@@ -31,7 +31,7 @@ const Commodities = () => {
                 
                 {/* SECTION 1: WHAT IS COMMODITY TRADING */}
                 <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
-                    <div style={{ background: 'white', padding: '24px', borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.06)' }}>
+                    <div className="lp-image-panel" style={{ background: 'white', padding: '24px', borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.06)' }}>
                         <img 
                             src="https://images.unsplash.com/photo-1518544830403-18196e81997d?auto=format&fit=crop&q=80&w=1200" 
                             alt="Global Commodities" 
@@ -70,7 +70,7 @@ const Commodities = () => {
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>Open Live Account</button>
                     </div>
                     <div style={{ order: 1, display: 'flex', justifyContent: 'center' }}>
-                         <div style={{ width: '100%', maxWidth: '340px', height: '640px', background: '#0b0e14', borderRadius: '48px', border: '10px solid #1e293b', boxShadow: '0 40px 100px rgba(0,0,0,0.3)', position: 'relative', overflow: 'hidden' }}>
+                         <div className="lp-phone-mock" style={{ width: '100%', maxWidth: '340px', height: '640px', background: '#0b0e14', borderRadius: '48px', border: '10px solid #1e293b', boxShadow: '0 40px 100px rgba(0,0,0,0.3)', position: 'relative', overflow: 'hidden' }}>
                              <img 
                                 src="https://images.unsplash.com/photo-1524311582025-635e68344f6f?auto=format&fit=crop&q=80&w=600" 
                                 style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} 
