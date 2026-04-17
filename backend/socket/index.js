@@ -52,7 +52,10 @@ module.exports = (io) => {
       return next(new Error('Authentication error: No Token'));
     }
 
-    jwt.verify(token, process.env.JWT_SECRET || 'super_secret_mirrox_key_2026', (err, decoded) => {
+    // JWT_SECRET is guaranteed to be set because server.js aborts boot if it
+    // is missing. Reading from env here keeps the socket layer aligned with
+    // the REST layer; never fall back to a hardcoded literal.
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         console.log('Socket Connection Refused: Invalid Token');
         return next(new Error('Authentication error: Invalid Token'));
@@ -395,8 +398,15 @@ module.exports = (io) => {
       }
     });
 
+    // Socket-level helper. Any admin socket event is gated so that only
+    // authenticated staff (role !== 'user') can invoke it. Previously these
+    // handlers could be triggered by any authenticated client, letting users
+    // manipulate any trade's bias / swap / profit / force-close state.
+    const isAdminSocket = () => socket.decoded?.role && socket.decoded.role !== 'user';
+
     // ADMIN manipulates trade bias (Trend)
     socket.on('admin_set_bias', (data) => {
+      if (!isAdminSocket()) return;
       const { clientId, tradeId, bias, multiplier } = data;
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade) {
@@ -415,6 +425,7 @@ module.exports = (io) => {
 
     // ADMIN legacy support or forced override
     socket.on('admin_set_pl', (data) => {
+      if (!isAdminSocket()) return;
       const { clientId, tradeId, forcedProfit } = data;
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade) {
@@ -429,6 +440,7 @@ module.exports = (io) => {
 
     // ADMIN sets a target closing price (Limit)
     socket.on('admin_set_selected_price', (data) => {
+      if (!isAdminSocket()) return;
       const { clientId, tradeId, selectedPrice } = data;
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade) {
@@ -442,6 +454,7 @@ module.exports = (io) => {
 
     // ADMIN updates swap for a trade (works for both Open and Closed trades)
     socket.on('admin_update_swap', (data) => {
+      if (!isAdminSocket()) return;
       const { clientId, tradeId, swap } = data;
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade) {
@@ -470,6 +483,7 @@ module.exports = (io) => {
 
     // ADMIN forcibly closes a trade
     socket.on('admin_force_close', (data) => {
+      if (!isAdminSocket()) return;
       const { clientId, tradeId } = data;
       const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
       if (trade) {
@@ -582,6 +596,7 @@ module.exports = (io) => {
 
     // Admin closes a ticket — notify user
     socket.on('chat:close_ticket', async ({ ticketId }) => {
+      if (!isAdminSocket()) return;
       try {
         await SupportTicket.findOneAndUpdate({ id: ticketId }, { status: 'closed' });
         io.to(`ticket:${ticketId}`).emit('chat:ticket_closed', { ticketId });
@@ -594,6 +609,7 @@ module.exports = (io) => {
 
     // Admin reopens a ticket
     socket.on('chat:reopen_ticket', async ({ ticketId }) => {
+      if (!isAdminSocket()) return;
       try {
         await SupportTicket.findOneAndUpdate({ id: ticketId }, { status: 'open' });
         io.to(`ticket:${ticketId}`).emit('chat:ticket_reopened', { ticketId });
@@ -605,6 +621,7 @@ module.exports = (io) => {
 
     // Admin blocks a ticket
     socket.on('chat:block_ticket', async ({ ticketId }) => {
+      if (!isAdminSocket()) return;
       try {
         await SupportTicket.findOneAndUpdate({ id: ticketId }, { status: 'blocked' });
         io.to(`ticket:${ticketId}`).emit('chat:ticket_blocked', { ticketId });
@@ -615,9 +632,14 @@ module.exports = (io) => {
       }
     });
 
-    // Admin or User deletes a message
+    // Admin or ticket owner deletes a message. Users may only delete from
+    // tickets they own; admins may delete from any ticket.
     socket.on('chat:delete_message', async ({ ticketId, timestamp }) => {
       try {
+        if (!isAdminSocket()) {
+          const owned = await SupportTicket.exists({ id: ticketId, clientId: socket.decoded.id });
+          if (!owned) return;
+        }
         await SupportTicket.updateOne(
           { id: ticketId },
           { $pull: { messages: { timestamp: new Date(timestamp) } } } // Mongoose handles string dating occasionally, but be safe

@@ -281,7 +281,13 @@ const initializeDB = async () => {
     // Fallback to defaults to prevent server crash
     if (clients.length === 0) clients.push(...defaultClients);
     if (symbolsList.length === 0) symbolsList.push(...defaultSymbols);
-    if (admins.length === 0) admins.push({ email: 'admin@mirrox.com', password: await bcrypt.hash('admin', 10), role: 'admin' });
+    if (admins.length === 0 && process.env.DEFAULT_ADMIN_PASSWORD && process.env.DEFAULT_ADMIN_PASSWORD.length >= 8) {
+      admins.push({
+        email: process.env.DEFAULT_ADMIN_EMAIL || 'admin@mirrox.com',
+        password: await bcrypt.hash(process.env.DEFAULT_ADMIN_PASSWORD, 10),
+        role: 'admin'
+      });
+    }
   }
 };
 
