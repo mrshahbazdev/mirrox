@@ -209,5 +209,3 @@ const HomePublic = () => {
 };
 
 export default HomePublic;
-
-export default HomePublic;

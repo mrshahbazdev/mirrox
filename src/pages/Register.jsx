@@ -123,8 +123,3 @@ const Register = ({ onRegister }) => {
 };
 
 export default Register;
-    </div>
-  );
-};
-
-export default Register;

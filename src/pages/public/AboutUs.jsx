@@ -79,7 +79,7 @@ const AboutUs = () => {
                 {/* --- VALUES SECTION --- */}
                 <section>
                     <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-                        <h2 style={{ textTransform: 'uppercase', tracking: '-1px' }}>Our Core Principles</h2>
+                        <h2 style={{ textTransform: 'uppercase', letterSpacing: '-1px' }}>Our Core Principles</h2>
                     </div>
                     <div className="pub-info-grid">
                         {values.map((val, i) => (
@@ -96,7 +96,7 @@ const AboutUs = () => {
 
                 {/* --- REGULATORY SECTION --- */}
                 <section style={{ background: '#0b0e14', borderRadius: '32px', padding: '64px', color: 'white', marginTop: '80px', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'relative', z-10, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'center' }}>
+                    <div style={{ position: 'relative', zIndex: 10, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'center' }}>
                         <div className="space-y-8">
                             <div style={{ width: '64px', height: '64px', background: 'var(--pub-red)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', marginBottom: '24px' }}>
                                 <Award size={32} />
