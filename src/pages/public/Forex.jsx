@@ -3,19 +3,6 @@ import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap } fro
 
 const Forex = () => {
     const forexPairs = [
-        { symbol: "EURUSD", name: "Euro / US Dollar", spread: "1.2", category: "Majors" },
-        { symbol: "GBPUSD", name: "Great Britain Pound / US Dollar", spread: "1.5", category: "Majors" },
-        { symbol: "USDJPY", name: "US Dollar / Japanese Yen", spread: "1.1", category: "Majors" },
-        { symbol: "USDCAD", name: "US Dollar / Canadian Dollar", spread: "1.8", category: "Majors" },
-        { symbol: "AUDUSD", name: "Australian Dollar / US Dollar", spread: "1.4", category: "Majors" },
-        { symbol: "EURGBP", name: "Euro / Great Britain Pound", spread: "2.1", category: "Minors" },
-        { symbol: "GBPCHF", name: "Great Britain Pound / Swiss Franc", spread: "2.5", category: "Minors" },
-        { symbol: "AUDJPY", name: "Australian Dollar / Japanese Yen", spread: "2.3", category: "Minors" },
-    ];
-
-    return (
-const Forex = () => {
-    const forexPairs = [
         { symbol: "EURUSD", name: "Euro / US Dollar", spread: "0.2", category: "Majors" },
         { symbol: "GBPUSD", name: "Great Britain Pound / US Dollar", spread: "0.5", category: "Majors" },
         { symbol: "USDJPY", name: "US Dollar / Japanese Yen", spread: "0.4", category: "Majors" },
@@ -151,8 +138,6 @@ const Forex = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

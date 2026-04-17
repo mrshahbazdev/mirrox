@@ -162,5 +162,3 @@ const TradingCentral = () => {
 };
 
 export default TradingCentral;
-
-export default TradingCentral;

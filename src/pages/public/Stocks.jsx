@@ -13,19 +13,6 @@ const Stocks = () => {
         { symbol: "NFLX", name: "Netflix Inc.", spread: "0.7", category: "Media" },
     ];
 
-    return (
-const Stocks = () => {
-    const stockData = [
-        { symbol: "AAPL", name: "Apple Inc.", spread: "0.2", category: "Tech" },
-        { symbol: "AMZN", name: "Amazon.com Inc.", spread: "0.5", category: "Retail" },
-        { symbol: "GOOGL", name: "Alphabet Inc.", spread: "0.4", category: "Tech" },
-        { symbol: "MSFT", name: "Microsoft Corp.", spread: "0.3", category: "Tech" },
-        { symbol: "META", name: "Meta Platforms Inc.", spread: "0.6", category: "Social" },
-        { symbol: "TSLA", name: "Tesla Inc.", spread: "0.8", category: "Auto" },
-        { symbol: "NVDA", name: "NVIDIA Corp.", spread: "0.5", category: "Tech" },
-        { symbol: "NFLX", name: "Netflix Inc.", spread: "0.7", category: "Media" },
-    ];
-
     const navigate = (path) => { window.location.href = path; };
 
     return (
@@ -147,8 +134,6 @@ const Stocks = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

@@ -115,7 +115,5 @@ const MarketHolidays = () => {
         </div>
     );
 };
-    );
-};
 
 export default MarketHolidays;

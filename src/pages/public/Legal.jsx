@@ -13,15 +13,6 @@ const Legal = () => {
     ];
 
     return (
-const Legal = () => {
-    const docs = [
-        "CLIENT AGREEMENT", "PRIVACY POLICY", "BONUS TERMS", 
-        "AML POLICY", "GENERAL FEES", "COMPLAINTS HANDLING PROCEDURE",
-        "RISK DISCLOSURE", "MARGIN INFORMATION", "TERMS OF USE",
-        "REFUND & CANCELLATION", "RENEWAL CERTIFICATE"
-    ];
-
-    return (
         <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero">
@@ -67,8 +58,6 @@ const Legal = () => {
                  </div>
             </div>
         </div>
-    );
-};
     );
 };
 

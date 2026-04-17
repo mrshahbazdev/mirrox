@@ -22,28 +22,6 @@ const Glossary = () => {
         { term: "Available", def: "The amount of funds available to open new positions after accounting for margin requirements." }
     ];
 
-    // Filter logic placeholder (normally we'd filter by activeLetter)
-    const filteredTerms = activeLetter === 'A' ? glossaryTerms : [];
-
-    return (
-const Glossary = () => {
-    const [activeLetter, setActiveLetter] = useState('A');
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-    const glossaryTerms = [
-        { term: "Algorithmic Trading", def: "Automated trading using algorithms (known as 'bots') to execute trades at high speed." },
-        { term: "Analysis (Technical/Fundamental)", def: "Technical uses historical price charts, while Fundamental analyzes economic indicators." },
-        { term: "Appreciation", def: "An increase in the value of an asset. Essential for profit in long positions." },
-        { term: "Arbitrage", def: "The practice of taking advantage of a price difference between two or more markets." },
-        { term: "Ask Price", def: "The price at which a trader can buy an asset in the market." },
-        { term: "Ask Spread", def: "The difference between the bid (buy) and ask (sell) prices, reflecting the cost of trading." },
-        { term: "Asset", def: "Anything of value that can be traded, including currencies, stocks, indices, and commodities." },
-        { term: "ATR (Average True Range)", def: "A technical indicator used to measure market volatility by averaging the range of price movements." },
-        { term: "Aussie", def: "An informal name for the Australian Dollar (AUD)." },
-        { term: "Automated Trading", def: "Trading systems that automatically generate and execute buy/sell orders based on pre-set rules." },
-        { term: "Available", def: "The amount of funds available to open new positions after accounting for margin requirements." }
-    ];
-
     const filteredTerms = activeLetter === 'A' ? glossaryTerms : [];
 
     return (
@@ -130,8 +108,6 @@ const Glossary = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

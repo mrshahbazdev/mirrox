@@ -13,19 +13,6 @@ const Metals = () => {
         { symbol: "ZINC", name: "Zinc", spread: "1.0", category: "Industrial" },
     ];
 
-    return (
-const Metals = () => {
-    const metalData = [
-        { symbol: "XAUUSD", name: "Gold / US Dollar", spread: "0.25", category: "Precious" },
-        { symbol: "XAGUSD", name: "Silver / US Dollar", spread: "0.015", category: "Precious" },
-        { symbol: "XPTUSD", name: "Platinum / US Dollar", spread: "1.5", category: "Precious" },
-        { symbol: "XPDUSD", name: "Palladium / US Dollar", spread: "3.2", category: "Precious" },
-        { symbol: "ALU", name: "Aluminum", spread: "0.5", category: "Industrial" },
-        { symbol: "COPPER", name: "Copper", spread: "0.002", category: "Industrial" },
-        { symbol: "NICKEL", name: "Nickel", spread: "2.5", category: "Industrial" },
-        { symbol: "ZINC", name: "Zinc", spread: "1.0", category: "Industrial" },
-    ];
-
     const navigate = (path) => { window.location.href = path; };
 
     return (
@@ -147,8 +134,6 @@ const Metals = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

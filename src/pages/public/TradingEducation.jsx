@@ -146,5 +146,3 @@ const TradingEducation = () => {
 };
 
 export default TradingEducation;
-
-export default TradingEducation;

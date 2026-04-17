@@ -13,19 +13,6 @@ const Indices = () => {
         { symbol: "ESP35", name: "Spain 35 (IBEX)", spread: "2.0", category: "Europe" },
     ];
 
-    return (
-const Indices = () => {
-    const indicesData = [
-        { symbol: "US500", name: "S&P 500 Index", spread: "0.5", category: "USA" },
-        { symbol: "US30", name: "Wall Street 30 (Dow Jones)", spread: "1.2", category: "USA" },
-        { symbol: "USTEC", name: "US Tech 100 (Nasdaq)", spread: "0.8", category: "USA" },
-        { symbol: "GER40", name: "Germany 40 (DAX)", spread: "1.0", category: "Europe" },
-        { symbol: "UK100", name: "UK 100 (FTSE)", spread: "0.9", category: "Europe" },
-        { symbol: "JPN225", name: "Japan 225 (Nikkei)", spread: "1.5", category: "Asia" },
-        { symbol: "F40", name: "France 40 (CAC)", spread: "1.1", category: "Europe" },
-        { symbol: "ESP35", name: "Spain 35 (IBEX)", spread: "2.0", category: "Europe" },
-    ];
-
     const navigate = (path) => { window.location.href = path; };
 
     return (
@@ -147,8 +134,6 @@ const Indices = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

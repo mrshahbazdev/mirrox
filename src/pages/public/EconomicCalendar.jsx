@@ -51,7 +51,5 @@ const EconomicCalendar = () => {
         </div>
     );
 };
-    );
-};
 
 export default EconomicCalendar;

@@ -176,21 +176,4 @@ const SwapFees = () => {
     );
 };
 
-            {/* --- FINAL CTA --- */}
-            <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
-                <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
-                </div>
-            </section>
-
-             <footer style={{ textAlign: 'center', paddingBottom: '64px' }}>
-                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    NOTE: SWAP RATES ARE SUBJECT TO MARKET VOLATILITY AND LIQUIDITY PROVIDER ADJUSTMENTS.
-                </p>
-            </footer>
-        </div>
-    );
-};
-
 export default SwapFees;

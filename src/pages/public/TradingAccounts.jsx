@@ -18,22 +18,6 @@ const TradingAccounts = () => {
     ];
 
     const accountNames = ["Classic", "Silver", "Gold", "Platinum", "VIP"];
-
-    return (
-const TradingAccounts = () => {
-    const tableData = [
-        { label: "Base currency", values: ["USD", "USD", "USD", "USD", "USD"] },
-        { label: "CFDs", values: ["160+", "160+", "160+", "160+", "160+"] },
-        { label: "Margin Call", values: ["100%", "100%", "100%", "100%", "100%"] },
-        { label: "Stop out", values: ["35%", "35%", "35%", "35%", "35%"] },
-        { label: "Swap Discount", values: ["Basic", "Medium", "High", "Variable", "Variable"] },
-        { label: "Free Support", values: [true, true, true, true, true] },
-        { label: "Free Education", values: [true, true, true, true, true] },
-        { label: "Spread Starting From", values: ["3.8", "2.8", "1.8", "1.4", "0.0"] },
-        { label: "Improved Spread Promotion", values: [true, true, true, true, true] },
-    ];
-
-    const accountNames = ["Classic", "Silver", "Gold", "Platinum", "VIP"];
     const navigate = (path) => { window.location.href = path; };
 
     return (
@@ -157,8 +141,6 @@ const TradingAccounts = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

@@ -13,15 +13,7 @@ const HomePublic = () => {
         { symbol: "US500", name: "S&P 500 Index", price: "5,123.32", change: "+1.22%", up: true },
     ];
 
-    return (
-const HomePublic = () => {
-    const navigate = useNavigate();
-    const marketAssets = [
-        { symbol: "EURUSD", name: "Euro / US Dollar", price: "1.0842", change: "+0.15%", up: true },
-        { symbol: "XAUUSD", name: "Gold / US Dollar", price: "2,354.20", change: "-0.45%", up: false },
-        { symbol: "BTCUSD", name: "Bitcoin / US Dollar", price: "64,230.50", change: "+2.41%", up: true },
-        { symbol: "US500", name: "S&P 500 Index", price: "5,123.32", change: "+1.22%", up: true },
-    ];
+    const navigate = (path) => { window.location.href = path; };
 
     return (
         <div className="lp-wrapper">
@@ -212,8 +204,6 @@ const HomePublic = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

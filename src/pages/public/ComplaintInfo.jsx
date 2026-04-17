@@ -6,8 +6,7 @@ import {
 } from 'lucide-react';
 
 const ComplaintInfo = () => {
-    return (
-const ComplaintInfo = () => {
+    const navigate = (path) => { window.location.href = path; };
     return (
         <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
@@ -151,8 +150,6 @@ const ComplaintInfo = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

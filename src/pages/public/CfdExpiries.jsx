@@ -133,7 +133,5 @@ const CfdExpiries = () => {
         </div>
     );
 };
-    );
-};
 
 export default CfdExpiries;

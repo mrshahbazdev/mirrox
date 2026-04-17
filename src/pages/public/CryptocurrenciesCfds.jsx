@@ -13,19 +13,6 @@ const CryptocurrenciesCfds = () => {
         { symbol: "DOTUSD", name: "Polkadot", spread: "0.1", category: "Altcoins" },
     ];
 
-    return (
-const CryptocurrenciesCfds = () => {
-    const cryptoData = [
-        { symbol: "BTCUSD", name: "Bitcoin", spread: "2.5", category: "Majors" },
-        { symbol: "ETHUSD", name: "Ethereum", spread: "1.2", category: "Majors" },
-        { symbol: "XRPUSD", name: "Ripple", spread: "0.005", category: "Altcoins" },
-        { symbol: "LTCUSD", name: "Litecoin", spread: "0.15", category: "Altcoins" },
-        { symbol: "DOGEUSD", name: "Dogecoin", spread: "0.0001", category: "Altcoins" },
-        { symbol: "ADAUSD", name: "Cardano", spread: "0.01", category: "Altcoins" },
-        { symbol: "SOLUSD", name: "Solana", spread: "0.25", category: "Altcoins" },
-        { symbol: "DOTUSD", name: "Polkadot", spread: "0.1", category: "Altcoins" },
-    ];
-
     const navigate = (path) => { window.location.href = path; };
 
     return (
@@ -147,8 +134,6 @@ const CryptocurrenciesCfds = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

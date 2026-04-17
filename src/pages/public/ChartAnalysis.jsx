@@ -3,8 +3,6 @@ import { Lock, ArrowRight, Shield, Zap, BarChart3, TrendingUp } from 'lucide-rea
 
 const ChartAnalysis = () => {
     return (
-const ChartAnalysis = () => {
-    return (
         <div className="lp-wrapper">
             
             {/* --- BLURRED BACKGROUND MOCKUP --- */}
@@ -43,8 +41,6 @@ const ChartAnalysis = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

@@ -13,19 +13,6 @@ const Commodities = () => {
         { symbol: "SUGAR", name: "Sugar", spread: "0.05", category: "Agriculture" },
     ];
 
-    return (
-const Commodities = () => {
-    const commodityPairs = [
-        { symbol: "BRENT", name: "Brent Crude Oil", spread: "0.03", category: "Energy" },
-        { symbol: "WTI", name: "Crude Oil (WTI)", spread: "0.03", category: "Energy" },
-        { symbol: "NGAS", name: "Natural Gas", spread: "0.005", category: "Energy" },
-        { symbol: "GOLD", name: "Gold (Commodity)", spread: "0.45", category: "Metals" },
-        { symbol: "SILVER", name: "Silver (Commodity)", spread: "0.03", category: "Metals" },
-        { symbol: "COPPER", name: "Copper", spread: "0.002", category: "Metals" },
-        { symbol: "WHEAT", name: "Wheat", spread: "0.50", category: "Agriculture" },
-        { symbol: "SUGAR", name: "Sugar", spread: "0.05", category: "Agriculture" },
-    ];
-
     const navigate = (path) => { window.location.href = path; };
 
     return (
@@ -155,8 +142,6 @@ const Commodities = () => {
                 </div>
             </section>
         </div>
-    );
-};
     );
 };
 

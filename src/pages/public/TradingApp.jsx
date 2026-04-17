@@ -136,5 +136,3 @@ const TradingApp = () => {
 };
 
 export default TradingApp;
-
-export default TradingApp;

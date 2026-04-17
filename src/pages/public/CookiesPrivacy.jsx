@@ -112,7 +112,5 @@ const CookiesPrivacy = () => {
         </div>
     );
 };
-    );
-};
 
 export default CookiesPrivacy;

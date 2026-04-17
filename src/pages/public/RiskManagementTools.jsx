@@ -141,7 +141,5 @@ const RiskManagementTools = () => {
         </div>
     );
 };
-    );
-};
 
 export default RiskManagementTools;
