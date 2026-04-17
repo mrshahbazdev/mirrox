@@ -1,87 +1,41 @@
 import React from 'react';
 import { 
-    Download, Mail, ShieldCheck, ArrowRight, Smartphone, 
-    CheckCircle2, Globe, QrCode
+    Smartphone, ShieldCheck, Zap, 
+    TrendingUp, BarChart2, CheckCircle2,
+    ArrowRight, Globe, PlayCircle, Apple, QrCode
 } from 'lucide-react';
 
 const TradingApp = () => {
-    const steps = [
-        {
-            title: "Visit application page on Firebase",
-            desc: "Start by navigating to our official application distribution page on Firebase.",
-            side: "left",
-            image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=500"
-        },
-        {
-            title: "Sign up with your email",
-            desc: "Register with your trading email to be added to our authorized user list for app access.",
-            side: "right",
-            image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500"
-        },
-        {
-            title: "Check your email for invitation",
-            desc: "Look for an invitation link sent by Firebase to your inbox and accept it to proceed.",
-            side: "left",
-            image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=500"
-        },
-        {
-            title: "Enable unknown sources",
-            desc: "Open your device settings and allow installations from unknown sources to install the tester.",
-            side: "right",
-            image: null
-        },
-        {
-            title: "Download App Tester",
-            desc: "Accept the invitation, download App Tester, and use Firebase Distribution to get the Mirrox app.",
-            side: "left",
-            image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=500"
-        },
-        {
-            title: "Install & Start Trading",
-            desc: "Follow the prompts to install the Mirrox app and begin your premium trading experience.",
-            side: "right",
-            image: "https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=500"
-        }
-    ];
-
-    return (
-const TradingApp = () => {
-    const navigate = useNavigate();
+    const navigate = (path) => { window.location.href = path; };
     const steps = [
         {
             title: "Visit Firebase Distribution",
             desc: "Start by navigating to our official application distribution page on Firebase to access the secure beta environment.",
-            side: "left",
             image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=500"
         },
         {
             title: "Authorize Email",
             desc: "Register with your trading email to be added to our authorized user list for seamless app access and security.",
-            side: "right",
             image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500"
         },
         {
             title: "Accept Invitation",
             desc: "Look for an invitation link sent by Firebase to your inbox and accept it to proceed to the download phase.",
-            side: "left",
             image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=500"
         },
         {
             title: "Configuration",
             desc: "Open your device settings and allow installations from unknown sources to install the tester application.",
-            side: "right",
             image: null
         },
         {
             title: "Download Tester",
             desc: "Download the App Tester and use the Firebase Distribution platform to get the Mirrox trading app.",
-            side: "left",
             image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=500"
         },
         {
             title: "Launch & Trade",
             desc: "Follow the prompts to install the Mirrox app and begin your premium mobile trading experience.",
-            side: "right",
             image: "https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=500"
         }
     ];
@@ -107,10 +61,7 @@ const TradingApp = () => {
                             alignItems: 'center' 
                         }}>
                             {/* Image Side */}
-                            <div style={{ 
-                                order: step.side === 'right' ? 2 : 1,
-                                position: 'relative'
-                            }}>
+                            <div style={{ order: i % 2 === 0 ? 1 : 2, position: 'relative' }}>
                                 {step.image ? (
                                     <div style={{ padding: '24px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '48px', boxShadow: '0 40px 100px rgba(0,0,0,0.06)' }}>
                                         <img 
@@ -143,7 +94,7 @@ const TradingApp = () => {
                             </div>
 
                             {/* Content Side */}
-                            <div className="lp-content-side" style={{ order: step.side === 'right' ? 1 : 2 }}>
+                            <div className="lp-content-side" style={{ order: i % 2 === 0 ? 2 : 1 }}>
                                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'var(--pub-red-soft)', color: 'var(--pub-red)', padding: '10px 24px', borderRadius: '100px', fontSize: '12px', fontWeight: '900', marginBottom: '32px', letterSpacing: '0.1em' }}>
                                     PHASE 0{i + 1}
                                 </div>
@@ -155,7 +106,7 @@ const TradingApp = () => {
                                 </p>
                                 {i === 0 && (
                                     <div style={{ display: 'flex', gap: '16px', marginTop: '40px' }}>
-                                        <button className="lp-btn-primary">Go to Firebase</button>
+                                        <button className="lp-btn-primary" onClick={() => window.open('https://firebase.google.com/products/app-distribution')}>Go to Firebase</button>
                                         <div style={{ width: '56px', height: '56px', background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <QrCode size={24} style={{ color: '#94a3b8' }} />
                                         </div>
@@ -183,7 +134,7 @@ const TradingApp = () => {
         </div>
     );
 };
-    );
-};
+
+export default TradingApp;
 
 export default TradingApp;

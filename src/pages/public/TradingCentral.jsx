@@ -9,10 +9,6 @@ const TradingCentral = () => {
     const navigate = (path) => { window.location.href = path; };
 
     return (
-const TradingCentral = () => {
-    const navigate = (path) => { window.location.href = path; };
-
-    return (
         <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero" style={{ padding: '120px 24px', textAlign: 'left', minHeight: '60vh' }}>
@@ -114,7 +110,7 @@ const TradingCentral = () => {
                              <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '24px', height: '100%' }}>
                                 <h3 style={{ fontSize: '20px', fontWeight: '900', textTransform: 'uppercase' }}>Global Support</h3>
                                 <p style={{ opacity: 0.9, lineHeight: '1.7', fontSize: '15px' }}>Experience professional account management and dedicated technical support available at all times.</p>
-                                <button className="lp-cta-white" style={{ marginTop: 'auto', alignSelf: 'flex-start' }}>Contact Agent</button>
+                                <button className="lp-cta-white" style={{ marginTop: 'auto', alignSelf: 'flex-start' }} onClick={() => navigate('/contact-us')}>Contact Agent</button>
                              </div>
                              <Headphones size={200} style={{ position: 'absolute', bottom: '-80px', right: '-40px', opacity: 0.15, pointerEvents: 'none' }} />
                         </div>
@@ -143,7 +139,7 @@ const TradingCentral = () => {
                          ))}
                     </div>
                     <div style={{ textAlign: 'center', marginTop: '100px' }}>
-                         <button className="lp-btn-primary" style={{ padding: '20px 60px' }}>Create Your Account</button>
+                         <button className="lp-btn-primary" style={{ padding: '20px 60px' }} onClick={() => navigate('/register')}>Create Your Account</button>
                     </div>
                 </div>
             </section>
@@ -164,7 +160,7 @@ const TradingCentral = () => {
         </div>
     );
 };
-    );
-};
+
+export default TradingCentral;
 
 export default TradingCentral;

@@ -5,32 +5,7 @@ import {
 } from 'lucide-react';
 
 const WebTrader = () => {
-    const features = [
-        {
-            icon: <Layout className="text-[#FF4D5E]" size={24} />,
-            title: "Customizable Interface",
-            desc: "Tailor your trading environment to your preferences with flexible interface options. Create a workspace that enhances efficiency."
-        },
-        {
-            icon: <BarChart className="text-[#FF4D5E]" size={24} />,
-            title: "Precise Visual Analytics",
-            desc: "Use detailed charts and a variety of analytical tools to make data-driven decisions and create more effective strategies."
-        },
-        {
-            icon: <Headphones className="text-[#FF4D5E]" size={24} />,
-            title: "Strong Support",
-            desc: "Enjoy specialized customer support for any trading-related inquiries. Our skilled team is eager to assist and ensure effectiveness."
-        },
-        {
-            icon: <Cpu className="text-[#FF4D5E]" size={24} />,
-            title: "Extensive Trading Tools",
-            desc: "Get access to a range of trading tools, including real-time rate streaming, stop-loss/take-profit choices, and extensive charting."
-        }
-    ];
-
-    return (
-const WebTrader = () => {
-    const navigate = useNavigate();
+    const navigate = (path) => { window.location.href = path; };
     const features = [
         {
             icon: <Layout size={28} />,
@@ -117,7 +92,7 @@ const WebTrader = () => {
                     <div className="lp-grid">
                         {features.map((f, i) => (
                             <div key={i} className="lp-card">
-                                <div className="lp-icon-box">
+                                <div className="lp-icon-box" style={{ color: 'var(--pub-red)' }}>
                                     {f.icon}
                                 </div>
                                 <h3 style={{ textTransform: 'uppercase', fontSize: '20px' }}>{f.title}</h3>
@@ -142,8 +117,6 @@ const WebTrader = () => {
                 </p>
             </footer>
         </div>
-    );
-};
     );
 };
 
