@@ -613,7 +613,7 @@ export default function SupportChat({ onAdminLogout }) {
                           </div>
                         )}
                         <div className="support-msg-bubble-wrap">
-                          <div className={`chat-msg-bubble ${isAdmin ? 'admin' : 'user'}`}>
+                          <div className={`chat-msg-bubble ${isAdmin ? 'user' : 'admin'}`}>
                             {msg.attachment && (
                               <div className="support-attachment-preview" onClick={() => setActiveZoomImage(msg.attachment)} style={{ cursor: 'zoom-in' }}>
                                 <img src={msg.attachment} alt="Attachment" style={{ maxWidth: '100%', borderRadius: '8px', marginBottom: msg.text ? '8px' : '0' }} />
@@ -654,7 +654,7 @@ export default function SupportChat({ onAdminLogout }) {
                     {selectedTicket.clientName?.[0]?.toUpperCase() || 'C'}
                   </div>
                   <div className="support-msg-bubble-wrap">
-                    <div className="chat-msg-bubble user typing-preview">
+                    <div className="chat-msg-bubble admin typing-preview">
                       {userTypingText}
                       <span className="typing-cursor" />
                     </div>
@@ -732,7 +732,7 @@ export default function SupportChat({ onAdminLogout }) {
                   {showEmoji && (
                     <div className="support-emoji-container">
                       <EmojiPicker 
-                        theme={Theme.DARK}
+                        theme={Theme.LIGHT}
                         onEmojiClick={onAdminEmojiClick}
                         width={300}
                         height={400}

@@ -1579,10 +1579,15 @@ body {
 }
 .chat-msg-bubble.user {
   background: var(--accent-gradient);
-  color: #fff;
+  color: #ffffff;
   border-bottom-right-radius: 4px;
 }
-.chat-msg-bubble.admin { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+.chat-msg-bubble.admin { 
+  background: var(--bg-card); 
+  color: var(--text-main); 
+  border: 1px solid var(--border); 
+  border-bottom-left-radius: 4px; 
+}
 
 .chat-msg-bubble img,
 .support-msg-bubble-wrap img {
@@ -2027,6 +2032,16 @@ body {
   background: rgba(255, 77, 94, 0.1); color: #FF4D5E;
   padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255, 77, 94, 0.2);
   margin-left: 8px;
+}
+
+/* Ensure support chat bubbles specifically are always high contrast */
+.support-messages-area .chat-msg-bubble.admin {
+  background: var(--bg-card);
+  color: var(--text-main) !important;
+}
+.support-messages-area .chat-msg-bubble.user {
+  background: var(--accent-gradient);
+  color: #ffffff !important;
 }
 
 /* Modal Styling */
