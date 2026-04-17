@@ -76,7 +76,7 @@ const CfdExpiries = () => {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px' }}>
                         {/* Effortless Trading */}
-                        <div style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
+                        <div className="lp-feature-card" style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
                              <div style={{ color: 'var(--pub-red)', marginBottom: '32px' }}><Layout size={32} /></div>
                              <h3 style={{ fontSize: '22px', fontWeight: '900', color: '#111', marginBottom: '32px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Elite Platform</h3>
                              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -89,7 +89,7 @@ const CfdExpiries = () => {
                         </div>
 
                         {/* Regulated & Secure */}
-                        <div style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
+                        <div className="lp-feature-card" style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
                              <div style={{ color: 'var(--pub-red)', marginBottom: '32px' }}><Shield size={32} /></div>
                              <h3 style={{ fontSize: '22px', fontWeight: '900', color: '#111', marginBottom: '32px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Hardened Security</h3>
                              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -102,7 +102,7 @@ const CfdExpiries = () => {
                         </div>
 
                         {/* Dedicated Support */}
-                        <div style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
+                        <div className="lp-feature-card" style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
                              <div style={{ color: 'var(--pub-red)', marginBottom: '32px' }}><Headphones size={32} /></div>
                              <h3 style={{ fontSize: '22px', fontWeight: '900', color: '#111', marginBottom: '32px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Expert Support</h3>
                              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

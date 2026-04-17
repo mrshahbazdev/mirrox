@@ -31,7 +31,7 @@ const CryptocurrenciesCfds = () => {
                 
                 {/* SECTION 1: WHAT IS CRYPTO TRADING */}
                 <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
-                    <div style={{ background: 'white', padding: '24px', borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.06)' }}>
+                    <div className="lp-image-panel" style={{ background: 'white', padding: '24px', borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.06)' }}>
                         <img 
                             src="https://images.unsplash.com/photo-1518544830403-18196e81997d?auto=format&fit=crop&q=80&w=1200" 
                             alt="Digital Assets" 
@@ -70,7 +70,7 @@ const CryptocurrenciesCfds = () => {
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>Launch Terminal</button>
                     </div>
                     <div style={{ order: 1 }}>
-                        <div style={{ background: '#0b0e14', padding: '32px', borderRadius: '56px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 40px 100px rgba(0,0,0,0.3)' }}>
+                        <div className="lp-image-panel" style={{ background: '#0b0e14', padding: '32px', borderRadius: '56px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 40px 100px rgba(0,0,0,0.3)' }}>
                             <img 
                                 src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?auto=format&fit=crop&q=80&w=1200" 
                                 alt="Network Analysis" 
