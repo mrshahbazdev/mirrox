@@ -130,13 +130,13 @@ export default function Tool() {
   // Handlers
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => { setImage(URL.createObjectURL(file)); setBase64Image(reader.result.split(',')[1]); };
-    reader.readAsDataURL(file);
-  };
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onloadend = () => { setImage(URL.createObjectURL(file)); setBase64Image(reader.result.split(',')[1]); };
+                    reader.readAsDataURL(file);
+                  };
 
-  const generateUI = async (retryCount = 0) => {
+                  const generateUI = async (retryCount = 0) => {
     if (!apiKey) { setShowSettings(true); return; }
     setIsLoading(true); setError(null);
     const parts = [{ text: `Generate ${variationCount} layouts. App: ${preset || 'Professional UI'}. Prompt: ${prompt}. Mode: ${techTarget}.` }];

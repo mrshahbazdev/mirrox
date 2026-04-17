@@ -50,29 +50,36 @@ const Faq = () => {
     const [openIndex, setOpenIndex] = useState(0);
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="lp-wrapper">
             {/* HERO SECTION */}
-            <section className="bg-[#FF4D5E] py-24 md:py-32 px-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                <div className="relative z-10">
-                    <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">Mirrox Help Center</h1>
-                    <p className="text-rose-100 text-lg md:text-xl font-medium max-w-2xl mx-auto opacity-90">
-                        All Your Trading Information in One Place. Find answers to your most common questions.
+            <section className="pub-content-hero">
+                <div className="relative z-10 max-w-4xl mx-auto text-center">
+                    <h1>Mirrox <span style={{ color: 'var(--pub-red)' }}>Help Center</span></h1>
+                    <p style={{ margin: '0 auto', maxWidth: '800px' }}>
+                        All the information you need to master your trading experience in one place.
                     </p>
                 </div>
                 
                 {/* Horizontal Tabs Area */}
-                <div className="relative z-20 mt-16 max-w-6xl mx-auto">
-                    <div className="flex overflow-x-auto no-scrollbar gap-2 justify-start md:justify-center p-2 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+                <div style={{ marginTop: '64px', maxWidth: '1200px', margin: '64px auto 0 auto', padding: '0 24px' }}>
+                    <div style={{ display: 'flex', overflowX: 'auto', gap: '8px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }} className="no-scrollbar">
                         {Object.keys(FAQ_DATA).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => { setActiveTab(tab); setOpenIndex(0); }}
-                                className={`px-6 py-3 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 ${
-                                    activeTab === tab 
-                                    ? "bg-white text-[#FF4D5E] shadow-xl" 
-                                    : "text-white hover:bg-white/10"
-                                }`}
+                                style={{ 
+                                    padding: '12px 24px', 
+                                    borderRadius: '16px', 
+                                    fontSize: '12px', 
+                                    fontWeight: '900', 
+                                    textTransform: 'uppercase', 
+                                    whiteSpace: 'nowrap', 
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s',
+                                    background: activeTab === tab ? 'white' : 'transparent',
+                                    color: activeTab === tab ? 'var(--pub-red)' : 'white'
+                                }}
                             >
                                 {tab}
                             </button>
@@ -81,118 +88,113 @@ const Faq = () => {
                 </div>
             </section>
 
-            {/* ACCORDION SECTION */}
-            <section className="max-w-4xl mx-auto px-6 py-24">
-                <h2 className="text-3xl font-black text-gray-900 mb-12 flex items-center gap-4">
-                    {activeTab}
-                </h2>
-                
-                <div className="space-y-4">
-                    {FAQ_DATA[activeTab].map((item, idx) => (
-                        <div 
-                            key={idx} 
-                            className={`border rounded-2xl transition-all duration-300 ${
-                                openIndex === idx ? "border-[#FF4D5E] bg-red-50/10 shadow-sm" : "border-gray-100 hover:border-gray-200"
-                            }`}
-                        >
-                            <button 
-                                onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
-                                className="w-full text-left px-8 py-6 flex items-center justify-between group"
+            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '80px' }}>
+                {/* ACCORDION SECTION */}
+                <section style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+                    <h2 style={{ fontSize: '32px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '48px', color: '#1a1a1a', textAlign: 'center' }}>
+                        {activeTab}
+                    </h2>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {FAQ_DATA[activeTab].map((item, idx) => (
+                            <div 
+                                key={idx} 
+                                style={{ 
+                                    borderRadius: '24px', 
+                                    border: openIndex === idx ? '1px solid var(--pub-red)' : '1px solid #e2e8f0',
+                                    background: 'white',
+                                    overflow: 'hidden',
+                                    transition: 'all 0.3s'
+                                }}
                             >
-                                <span className={`font-bold text-lg md:text-xl transition-colors ${openIndex === idx ? "text-[#FF4D5E]" : "text-gray-900"}`}>
-                                    {item.q}
-                                </span>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${openIndex === idx ? "bg-[#FF4D5E] text-white rotate-180" : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"}`}>
-                                    {openIndex === idx ? <Minus size={18} /> : <Plus size={18} />}
-                                </div>
-                            </button>
-                            
-                            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${openIndex === idx ? "max-height-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
-                                <div className="px-8 pb-8 text-gray-600 text-lg leading-relaxed">
-                                    {item.a}
-                                </div>
+                                <button 
+                                    onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
+                                    style={{ 
+                                        width: '100%', 
+                                        textAlign: 'left', 
+                                        padding: '24px 32px', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'space-between', 
+                                        background: 'none', 
+                                        border: 'none', 
+                                        cursor: 'pointer' 
+                                    }}
+                                >
+                                    <span style={{ 
+                                        fontSize: '18px', 
+                                        fontWeight: '900', 
+                                        textTransform: 'uppercase', 
+                                        transition: 'color 0.3s',
+                                        color: openIndex === idx ? 'var(--pub-red)' : '#1a1a1a'
+                                    }}>
+                                        {item.q}
+                                    </span>
+                                    <div style={{ 
+                                        width: '40px', 
+                                        height: '40px', 
+                                        background: openIndex === idx ? 'var(--pub-red)' : '#f8fafc',
+                                        color: openIndex === idx ? 'white' : '#94a3b8',
+                                        borderRadius: '100px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        transition: 'all 0.3s'
+                                    }}>
+                                        {openIndex === idx ? <Minus size={20} /> : <Plus size={20} />}
+                                    </div>
+                                </button>
+                                
+                                {openIndex === idx && (
+                                    <div style={{ padding: '0 32px 32px 32px', color: 'var(--pub-text-muted)', fontSize: '16px', lineHeight: '1.6' }}>
+                                        {item.a}
+                                    </div>
+                                )}
                             </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* HAVE MORE QUESTIONS SECTION */}
-            <section className="px-6 pb-24">
-                <div className="max-w-6xl mx-auto bg-gradient-to-r from-[#FF4D5E] to-[#FF6B6B] rounded-[3rem] overflow-hidden shadow-2xl flex flex-col md:flex-row items-center">
-                    <div className="flex-1 p-12 md:p-20 text-center md:text-left">
-                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Have More Questions?</h2>
-                        <p className="text-rose-100 text-lg mb-10 opacity-90">Our support team is here for you 24/7. Get in touch with us anytime.</p>
-                        <button className="bg-white text-[#FF4D5E] px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:scale-105 transition-transform">
-                            Get In Touch
-                        </button>
+                        ))}
                     </div>
-                    {/* Visual UI Mockup Placeholder */}
-                    <div className="flex-1 p-8 hidden md:block">
-                        <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-8 transform rotate-3 scale-110">
-                            <div className="space-y-4">
-                                <div className="h-4 bg-white/20 rounded w-3/4"></div>
-                                <div className="h-4 bg-white/20 rounded w-1/2"></div>
-                                <div className="grid grid-cols-3 gap-4 mt-8">
-                                    <div className="h-20 bg-white/10 rounded-xl border border-white/10"></div>
-                                    <div className="h-20 bg-white/10 rounded-xl border border-white/10"></div>
-                                    <div className="h-20 bg-white/10 rounded-xl border border-white/10"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            {/* 3 EASY STEPS */}
-            <section className="py-24 bg-gray-50 border-y border-gray-100">
-                <div className="max-w-6xl mx-auto px-6 text-center">
-                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-6">Open Your Account in 3 Easy Steps</h2>
-                    <p className="text-gray-500 text-lg mb-20">Get started with Mirrox today!</p>
-                    
-                    <div className="grid md:grid-cols-3 gap-12 relative">
-                        {/* Step 1 */}
-                        <div className="flex flex-col items-center group">
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#FF4D5E] text-2xl font-black shadow-lg border border-gray-100 mb-8 group-hover:bg-[#FF4D5E] group-hover:text-white transition-all">
-                                1
-                            </div>
-                            <h3 className="text-xl font-bold mb-4">Sign Up</h3>
-                            <p className="text-gray-500 text-sm leading-relaxed">Fill out the registration form and submit verification documents.</p>
+                {/* HAVE MORE QUESTIONS SECTION */}
+                <section>
+                    <div style={{ background: 'var(--pub-red)', borderRadius: '48px', padding: '80px', display: 'flex', flexDirection: 'column', gap: '32px', textAlign: 'center', color: 'white', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'relative', zIndex: 10 }}>
+                            <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', textTransform: 'uppercase', lineHeight: '1.1', marginBottom: '24px' }}>Have More Questions?</h2>
+                            <p style={{ opacity: 0.8, fontSize: '18px', maxWidth: '600px', margin: '0 auto 48px auto' }}>Our support team is available 24/5. Get in touch with us anytime for dedicated assistance.</p>
+                            <button className="lp-cta-white" style={{ padding: '20px 48px' }}>Get In Touch</button>
                         </div>
-                        {/* Step 2 */}
-                        <div className="flex flex-col items-center group">
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#FF4D5E] text-2xl font-black shadow-lg border border-gray-100 mb-8 group-hover:bg-[#FF4D5E] group-hover:text-white transition-all">
-                                2
-                            </div>
-                            <h3 className="text-xl font-bold mb-4">Make a Deposit</h3>
-                            <p className="text-gray-500 text-sm leading-relaxed">Choose your payment method and fund your trading account.</p>
-                        </div>
-                        {/* Step 3 */}
-                        <div className="flex flex-col items-center group">
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#FF4D5E] text-2xl font-black shadow-lg border border-gray-100 mb-8 group-hover:bg-[#FF4D5E] group-hover:text-white transition-all">
-                                3
-                            </div>
-                            <h3 className="text-xl font-bold mb-4">Start Trading</h3>
-                            <p className="text-gray-500 text-sm leading-relaxed">Begin your journey and explore endless financial opportunities.</p>
-                        </div>
+                        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'rgba(255,255,255,0.05)', borderRadius: '100%' }}></div>
+                    </div>
+                </section>
+
+                {/* 3 EASY STEPS */}
+                <section style={{ background: '#f8fafc', padding: '80px 48px', borderRadius: '48px', border: '1px solid #e2e8f0' }}>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
+                        <h2>Open Account in 3 Steps</h2>
+                        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase' }}>Join the Mirrox community today</p>
                     </div>
                     
-                    <button className="mt-20 bg-[#FF4D5E] text-white px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform">
-                        Open Account
-                    </button>
-                </div>
-            </section>
-
-            {/* FINALE CTA BANNER */}
-            <section className="px-6 py-24">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                    <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl md:text-7xl font-black text-white leading-tight">Join Mirrox and<br/>Start Trading</h2>
-                        <div className="flex flex-col md:flex-row justify-center gap-6">
-                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform">Get Started Now</button>
-                        </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '48px' }}>
+                        {[
+                            { s: "1", t: "Sign Up", d: "Fill out the registration form and submit verification documents." },
+                            { s: "2", t: "Deposit", d: "Choose your payment method and fund your trading account." },
+                            { s: "3", t: "Trade", d: "Begin your journey and explore endless financial opportunities." }
+                        ].map((item, i)=>(
+                            <div key={i} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                                <div style={{ width: '64px', height: '64px', borderRadius: '100px', background: 'white', color: 'var(--pub-red)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: '900', margin: '0 auto', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>{item.s}</div>
+                                <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase' }}>{item.t}</h3>
+                                <p style={{ color: 'var(--pub-text-muted)', lineHeight: '1.6' }}>{item.d}</p>
+                            </div>
+                        ))}
                     </div>
+                </section>
+            </div>
+
+            {/* FINALE CTA */}
+            <section className="lp-cta-block">
+                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
+                <div style={{ marginTop: '40px', textAlign: 'center' }}>
+                    <button className="lp-cta-white">Get Started Now</button>
                 </div>
             </section>
         </div>

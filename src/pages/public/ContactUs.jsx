@@ -7,144 +7,132 @@ import {
 const ContactUs = () => {
     const contactMethods = [
         {
-            icon: <Mail />,
+            icon: <Mail size={32} />,
             title: "Email Support",
             desc: "Detailed assistance via email",
-            link: "support@mirrox.com",
-            color: "blue"
+            link: "support@mirrox.com"
         },
         {
-            icon: <MessageSquare />,
+            icon: <MessageSquare size={32} />,
             title: "Live Chat",
             desc: "Real-time customer support",
-            link: "Open Chat",
-            color: "green"
+            link: "Open Chat"
         },
         {
-            icon: <Phone />,
+            icon: <Phone size={32} />,
             title: "Phone Call",
             desc: "Immediate voice assistance",
-            link: "+1 (800) MIRROX",
-            color: "red"
+            link: "+1 (800) MIRROX"
         }
     ];
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
-            <section className="bg-[#FF4D5E] py-24 px-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                <div className="relative z-10 max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-none">Get in Touch</h1>
-                    <p className="text-rose-100 text-lg md:text-xl font-medium opacity-90 leading-relaxed max-w-2xl mx-auto uppercase tracking-wide">
+            <section className="pub-content-hero">
+                <div className="relative z-10 max-w-4xl mx-auto text-center">
+                    <h1>Get in <span style={{ color: 'var(--pub-red)' }}>Touch</span></h1>
+                    <p style={{ margin: '0 auto', maxWidth: '800px' }}>
                         Our expert team is available 24/5 to assist you with any questions or technical support.
                     </p>
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-6 py-24">
-                <div className="grid lg:grid-cols-3 gap-8 mb-24">
+            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '120px' }}>
+                {/* CONTACT METHODS GRID */}
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
                     {contactMethods.map((method, i) => (
-                        <div key={i} className="bg-gray-50 p-10 rounded-[3rem] border border-transparent hover:border-red-100 hover:bg-white hover:shadow-2xl transition-all duration-500 group">
-                            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-[#FF4D5E] shadow-sm group-hover:bg-[#FF4D5E] group-hover:text-white transition-colors mb-8">
+                        <div key={i} style={{ background: 'white', padding: '48px', borderRadius: '48px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '24px', transition: 'all 0.3s' }}>
+                            <div style={{ width: '64px', height: '64px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 {method.icon}
                             </div>
-                            <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tight mb-4">{method.title}</h3>
-                            <p className="text-gray-500 mb-8 font-medium">{method.desc}</p>
-                            <p className="text-[#FF4D5E] font-black text-lg">{method.link}</p>
+                            <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase' }}>{method.title}</h3>
+                            <p style={{ color: 'var(--pub-text-muted)', fontSize: '15px', lineHeight: '1.6' }}>{method.desc}</p>
+                            <p style={{ color: 'var(--pub-red)', fontWeight: '900', fontSize: '18px', marginTop: 'auto' }}>{method.link}</p>
                         </div>
                     ))}
-                </div>
+                </section>
 
-                <div className="grid lg:grid-cols-2 gap-20 items-start">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'start' }}>
                     {/* Contact Form */}
-                    <div className="bg-white p-10 md:p-16 rounded-[4rem] shadow-2xl border border-gray-100">
-                        <div className="mb-12">
-                            <h2 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter mb-4">Send a Message</h2>
-                            <p className="text-gray-500 font-medium">Fill out the form below and we'll get back to you within 24 hours.</p>
+                    <div style={{ background: 'white', padding: '64px', borderRadius: '64px', boxShadow: '0 40px 100px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
+                        <div style={{ marginBottom: '48px' }}>
+                            <h2 style={{ fontSize: '32px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '16px' }}>Send a Message</h2>
+                            <p style={{ color: 'var(--pub-text-muted)' }}>Fill out the form below and we'll get back to you within 24 hours.</p>
                         </div>
-                        <form className="space-y-6">
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Full Name</label>
-                                    <input type="text" placeholder="John Doe" className="w-full px-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#FF4D5E] transition-all outline-none font-medium text-gray-900" />
+                        <form style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <label style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Full Name</label>
+                                    <input type="text" style={{ padding: '16px 24px', background: '#f8fafc', border: 'none', borderRadius: '16px' }} placeholder="John Doe" />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Email Address</label>
-                                    <input type="email" placeholder="john@example.com" className="w-full px-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#FF4D5E] transition-all outline-none font-medium text-gray-900" />
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <label style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Work Email</label>
+                                    <input type="email" style={{ padding: '16px 24px', background: '#f8fafc', border: 'none', borderRadius: '16px' }} placeholder="john@company.com" />
                                 </div>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Subject</label>
-                                <select className="w-full px-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#FF4D5E] transition-all outline-none font-medium text-gray-900 appearance-none">
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <label style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Topic</label>
+                                <select style={{ padding: '16px 24px', background: '#f8fafc', border: 'none', borderRadius: '16px' }}>
                                     <option>Technical Support</option>
                                     <option>Account Inquiry</option>
                                     <option>Partnerships</option>
-                                    <option>Other</option>
                                 </select>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Message</label>
-                                <textarea rows="5" placeholder="How can we help you?" className="w-full px-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#FF4D5E] transition-all outline-none font-medium text-gray-900 resize-none"></textarea>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <label style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Message</label>
+                                <textarea rows="5" style={{ padding: '16px 24px', background: '#f8fafc', border: 'none', borderRadius: '16px', resize: 'none' }} placeholder="How can we help?"></textarea>
                             </div>
-                            <div className="flex items-center gap-3 py-2">
-                                <input type="checkbox" className="w-5 h-5 accent-[#FF4D5E] rounded" />
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-tight">I agree to the Terms and Conditions</span>
-                            </div>
-                            <button className="w-full bg-[#FF4D5E] text-white py-6 rounded-3xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-3">
-                                Send Message <Send size={18} />
-                            </button>
+                            <button className="lp-btn-primary" style={{ width: '100%', padding: '20px' }}>Send Request <Send size={18} /></button>
                         </form>
                     </div>
 
                     {/* Reach Section */}
-                    <div className="space-y-12 py-10">
-                        <div className="space-y-6">
-                            <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter leading-tight">Global Support<br/>Network</h2>
-                            <p className="text-gray-500 text-lg leading-relaxed font-medium">
-                                Our support infrastructure spans across multiple timezones to provide the fastest response times in the industry.
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}>
+                        <div>
+                            <h2 style={{ fontSize: '32px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '24px', lineHeight: '1.2' }}>Global Support Network</h2>
+                            <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.6' }}>
+                                Our support infrastructure spans across multiple timezones to provide the fastest response times.
                             </p>
                         </div>
                         
-                        <div className="space-y-8">
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
                             {[
-                                { icon: <Clock />, title: "24/5 Availability", desc: "Our team is active from Monday morning to Friday night (UTC)." },
-                                { icon: <Globe />, title: "Multilingual Support", desc: "Assistance available in over 10 languages." },
-                                { icon: <Shield />, title: "Secure Communication", desc: "All data sent via our contact channels is encrypted." }
+                                { icon: <Clock size={24} />, title: "24/5 Availability", desc: "Our team is active from Monday morning to Friday night (UTC)." },
+                                { icon: <Globe size={24} />, title: "Multilingual", desc: "Assistance available in over 10 languages." },
+                                { icon: <Shield size={24} />, title: "Secure Data", desc: "All data sent via our contact channels is encrypted." }
                             ].map((item, i) => (
-                                <div key={i} className="flex gap-6">
-                                    <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-[#FF4D5E] shrink-0">
+                                <div key={i} style={{ display: 'flex', gap: '24px' }}>
+                                    <div style={{ width: '56px', height: '56px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', shrink: 0 }}>
                                         {item.icon}
                                     </div>
                                     <div>
-                                        <h4 className="text-xl font-black text-gray-900 uppercase tracking-tight mb-2">{item.title}</h4>
-                                        <p className="text-gray-500 font-medium leading-relaxed">{item.desc}</p>
+                                        <h4 style={{ fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '8px' }}>{item.title}</h4>
+                                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '14px', lineHeight: '1.6' }}>{item.desc}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="pt-10">
-                            <div className="p-10 bg-gray-900 rounded-[3rem] text-white space-y-6">
-                                <div className="flex items-center gap-4 text-[#FF4D5E]">
-                                    <MapPin size={24} />
-                                    <span className="font-black uppercase tracking-widest text-xs">Headquarters</span>
-                                </div>
-                                <h3 className="text-2xl font-black uppercase tracking-tight leading-tight">Mwali International Services Authority (MISA)</h3>
-                                <p className="text-gray-400 font-medium">Jurisdiction of the island of Mwali - Comoros Union. License: BFX2024064.</p>
+                        <div style={{ background: '#0b0e14', padding: '64px', borderRadius: '48px', color: 'white' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--pub-red)', marginBottom: '24px' }}>
+                                <MapPin size={24} />
+                                <span style={{ fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Headquarters</span>
                             </div>
+                            <h3 style={{ fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', lineHeight: '1.2', marginBottom: '16px' }}>Mwali International Services Authority</h3>
+                            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px', fontWeight: '500' }}>Jurisdiction of the island of Mwali - Comoros Union. License: BFX2024064.</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            {/* CTA Final */}
-            <section className="px-6 py-24">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-gray-50 py-24 px-10 text-center border border-gray-100">
-                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-8 uppercase tracking-tighter">Follow Our Social Channels</h2>
-                    <div className="flex flex-wrap justify-center gap-10">
+            {/* Social Grid */}
+            <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
+                <div style={{ maxWidth: '1280px', margin: '0 auto', textAlign: 'center' }}>
+                    <h2 style={{ fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '40px' }}>Follow Our Channels</h2>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '48px' }}>
                         {['Twitter', 'LinkedIn', 'YouTube', 'Facebook'].map(social => (
-                            <button key={social} className="text-gray-400 hover:text-[#FF4D5E] font-black uppercase tracking-widest text-sm transition-colors">{social}</button>
+                            <button key={social} style={{ background: 'none', border: 'none', color: '#94a3b8', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase', cursor: 'pointer', transition: 'color 0.3s' }}>{social}</button>
                         ))}
                     </div>
                 </div>

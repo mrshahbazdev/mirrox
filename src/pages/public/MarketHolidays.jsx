@@ -17,40 +17,41 @@ const MarketHolidays = () => {
     ];
 
     const holidayDates = ["Jan 01", "Apr 18", "Apr 21", "May 01", "Dec 25", "Dec 26"];
+    const navigate = (path) => { window.location.href = path; };
 
     return (
         <div className="lp-wrapper">
-            {/* --- HERO SECTION --- */}
-            <section className="pub-content-hero">
-                <div className="relative z-10 max-w-4xl mx-auto">
-                    <h1>Market Holidays at Mirrox</h1>
-                    <p>
-                        Stay informed about global trading breaks and adjusted hours.
+            {/* HERO SECTION */}
+            <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: 'clamp(40px, 8vw, 80px)' }}>Market <span style={{ color: 'var(--pub-red)' }}>Holidays</span></h1>
+                    <p style={{ margin: '24px auto 0', fontSize: '20px', maxWidth: '750px' }}>
+                        Global financial centers never sleep, but they do take breaks. Track international exchange holidays and adjusted liquidity windows.
                     </p>
                 </div>
             </section>
 
-            {/* --- HOLIDAY GRID --- */}
-            <section style={{ padding: '120px 24px' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', marginBottom: '48px', alignItems: 'center', justifyContent: 'space-between' }}>
-                         <div>
-                            <h2 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase', marginBottom: '8px' }}>Trading Calendar 2024-25</h2>
-                            <p style={{ color: '#94a3b8', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Global Market Hours & Special Schedules</p>
+            {/* HOLIDAY GRID */}
+            <section style={{ padding: '160px 24px' }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginBottom: '80px', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                         <div className="lp-section-header">
+                            <h2 style={{ textTransform: 'uppercase' }}>Trading <span style={{ color: 'var(--pub-red)' }}>Calendar</span> 24/25</h2>
+                            <div className="accent-line" style={{ marginTop: '24px' }}></div>
                          </div>
-                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-                            <div style={{ padding: '8px 16px', background: '#f0fdf4', color: '#16a34a', borderRadius: '8px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', border: '1px solid #dcfce7' }}>Normal Hours</div>
-                            <div style={{ padding: '8px 16px', background: '#fff1f2', color: '#ef4444', borderRadius: '8px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', border: '1px solid #fee2e2' }}>Closed</div>
-                            <div style={{ padding: '8px 16px', background: '#eff6ff', color: '#3b82f6', borderRadius: '8px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', border: '1px solid #dbeafe' }}>Special</div>
+                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', background: 'white', padding: '12px', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
+                            <div style={{ padding: '8px 16px', background: '#ecfdf5', color: '#059669', borderRadius: '12px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase' }}>Normal</div>
+                            <div style={{ padding: '8px 16px', background: '#fff1f2', color: '#e11d48', borderRadius: '12px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase' }}>Closed</div>
+                            <div style={{ padding: '8px 16px', background: '#eff6ff', color: '#2563eb', borderRadius: '12px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase' }}>Special</div>
                          </div>
                     </div>
 
-                    <div className="lp-table-wrapper">
+                    <div className="lp-table-wrapper" style={{ borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.06)', background: 'white', padding: '24px', overflow: 'hidden' }}>
                         <table className="lp-table">
                             <thead>
                                 <tr>
-                                    <th>Symbol</th>
-                                    <th>Country</th>
+                                    <th style={{ padding: '24px' }}>Institutional Asset</th>
+                                    <th>Region</th>
                                     {holidayDates.map((date, i) => (
                                         <th key={i} style={{ textAlign: 'center' }}>{date}</th>
                                     ))}
@@ -59,20 +60,20 @@ const MarketHolidays = () => {
                             <tbody>
                                 {holidayData.map((row, idx) => (
                                     <tr key={idx}>
-                                        <td style={{ fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase' }}>{row.symbol}</td>
-                                        <td style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase' }}>{row.country}</td>
+                                        <td style={{ fontWeight: '900', color: '#111', textTransform: 'uppercase', padding: '24px', fontSize: '14px' }}>{row.symbol}</td>
+                                        <td style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{row.country}</td>
                                         {row.dates.map((status, i) => (
                                             <td key={i} style={{ textAlign: 'center' }}>
                                                 <span style={{ 
-                                                    padding: '4px 12px', 
-                                                    borderRadius: '8px', 
+                                                    padding: '6px 14px', 
+                                                    borderRadius: '100px', 
                                                     fontSize: '9px', 
                                                     fontWeight: '900', 
                                                     textTransform: 'uppercase',
-                                                    background: status === 'Normal' ? '#f0fdf4' : status === 'Closed' ? '#fff1f2' : '#eff6ff',
-                                                    color: status === 'Normal' ? '#16a34a' : status === 'Closed' ? '#ef4444' : '#3b82f6'
+                                                    background: status === 'Normal' ? '#ecfdf5' : status === 'Closed' ? '#fff1f2' : '#eff6ff',
+                                                    color: status === 'Normal' ? '#059669' : status === 'Closed' ? '#e11d48' : '#2563eb'
                                                 }}>
-                                                    {status === 'Normal' ? 'Normal' : status}
+                                                    {status}
                                                 </span>
                                             </td>
                                         ))}
@@ -82,36 +83,38 @@ const MarketHolidays = () => {
                         </table>
                     </div>
 
-                    <div style={{ marginTop: '48px', padding: '32px', background: '#eff6ff', borderRadius: '32px', border: '1px solid #dbeafe', display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
-                        <div style={{ width: '48px', height: '48px', background: 'white', border: '1px solid #dbeafe', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6' }}>
-                            <Info size={24} />
+                    <div style={{ marginTop: '80px', padding: '56px', background: '#0b0e14', borderRadius: '64px', border: '1px solid rgba(255,255,255,0.05)', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '40px', alignItems: 'center', boxShadow: '0 40px 100px rgba(0,0,0,0.3)' }}>
+                        <div style={{ width: '80px', height: '80px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--pub-red)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <Info size={40} />
                         </div>
                         <div style={{ flex: '1' }}>
-                             <h4 style={{ fontSize: '12px', fontWeight: '900', color: '#1e3a8a', textTransform: 'uppercase', marginBottom: '8px' }}>Important Note</h4>
-                             <p style={{ fontSize: '14px', color: '#3b82f6', lineHeight: '1.6', fontWeight: '600' }}>
-                                Market liquidity and spreads can be significantly impacted during holiday periods. 
-                                Mirrox provides these dates for informational purposes; however, local market conditions may vary. 
-                                Always check your trading terminal for real-time schedule updates.
+                             <h4 style={{ fontSize: '14px', fontWeight: '900', color: 'white', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>Institutional Protocol</h4>
+                             <p style={{ fontSize: '18px', color: '#94a3b8', lineHeight: '1.7', fontWeight: '500' }}>
+                                Market liquidity and execution spreads are subject to volatility during holiday cycles. 
+                                Mirrox provides these schedules as benchmark data; however, regional settlement conditions may fluctuate. 
+                                Verify real-time terminal hours for precise operational planning.
                              </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* --- FINAL CTA --- */}
-            <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
-                <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
+            {/* FINAL CTA */}
+            <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
+                <h2>Execute with Global Precision</h2>
+                <div style={{ marginTop: '48px' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Launch Terminal</button>
                 </div>
             </section>
 
-             <footer style={{ textAlign: 'center', paddingBottom: '64px' }}>
-                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    NOTE: MARKET HOLIDAYS MAY VARY BASED ON REGIONAL LIQUIDITY PROVIDERS.
+             <footer style={{ textAlign: 'center', paddingBottom: '80px', paddingLeft: '24px', paddingRight: '24px' }}>
+                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em', lineHeight: '2' }}>
+                    Disclaimer: Market schedules are subject to liquidity provider adjustments and exchange discretion.
                 </p>
             </footer>
         </div>
+    );
+};
     );
 };
 

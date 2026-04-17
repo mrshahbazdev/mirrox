@@ -34,91 +34,92 @@ const SwapFees = () => {
     };
 
     const currentData = swapData[activeTab] || swapData['forex'];
+    const navigate = (path) => { window.location.href = path; };
 
     return (
         <div className="lp-wrapper">
-            {/* --- HERO SECTION --- */}
-            <section className="pub-content-hero">
-                <div className="relative z-10 max-w-4xl mx-auto">
-                    <h1>Swap Rates at Mirrox</h1>
-                    <p>
-                        Understanding overnight charges for strategic position management.
+            {/* HERO SECTION */}
+            <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: 'clamp(40px, 8vw, 80px)' }}>Swap <span style={{ color: 'var(--pub-red)' }}>Transparency</span></h1>
+                    <p style={{ margin: '24px auto 0', fontSize: '20px', maxWidth: '750px' }}>
+                        Sophisticated position management. Access real-time institutional rollover rates for global financial instruments.
                     </p>
                 </div>
             </section>
 
-            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '120px' }}>
+            <div className="lp-section" style={{ maxWidth: '1200px', margin: '0 auto', padding: '160px 24px', display: 'flex', flexDirection: 'column', gap: '160px' }}>
                 
                 {/* SECTION 1: WHAT ARE SWAP FEES */}
-                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
-                    <div style={{ position: 'relative' }}>
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
+                    <div style={{ background: 'white', padding: '24px', borderRadius: '56px', boxShadow: '0 40px 100px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0' }}>
                         <img 
-                            src="https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=800" 
-                            alt="Swap Explained" 
-                            style={{ width: '100%', borderRadius: '48px', boxShadow: '0 30px 60px rgba(0,0,0,0.1)' }}
+                            src="https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=1200" 
+                            alt="Swap Framework" 
+                            style={{ width: '100%', borderRadius: '40px', display: 'block' }}
                         />
                     </div>
                     <div className="lp-content-side">
-                         <div style={{ display: 'inline-block', padding: '6px 16px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '100px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '24px' }}>Trading Basics</div>
-                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: '900', color: '#1a1a1a', lineHeight: '1.2', marginBottom: '24px' }}>What Are Swap Fees?</h2>
-                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.6', marginBottom: '24px' }}>
-                           Swap fees, also known as rollover fees, are interest charges or credits applied to positions held overnight.
+                         <div className="accent-label" style={{ background: 'var(--pub-red-soft)', color: 'var(--pub-red)', padding: '8px 20px', borderRadius: '100px', display: 'inline-block', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '32px' }}>Operational Insights</div>
+                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>Overnight <span style={{ color: 'var(--pub-red)' }}>Dynamics</span></h2>
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '32px' }}>
+                           Swap fees reflect the interest rate differential between currency components. They are credited or debited for positions maintained past the daily settlement time.
                         </p>
-                        <p style={{ color: 'var(--pub-text-muted)', lineHeight: '1.6' }}>
-                            These fees reflect the interest rate differential between two assets and are a standard part of professional trading. 
-                            At Mirrox, we provide transparent rates to help you manage your long-term strategies.
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7' }}>
+                            At Mirrox, we deploy institutional-grade transparency. Monitor your rollover costs to optimize long-duration strategic exposure.
                         </p>
                     </div>
                 </section>
 
                 {/* SECTION 2: CALCULATIONS */}
-                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
                     <div className="lp-content-side">
-                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: '900', color: '#1a1a1a', lineHeight: '1.2', marginBottom: '24px' }}>Calculations & Examples</h2>
-                        <div style={{ background: '#f8fafc', padding: '32px', borderRadius: '32px', border: '1px solid #e2e8f0', marginBottom: '32px' }}>
-                            <p style={{ fontSize: '10px', fontWeight: '900', color: 'var(--pub-red)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>Formula</p>
-                            <p style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', letterSpacing: '-0.02em' }}>Swap = Lots × Size × Point × Rate</p>
+                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '40px', textTransform: 'uppercase' }}>Precision <span style={{ color: 'var(--pub-red)' }}>Formula</span></h2>
+                        <div style={{ background: '#0b0e14', padding: '48px', borderRadius: '48px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '48px', boxShadow: '0 40px 80px rgba(0,0,0,0.2)' }}>
+                            <p style={{ fontSize: '11px', fontWeight: '900', color: 'var(--pub-red)', textTransform: 'uppercase', marginBottom: '24px', letterSpacing: '0.2em' }}>Algorithmic Calculation</p>
+                            <p style={{ fontSize: 'clamp(18px, 3vw, 24px)', fontWeight: '900', color: 'white', letterSpacing: '0.05em', fontStyle: 'italic' }}>Swap = (Lots × Contact Size) × Point × Rate</p>
                         </div>
-                        <p style={{ color: 'var(--pub-text-muted)', lineHeight: '1.6' }}>
-                            Keep in mind that bank holidays can affect the number of days a position is rolled forward. 
-                            Positions held overnight on Wednesdays typically incur a 3-day swap to cover the weekend.
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7' }}>
+                            Rollover cycles are impacted by global bank holidays. Triple-swap adjustments typically occur on Wednesdays to account for standard settlement lag over weekends.
                         </p>
                     </div>
                     <div style={{ position: 'relative' }}>
-                        <img 
-                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" 
-                            alt="Calculation Visual" 
-                            style={{ width: '100%', borderRadius: '48px', boxShadow: '0 30px 60px rgba(0,0,0,0.1)' }}
-                        />
+                        <div style={{ background: 'white', padding: '24px', borderRadius: '56px', boxShadow: '0 40px 100px rgba(0,0,0,0.08)', border: '1px solid #e2e8f0' }}>
+                            <img 
+                                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200" 
+                                alt="Metric Visualization" 
+                                style={{ width: '100%', borderRadius: '40px', display: 'block' }}
+                            />
+                        </div>
                     </div>
                 </section>
 
-                {/* --- SWAP MATRIX --- */}
+                {/* SWAP MATRIX */}
                 <section>
-                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
-                        <h2 style={{ fontSize: '48px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase' }}>Swap Rate Matrix</h2>
-                        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase' }}>Real-time overnight rollover rates</p>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
+                        <h2 style={{ textTransform: 'uppercase' }}>Swap Rate <span style={{ color: 'var(--pub-red)' }}>Index</span></h2>
+                        <div className="accent-line" style={{ margin: '24px auto' }}></div>
                     </div>
 
                     {/* Tab Navigation */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', marginBottom: '48px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px', marginBottom: '64px' }}>
                         {tabs.map(tab => (
                             <button 
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 style={{ 
-                                    padding: '16px 40px', 
-                                    borderRadius: '16px', 
-                                    border: 'none', 
-                                    fontSize: '12px', 
+                                    padding: '16px 36px', 
+                                    borderRadius: '100px', 
+                                    border: '1px solid #e2e8f0', 
+                                    fontSize: '11px', 
                                     fontWeight: '900', 
                                     textTransform: 'uppercase', 
                                     letterSpacing: '0.1em',
                                     cursor: 'pointer',
-                                    transition: 'all 0.3s',
-                                    background: activeTab === tab.id ? 'var(--pub-red)' : '#f8fafc',
-                                    color: activeTab === tab.id ? 'white' : '#94a3b8',
-                                    boxShadow: activeTab === tab.id ? '0 10px 20px rgba(255,77,94,0.2)' : 'none'
+                                    transition: 'all 0.3s ease',
+                                    background: activeTab === tab.id ? '#0b0e14' : 'white',
+                                    color: activeTab === tab.id ? 'white' : '#64748b',
+                                    boxShadow: activeTab === tab.id ? '0 20px 40px rgba(0,0,0,0.1)' : 'none'
                                 }}
                             >
                                 {tab.label}
@@ -126,30 +127,30 @@ const SwapFees = () => {
                         ))}
                     </div>
 
-                    <div className="lp-table-wrapper">
+                    <div className="lp-table-wrapper" style={{ borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.05)', background: 'white', padding: '24px', overflow: 'hidden' }}>
                         <table className="lp-table">
                             <thead>
                                 <tr>
-                                    <th>Asset</th>
-                                    <th style={{ textAlign: 'center' }}>Long Swap</th>
-                                    <th style={{ textAlign: 'center' }}>Short Swap</th>
-                                    <th style={{ textAlign: 'right' }}>3rd Day</th>
+                                    <th style={{ padding: '24px' }}>Institutional Asset</th>
+                                    <th style={{ textAlign: 'center' }}>Long Adjustment</th>
+                                    <th style={{ textAlign: 'center' }}>Short Adjustment</th>
+                                    <th style={{ textAlign: 'right', padding: '24px' }}>3-Day Rollover</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentData.map((item, idx) => (
                                     <tr key={idx}>
-                                        <td>
+                                        <td style={{ padding: '24px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                                <div style={{ width: '40px', height: '40px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <BarChart size={18} />
+                                                <div style={{ width: '40px', height: '40px', background: 'var(--pub-red-soft)', color: 'var(--pub-red)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <BarChart size={20} />
                                                 </div>
-                                                <span style={{ fontWeight: '900', color: '#1a1a1a', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{item.asset}</span>
+                                                <span style={{ fontWeight: '900', color: '#111', fontSize: '15px' }}>{item.asset}</span>
                                             </div>
                                         </td>
                                         <td style={{ textAlign: 'center', fontWeight: '900', color: '#ef4444' }}>{item.long}</td>
-                                        <td style={{ textAlign: 'center', fontWeight: '900', color: '#22c55e' }}>{item.short}</td>
-                                        <td style={{ textAlign: 'right', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', fontSize: '11px' }}>Wednesday</td>
+                                        <td style={{ textAlign: 'center', fontWeight: '900', color: '#10b981' }}>{item.short}</td>
+                                        <td style={{ textAlign: 'right', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', fontSize: '11px', padding: '24px' }}>WEDNESDAY Cycle</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -157,6 +158,23 @@ const SwapFees = () => {
                     </div>
                 </section>
             </div>
+
+            {/* FINAL CTA */}
+            <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
+                <h2>Ready to Execute? Start with Mirrox</h2>
+                <div style={{ marginTop: '48px' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Activate Terminal</button>
+                </div>
+            </section>
+
+             <footer style={{ textAlign: 'center', paddingBottom: '80px', paddingLeft: '24px', paddingRight: '24px' }}>
+                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em', lineHeight: '2' }}>
+                    Note: Swap rates are calculated based on bank liquidity and subject to periodic adjustments.
+                </p>
+            </footer>
+        </div>
+    );
+};
 
             {/* --- FINAL CTA --- */}
             <section className="lp-cta-block">

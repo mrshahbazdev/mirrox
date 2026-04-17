@@ -5,11 +5,13 @@ import {
 } from 'lucide-react';
 
 const BecomeAPartner = () => {
+    const navigate = (path) => { window.location.href = path; };
+
     const partnershipBenefits = [
-        { icon: <ShieldCheck />, title: "Regulated Broker", desc: "Partner with a licensed and trusted global entity." },
-        { icon: <Gift />, title: "Custom Promotions", desc: "Access high-converting creative materials for your audience." },
-        { icon: <BarChart />, title: "Advanced Analytics", desc: "Real-time tracking of your referrals and earnings." },
-        { icon: <Headphones />, title: "24/7 PM Support", desc: "Dedicated managers to help grow your network." }
+        { icon: <ShieldCheck size={32} />, title: "Regulated Broker", desc: "Partner with a licensed and trusted global entity." },
+        { icon: <Gift size={32} />, title: "Custom Promotions", desc: "Access high-converting creative materials for your audience." },
+        { icon: <BarChart size={32} />, title: "Advanced Analytics", desc: "Real-time tracking of your referrals and earnings." },
+        { icon: <Headphones size={32} />, title: "24/7 PM Support", desc: "Dedicated managers to help grow your network." }
     ];
 
     const plans = [
@@ -30,134 +32,120 @@ const BecomeAPartner = () => {
     ];
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
-            <section className="bg-gray-950 py-32 px-6 text-center relative overflow-hidden text-white">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FF4D5E] opacity-[0.08] rounded-full blur-[120px] pointer-events-none"></div>
+            <section className="pub-content-hero">
                 <div className="relative z-10 max-w-5xl mx-auto space-y-8">
-                    <div className="inline-block px-4 py-1.5 bg-[#FF4D5E]/10 text-[#FF4D5E] font-black text-[10px] rounded-full uppercase tracking-widest">Growth Opportunities</div>
-                    <h1 className="text-4xl md:text-8xl font-black leading-[1.1] tracking-tighter uppercase">Partner with<br/>the Best in<br/><span className="text-[#FF4D5E]">Trading</span></h1>
-                    <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mx-auto uppercase tracking-wide opacity-80 decoration-red-500/20 underline underline-offset-8">
+                    <div style={{ display: 'inline-block', padding: '6px 16px', background: 'rgba(255,77,94,0.1)', color: 'var(--pub-red)', borderRadius: '100px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '24px' }}>Growth Opportunities</div>
+                    <h1>Partner with the Best in <span style={{ color: 'var(--pub-red)' }}>Trading</span></h1>
+                    <p style={{ maxWidth: '800px', margin: '0 auto', opacity: 0.8 }}>
                         The Mirrox Affiliate Program offers a unique opportunity to expand your network, boost your revenue, and reach your financial goals.
                     </p>
-                    <div className="pt-8">
-                        <button className="bg-[#FF4D5E] text-white px-12 py-5 rounded-3xl font-black text-sm uppercase tracking-widest shadow-[0_20px_50px_rgba(255,77,94,0.3)] hover:scale-105 transition-transform flex items-center gap-3 mx-auto">
-                           Join Program <UserPlus size={18} />
-                        </button>
+                    <div style={{ marginTop: '40px' }}>
+                        <button className="lp-btn-primary" style={{ padding: '20px 48px' }} onClick={() => navigate('/register')}>Join Program <UserPlus size={18} /></button>
                     </div>
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-6 py-32 space-y-32">
+            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '120px' }}>
                 {/* --- WHY PARTNER --- */}
                 <section>
-                    <div className="text-center mb-24">
-                        <h2 className="text-4xl md:text-6xl font-black text-gray-900 uppercase tracking-tighter">Why Partner with Mirrox?</h2>
-                        <p className="text-gray-500 mt-6 text-lg max-w-2xl mx-auto font-medium">Join an ecosystem designed for success, featuring top-notch security and industry-leading conversions.</p>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
+                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)' }}>Why Partner with Mirrox?</h2>
+                        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase' }}>Join an ecosystem designed for success</p>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px' }}>
                         {partnershipBenefits.map((item, i) => (
-                            <div key={i} className="bg-white p-10 rounded-[3rem] shadow-xl border border-gray-100 hover:border-[#FF4D5E]/20 transition-all duration-500 group">
-                                <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-[#FF4D5E] shadow-sm mb-6 group-hover:bg-[#FF4D5E] group-hover:text-white transition-colors">
+                            <div key={i} style={{ padding: '48px', background: 'white', borderRadius: '40px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '24px', transition: 'all 0.3s' }}>
+                                <div style={{ width: '64px', height: '64px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     {item.icon}
                                 </div>
-                                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight mb-4">{item.title}</h3>
-                                <p className="text-gray-500 text-sm leading-relaxed font-medium">{item.desc}</p>
+                                <h3 style={{ fontSize: '20px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase' }}>{item.title}</h3>
+                                <p style={{ color: 'var(--pub-text-muted)', lineHeight: '1.6', fontSize: '14px' }}>{item.desc}</p>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 {/* --- PLANS SECTION --- */}
-                <section className="bg-gray-50 rounded-[4rem] p-10 md:p-20 overflow-hidden relative">
-                    <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#FF4D5E]/5 rounded-full blur-[80px]"></div>
-                    <div className="relative z-10">
-                        <div className="max-w-3xl mb-16">
-                            <h2 className="text-4xl md:text-6xl font-black text-gray-900 uppercase tracking-tighter mb-6 leading-tight text-glow">Flexible Earnings For Every Partner</h2>
-                            <p className="text-gray-500 text-lg font-medium">Choose the plan that best fits your strategy and start maximizing your potential with our tailored programs.</p>
-                        </div>
+                <section style={{ background: '#f8fafc', padding: '80px 48px', borderRadius: '64px', border: '1px solid #e2e8f0' }}>
+                    <div className="lp-section-header" style={{ marginBottom: '64px' }}>
+                        <h2>Flexible Earnings</h2>
+                        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase' }}>Choose your path to professional success</p>
+                    </div>
 
-                        <div className="grid md:grid-cols-2 gap-8">
-                            {plans.map((plan, i) => (
-                                <div key={i} className="bg-white p-12 rounded-[3rem] shadow-2xl border border-gray-100 space-y-8 group hover:-translate-y-2 transition-transform duration-500">
-                                    <div className="space-y-4">
-                                        <div className="text-[#FF4D5E] mb-2"><Briefcase size={32} /></div>
-                                        <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tight">{plan.name}</h3>
-                                        <div className="inline-block px-3 py-1 bg-red-50 text-[#FF4D5E] text-[10px] font-black rounded-lg uppercase tracking-widest">{plan.focus}</div>
-                                    </div>
-                                    <p className="text-gray-500 font-medium leading-relaxed">{plan.desc}</p>
-                                    <ul className="space-y-3">
-                                        {plan.features.map((f, j) => (
-                                            <li key={j} className="flex items-center gap-2 text-xs font-black uppercase tracking-tight text-gray-400 group-hover:text-gray-900 transition-colors">
-                                                <Rocket size={14} className="text-[#FF4D5E]" /> {f}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button className="w-full py-5 rounded-2xl border-2 border-gray-900 text-gray-900 font-black text-xs uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all">
-                                        {plan.cta}
-                                    </button>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
+                        {plans.map((plan, i) => (
+                            <div key={i} style={{ padding: '64px', background: 'white', borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 20px 50px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    <div style={{ color: 'var(--pub-red)' }}><Briefcase size={40} /></div>
+                                    <h3 style={{ fontSize: '28px', fontWeight: '900', color: '#1a1a1a', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>{plan.name}</h3>
+                                    <div style={{ display: 'inline-block', padding: '6px 12px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '8px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', width: 'fit-content' }}>{plan.focus}</div>
                                 </div>
-                            ))}
-                        </div>
+                                <p style={{ color: 'var(--pub-text-muted)', fontSize: '16px', lineHeight: '1.6' }}>{plan.desc}</p>
+                                <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    {plan.features.map((f, j) => (
+                                        <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase', color: '#94a3b8' }}>
+                                            <Rocket size={16} style={{ color: 'var(--pub-red)' }} /> {f}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button className="lp-btn-primary" style={{ width: '100%', marginTop: 'auto' }}>{plan.cta}</button>
+                            </div>
+                        ))}
                     </div>
                 </section>
 
                 {/* --- MARKETING SECTION --- */}
-                <section className="grid md:grid-cols-2 gap-20 items-center">
-                    <div className="space-y-8">
-                        <div className="inline-block px-4 py-1.5 bg-red-50 text-[#FF4D5E] font-black text-[10px] rounded-full uppercase tracking-widest">Marketing Simplicity</div>
-                        <h2 className="text-4xl md:text-6xl font-black text-gray-900 uppercase tracking-tighter leading-[1.1]">Everything You Need to Succeed</h2>
-                        <p className="text-gray-500 text-lg leading-relaxed font-medium">
-                            Promoting Mirrox is easier with our professional marketing resources. Access banners, email templates, and creative assets designed to engage and convert.
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
+                    <div className="lp-content-side">
+                        <div style={{ display: 'inline-block', padding: '6px 16px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '100px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '24px' }}>Marketing Simplicity</div>
+                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#1a1a1a', lineHeight: '1.2', marginBottom: '24px' }}>Everything to Succeed</h2>
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.6', marginBottom: '40px' }}>
+                            Promoting Mirrox is easier with our professional marketing resources. Access banners, email templates, and creative assets designed to engage.
                         </p>
-                        <ul className="space-y-4 pt-4">
-                            {["Ready-to-use Banners", "High-Converting Landings", "Email Swipe Copies", "Multi-Asset Creative"].map((item, i) => (
-                                <li key={i} className="flex items-center gap-3 text-gray-900 font-black text-sm uppercase tracking-wide">
-                                    <DollarSign size={18} className="text-[#FF4D5E]" /> {item}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="relative">
-                        <div className="bg-gray-900 rounded-[3rem] p-10 shadow-2xl overflow-hidden group">
-                             <div className="grid grid-cols-2 gap-4 opacity-40 group-hover:opacity-60 transition-opacity">
-                                <div className="h-48 bg-white/5 rounded-2xl animate-pulse"></div>
-                                <div className="h-48 bg-[#FF4D5E]/20 rounded-2xl"></div>
-                                <div className="h-48 bg-white/10 rounded-2xl"></div>
-                                <div className="h-48 bg-white/5 rounded-2xl animate-pulse"></div>
-                             </div>
-                             <div className="absolute inset-0 flex items-center justify-center p-10 text-center">
-                                <div className="space-y-4">
-                                    <h4 className="text-white text-2xl font-black uppercase">Creative Hub</h4>
-                                    <p className="text-gray-400 text-xs font-medium uppercase tracking-widest">Access our full asset suite</p>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                            {["Banners", "Landings", "Email Swipe", "Creative"].map((item, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#1a1a1a', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase' }}>
+                                    <DollarSign size={18} style={{ color: 'var(--pub-red)' }} /> {item}
                                 </div>
-                             </div>
+                            ))}
                         </div>
+                    </div>
+                    <div style={{ background: '#0b0e14', borderRadius: '48px', padding: '64px', position: 'relative', overflow: 'hidden' }}>
+                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', opacity: 0.2 }}>
+                            <div style={{ height: '160px', background: 'white', borderRadius: '24px' }}></div>
+                            <div style={{ height: '160px', background: 'var(--pub-red)', borderRadius: '24px' }}></div>
+                            <div style={{ height: '160px', background: 'white', borderRadius: '24px' }}></div>
+                            <div style={{ height: '160px', background: 'white', borderRadius: '24px' }}></div>
+                         </div>
+                         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                            <h4 style={{ color: 'white', fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '8px' }}>Creative Hub</h4>
+                            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Access Full Suite</p>
+                         </div>
                     </div>
                 </section>
             </div>
 
             {/* --- FINAL CTA FORM --- */}
-            <section className="bg-[#FF4D5E] py-32 px-6 text-white text-center">
-                <div className="max-w-4xl mx-auto space-y-12">
-                     <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-tight">Ready to Become a<br/>Mirrox Partner?</h2>
-                     <p className="text-rose-100 text-lg font-medium opacity-80 uppercase tracking-widest">Your dedicated manager is waiting to assist you.</p>
-                     
-                     <div className="bg-white p-10 md:p-16 rounded-[4rem] text-gray-900 shadow-2xl text-left max-w-2xl mx-auto">
-                        <form className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Full Name</label>
-                                <input type="text" className="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#FF4D5E] outline-none" />
+            <section style={{ background: 'var(--pub-red)', padding: '120px 24px', textAlign: 'center', color: 'white' }}>
+                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+                    <h2 style={{ fontSize: 'clamp(32px, 6vw, 72px)', fontWeight: '900', textTransform: 'uppercase', lineHeight: '1', marginBottom: '24px' }}>Ready to Become<br/>a Partner?</h2>
+                    <p style={{ opacity: 0.8, fontSize: '18px', marginBottom: '64px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Your dedicated manager is waiting to assist you.</p>
+                    
+                    <div style={{ maxWidth: '600px', margin: '0 auto', background: 'white', padding: '64px', borderRadius: '48px', textAlign: 'left', color: '#1a1a1a', boxShadow: '0 40px 100px rgba(0,0,0,0.2)' }}>
+                        <form style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <label style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Full Name</label>
+                                <input type="text" style={{ padding: '16px 24px', background: '#f8fafc', border: 'none', borderRadius: '16px', outline: 'none' }} placeholder="John Doe" />
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Work Email</label>
-                                <input type="email" className="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#FF4D5E] outline-none" />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <label style={{ fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Work Email</label>
+                                <input type="email" style={{ padding: '16px 24px', background: '#f8fafc', border: 'none', borderRadius: '16px', outline: 'none' }} placeholder="john@company.com" />
                             </div>
-                            <button className="w-full bg-[#FF4D5E] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:scale-102 transition-transform">
-                                Submit Application
-                            </button>
+                            <button className="lp-btn-primary" style={{ width: '100%', padding: '20px' }}>Submit Application</button>
                         </form>
-                     </div>
+                    </div>
                 </div>
             </section>
         </div>

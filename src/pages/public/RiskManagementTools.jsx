@@ -6,83 +6,90 @@ import {
 } from 'lucide-react';
 
 const RiskManagementTools = () => {
+    const navigate = (path) => { window.location.href = path; };
+
     return (
-        <div className="bg-white min-h-screen font-['Outfit'] overflow-x-hidden">
-            {/* --- HERO SECTION --- */}
-            <section className="bg-white pt-32 pb-16 px-6 text-center">
-                <div className="max-w-4xl mx-auto space-y-6 text-center">
-                    <h1 className="text-4xl md:text-7xl font-black text-gray-900 uppercase tracking-tighter leading-none text-center">What are Risk Management Tools?</h1>
-                    <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mx-auto uppercase tracking-widest leading-relaxed text-center">
-                        Protect your capital and minimize exposure with professional strategies.
+        <div className="lp-wrapper">
+            {/* HERO SECTION */}
+            <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: 'clamp(40px, 8vw, 80px)' }}>Defensive <span style={{ color: 'var(--pub-red)' }}>Protocols</span></h1>
+                    <p style={{ margin: '24px auto 0', fontSize: '20px', maxWidth: '750px' }}>
+                        Strategic capital preservation. Deploy institutional-grade safeguards to mitigate exposure and optimize risk-adjusted performance.
                     </p>
                 </div>
             </section>
 
-            {/* --- TOP IMAGE --- */}
-            <section className="px-6 mb-32">
-                <div className="max-w-6xl mx-auto rounded-[3.5rem] overflow-hidden shadow-2xl border border-gray-100 h-[600px]">
+            {/* HERO IMAGE */}
+            <section style={{ padding: '0 24px', marginTop: '-80px', position: 'relative', zIndex: 10 }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto', borderRadius: '64px', overflow: 'hidden', height: 'clamp(300px, 50vh, 600px)', boxShadow: '0 60px 120px rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <img 
-                        src="https://images.unsplash.com/photo-1551288049-bbbda5402bd7?auto=format&fit=crop&q=80&w=1200" 
-                        alt="Risk Management Visualization" 
-                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                        src="https://images.unsplash.com/photo-1551288049-bbbda5402bd7?auto=format&fit=crop&q=80&w=1600" 
+                        alt="Security Infrastructure" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                 </div>
             </section>
 
-            <div className="max-w-5xl mx-auto px-6 space-y-48">
+            <div className="lp-section" style={{ maxWidth: '1200px', margin: '0 auto', padding: '160px 24px', display: 'flex', flexDirection: 'column', gap: '160px' }}>
                 
                 {/* SECTION 1: STRATEGIES */}
-                <section className="grid md:grid-cols-2 gap-20 items-center">
-                    <div className="space-y-10">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter leading-tight">Understanding Risk Management Strategies</h2>
-                        <ul className="space-y-6">
+                <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
+                    <div className="lp-content-side">
+                        <div className="accent-label" style={{ background: 'var(--pub-red-soft)', color: 'var(--pub-red)', padding: '8px 20px', borderRadius: '100px', display: 'inline-block', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '32px' }}>Operational Safety</div>
+                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '40px', textTransform: 'uppercase' }}>Hardened <span style={{ color: 'var(--pub-red)' }}>Strategies</span></h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
                             {[
-                                { t: "Stop-Loss Orders", d: "Automatically close trades at a set price to prevent catastrophic losses." },
-                                { t: "Position Sizing", d: "Limit each trade to a specific percentage of your total equity." },
-                                { t: "Diversification", d: "Spread risk across multiple assets and sectors." },
-                                { t: "Hedging", d: "Offset potential losses with contrasting positions in related markets." }
+                                { t: "Stop-Loss Architecture", d: "Automated exit protocols that terminate positions at predefined price points to enforce discipline." },
+                                { t: "Calculated Sizing", d: "Algorithmically determined position limits based on real-time equity and volatility parameters." },
+                                { t: "Asset Diversification", d: "Systematic risk distribution across non-correlated global markets and instrument classes." },
+                                { t: "Strategic Hedging", d: "Contrasting exposure models designed to neutralize delta and protect during extreme events." }
                             ].map((s, i)=>(
-                                <li key={i} className="flex gap-4 items-start group">
-                                    <div className="w-6 h-6 rounded-full bg-red-100 text-[#FF4D5E] flex items-center justify-center shrink-0 mt-1 font-black text-[10px] group-hover:bg-[#FF4D5E] group-hover:text-white transition-all">{i+1}</div>
-                                    <div className="space-y-1">
-                                        <h4 className="text-sm font-black text-gray-900 uppercase tracking-tight">{s.t}</h4>
-                                        <p className="text-gray-400 font-medium leading-relaxed text-sm">{s.d}</p>
+                                <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+                                    <div style={{ width: '36px', height: '36px', background: '#0b0e14', color: 'white', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '13px', fontWeight: '900' }}>{i+1}</div>
+                                    <div style={{ flex: '1' }}>
+                                        <h4 style={{ fontSize: '16px', fontWeight: '900', color: '#111', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>{s.t}</h4>
+                                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '15px', lineHeight: '1.7' }}>{s.d}</p>
                                     </div>
-                                </li>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     </div>
-                    <div className="relative p-12 bg-gray-50 rounded-[4rem] group overflow-hidden">
-                         <div className="relative bg-white rounded-3xl p-10 shadow-2xl border border-gray-100 flex flex-col items-center gap-6 transform group-hover:rotate-2 transition-transform duration-700">
-                             <Shield size={80} className="text-[#FF4D5E] opacity-10 absolute -top-10 -right-10" />
-                             <div className="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center text-[#FF4D5E]">
-                                <ShieldCheck size={40} />
+                    <div style={{ position: 'relative', background: '#f8fafc', padding: '80px', borderRadius: '64px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                         <div style={{ position: 'relative', background: 'white', borderRadius: '48px', padding: '64px', width: '100%', maxWidth: '400px', boxShadow: '0 40px 100px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                             <Shield size={80} style={{ color: 'var(--pub-red)', opacity: 0.03, position: 'absolute', top: '32px', right: '32px' }} />
+                             <div style={{ width: '100px', height: '100px', background: 'var(--pub-red-soft)', color: 'var(--pub-red)', borderRadius: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 40px auto' }}>
+                                <ShieldCheck size={48} />
                              </div>
-                             <div className="space-y-3 w-full">
-                                <div className="w-full h-2 bg-gray-50 rounded-full"></div>
-                                <div className="w-3/4 h-2 bg-red-100 rounded-full"></div>
-                                <div className="w-1/2 h-2 bg-red-500 rounded-full"></div>
+                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                <div style={{ height: '10px', background: '#f1f5f9', borderRadius: '100px', width: '100%' }}></div>
+                                <div style={{ height: '10px', background: '#fee2e2', borderRadius: '100px', width: '80%', margin: '0 auto' }}></div>
+                                <div style={{ height: '10px', background: 'var(--pub-red)', borderRadius: '100px', width: '60%', margin: '0 auto' }}></div>
                              </div>
+                             <h4 style={{ marginTop: '40px', fontSize: '12px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Protocol Status: Active</h4>
                          </div>
                     </div>
                 </section>
 
                 {/* SECTION 2: WHY YOU NEED THEM */}
-                <section className="space-y-16">
-                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter text-center">Why You Need Risk Management Tools</h2>
-                    <div className="grid md:grid-cols-3 gap-12">
+                <section>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '100px' }}>
+                        <h2 style={{ textTransform: 'uppercase' }}>The Core of <span style={{ color: 'var(--pub-red)' }}>Permanence</span></h2>
+                        <div className="accent-line" style={{ margin: '24px auto' }}></div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px' }}>
                          {[
-                             { title: "Capital Protection", desc: "Preserve your trading longevity by ensuring no single event wipes out your account." },
-                             { title: "Emotional Stability", desc: "Automated orders take the fear out of trading, keeping you disciplined and focused." },
-                             { title: "Strategic Growth", desc: "Manageable risks allow for consistent, long-term portfolio growth without overexposure." }
+                             { title: "Capital Fortress", desc: "Our infrastructure ensures no single market anomaly can compromise your long-term liquidity.", icon: <Anchor size={40} /> },
+                             { title: "Psychological Edge", desc: "Remove heuristic biases with automated execution boundaries that maintain operational poise.", icon: <Activity size={40} /> },
+                             { title: "Exponential Growth", desc: "Sustainable scaling is only possible through rigorous control of detrimental drawdowns.", icon: <PieChart size={40} /> }
                          ].map((item, i) => (
-                             <div key={i} className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-xl hover:border-red-100 transition-all group flex flex-col items-center text-center gap-6">
-                                 <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-[#FF4D5E] group-hover:bg-[#FF4D5E] group-hover:text-white transition-all">
-                                     <Activity size={32} />
+                             <div key={i} style={{ background: 'white', padding: '64px 48px', borderRadius: '56px', border: '1px solid #e2e8f0', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '32px', transition: 'all 0.4s ease', boxShadow: '0 20px 60px rgba(0,0,0,0.02)' }}>
+                                 <div style={{ width: '80px', height: '80px', background: 'var(--pub-red-soft)', color: 'var(--pub-red)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                     {item.icon}
                                  </div>
-                                 <div className="space-y-2">
-                                    <h4 className="text-lg font-black text-gray-900 uppercase tracking-tight">{item.title}</h4>
-                                    <p className="text-gray-500 font-medium leading-relaxed text-sm">{item.desc}</p>
+                                 <div>
+                                    <h4 style={{ fontSize: '22px', fontWeight: '900', color: '#111', textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '0.05em' }}>{item.title}</h4>
+                                    <p style={{ color: 'var(--pub-text-muted)', fontSize: '16px', lineHeight: '1.7' }}>{item.desc}</p>
                                  </div>
                              </div>
                          ))}
@@ -90,55 +97,50 @@ const RiskManagementTools = () => {
                 </section>
 
                  {/* SECTION 3: HOW TO UTILIZE */}
-                 <section className="grid md:grid-cols-2 gap-20 items-center">
-                    <div className="relative p-12 bg-gray-900 rounded-[4rem] group overflow-hidden order-2 md:order-1">
+                 <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
+                    <div style={{ position: 'relative', background: '#0b0e14', height: '500px', borderRadius: '64px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 40px 100px rgba(0,0,0,0.2)' }}>
                          <img 
-                            src="https://images.unsplash.com/photo-1543286386-713bcd549651?auto=format&fit=crop&q=80&w=800" 
-                            className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-[2000ms]"
-                            alt="Market Data"
+                            src="https://images.unsplash.com/photo-1543286386-713bcd549651?auto=format&fit=crop&q=80&w=1200" 
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.3 }}
+                            alt="Institutional Intel"
                          />
-                         <div className="relative z-10 text-white space-y-4">
-                            <h3 className="text-2xl font-black uppercase tracking-tight">Real-Time Risk Analysis</h3>
-                            <button className="bg-[#FF4D5E] px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-2xl">Open Tools</button>
+                         <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '48px' }}>
+                            <h3 style={{ color: 'white', fontSize: '28px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '32px', letterSpacing: '0.1em' }}>Institutional Console</h3>
+                            <button className="lp-cta-white" onClick={() => navigate('/register')}>Access Terminal</button>
                          </div>
                     </div>
-                    <div className="space-y-8 order-1 md:order-2">
-                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter leading-tight">How to Utilize Mirrox's Risk Management Tools?</h2>
-                        <p className="text-gray-500 text-lg leading-relaxed font-medium">
-                            Our platform integrates standard tools like trailing stops and take-profit orders directly into the execution terminal.
+                    <div className="lp-content-side">
+                        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>Native <span style={{ color: 'var(--pub-red)' }}>Integration</span></h2>
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '32px' }}>
+                            The Mirrox terminal embeds trailing stops and take-profit mechanisms directly into the trade-lifecycle, ensuring zero-latency protection.
                         </p>
-                        <p className="text-gray-500 leading-relaxed font-medium">
-                            Combined with our negative balance protection and tiered leverage options, you have full control over your risk profiles.
+                        <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7' }}>
+                            Coupled with Negative Balance Protection and Dynamic Margin scaling, our environment provides the ultimate safety net for elite operations.
                         </p>
                     </div>
                 </section>
 
                 {/* SECTION 4: MONITORING */}
-                <section className="pb-32 space-y-12">
-                     <div className="p-16 bg-red-50/30 rounded-[3rem] border border-red-50/50 space-y-8 text-center">
-                        <h3 className="text-4xl font-black text-gray-900 uppercase tracking-tighter">Continuous Monitoring and Adjustment</h3>
-                        <p className="text-gray-500 text-lg leading-relaxed max-w-4xl mx-auto font-medium">
-                            Effective risk management is not a 'set and forget' process. Market conditions change, and so should your strategy. Mirrox provides the analytical tools to monitor your positions 24/7 and adjust your risk parameters dynamically as market volatility scales.
+                <section>
+                     <div style={{ padding: '80px 56px', background: '#0b0e14', borderRadius: '64px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                        <h3 style={{ fontSize: 'clamp(24px, 4vw, 40px)', fontWeight: '900', color: 'white', textTransform: 'uppercase', marginBottom: '32px', letterSpacing: '0.05em' }}>Perpetual <span style={{ color: 'var(--pub-red)' }}>Vigilance</span></h3>
+                        <p style={{ color: '#94a3b8', fontSize: '18px', lineHeight: '1.8', maxWidth: '1000px', margin: '0 auto', fontWeight: '500' }}>
+                            Risk management is an iterative science. Mirrox delivers the analytical telemetry required to monitor exposures 24/7, enabling you to calibrate risk parameters as global market volatility evolves.
                         </p>
                      </div>
                 </section>
             </div>
 
-            {/* --- FINAL CTA --- */}
-            <section className="px-6 py-24 bg-gray-50">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group shadow-[0_45px_100px_rgba(255,77,94,0.35)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                    <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl md:text-8xl font-black text-white leading-tight tracking-tighter uppercase whitespace-pre-line text-center">Join Mirrox and{"\n"}Start Trading</h2>
-                        <div className="flex flex-col md:flex-row justify-center gap-6 text-center">
-                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform text-center mx-auto">
-                                Start Now
-                            </button>
-                        </div>
-                    </div>
+            {/* FINAL CTA */}
+            <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
+                <h2>Commit to Excellence. Start Trading.</h2>
+                <div style={{ marginTop: '48px' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Launch Live Account</button>
                 </div>
             </section>
         </div>
+    );
+};
     );
 };
 

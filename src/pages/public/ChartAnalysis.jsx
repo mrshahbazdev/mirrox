@@ -3,51 +3,48 @@ import { Lock, ArrowRight, Shield, Zap, BarChart3, TrendingUp } from 'lucide-rea
 
 const ChartAnalysis = () => {
     return (
-        <div className="bg-white min-h-screen font-['Outfit'] overflow-x-hidden relative">
+const ChartAnalysis = () => {
+    return (
+        <div className="lp-wrapper">
             
             {/* --- BLURRED BACKGROUND MOCKUP --- */}
-            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none filter blur-md">
-                <div className="max-w-7xl mx-auto px-6 py-24 space-y-12">
-                     <div className="h-24 bg-red-50 rounded-3xl w-full"></div>
-                     <div className="grid grid-cols-12 gap-6">
-                        <div className="col-span-8 h-[600px] bg-gray-100 rounded-[3rem]"></div>
-                        <div className="col-span-4 h-[600px] bg-gray-50 rounded-[3rem]"></div>
+            <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.1, pointerEvents: 'none', filter: 'blur(10px)', overflow: 'hidden' }}>
+                <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+                     <div style={{ height: '80px', background: '#e2e8f0', borderRadius: '24px', width: '100%' }}></div>
+                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+                        <div style={{ height: '600px', background: '#f1f5f9', borderRadius: '48px' }}></div>
+                        <div style={{ height: '600px', background: '#f8fafc', borderRadius: '48px' }}></div>
                      </div>
                 </div>
             </div>
 
             {/* --- LOCKED OVERLAY --- */}
-            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
-                <div className="max-w-xl w-full bg-white/90 backdrop-blur-2xl p-12 rounded-[3.5rem] shadow-[0_50px_100px_rgba(255,77,94,0.15)] border border-white text-center space-y-10 border-gray-100">
-                    <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center text-[#FF4D5E] mx-auto shadow-inner">
+            <div style={{ position: 'relative', zIndex: 10, minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '120px 24px' }}>
+                <div style={{ maxWidth: '560px', width: '100%', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(32px)', padding: '64px', borderRadius: '64px', border: '1px solid white', boxShadow: '0 40px 100px rgba(0,0,0,0.06)', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '40px' }}>
+                    <div style={{ width: '96px', height: '96px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
                         <Lock size={40} />
                     </div>
-                    <div className="space-y-4">
-                        <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter leading-none">Chart Analysis Is Locked</h1>
-                        <p className="text-gray-500 font-medium leading-relaxed">Please sign up or log in to unlock access to our professional real-time chart analysis tools.</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <h1 style={{ fontSize: '32px', fontWeight: '900', color: '#111', textTransform: 'uppercase', letterSpacing: '-1px', lineHeight: '1.1' }}>Analysis <span style={{ color: 'var(--pub-red)' }}>Locked</span></h1>
+                        <p style={{ color: '#64748b', fontSize: '16px', lineHeight: '1.6', fontWeight: '500' }}>Please sign up or log in to unlock access to our professional real-time chart analysis tools and expert insights.</p>
                     </div>
-                    <div className="flex flex-col md:flex-row gap-4 justify-center">
-                        <button className="bg-[#FF4D5E] text-white px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-red-100">Login</button>
-                        <button className="bg-white text-gray-900 border border-gray-200 px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-50 transition-all">Create Account</button>
+                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <button className="lp-btn-primary" style={{ padding: '16px 40px' }}>Login</button>
+                        <button style={{ padding: '16px 40px', borderRadius: '16px', background: 'white', border: '1px solid #e2e8f0', color: '#111', fontWeight: '900', fontSize: '11px', textTransform: 'uppercase', cursor: 'pointer' }}>Create Account</button>
                     </div>
                 </div>
             </div>
 
-             {/* --- FINAL CTA --- */}
-             <section className="px-6 py-24 relative z-10">
-                <div className="max-w-6xl mx-auto rounded-[3rem] bg-[#FF4D5E] py-24 px-10 text-center relative overflow-hidden group shadow-[0_45px_100px_rgba(255,77,94,0.35)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent"></div>
-                    <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl md:text-8xl font-black text-white leading-tight tracking-tighter uppercase whitespace-pre-line text-center">Join Mirrox and{"\n"}Start Trading</h2>
-                        <div className="flex flex-col md:flex-row justify-center gap-6 text-center text-center">
-                            <button className="bg-white text-[#FF4D5E] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform text-center mx-auto">
-                                Start Now
-                            </button>
-                        </div>
-                    </div>
+            {/* --- FINAL CTA --- */}
+            <section className="lp-cta-block" style={{ marginTop: '0' }}>
+                <h2 style={{ textAlign: 'center' }}>Ready to Unlock Full Potential?</h2>
+                <div style={{ marginTop: '40px', textAlign: 'center' }}>
+                    <button className="lp-cta-white">Join Mirrox Now</button>
                 </div>
             </section>
         </div>
+    );
+};
     );
 };
 

@@ -12,45 +12,52 @@ const CfdExpiries = () => {
         { asset: "COFFEE", name: "US Coffee C", month: "MAR 2025", final: "2025-02-20" },
     ];
 
+    const navigate = (path) => { window.location.href = path; };
+
     return (
         <div className="lp-wrapper">
-            {/* --- HERO SECTION --- */}
-            <section className="pub-content-hero">
-                <div className="relative z-10 max-w-4xl mx-auto">
-                    <h1>Future Expiry Dates at Mirrox</h1>
-                    <p>
-                        Master your trade management with precision contract tracking.
+            {/* HERO SECTION */}
+            <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: 'clamp(40px, 8vw, 80px)' }}>Future <span style={{ color: 'var(--pub-red)' }}>Expiries</span></h1>
+                    <p style={{ margin: '24px auto 0', fontSize: '20px', maxWidth: '750px' }}>
+                        Strategic timing is essential. Monitor upcoming contract rollover dates and final expiry events with institutional precision.
                     </p>
                 </div>
             </section>
 
-            {/* --- EXPIRY MATRIX --- */}
-            <section style={{ padding: '120px 24px' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-                    <div className="lp-table-wrapper">
+            {/* EXPIRY MATRIX */}
+            <section style={{ padding: '160px 24px' }}>
+                <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
+                        <h2 style={{ textTransform: 'uppercase' }}>Contract <span style={{ color: 'var(--pub-red)' }}>Lifecycle</span></h2>
+                        <div className="accent-line" style={{ margin: '24px auto' }}></div>
+                    </div>
+
+                    <div className="lp-table-wrapper" style={{ borderRadius: '48px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.05)', background: 'white', padding: '24px', overflow: 'hidden' }}>
                         <table className="lp-table">
                             <thead>
                                 <tr>
-                                    <th>Asset</th>
+                                    <th style={{ padding: '24px' }}>Asset Identifier</th>
                                     <th style={{ textAlign: 'center' }}>Product Name</th>
-                                    <th style={{ textAlign: 'center' }}>Expiry Month</th>
-                                    <th style={{ textAlign: 'right' }}>Final Expiry</th>
+                                    <th style={{ textAlign: 'center' }}>Cycle Month</th>
+                                    <th style={{ textAlign: 'right', padding: '24px' }}>Final Expiry</th>
                                 </tr>
                             </thead>
-                            <tbody style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '900' }}>
+                            <tbody style={{ fontSize: '12px' }}>
                                 {expiryData.map((item, idx) => (
                                     <tr key={idx}>
-                                        <td>
+                                        <td style={{ padding: '24px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                                <div style={{ width: '40px', height: '40px', background: '#fff1f2', color: 'var(--pub-red)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <div style={{ width: '40px', height: '40px', background: 'var(--pub-red-soft)', color: 'var(--pub-red)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                     <Calendar size={18} />
                                                 </div>
-                                                <span style={{ color: '#1a1a1a', letterSpacing: '0.05em' }}>{item.asset}</span>
+                                                <span style={{ fontWeight: '900', color: '#111', fontSize: '15px' }}>{item.asset}</span>
                                             </div>
                                         </td>
-                                        <td style={{ textAlign: 'center', color: '#64748b' }}>{item.name}</td>
-                                        <td style={{ textAlign: 'center', color: 'var(--pub-red)' }}>{item.month}</td>
-                                        <td style={{ textAlign: 'right', color: '#1a1a1a' }}>{item.final}</td>
+                                        <td style={{ textAlign: 'center', color: '#64748b', fontWeight: '800', textTransform: 'uppercase' }}>{item.name}</td>
+                                        <td style={{ textAlign: 'center', color: 'var(--pub-red)', fontWeight: '900', textTransform: 'uppercase' }}>{item.month}</td>
+                                        <td style={{ textAlign: 'right', color: '#111', fontWeight: '900', padding: '24px' }}>{item.final}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -59,46 +66,49 @@ const CfdExpiries = () => {
                 </div>
             </section>
 
-            {/* --- THE MIRROX EDGE --- */}
-            <section style={{ background: '#f8fafc', padding: '120px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-                    <div className="lp-section-header">
-                        <h2>The Mirrox Edge</h2>
-                        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase' }}>Seamless performance across all financial markets</p>
+            {/* THE MIRROX EDGE GRID */}
+            <section style={{ background: '#f8fafc', padding: '160px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '100px' }}>
+                        <h2 style={{ textTransform: 'uppercase' }}>Institutional <span style={{ color: 'var(--pub-red)' }}>Advantages</span></h2>
+                        <div className="accent-line" style={{ margin: '24px auto' }}></div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', marginTop: '64px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px' }}>
                         {/* Effortless Trading */}
-                        <div style={{ padding: '48px', background: 'white', borderRadius: '40px', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0,0,0,0.02)' }}>
-                             <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', marginBottom: '32px', textTransform: 'uppercase' }}>Effortless Trading</h3>
-                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                {["Intuitive UI", "One-Click Execution", "Seamless Navigation", "Customizable View"].map((f,i)=>(
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase' }}>
-                                        <CheckCircle2 size={16} style={{ color: 'var(--pub-red)' }} /> {f}
+                        <div style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
+                             <div style={{ color: 'var(--pub-red)', marginBottom: '32px' }}><Layout size={32} /></div>
+                             <h3 style={{ fontSize: '22px', fontWeight: '900', color: '#111', marginBottom: '32px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Elite Platform</h3>
+                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                {["One-Click Execution", "Institutional Liquidty", "Advanced Workspace", "Dynamic Charts"].map((f,i)=>(
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>
+                                        <CheckCircle2 size={20} style={{ color: 'var(--pub-red)' }} /> {f}
                                     </div>
                                 ))}
                              </div>
                         </div>
 
                         {/* Regulated & Secure */}
-                        <div style={{ padding: '48px', background: 'white', borderRadius: '40px', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0,0,0,0.02)' }}>
-                             <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', marginBottom: '32px', textTransform: 'uppercase' }}>Regulated & Secure</h3>
-                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                {["MWALI Regulation", "Segregated Funds", "256-bit Encryption", "SAS 70 Data Center"].map((f,i)=>(
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase' }}>
-                                        <CheckCircle2 size={16} style={{ color: 'var(--pub-red)' }} /> {f}
+                        <div style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
+                             <div style={{ color: 'var(--pub-red)', marginBottom: '32px' }}><Shield size={32} /></div>
+                             <h3 style={{ fontSize: '22px', fontWeight: '900', color: '#111', marginBottom: '32px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Hardened Security</h3>
+                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                {["MWALI Regulation", "Tier-1 Capital", "Encrypted Protocols", "Client Fund Safety"].map((f,i)=>(
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>
+                                        <CheckCircle2 size={20} style={{ color: 'var(--pub-red)' }} /> {f}
                                     </div>
                                 ))}
                              </div>
                         </div>
 
                         {/* Dedicated Support */}
-                        <div style={{ padding: '48px', background: 'white', borderRadius: '40px', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0,0,0,0.02)' }}>
-                             <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1a1a1a', marginBottom: '32px', textTransform: 'uppercase' }}>Dedicated Support</h3>
-                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                {["24/7 Availability", "Multilingual Team", "Personal Manager", "Expert Analysis"].map((f,i)=>(
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase' }}>
-                                        <CheckCircle2 size={16} style={{ color: 'var(--pub-red)' }} /> {f}
+                        <div style={{ padding: '64px 48px', background: 'white', borderRadius: '56px', border: '1px solid #e2e8f0', boxShadow: '0 40px 100px rgba(0,0,0,0.03)' }}>
+                             <div style={{ color: 'var(--pub-red)', marginBottom: '32px' }}><Headphones size={32} /></div>
+                             <h3 style={{ fontSize: '22px', fontWeight: '900', color: '#111', marginBottom: '32px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Expert Support</h3>
+                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                {["Dedicated Managers", "24/7 Global Desk", "Market Analysis", "Strategic Insights"].map((f,i)=>(
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>
+                                        <CheckCircle2 size={20} style={{ color: 'var(--pub-red)' }} /> {f}
                                     </div>
                                 ))}
                              </div>
@@ -107,20 +117,22 @@ const CfdExpiries = () => {
                 </div>
             </section>
 
-            {/* --- FINAL CTA --- */}
-            <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Mirrox and Start Trading</h2>
-                <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
+            {/* FINAL CTA */}
+            <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
+                <h2>Ready for Your Next Operation?</h2>
+                <div style={{ marginTop: '48px' }}>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Launch Live Account</button>
                 </div>
             </section>
 
-             <footer style={{ textAlign: 'center', paddingBottom: '64px' }}>
-                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    DISCLAIMER: CFD TRADING INVOLVES SIGNIFICANT RISK TO YOUR CAPITAL.
+             <footer style={{ textAlign: 'center', paddingBottom: '80px', paddingLeft: '24px', paddingRight: '24px' }}>
+                <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em', lineHeight: '2' }}>
+                    Risk Disclosure: Contract for Differences (CFDs) are complex instruments and come with high risk.
                 </p>
             </footer>
         </div>
+    );
+};
     );
 };
 
