@@ -5017,6 +5017,15 @@ input[type="number"]::-webkit-outer-spin-button {
    ========================================= */
 
 @media (max-width: 768px) {
+  /* Prevent the shared PublicLayout flex container from expanding
+     to min-content when a descendant demands extra width (e.g. the
+     560px-min-width matrix table). Without `min-width: 0`, flex
+     children default to `min-width: auto` and grow past the viewport,
+     forcing a horizontal page scroll. */
+  .pub-layout .flex { min-width: 0 !important; }
+  .pub-main { min-width: 0 !important; }
+  .lp-wrapper { min-width: 0 !important; max-width: 100vw; }
+
   /* Make tables scrollable horizontally on narrow screens so
      none of the 4/6-column matrices force a page overflow. Needs
      !important because several pages set inline `overflow: hidden`
