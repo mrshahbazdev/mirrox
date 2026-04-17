@@ -5016,14 +5016,17 @@ input[type="number"]::-webkit-outer-spin-button {
    and other pages wrapped in `.lp-wrapper`.
    ========================================= */
 
-/* Make tables scrollable horizontally on narrow screens so
-   none of the 4/6-column matrices force a page overflow. */
-.lp-wrapper .lp-table-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
 @media (max-width: 768px) {
+  /* Make tables scrollable horizontally on narrow screens so
+     none of the 4/6-column matrices force a page overflow. Needs
+     !important because several pages set inline `overflow: hidden`
+     on `.lp-table-wrapper` to clip rounded corners on desktop. */
+  .lp-wrapper .lp-table-wrapper {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
   /* Hero */
   .lp-wrapper .pub-content-hero { padding: 80px 20px !important; }
   .lp-wrapper .pub-content-hero h1 {
@@ -5073,6 +5076,7 @@ input[type="number"]::-webkit-outer-spin-button {
   .lp-wrapper .lp-table-wrapper {
     padding: 8px !important;
     border-radius: 20px !important;
+    max-width: 100% !important;
   }
   .lp-wrapper .lp-table { min-width: 560px; }
   .lp-wrapper .lp-table th,
