@@ -108,6 +108,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     { icon: 'fa-solid fa-user-gear', path: '/admin/staff', label: 'Team' },
     { icon: 'fa-solid fa-shield-halved', path: '/admin/security', label: 'Security' },
     { icon: 'fa-solid fa-gears', path: '/admin/settings', label: 'Settings' },
+    { icon: 'fa-solid fa-shoe-prints', path: '/admin/visitors', label: 'Visitors' },
   ];
 
   return (

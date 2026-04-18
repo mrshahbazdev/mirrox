@@ -16,6 +16,7 @@ import ActiveTraders from './pages/admin/ActiveTraders';
 import Settings from './pages/admin/Settings';
 import SupportChat from './pages/admin/SupportChat';
 import StaffManager from './pages/admin/StaffManager';
+import VisitorLogs from './pages/admin/VisitorLogs';
 import Admin2FA from './pages/admin/Admin2FA';
 import axios from 'axios';
 import Register from './pages/Register';
@@ -55,6 +56,7 @@ import ComplaintInfo from './pages/public/ComplaintInfo';
 import CookiesPrivacy from './pages/public/CookiesPrivacy';
 import GlobalModal from './components/GlobalModal';
 import LiveChat from './components/LiveChat';
+import VisitorTracker from './components/VisitorTracker';
 import { useTrading } from './context/TradingContext';
 
 // Client auth wrapper
@@ -128,6 +130,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <VisitorTracker />
       <GlobalModal />
       <Routes>
         {/* Public Routes with Template */}
@@ -289,6 +292,14 @@ function App() {
           element={
             <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
               <SupportChat onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/visitors"
+          element={
+            <AdminRoute isAdminLoggedIn={isAdminLoggedIn}>
+              <VisitorLogs onAdminLogout={() => { localStorage.removeItem('bullvera_admin_token'); setIsAdminLoggedIn(false); }} />
             </AdminRoute>
           }
         />

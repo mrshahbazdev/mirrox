@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 const SupportTicket = require('../models/SupportTicket');
 const Admin = require('../models/Admin');
 const Trade = require('../models/Trade');
+const Visitor = require('../models/Visitor');
 
 // Set up Live Binance Feed for Crypto Markets
 let binanceWs = null;
@@ -297,6 +298,30 @@ module.exports = (io) => {
       });
       broadcastVisitors();
       console.log(`[VISITOR] ${clientName} (${clientId}) visiting ${page}`);
+    });
+
+    socket.on('visitor:track', async (data) => {
+        const { visitorId, userId, ip, country, city, userAgent, referrer, path } = data;
+        if (!visitorId) return;
+
+        try {
+            const visitor = await Visitor.findOneAndUpdate(
+                { visitorId },
+                {
+                    $set: { userId, ip, country, city, userAgent, referrer, lastActive: new Date() },
+                    $inc: { sessionCount: 0 }, // Just to ensure it exists
+                    $push: { pathHistory: { path, timestamp: new Date() } }
+                },
+                { upsert: true, new: true }
+            );
+            
+            // If it's a new visitor (first entry in history)
+            if (visitor.pathHistory.length === 1) {
+                await Visitor.updateOne({ visitorId }, { $inc: { sessionCount: 1 } });
+            }
+        } catch (err) {
+            console.error('[VISITOR TRACK ERR]', err.message);
+        }
     });
 
     socket.on('user:leave', ({ clientId }) => {

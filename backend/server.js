@@ -13,6 +13,7 @@ const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
 const AdminActivity = require('./models/AdminActivity');
+const Visitor = require('./models/Visitor');
 const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 
@@ -458,6 +459,25 @@ app.get('/api/admins/activities', verifyAdminToken, verifyAdminPermission('manag
       const activities = await AdminActivity.find().sort({ timestamp: -1 }).limit(100);
       res.json(activities);
   } catch(err) { res.status(500).json({ error: 'Failed to fetch logs' }); }
+});
+
+// Visitor History APIs
+app.get('/api/admin/visitors', verifyAdminToken, async (req, res) => {
+  try {
+    const visitors = await Visitor.find().sort({ lastActive: -1 }).limit(500);
+    res.json(visitors);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch visitor logs' });
+  }
+});
+
+app.delete('/api/admin/visitors/:id', verifyAdminToken, verifyAdminPermission('manageStaff'), async (req, res) => {
+  try {
+    await Visitor.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete log' });
+  }
 });
 
   app.post('/api/admins/2fa/setup', verifyAdminToken, async (req, res) => {
