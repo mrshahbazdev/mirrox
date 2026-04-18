@@ -16,16 +16,14 @@ const Finances = () => {
   const [deposits, setDeposits] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('deposit'); // deposit, withdrawal, history
+  const [activeTab, setActiveTab] = useState('deposit');
 
-  // Form states
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState('bank_transfer');
   const [txHash, setTxHash] = useState('');
   const [withdrawalPin, setWithdrawalPin] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Setup PIN states
   const [showSetupPin, setShowSetupPin] = useState(false);
   const [newPin, setNewPin] = useState('');
   const [oldPin, setOldPin] = useState('');
@@ -51,12 +49,9 @@ const Finances = () => {
 
   useEffect(() => {
     fetchData();
-
     if (socket) {
       socket.on('finance_update', fetchData);
-      return () => {
-        socket.off('finance_update', fetchData);
-      };
+      return () => { socket.off('finance_update', fetchData); };
     }
   }, [socket, fetchData]);
 
@@ -155,29 +150,28 @@ const Finances = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--text-muted)]">
-        <RefreshCw className="animate-spin mb-4 text-[var(--accent)]" size={40} />
-        <p className="font-bold uppercase tracking-widest text-xs">Syncing Financial Node...</p>
+      <div className="fin-loading">
+        <RefreshCw className="fin-loading-spinner" size={40} />
+        <p className="fin-loading-text">Syncing Financial Node...</p>
       </div>
     );
   }
 
   return (
-    <div className="finances-page-v3 animate-fade-in no-scrollbar" style={{ gridColumn: '1 / -1', height: '100%', overflowY: 'auto' }}>
-      {/* --- BACKGROUND DECORATION --- */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--accent-muted)] blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--accent-muted)] blur-[100px] rounded-full pointer-events-none"></div>
+    <div className="fin-page">
+      <div className="fin-bg-orb fin-bg-orb--top"></div>
+      <div className="fin-bg-orb fin-bg-orb--bottom"></div>
 
-      <div className="finances-container max-w-[1400px] mx-auto p-4 md:p-8 xl:p-12">
+      <div className="fin-container">
         {/* --- HEADER --- */}
-        <header className="mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-[var(--text-main)] tracking-tighter flex items-center gap-4">
-              <span className="w-2 h-10 bg-[var(--accent)] rounded-full"></span>
+        <header className="fin-header">
+          <div className="fin-title-group">
+            <h1 className="fin-title">
+              <span className="fin-title-bar"></span>
               Wallet
             </h1>
-            <p className="text-[var(--text-muted)] text-[10px] md:text-xs font-black uppercase tracking-[0.2em] ml-6">
-              Institutional Asset Management • Bullvera
+            <p className="fin-subtitle">
+              Institutional Asset Management &bull; Bullvera
             </p>
           </div>
 
@@ -205,11 +199,11 @@ const Finances = () => {
         </header>
 
         {/* --- MAIN CONTENT GRID --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* LEFT: ACTIONS & LEDGER */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* SEGMENTED TABS */}
-            <div className="segmented-tabs-v3 p-1.5 flex bg-[var(--bg-card-alt)] border border-[var(--border)] rounded-2xl">
+        <div className="fin-main-grid">
+          {/* LEFT COLUMN */}
+          <div>
+            {/* TABS */}
+            <div className="fin-tabs">
               {[
                 { id: 'deposit', label: 'Deposit', icon: <PlusCircle size={18} /> },
                 { id: 'withdrawal', label: 'Withdraw', icon: <MinusCircle size={18} /> },
@@ -218,7 +212,7 @@ const Finances = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-hover)]'}`}
+                  className={`fin-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
                 >
                   {tab.icon}
                   {tab.label}
@@ -226,129 +220,126 @@ const Finances = () => {
               ))}
             </div>
 
-            {/* DYNAMIC FORM AREA */}
-            <div className="fin-action-card-v3 bg-[var(--bg-card)] border border-[var(--border)] rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group shadow-sm">
-              {/* CONTENT */}
-              <div className="relative z-10 transition-all duration-500 animate-slide-up">
+            {/* FORM CARD */}
+            <div className="fin-form-card" style={{ marginTop: 32 }}>
+              <div className="fin-form-card__inner">
+
+                {/* === DEPOSIT === */}
                 {activeTab === 'deposit' && (
-                  <div className="space-y-10">
-                    <div className="flex items-center gap-4 border-b border-[var(--border)] pb-8">
-                      <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[rgba(255,77,94,0.2)]">
+                  <div>
+                    <div className="fin-section-header">
+                      <div className="fin-section-icon">
                         <PlusCircle size={32} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-[var(--text-main)] uppercase tracking-tight">Fund Account</h3>
-                        <p className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest">Select methodology & amount</p>
+                        <h3 className="fin-section-title">Fund Account</h3>
+                        <p className="fin-section-subtitle">Select methodology &amp; amount</p>
                       </div>
                     </div>
 
-                    <form onSubmit={handleDeposit} className="space-y-12">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        {/* LEFT COLUMN: METHOD & AMOUNT */}
-                        <div className="space-y-8">
-                          <div className="space-y-4">
-                            <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] ml-1">Payment Methodology</label>
-                            <div className="grid grid-cols-2 gap-4">
+                    <form onSubmit={handleDeposit}>
+                      <div className="fin-form-grid">
+                        {/* LEFT: Method & Amount */}
+                        <div className="fin-form-section">
+                          <div className="fin-form-group">
+                            <label className="fin-form-label">Payment Methodology</label>
+                            <div className="fin-method-grid">
                               <button
                                 type="button"
                                 onClick={() => setMethod('crypto')}
-                                className={`p-6 rounded-3xl border text-left transition-all relative overflow-hidden group/method ${method === 'crypto' ? 'bg-[var(--accent-muted)] border-[var(--accent)] text-[var(--text-main)]' : 'bg-[var(--bg-card-alt)] border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--text-dim)]'}`}
-                                >
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${method === 'crypto' ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'}`}>
+                                className={`fin-method-btn ${method === 'crypto' ? 'active' : ''}`}
+                              >
+                                <div className="fin-method-icon">
                                   <Zap size={20} />
                                 </div>
-                                <span className="block text-xs font-black uppercase tracking-widest">USDT (TRC20)</span>
-                                <span className="text-[9px] font-bold text-[var(--text-muted)] block mt-1">Instant Crypto</span>
-                                {method === 'crypto' && <div className="absolute top-3 right-3 w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></div>}
+                                <span className="fin-method-name">USDT (TRC20)</span>
+                                <span className="fin-method-desc">Instant Crypto</span>
+                                {method === 'crypto' && <div className="fin-method-dot"></div>}
                               </button>
 
                               <button
                                 type="button"
                                 onClick={() => setMethod('bank_transfer')}
-                                className={`p-6 rounded-3xl border text-left transition-all relative overflow-hidden group/method ${method === 'bank_transfer' ? 'bg-[var(--accent-muted)] border-[var(--accent)] text-[var(--text-main)]' : 'bg-[var(--bg-card-alt)] border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--text-dim)]'}`}
-                                >
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${method === 'bank_transfer' ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'}`}>
+                                className={`fin-method-btn ${method === 'bank_transfer' ? 'active' : ''}`}
+                              >
+                                <div className="fin-method-icon">
                                   <Landmark size={20} />
                                 </div>
-                                <span className="block text-xs font-black uppercase tracking-widest">Bank Wire</span>
-                                <span className="text-[9px] font-bold text-[var(--text-muted)] block mt-1">Global IBAN</span>
-                                {method === 'bank_transfer' && <div className="absolute top-3 right-3 w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></div>}
+                                <span className="fin-method-name">Bank Wire</span>
+                                <span className="fin-method-desc">Global IBAN</span>
+                                {method === 'bank_transfer' && <div className="fin-method-dot"></div>}
                               </button>
                             </div>
                           </div>
 
-                          <div className="space-y-4">
-                            <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] ml-1">Deposit Amplitude (USD)</label>
-                            <div className="relative group">
-                              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold text-2xl group-focus-within:text-[var(--accent)] transition-colors">$</span>
+                          <div className="fin-form-group">
+                            <label className="fin-form-label">Deposit Amplitude (USD)</label>
+                            <div className="fin-amount-wrap">
+                              <span className="fin-amount-symbol">$</span>
                               <input
                                 type="number"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="0.00"
-                                className="w-full bg-[var(--bg-card-alt)] border border-[var(--border)] rounded-[2rem] pl-12 pr-8 py-8 text-[var(--text-main)] text-4xl font-black outline-none focus:border-[var(--accent)] focus:bg-[var(--accent-muted)] transition-all"
+                                className="fin-amount-input"
                                 required
                               />
                             </div>
-                            <div className="flex gap-2">
+                            <div className="fin-quick-amounts">
                               {[500, 1000, 5000].map(v => (
-                                <button key={v} type="button" onClick={() => setAmount(v.toString())} className="px-4 py-2 bg-[var(--bg-card-alt)] border border-[var(--border)] rounded-xl text-[10px] font-black text-[var(--text-dim)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-main)] transition-all">+${v.toLocaleString()}</button>
+                                <button key={v} type="button" onClick={() => setAmount(v.toString())} className="fin-quick-btn">+${v.toLocaleString()}</button>
                               ))}
                             </div>
                           </div>
                         </div>
 
-                        {/* RIGHT COLUMN: INSTRUCTIONS */}
-                        <div className="space-y-6">
-                          <div className="instructions-card p-8 rounded-[2rem] bg-[var(--accent-muted)] border border-dashed border-[rgba(255,77,94,0.2)]">
-                            <h4 className="flex items-center gap-3 text-[10px] font-black text-[var(--accent)] uppercase tracking-widest mb-6">
+                        {/* RIGHT: Instructions */}
+                        <div>
+                          <div className="fin-instructions">
+                            <h4 className="fin-instructions-title">
                               <Info size={14} />
                               Transfer Protocol
                             </h4>
 
                             {method === 'crypto' ? (
-                              <div className="space-y-6">
-                                <div className="space-y-3">
-                                  <div className="flex justify-between items-center px-1">
-                                    <span className="text-[9px] text-[var(--text-muted)] uppercase font-black">Destination Wallet</span>
-                                    <span className="text-[8px] bg-[var(--success-muted)] text-[var(--success)] px-2 py-0.5 rounded font-black">Active</span>
-                                  </div>
-                                  <div className="flex items-center gap-3 bg-[var(--bg-card-alt)] border border-[var(--border)] p-4 rounded-2xl group/copy">
-                                    <code className="flex-1 text-xs text-[var(--success)] font-mono break-all leading-relaxed">{platformConfig.usdt_address}</code>
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        navigator.clipboard.writeText(platformConfig.usdt_address);
-                                        showAlert('Address copied to clipboard', 'Copied', 'success');
-                                      }}
-                                      className="shrink-0 w-10 h-10 bg-[var(--bg-hover)] hover:bg-[var(--border)] text-[var(--accent)] rounded-xl transition-all flex items-center justify-center"
-                                    >
-                                      <Copy size={16} />
-                                    </button>
-                                  </div>
+                              <div>
+                                <div className="fin-wallet-label-row">
+                                  <span className="fin-wallet-label">Destination Wallet</span>
+                                  <span className="fin-wallet-active-badge">Active</span>
                                 </div>
-                                <p className="text-[10px] text-[var(--text-muted)] leading-relaxed font-bold">
-                                  <AlertCircle size={10} className="inline mr-1 text-[var(--accent)]" />
-                                  Only transmit <strong className="text-[var(--text-main)]">USDT via the TRC20 (Tron)</strong> network. Assets sent over other bridges will be permanently lost.
+                                <div className="fin-wallet-address-row">
+                                  <code className="fin-wallet-address">{platformConfig.usdt_address}</code>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(platformConfig.usdt_address);
+                                      showAlert('Address copied to clipboard', 'Copied', 'success');
+                                    }}
+                                    className="fin-copy-btn"
+                                  >
+                                    <Copy size={16} />
+                                  </button>
+                                </div>
+                                <p className="fin-warning-text">
+                                  <AlertCircle size={10} style={{ display: 'inline', marginRight: 4, color: 'var(--accent)' }} />
+                                  Only transmit <strong>USDT via the TRC20 (Tron)</strong> network. Assets sent over other bridges will be permanently lost.
                                 </p>
                               </div>
                             ) : (
-                              <div className="space-y-4">
-                                <div className="space-y-2">
-                                  <div className="flex justify-between text-[11px] p-3 rounded-xl bg-[var(--bg-card-alt)] border border-[var(--border)]">
-                                    <span className="text-[var(--text-muted)] uppercase font-black">Bank</span>
-                                    <span className="text-[var(--text-main)] font-bold">{platformConfig.bank_name}</span>
+                              <div>
+                                <div className="fin-bank-rows">
+                                  <div className="fin-bank-row">
+                                    <span className="fin-bank-row__label">Bank</span>
+                                    <span className="fin-bank-row__value">{platformConfig.bank_name}</span>
                                   </div>
-                                  <div className="flex justify-between text-[11px] p-3 rounded-xl bg-[var(--bg-card-alt)] border border-[var(--border)]">
-                                    <span className="text-[var(--text-muted)] uppercase font-black">Holder</span>
-                                    <span className="text-[var(--text-main)] font-bold">{platformConfig.account_name}</span>
+                                  <div className="fin-bank-row">
+                                    <span className="fin-bank-row__label">Holder</span>
+                                    <span className="fin-bank-row__value">{platformConfig.account_name}</span>
                                   </div>
                                 </div>
-                                <div className="space-y-2">
-                                  <span className="text-[9px] text-[var(--text-muted)] uppercase font-black ml-1">Transfer IBAN</span>
-                                  <div className="p-4 bg-[var(--bg-card-alt)] border border-[rgba(255,77,94,0.2)] rounded-2xl text-[var(--accent)] font-mono text-xs break-all">
-                                    {platformConfig.bank_iban}
-                                  </div>
+                                <span className="fin-iban-label">Transfer IBAN</span>
+                                <div className="fin-iban-value">
+                                  {platformConfig.bank_iban}
                                 </div>
                               </div>
                             )}
@@ -356,33 +347,27 @@ const Finances = () => {
                         </div>
                       </div>
 
-                      <div className="space-y-4">
-                        <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] ml-1">Transaction Proof / Hash</label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            value={txHash}
-                            onChange={(e) => setTxHash(e.target.value)}
-                            placeholder="Paste your transaction hash or reference here..."
-                            className="w-full bg-[var(--bg-card-alt)] border border-[var(--border)] rounded-2xl p-6 text-[var(--text-main)] text-sm outline-none font-mono focus:border-[var(--accent)] transition-all"
-                            required
-                          />
-                        </div>
+                      <div className="fin-proof-group">
+                        <label className="fin-form-label">Transaction Proof / Hash</label>
+                        <input
+                          type="text"
+                          value={txHash}
+                          onChange={(e) => setTxHash(e.target.value)}
+                          placeholder="Paste your transaction hash or reference here..."
+                          className="fin-proof-input"
+                          required
+                        />
                       </div>
 
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full py-8 bg-[var(--accent)] hover:brightness-110 text-white rounded-[2.5rem] font-black text-lg tracking-widest shadow-2xl shadow-[var(--accent-muted)] active:scale-[0.98] transition-all flex items-center justify-center gap-4 group"
-                      >
+                      <button type="submit" disabled={isSubmitting} className="fin-submit-btn">
                         {isSubmitting ? (
                           <>
-                            <RefreshCw className="animate-spin" size={24} />
+                            <RefreshCw className="fin-loading-spinner" size={24} />
                             Validating Transmission...
                           </>
                         ) : (
                           <>
-                            <Send size={24} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <Send size={24} />
                             Submit Funding Request
                           </>
                         )}
@@ -391,45 +376,46 @@ const Finances = () => {
                   </div>
                 )}
 
+                {/* === WITHDRAWAL === */}
                 {activeTab === 'withdrawal' && (
-                  <div className="max-w-2xl mx-auto py-10 space-y-12">
-                    <div className="text-center space-y-6">
-                      <div className="w-24 h-24 rounded-[2.5rem] bg-[var(--accent-muted)] text-[var(--accent)] flex items-center justify-center border border-[rgba(255,77,94,0.2)] mx-auto shadow-2xl shadow-[var(--accent-muted)]">
+                  <div className="fin-withdraw-section">
+                    <div className="fin-withdraw-header">
+                      <div className="fin-withdraw-icon">
                         <Shield size={44} />
                       </div>
-                      <div className="space-y-2">
-                        <h3 className="text-4xl font-black text-[var(--text-main)] uppercase tracking-tight">Withdraw Assets</h3>
-                        <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.3em]">Authorized Secure Payout Gateway</p>
+                      <div>
+                        <h3 className="fin-withdraw-title">Withdraw Assets</h3>
+                        <p className="fin-withdraw-subtitle">Authorized Secure Payout Gateway</p>
                       </div>
                     </div>
 
-                    <form onSubmit={handleWithdrawal} className="space-y-12 bg-[var(--bg-card-alt)] p-10 rounded-[3rem] border border-[var(--border)] relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--bg-card)] border border-[var(--border)] px-6 py-2 rounded-full shadow-lg">
-                        <span className="text-[10px] text-[var(--text-dim)] font-black uppercase tracking-widest">Digital Authentication Required</span>
+                    <form onSubmit={handleWithdrawal} className="fin-withdraw-form">
+                      <div className="fin-withdraw-badge">
+                        <span>Digital Authentication Required</span>
                       </div>
 
-                      <div className="space-y-5 text-center">
-                        <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">Capital Amount (USD)</label>
-                        <div className="relative max-w-sm mx-auto group">
-                          <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold text-4xl group-focus-within:text-[var(--accent)] transition-colors">$</span>
+                      <div className="fin-withdraw-amount-group">
+                        <label className="fin-form-label" style={{ marginBottom: 0 }}>Capital Amount (USD)</label>
+                        <div className="fin-withdraw-amount-wrap">
+                          <span className="fin-withdraw-amount-symbol">$</span>
                           <input
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="0.00"
-                            className="w-full bg-[var(--bg-hover)] border border-[var(--border)] rounded-[2.5rem] text-center text-5xl font-black text-[var(--text-main)] py-10 outline-none focus:bg-[var(--accent-muted)] focus:border-[var(--accent)] transition-all"
+                            className="fin-withdraw-amount-input"
                             required
                           />
                         </div>
-                        <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">
-                          Liquid Balance: <span className="text-[var(--accent)]">${formatCurrency(tm.balance)}</span>
+                        <p className="fin-withdraw-balance">
+                          Liquid Balance: <span>${formatCurrency(tm.balance)}</span>
                         </p>
                       </div>
 
-                      <div className="space-y-5 text-center">
-                        <div className="flex items-center justify-center gap-3">
-                          <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">Access Key</label>
-                          <button type="button" onClick={() => setShowSetupPin(true)} className="text-[10px] text-[var(--accent)] font-black uppercase hover:underline">Reset PIN</button>
+                      <div className="fin-pin-group">
+                        <div className="fin-pin-label-row">
+                          <label className="fin-pin-label">Access Key</label>
+                          <button type="button" onClick={() => setShowSetupPin(true)} className="fin-pin-reset">Reset PIN</button>
                         </div>
                         <input
                           type="password"
@@ -437,19 +423,15 @@ const Finances = () => {
                           value={withdrawalPin}
                           onChange={(e) => setWithdrawalPin(e.target.value.replace(/\D/g, ''))}
                           placeholder="••••"
-                          className="w-48 bg-[var(--bg-hover)] border border-[var(--border)] rounded-2xl mx-auto block text-center text-5xl font-black text-[var(--text-main)] tracking-[0.6em] py-6 outline-none focus:border-[var(--accent)] transition-all"
+                          className="fin-pin-input"
                           required
                         />
                       </div>
 
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full py-8 bg-[var(--accent)] text-white rounded-[2.5rem] font-black text-xl flex items-center justify-center gap-4 hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-[var(--accent-muted)]"
-                      >
+                      <button type="submit" disabled={isSubmitting} className="fin-withdraw-btn">
                         {isSubmitting ? (
                           <>
-                            <RefreshCw className="animate-spin" size={24} />
+                            <RefreshCw className="fin-loading-spinner" size={24} />
                             Encrypting Payout...
                           </>
                         ) : (
@@ -463,53 +445,52 @@ const Finances = () => {
                   </div>
                 )}
 
+                {/* === HISTORY === */}
                 {activeTab === 'history' && (
-                  <div className="space-y-10">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-[var(--border)] pb-10">
-                      <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[rgba(255,77,94,0.1)]">
+                  <div>
+                    <div className="fin-history-header">
+                      <div className="fin-history-header-left">
+                        <div className="fin-section-icon">
                           <History size={32} />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-black text-[var(--text-main)] uppercase tracking-tight">Ledger Matrix</h3>
-                          <p className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest">Historical Asset Activity</p>
+                          <h3 className="fin-section-title">Ledger Matrix</h3>
+                          <p className="fin-section-subtitle">Historical Asset Activity</p>
                         </div>
                       </div>
-                      <div className="flex gap-4 w-full md:w-auto">
-                        <button className="flex-1 md:flex-none px-6 py-4 bg-[var(--bg-card-alt)] text-[var(--text-muted)] text-[10px] font-black uppercase rounded-xl border border-[var(--border)] hover:bg-[var(--bg-hover)] transition-all tracking-widest">Export Ledger</button>
-                      </div>
+                      <button className="fin-export-btn">Export Ledger</button>
                     </div>
 
-                    <div className="ledger-rows-v3 space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-2">
+                    <div className="fin-ledger-rows">
                       {history.length === 0 ? (
-                        <div className="py-32 flex flex-col items-center opacity-30">
-                          <AlertCircle size={80} className="mb-6" />
-                          <p className="text-xl font-black uppercase tracking-[0.4em]">Vault Uninitialized</p>
+                        <div className="fin-empty-state">
+                          <AlertCircle size={80} />
+                          <p>Vault Uninitialized</p>
                         </div>
                       ) : (
                         history.map((tx, idx) => (
-                          <div key={idx} className="tx-row-v3 group flex items-center justify-between p-6 bg-[var(--bg-card)] border border-[var(--border)] rounded-3xl hover:bg-[var(--bg-card-alt)] hover:border-[var(--text-dim)] transition-all shadow-sm">
-                            <div className="flex items-center gap-6">
-                              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center relative shadow-sm ${tx.type === 'Deposit' ? 'bg-[var(--success-muted)] text-[var(--success)]' : 'bg-[var(--danger-muted)] text-[var(--danger)]'}`}>
+                          <div key={idx} className="fin-tx-row">
+                            <div className="fin-tx-left">
+                              <div className={`fin-tx-icon ${tx.type === 'Deposit' ? 'deposit' : 'withdrawal'}`}>
                                 {tx.type === 'Deposit' ? <ArrowDownLeft size={24} /> : <ArrowUpRight size={24} />}
-                                <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-[var(--bg-card)] ${tx.status === 'approved' ? 'bg-[var(--success)]' : tx.status === 'pending' ? 'bg-[var(--warning)]' : 'bg-[var(--danger)]'}`}></div>
+                                <div className={`fin-tx-status-dot ${tx.status}`}></div>
                               </div>
-                              <div className="space-y-1.5">
-                                <div className="flex items-center gap-3">
-                                  <h4 className="text-lg font-black text-[var(--text-main)] uppercase tracking-tight">{tx.type}</h4>
-                                  <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-[var(--bg-card-alt)] text-[var(--text-muted)] rounded">{tx.method.replace('_', ' ')}</span>
+                              <div className="fin-tx-info">
+                                <div className="fin-tx-type-row">
+                                  <h4 className="fin-tx-type">{tx.type}</h4>
+                                  <span className="fin-tx-method-badge">{tx.method.replace('_', ' ')}</span>
                                 </div>
-                                <p className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest flex items-center gap-2">
+                                <p className="fin-tx-date">
                                   {tx.date}
-                                  <span className="w-1 h-1 bg-[var(--border)] rounded-full"></span>
+                                  <span className="fin-tx-date-dot"></span>
                                   BVR-{tx._id?.substring(0, 8).toUpperCase() || 'EXTERNAL'}
                                 </p>
                               </div>
                             </div>
 
-                            <div className="text-right flex items-center gap-8">
-                              <div className="space-y-1.5">
-                                <p className={`text-2xl font-black font-mono leading-none ${tx.type === 'Deposit' ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
+                            <div className="fin-tx-right">
+                              <div>
+                                <p className={`fin-tx-amount ${tx.type === 'Deposit' ? 'deposit' : 'withdrawal'}`}>
                                   {tx.type === 'Deposit' ? '+' : '-'}${formatCurrency(tx.amount)}
                                 </p>
                                 <div className={`status-badge-v3 ${tx.status}`}>
@@ -517,7 +498,7 @@ const Finances = () => {
                                   <span>{tx.status}</span>
                                 </div>
                               </div>
-                              <button className="w-12 h-12 rounded-xl bg-[var(--bg-card-alt)] text-[var(--text-muted)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:text-[var(--text-main)] hover:bg-[var(--bg-hover)]">
+                              <button className="fin-tx-action-btn">
                                 <ExternalLink size={16} />
                               </button>
                             </div>
@@ -531,38 +512,37 @@ const Finances = () => {
             </div>
           </div>
 
-          {/* RIGHT: METRICS & SUPPORT */}
-          <div className="lg:col-span-4 space-y-8">
-            {/* PORTFOLIO METRICS */}
-            <div className="glass-metric-card-v3 p-10 bg-[var(--bg-card)] border border-[var(--border)] rounded-[2.5rem] relative overflow-hidden group shadow-sm">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[rgba(255,77,94,0.05)] blur-[80px] -mr-16 -mt-16 group-hover:bg-[rgba(255,77,94,0.1)] transition-all duration-700"></div>
-              
-              <div className="relative z-10 space-y-8">
-                <div className="flex items-center gap-4 border-b border-[var(--border)] pb-8">
-                  <div className="w-12 h-12 bg-[var(--bg-card-alt)] rounded-2xl flex items-center justify-center text-[var(--text-muted)] border border-[var(--border)] shadow-sm">
-                    <Shield size={20} />
+          {/* RIGHT COLUMN */}
+          <div className="fin-right-col">
+            {/* METRICS CARD */}
+            <div className="fin-metrics-card">
+              <div className="fin-metrics-glow"></div>
+              <div className="fin-metrics-inner">
+                <div className="fin-metrics-header">
+                  <div className="fin-metrics-header-icon">
+                    <Shield size={18} />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-black text-[var(--text-dim)] uppercase tracking-[0.3em] mb-1">Risk Assessment</h4>
-                    <p className="text-[8px] text-[var(--text-muted)] font-black uppercase">Institutional Grade Metrics</p>
+                    <h4 className="fin-metrics-title">Risk Assessment</h4>
+                    <p className="fin-metrics-subtitle">Institutional Grade Metrics</p>
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="fin-metrics-rows">
                   {[
-                    { label: 'Total Equity', value: tm.equity, color: 'text-[var(--accent)]', icon: <Wallet size={14} /> },
-                    { label: 'Utilized Margin', value: tm.marginUsed, color: 'text-[var(--danger)]', icon: <CreditCard size={14} /> },
-                    { label: 'Free Liquidity', value: tm.freeMargin, color: 'text-[var(--success)]', icon: <Zap size={14} /> },
-                    { label: 'Security Level', value: (tm.marginLevel || 0).toFixed(2) + '%', color: 'text-[var(--warning)]', icon: <Shield size={14} />, isPercent: true }
+                    { label: 'Total Equity', value: tm.equity, colorClass: 'accent', icon: <Wallet size={14} /> },
+                    { label: 'Utilized Margin', value: tm.marginUsed, colorClass: 'danger', icon: <CreditCard size={14} /> },
+                    { label: 'Free Liquidity', value: tm.freeMargin, colorClass: 'success', icon: <Zap size={14} /> },
+                    { label: 'Security Level', value: (tm.marginLevel || 0).toFixed(2) + '%', colorClass: 'warning', icon: <Shield size={14} />, isPercent: true }
                   ].map(metric => (
-                    <div key={metric.label} className="metric-row-v3 flex justify-between items-center p-6 bg-[var(--bg-card-alt)] border border-[var(--border)] rounded-2xl hover:border-[var(--text-dim)] transition-all group/m">
-                      <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-lg bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-muted)] transition-colors shadow-sm">
+                    <div key={metric.label} className="fin-metric-row">
+                      <div className="fin-metric-left">
+                        <div className="fin-metric-icon">
                           {metric.icon}
                         </div>
-                        <span className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">{metric.label}</span>
+                        <span className="fin-metric-label">{metric.label}</span>
                       </div>
-                      <span className={`text-xl font-black font-mono tracking-tighter ${metric.color}`}>
+                      <span className={`fin-metric-value ${metric.colorClass}`}>
                         {metric.isPercent ? metric.value : '$' + formatCurrency(metric.value)}
                       </span>
                     </div>
@@ -571,21 +551,20 @@ const Finances = () => {
               </div>
             </div>
 
-            {/* QUICK SUPPORT */}
-            <div className="support-promo-v3 p-10 bg-[var(--accent)] rounded-[2.5rem] relative overflow-hidden group shadow-2xl shadow-[var(--accent-muted)]">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 blur-[100px] -mr-20 -mt-20 group-hover:scale-125 transition-transform duration-1000"></div>
-              
-              <div className="relative z-10 space-y-8 flex flex-col h-full">
-                <div className="w-16 h-16 bg-white text-[var(--accent)] rounded-2xl flex items-center justify-center text-2xl shadow-xl transform group-hover:rotate-6 transition-transform">
-                  <Headphones size={32} />
+            {/* SUPPORT CARD */}
+            <div className="fin-support-card">
+              <div className="fin-support-glow"></div>
+              <div className="fin-support-inner">
+                <div className="fin-support-icon">
+                  <Headphones size={24} />
                 </div>
-                <div className="space-y-4">
-                  <h4 className="text-3xl font-black text-white uppercase tracking-tight leading-none">Financial Desk</h4>
-                  <p className="text-white/60 text-xs font-bold leading-relaxed">
-                    Prioritized assistance for high-volume capital deployments and expedited payout verification cycles.
+                <div>
+                  <h4 className="fin-support-title">Financial Desk</h4>
+                  <p className="fin-support-desc">
+                    Prioritized support for capital deployments and payout verification.
                   </p>
                 </div>
-                <button className="w-full py-5 bg-white/20 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:bg-white/30 transition-all flex items-center justify-center gap-3">
+                <button className="fin-support-btn">
                   <Smartphone size={14} />
                   Connect With Specialist
                 </button>
@@ -595,226 +574,48 @@ const Finances = () => {
         </div>
       </div>
 
-      {/* --- SETUP PIN MODAL --- */}
+      {/* --- PIN MODAL --- */}
       {showSetupPin && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 backdrop-blur-3xl bg-black/40 animate-fade-in">
-          <div className="w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border)] rounded-[3rem] p-12 relative overflow-hidden shadow-2xl">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-muted)] blur-[80px] -mr-16 -mt-16"></div>
-             
-             <div className="relative z-10">
-                <div className="text-center space-y-6 mb-12">
-                   <div className="w-20 h-20 rounded-[1.8rem] bg-[var(--accent-muted)] text-[var(--accent)] flex items-center justify-center border border-[var(--accent-muted)] mx-auto">
-                      <Key size={36} />
-                   </div>
-                   <div className="space-y-2">
-                      <h3 className="text-3xl font-black text-[var(--text-main)] uppercase tracking-tight">Security Access</h3>
-                      <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">Platform Withdrawal Credentials</p>
-                   </div>
+        <div className="fin-modal-overlay">
+          <div className="fin-modal-card">
+            <div className="fin-modal-glow"></div>
+            <div className="fin-modal-inner">
+              <div className="fin-modal-header">
+                <div className="fin-modal-icon">
+                  <Key size={36} />
+                </div>
+                <div>
+                  <h3 className="fin-modal-title">Security Access</h3>
+                  <p className="fin-modal-subtitle">Platform Withdrawal Credentials</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSetupPin} className="fin-modal-form">
+                <div>
+                  <label className="fin-form-label">Define New 4-Digit PIN</label>
+                  <input
+                    type="password"
+                    maxLength="4"
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                    className="fin-modal-pin-input"
+                    placeholder="••••"
+                    required
+                  />
                 </div>
 
-                <form onSubmit={handleSetupPin} className="space-y-8">
-                   <div className="space-y-4">
-                      <label className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] ml-2">Define New 4-Digit PIN</label>
-                      <input
-                        type="password"
-                        maxLength="4"
-                        value={newPin}
-                        onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
-                        className="w-full bg-[var(--bg-hover)] border border-[var(--border)] rounded-2xl text-center text-4xl font-black text-[var(--text-main)] py-6 tracking-[0.8em] outline-none focus:border-[var(--accent)] transition-all"
-                        placeholder="••••"
-                        required
-                      />
-                   </div>
+                <button type="submit" disabled={isSubmitting} className="fin-modal-submit">
+                  {isSubmitting ? 'Securing Access...' : 'Commit Security PIN'}
+                </button>
 
-                   <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-6 bg-[var(--accent)] text-white rounded-[1.8rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-[var(--accent-muted)] hover:filter hover:brightness-110 transition-all"
-                   >
-                     {isSubmitting ? 'Securing Access...' : 'Commit Security PIN'}
-                   </button>
-                   
-                   <button
-                    type="button"
-                    onClick={() => setShowSetupPin(false)}
-                    className="w-full text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest hover:text-[var(--text-main)] transition-colors"
-                   >
-                     Cancel
-                   </button>
-                </form>
-             </div>
+                <button type="button" onClick={() => setShowSetupPin(false)} className="fin-modal-cancel">
+                  Cancel
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
-
-      {/* --- STYLES --- */}
-      <style>{`
-        .finances-page-v3 {
-          min-height: 100vh;
-          background: var(--bg-deep);
-          color: var(--text-main);
-          font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
-          position: relative;
-          overflow-x: hidden;
-        }
-
-        .premium-wallet-card-v3 {
-          width: 100%;
-          max-width: 440px;
-          padding: 32px;
-          background: var(--accent-gradient);
-          border-radius: 2.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 32px;
-          box-shadow: 0 30px 60px -15px rgba(255, 77, 94, 0.3);
-          position: relative;
-          overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .premium-wallet-card-v3::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent);
-          pointer-events: none;
-        }
-
-        .premium-wallet-card-v3 .card-top {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          position: relative;
-          z-index: 10;
-        }
-
-        .premium-wallet-card-v3 .balance-group .label {
-          display: block;
-          font-size: 10px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.2rem;
-          color: rgba(255, 255, 255, 0.6);
-          margin-bottom: 8px;
-        }
-
-        .premium-wallet-card-v3 .balance-group .balance {
-          font-size: 40px;
-          font-weight: 950;
-          letter-spacing: -2px;
-          line-height: 1;
-        }
-
-        .premium-wallet-card-v3 .wallet-chip {
-          width: 56px;
-          height: 56px;
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 1.25rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-        }
-
-        .premium-wallet-card-v3 .card-bottom {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          padding-top: 24px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          position: relative;
-          z-index: 10;
-        }
-
-        .premium-wallet-card-v3 .account-info .label {
-          display: block;
-          font-size: 8px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.15rem;
-          color: rgba(255, 255, 255, 0.4);
-          margin-bottom: 4px;
-        }
-
-        .premium-wallet-card-v3 .account-info .value {
-          font-family: 'Space Mono', monospace;
-          font-size: 14px;
-          font-weight: 700;
-          color: white;
-        }
-
-        .premium-wallet-card-v3 .network-labels {
-          display: flex;
-          gap: 8px;
-        }
-
-        .premium-wallet-card-v3 .network {
-          font-size: 8px;
-          font-weight: 900;
-          padding: 4px 10px;
-          background: white;
-          color: var(--accent);
-          border-radius: 100px;
-          text-transform: uppercase;
-        }
-
-        .status-badge-v3 {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 12px;
-          border-radius: 100px;
-          font-size: 9px;
-          font-weight: 900;
-          text-transform: uppercase;
-          letter-spacing: 0.1rem;
-          background: var(--bg-hover);
-        }
-
-        .status-badge-v3 .dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 100px;
-        }
-
-        .status-badge-v3.approved { color: var(--success); }
-        .status-badge-v3.approved .dot { background: var(--success); }
-        .status-badge-v3.pending { color: var(--warning); }
-        .status-badge-v3.pending .dot { background: var(--warning); }
-        .status-badge-v3.rejected { color: var(--danger); }
-        .status-badge-v3.rejected .dot { background: var(--danger); }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes slide-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
-        .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
-
-        @media (max-width: 768px) {
-          .premium-wallet-card-v3 {
-            max-width: 100%;
-            padding: 24px;
-          }
-          .premium-wallet-card-v3 .balance { font-size: 32px; }
-          .fin-action-card-v3 { padding: 32px 24px; border-radius: 2rem; }
-        }
-      `}</style>
     </div>
   );
 };
