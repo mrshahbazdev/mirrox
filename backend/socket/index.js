@@ -1,3 +1,4 @@
+const axios = require('axios');
 const { activeTrades, symbolsList, saveData, clients } = require('../store');
 const jwt = require('jsonwebtoken');
 const WebSocket = require('ws');
@@ -301,21 +302,53 @@ module.exports = (io) => {
     });
 
     socket.on('visitor:track', async (data) => {
-        const { visitorId, userId, ip, country, city, userAgent, referrer, path } = data;
+        const { visitorId, userId, userAgent, referrer, path } = data;
         if (!visitorId) return;
 
+        // Detect Real IP (handle proxies like Vercel/Cloudflare)
+        const ip = socket.handshake.headers['x-forwarded-for']?.split(',')[0].trim() || 
+                   socket.handshake.address || 
+                   'Unknown';
+
         try {
-            const visitor = await Visitor.findOneAndUpdate(
+            // 1. Find or create visitor
+            let visitor = await Visitor.findOne({ visitorId });
+            
+            let country = visitor?.country || 'Unknown';
+            let city = visitor?.city || 'Unknown';
+
+            // 2. If country is unknown, attempt GeoIP lookup (Server-side avoids CORS)
+            if (country === 'Unknown' && ip !== 'Unknown' && ip !== '::1' && ip !== '127.0.0.1') {
+                try {
+                    const geoRes = await axios.get(`https://ipapi.co/${ip}/json/`);
+                    if (geoRes.data && !geoRes.data.error) {
+                        country = geoRes.data.country_name || 'Unknown';
+                        city = geoRes.data.city || 'Unknown';
+                    }
+                } catch (geoErr) {
+                    console.error('[GEOIP ERR]', geoErr.message);
+                }
+            }
+
+            // 3. Update or Insert
+            visitor = await Visitor.findOneAndUpdate(
                 { visitorId },
                 {
-                    $set: { userId, ip, country, city, userAgent, referrer, lastActive: new Date() },
-                    $inc: { sessionCount: 0 }, // Just to ensure it exists
+                    $set: { 
+                        userId, 
+                        ip, 
+                        country, 
+                        city, 
+                        userAgent, 
+                        referrer, 
+                        lastActive: new Date() 
+                    },
                     $push: { pathHistory: { path, timestamp: new Date() } }
                 },
                 { upsert: true, new: true }
             );
             
-            // If it's a new visitor (first entry in history)
+            // Increment session count if it's the first historical entry
             if (visitor.pathHistory.length === 1) {
                 await Visitor.updateOne({ visitorId }, { $inc: { sessionCount: 1 } });
             }
