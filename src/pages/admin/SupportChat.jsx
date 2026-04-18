@@ -408,7 +408,6 @@ export default function SupportChat({ onAdminLogout }) {
   }, {});
 
   return (
-  return (
     <AdminLayout onAdminLogout={onAdminLogout}>
       <div className={`support-chat-layout ${selectedTicket ? 'has-open-ticket' : ''}`}>
       {/* LEFT — Ticket List */}
