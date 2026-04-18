@@ -6,9 +6,9 @@ import { useTrading } from '../../context/TradingContext';
 import { useModal } from '../../context/ModalContext';
 
 const statusConfig = {
-  active: { label: 'Active', color: '#00cc88', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.2)' },
-  pending: { label: 'Pending', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.2)' },
-  suspended: { label: 'Suspended', color: '#ff4d4d', bg: 'rgba(255,77,77,0.1)', border: 'rgba(255,77,77,0.2)' },
+  active: { label: 'Active', color: 'var(--success)', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.2)' },
+  pending: { label: 'Pending', color: 'var(--warning)', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.2)' },
+  suspended: { label: 'Suspended', color: 'var(--danger)', bg: 'rgba(255,77,77,0.1)', border: 'rgba(255,77,77,0.2)' },
 };
 
 const ITEMS_PER_PAGE = 5;
@@ -411,15 +411,15 @@ const ClientDetail = ({ onAdminLogout }) => {
   const st = statusConfig[client.status];
 
   const tradingMetricCards = [
-    { num: '①', label: 'Balance', value: `$${(tm?.balance || 0).toLocaleString()}`, color: '#FF4D5E' },
-    { num: '②', label: 'Credit Deposit', value: `$${(tm?.creditDeposit || 0).toLocaleString()}`, color: '#a855f7' },
-    { num: '③', label: 'Equity', value: `$${(tm?.equity || 0).toLocaleString()}`, color: '#06b6d4' },
-    { num: '④', label: 'Margin', value: `$${(tm?.marginUsed || 0).toLocaleString()}`, color: '#ef4444' },
-    { num: '⑤', label: 'Free Margin', value: `$${(tm?.freeMargin || 0).toLocaleString()}`, color: '#00cc88' },
-    { num: '⑥', label: 'Margin Level', value: `${tm?.marginLevel?.toFixed(2) || 0}%`, color: '#f59e0b' },
-    { num: '⑦', label: 'Swap', value: `$${(tm?.swap || 0).toFixed(2)}`, color: '#ff4d4d' },
-    { num: '⑧', label: 'Trades', value: tm?.trades || 0, color: '#10b981' },
-    { num: '⑨', label: 'Opened By / Date', value: `${tm?.openedBy || 'System'} \u00b7 ${tm?.openedDate || 'N/A'}`, color: '#94a3b8' },
+    { num: '①', label: 'Balance', value: `$${(tm?.balance || 0).toLocaleString()}`, color: 'var(--brand-primary)', icon: 'wallet' },
+    { num: '②', label: 'Equity', value: `$${(tm?.equity || 0).toLocaleString()}`, color: 'var(--info)', icon: 'chart-pie' },
+    { num: '③', label: 'Credit Deposit', value: `$${(tm?.creditDeposit || 0).toLocaleString()}`, color: 'var(--success)', icon: 'money-bill-trend-up' },
+    { num: '④', label: 'Margin Level', value: `${tm?.marginLevel?.toFixed(2) || 0}%`, color: 'var(--warning)', icon: 'gauge-high' },
+    { num: '⑤', label: 'Margin Used', value: `$${(tm?.marginUsed || 0).toLocaleString()}`, color: 'var(--danger)', icon: 'lock' },
+    { num: '⑥', label: 'Free Margin', value: `$${(tm?.freeMargin || 0).toLocaleString()}`, color: 'var(--success)', icon: 'unlock' },
+    { num: '⑦', label: 'Swap', value: `$${(tm?.swap || 0).toFixed(2)}`, color: 'var(--brand-primary)', icon: 'arrows-spin' },
+    { num: '⑧', label: 'Trades', value: tm?.trades || 0, color: 'var(--text-main)', icon: 'briefcase' },
+    { num: '⑨', label: 'Started', value: `${tm?.openedDate || 'N/A'}`, color: 'var(--text-dim)', icon: 'calendar-day' },
   ];
 
   return (
@@ -494,13 +494,13 @@ const ClientDetail = ({ onAdminLogout }) => {
                 </span>
                 
                 <div className="cd-actions-bar" style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-                  <button className="adm-act-btn fund" disabled={processing} style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', borderColor: 'rgba(16,185,129,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
+                  <button className="cd-act-btn success" disabled={processing} onClick={handleQuickFund} title="Deposit $10,000.00 Demo Funds">
                     <i className="fa-solid fa-coins" /> {processing ? '...' : 'Fund $10k'}
                   </button>
-                  <button className="adm-act-btn edit" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => setShowBalanceModal(true)}>
+                  <button className="cd-act-btn primary" style={{ opacity: 0.8 }} onClick={() => setShowBalanceModal(true)}>
                     <i className="fa-solid fa-pen-to-square" /> Edit Balance
                   </button>
-                  <button className="adm-act-btn pin" style={{ background: 'rgba(168,85,247,0.1)', color: '#a855f7', borderColor: 'rgba(168,85,247,0.2)', padding: '8px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleResetPin}>
+                  <button className="cd-act-btn primary" style={{ background: 'rgba(168,85,247,0.1)', color: '#a855f7', borderColor: 'rgba(168,85,247,0.2)' }} onClick={handleResetPin}>
                     <i className="fa-solid fa-key" /> Reset PIN
                   </button>
                 </div>
@@ -537,17 +537,17 @@ const ClientDetail = ({ onAdminLogout }) => {
       </div>
 
       <div className="cd-section">
-        <div className="cd-section-label" style={{ color: '#a855f7' }}>Verification Center (KYC Documents)</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '16px' }}>
+        <div className="cd-section-label">Verification Center (KYC Documents)</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginTop: '8px' }}>
           
           {[
             { id: 'poi', label: 'Proof of Identity', data: client?.kyc?.poi },
             { id: 'por', label: 'Proof of Residence', data: client?.kyc?.por },
             { id: 'selfie', label: 'Selfie with ID', data: client?.kyc?.selfie },
           ].map((item) => (
-            <div key={item.id} className="adm-kyc-card" style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px' }}>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#94a3b8' }}>{item.label}</div>
+            <div key={item.id} className="adm-kyc-card" style={{ padding: '24px', borderRadius: '20px' }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 900, color: 'var(--text-dim)', textTransform: 'uppercase' }}>{item.label}</div>
                   <span className={`cd-trade-status ${item.data?.status || 'none'}`}>
                      {item.data?.status || 'Not Submitted'}
                   </span>
@@ -555,36 +555,39 @@ const ClientDetail = ({ onAdminLogout }) => {
 
                {item.data?.url ? (
                  <>
-                    <div style={{ background: '#000', height: '180px', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div style={{ background: '#000', height: '200px', borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid var(--border)', position: 'relative' }}>
                        <img src={item.data.url} alt={item.id} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                       <div style={{ position: 'absolute', bottom: '12px', right: '12px' }}>
+                          <a href={item.data.url} target="_blank" rel="noreferrer" className="adm-mini-act" style={{ width: '36px', height: '36px', borderRadius: '10px' }}>
+                             <i className="fa-solid fa-expand" />
+                          </a>
+                       </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                       <a href={item.data.url} target="_blank" rel="noreferrer" className="adm-mini-act" style={{ background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E', textDecoration: 'none', textAlign: 'center', flex: 1, padding: '8px', borderRadius: '8px', fontSize: '12px', fontWeight: 600 }}>
-                          <i className="fa-solid fa-expand" style={{ marginRight: '6px' }} /> View
-                       </a>
+                    <div style={{ display: 'flex', gap: '10px' }}>
                        {(item.data.status === 'pending' || item.data.status === 'rejected') && (
-                         <button onClick={() => handleReviewKYC(item.id, 'approve')} className="adm-mini-act" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
-                            <i className="fa-solid fa-check" style={{ marginRight: '6px' }} /> Approve
+                         <button onClick={() => handleReviewKYC(item.id, 'approve')} className="cd-act-btn success" style={{ padding: '8px', fontSize: '11px', flex: 1 }}>
+                            <i className="fa-solid fa-check" /> Approve
                          </button>
                        )}
                        {(item.data.status === 'pending' || item.data.status === 'approved') && (
                          <button onClick={async () => {
                             const reason = await showPrompt("Enter rejection reason:", `Reject ${item.label}`, "Incomplete or blurry...");
                             if (reason) handleReviewKYC(item.id, 'reject', reason);
-                         }} className="adm-mini-act" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
-                            <i className="fa-solid fa-xmark" style={{ marginRight: '6px' }} /> Reject
+                         }} className="cd-act-btn danger" style={{ padding: '8px', fontSize: '11px', flex: 1 }}>
+                            <i className="fa-solid fa-xmark" /> Reject
                          </button>
                        )}
                     </div>
                     {item.data.rejectionReason && (
-                       <div style={{ marginTop: '12px', fontSize: '11px', color: '#ff4d4d', padding: '8px', background: 'rgba(255,77,77,0.05)', borderRadius: '8px' }}>
-                          <i className="fa-solid fa-circle-info" style={{ marginRight: '6px' }} /> {item.data.rejectionReason}
+                       <div style={{ marginTop: '16px', fontSize: '11px', color: 'var(--danger)', padding: '10px', background: 'rgba(255,77,77,0.05)', borderRadius: '10px', borderLeft: '3px solid var(--danger)' }}>
+                          <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: '6px' }} /> {item.data.rejectionReason}
                        </div>
                     )}
                  </>
                ) : (
-                 <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', fontSize: '13px', fontStyle: 'italic', border: '1px dashed rgba(255,255,255,0.05)', borderRadius: '12px' }}>
-                    Document not yet submitted
+                 <div style={{ height: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '12px', border: '2px dashed var(--border)', borderRadius: '14px', gap: '12px' }}>
+                    <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: '24px', opacity: 0.3 }} />
+                    Waiting for submission
                  </div>
                )}
             </div>
@@ -593,53 +596,39 @@ const ClientDetail = ({ onAdminLogout }) => {
       </div>
 
       <div className="cd-section">
-        <div className="cd-section-label" style={{ color: '#06b6d4' }}>Account Summary</div>
+        <div className="cd-section-label">Account Metrics & Trading Power</div>
         <div className="cd-account-grid">
-          {[
-            { label: 'Deposit', value: `$${(acc?.deposit || 0).toLocaleString()}` },
-            { label: 'Total Withdrawal', value: `$${totalWithdrawal.toLocaleString()}` },
-            { label: 'Credit Deposit', value: `$${(acc?.creditDeposit || 0).toLocaleString()}` },
-            { label: 'Equity', value: `$${(acc?.equity || 0).toLocaleString()}` },
-            { label: 'Swap', value: `$${(acc?.swap || 0).toFixed(2)}` },
-            { label: 'Commission', value: `$${(acc?.commission || 0).toFixed(2)}` },
-          ].map((item) => (
+           {[
+            { label: 'Total Deposit', value: `$${(acc?.deposit || 0).toLocaleString()}`, color: 'var(--success)' },
+            { label: 'Total Withdrawn', value: `$${totalWithdrawal.toLocaleString()}`, color: 'var(--danger)' },
+            { label: 'Available Funds', value: `$${(acc?.availableToWithdraw || 0).toLocaleString()}`, color: 'var(--info)' },
+           ].map(item => (
             <div className="cd-acc-card" key={item.label}>
               <div className="cd-acc-label">{item.label}</div>
-              <div className="cd-acc-value">{item.value}</div>
+              <div className="cd-acc-value" style={{ color: item.color }}>{item.value}</div>
             </div>
-          ))}
+           ))}
+           <div className="cd-acc-card" style={{ borderColor: (acc?.profitLoss || 0) >= 0 ? 'var(--success)' : 'var(--danger)', background: (acc?.profitLoss || 0) >= 0 ? 'rgba(0,204,136,0.05)' : 'rgba(255,77,77,0.05)' }}>
+              <div className="cd-acc-label">P/L Performance</div>
+              <div className="cd-acc-value" style={{ color: (acc?.profitLoss || 0) >= 0 ? 'var(--success)' : 'var(--danger)' }}>
+                {(acc?.profitLoss || 0) >= 0 ? '+' : ''}{(acc?.profitLoss || 0).toLocaleString()}
+              </div>
+           </div>
+           <div className="cd-acc-card">
+              <div className="cd-acc-label">Active Power</div>
+              <div className="cd-acc-value">{acc?.leverage || '1:100'}</div>
+           </div>
+           <div className="cd-acc-card">
+              <div className="cd-acc-label">Margin Health</div>
+              <div className="cd-acc-value" style={{ color: (acc?.marginLevel || 0) < 100 ? 'var(--danger)' : 'var(--success)' }}>{acc?.marginLevel || 0}%</div>
+           </div>
         </div>
-        <div className="cd-account-grid cd-account-grid-2">
-          <div className="cd-acc-card">
-            <div className="cd-acc-label">Amount Available to Withdraw</div>
-            <div className="cd-acc-value">${(acc?.availableToWithdraw || 0).toLocaleString()}</div>
-          </div>
-          <div className="cd-acc-card">
-            <div className="cd-acc-label">Leverage</div>
-            <div className="cd-acc-value">{acc?.leverage || '1:100'}</div>
-          </div>
-          <div className="cd-acc-card">
-            <div className="cd-acc-label">Margin Level</div>
-            <div className="cd-acc-value">{acc?.marginLevel || 0}%</div>
-          </div>
-          <div className="cd-acc-card cd-pl-card" style={{
-            background: (acc?.profitLoss || 0) >= 0 ? 'rgba(0,204,136,0.07)' : 'rgba(255,77,77,0.07)',
-            borderColor: (acc?.profitLoss || 0) >= 0 ? 'rgba(0,204,136,0.25)' : 'rgba(255,77,77,0.25)',
-          }}>
-            <div className="cd-acc-label">Profit / Loss</div>
-            <div className="cd-acc-value" style={{ color: (acc?.profitLoss || 0) >= 0 ? '#00cc88' : '#ff4d4d', fontSize: 20 }}>
-              {(acc?.profitLoss || 0) >= 0 ? '+' : ''}{(acc?.profitLoss || 0).toFixed(2)}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="cd-section">
-        <div className="cd-section-label" style={{ color: '#FF4D5E' }}>Trading Metrics</div>
         <div className="cd-metrics-grid">
           {tradingMetricCards.map((card) => (
-            <div className="cd-metric-card" key={card.num}>
-              <div className="cd-metric-num" style={{ color: card.color }}>{card.num}</div>
+            <div className="cd-metric-card" key={card.label}>
+              <div className="cd-metric-num">{card.num}</div>
+              <div className="cd-metric-icon"><i className={`fa-solid fa-${card.icon}`} style={{ color: card.color }} /></div>
               <div className="cd-metric-label">{card.label}</div>
               <div className="cd-metric-value" style={{ color: card.color }}>{card.value}</div>
             </div>
@@ -718,9 +707,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                           {t.status !== 'Closed' && (
                             <>
-                              <button onClick={() => handleEditPL(t)} style={{ background: 'rgba(255, 77, 94, 0.2)', border: 'none', color: '#FF4D5E', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>EDIT P/L</button>
-                              <button onClick={() => handleForceClose(t.id)} style={{ background: 'rgba(239,68,68,0.2)', border: 'none', color: '#ef4444', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>CLOSE</button>
-                              <button onClick={() => handleEditLimit(t)} style={{ background: 'rgba(255, 77, 94, 0.1)', border: '1px solid rgba(255, 77, 94, 0.2)', color: '#FF4D5E', padding: '4px 8px', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>SEL PRICE</button>
+                              <button onClick={() => handleEditPL(t)} className="adm-mini-act" style={{ color: 'var(--brand-primary)', borderColor: 'rgba(255, 77, 94, 0.3)', width: 'auto', padding: '0 12px', fontSize: '10px' }}>EDIT P/L</button>
+                              <button onClick={() => handleForceClose(t.id)} className="adm-mini-act reject" style={{ width: 'auto', padding: '0 12px', fontSize: '10px' }}>CLOSE</button>
+                              <button onClick={() => handleEditLimit(t)} className="adm-mini-act" style={{ color: 'var(--info)', borderColor: 'rgba(6, 182, 212, 0.3)', width: 'auto', padding: '0 12px', fontSize: '10px' }}>SEL PRICE</button>
                             </>
                           )}
                           <button
@@ -874,105 +863,133 @@ const ClientDetail = ({ onAdminLogout }) => {
       )}
 
       <style>{`
-        .adm-back-btn {
-          display: inline-flex; align-items: center; gap: 8px;
-          padding: 8px 16px; border-radius: 8px; margin-bottom: 20px;
-          background: rgba(255, 77, 94, 0.08); border: 1px solid rgba(255, 77, 94, 0.2);
-          color: #FF4D5E; font-size: 13px; font-weight: 600; cursor: pointer;
-          transition: all 0.2s; font-family: 'Inter', sans-serif;
+        :root {
+          --brand-primary: #FF4D5E;
+          --bg-deep: #0a0f18;
+          --bg-card: rgba(15, 23, 42, 0.6);
+          --border: rgba(255, 255, 255, 0.08);
+          --text-main: #e2e8f0;
+          --text-dim: #94a3b8;
+          --success: #00cc88;
+          --warning: #f59e0b;
+          --danger: #ff4d4d;
+          --info: #06b6d4;
+          --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-        .adm-back-btn:hover { background: rgba(255, 77, 94, 0.15); }
 
-        .cd-section { background: #0f1520; border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
-        .cd-section-label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00cc88; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-        .cd-section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent); }
+        .client-detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
+        .client-detail-header h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: #fff; margin: 0; }
+        .uid-tag { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+        .back-btn { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .back-btn:hover { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
 
-        .cd-profile-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: start; }
-        .cd-profile-main { display: flex; align-items: center; gap: 16px; }
-        .cd-avatar-lg { width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(255, 77, 94, 0.15), rgba(255, 77, 94, 0.3)); border: 2px solid rgba(255, 77, 94, 0.3); color: #FF4D5E; font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .cd-client-name { font-size: 22px; font-weight: 800; color: #e0e6ed; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
-        .adm-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .presence-indicator { display: flex; align-items: center; gap: 12px; background: rgba(0, 204, 136, 0.05); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(0, 204, 136, 0.2); }
+        .presence-indicator span { font-size: 10px; font-weight: 800; color: var(--success); letter-spacing: 0.5px; }
+        .presence-avatars { display: flex; margin-left: -4px; }
+        .presence-badge { width: 24px; height: 24px; border-radius: 50%; background: var(--success); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; border: 2px solid var(--bg-deep); margin-left: -6px; pointer-events: auto; }
+
+        .sticky-note-card { background: rgba(255, 77, 94, 0.03); border: 1px solid rgba(255, 77, 94, 0.1); border-radius: 16px; padding: 16px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 12px; }
+        .sticky-label { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 900; color: var(--brand-primary); letter-spacing: 1px; }
+        .sticky-textarea { background: transparent; border: none; font-size: 14px; color: var(--text-main); line-height: 1.6; min-height: 60px; resize: vertical; font-family: 'Inter', sans-serif; outline: none; }
+        .note-status-indicator { font-size: 9px; font-weight: 800; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+
+        .cd-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 24px; backdrop-filter: blur(10px); }
+        .cd-section-label { font-size: 10px; font-weight: 900; letter-spacing: 1.5px; color: var(--brand-primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .cd-section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+        .cd-profile-grid { display: grid; grid-template-columns: 1fr auto auto; gap: 40px; align-items: start; }
+        .cd-avatar-lg { width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, rgba(255, 77, 94, 0.1), rgba(255, 77, 94, 0.2)); border: 2px solid var(--brand-primary); color: var(--brand-primary); font-size: 36px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(255, 77, 94, 0.2); }
+        
+        .adm-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 30px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .adm-status-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-        .cd-profile-fields { display: flex; flex-direction: column; gap: 12px; }
-        .cd-field { display: flex; align-items: center; gap: 12px; }
-        .cd-field-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 77, 94, 0.1); color: #FF4D5E; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .cd-field-label { font-size: 11px; color: #64748b; font-weight: 600; }
-        .cd-field-value { font-size: 14px; color: #e0e6ed; font-weight: 600; margin-top: 1px; }
+        .cd-profile-fields { display: grid; gap: 16px; }
+        .cd-field { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.15); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
+        .cd-field-icon { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); color: var(--brand-primary); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .cd-field-label { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; }
+        .cd-field-value { font-size: 14px; font-weight: 700; color: #fff; margin-top: 2px; }
 
-        .cd-profile-actions { display: flex; flex-direction: column; gap: 8px; }
-        .cd-act-btn { padding: 10px 18px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid transparent; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
-        .cd-act-btn.primary { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.25); color: #FF4D5E; }
-        .cd-act-btn.primary:hover { background: #FF4D5E; color: #fff; }
-        .cd-act-btn.success { background: rgba(0,204,136,0.1); border-color: rgba(0,204,136,0.25); color: #00cc88; }
-        .cd-act-btn.success:hover { background: #00cc88; color: #fff; }
-        .cd-act-btn.danger { background: rgba(255,77,77,0.1); border-color: rgba(255,77,77,0.25); color: #ff4d4d; }
-        .cd-act-btn.danger:hover { background: #ff4d4d; color: #fff; }
+        .cd-profile-actions { display: flex; flex-direction: column; gap: 10px; }
+        .cd-act-btn { width: 100%; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .cd-act-btn.primary { background: var(--brand-primary); color: #fff; box-shadow: 0 4px 12px rgba(255, 77, 94, 0.3); }
+        .cd-act-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255, 77, 94, 0.4); }
+        .cd-act-btn.success { background: rgba(0, 204, 136, 0.1); color: var(--success); border-color: rgba(0, 204, 136, 0.2); }
+        .cd-act-btn.success:hover { background: var(--success); color: #fff; }
+        .cd-act-btn.danger { background: rgba(255, 77, 77, 0.1); color: var(--danger); border-color: rgba(255, 77, 77, 0.2); }
+        .cd-act-btn.danger:hover { background: var(--danger); color: #fff; }
 
-        .cd-account-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px; }
-        .cd-account-grid-2 { grid-template-columns: repeat(4, 1fr); }
-        .cd-acc-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; transition: all 0.2s; }
-        .cd-acc-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px; }
-        .cd-acc-value { font-size: 16px; font-weight: 800; color: #e0e6ed; font-family: 'Space Mono', monospace; }
+        .adm-kyc-card { background: rgba(0,0,0,0.2) !important; border: 2px solid var(--border) !important; transition: all 0.2s; }
+        .adm-kyc-card:hover { border-color: var(--brand-primary) !important; transform: translateY(-2px); }
+        .adm-mini-act { transition: all 0.2s; }
+        .adm-mini-act:hover { transform: scale(1.02); }
 
-        .cd-metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .cd-metric-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 16px; position: relative; transition: all 0.2s; }
-        .cd-metric-num { font-size: 20px; position: absolute; top: 12px; right: 14px; font-weight: 800; opacity: 0.5; }
-        .cd-metric-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 8px; }
-        .cd-metric-value { font-size: 18px; font-weight: 800; font-family: 'Space Mono', monospace; letter-spacing: -0.5px; }
-
-        .cd-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 4px; margin-bottom: 16px; width: fit-content; }
-        .cd-tab { display: flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 7px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 700; color: #64748b; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-        .cd-tab:hover { background: rgba(255, 77, 94, 0.05); color: #e0e6ed; }
-        .cd-tab.active { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.3); color: #FF4D5E; }
-
-        .cd-trade-table-wrap { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
-        .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table th { padding: 12px 18px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-        .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
-
-        .cd-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; }
-        .cd-modal { background: #0f1520; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 90%; max-width: 450px; box-shadow: 0 40px 80px rgba(0,0,0,0.5); overflow: hidden; animation: pop 0.3s; }
-        @keyframes pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .cd-modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .cd-modal-header h3 { margin: 0; font-size: 18px; color: #fff; }
-        .cd-modal-close { background: none; border: none; color: #64748b; cursor: pointer; font-size: 20px; }
-        .cd-modal-body { padding: 24px; }
-        .cd-modal-footer { padding: 20px 24px; background: rgba(0,0,0,0.2); display: flex; gap: 12px; }
-        .cd-modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
-        .cd-modal-btn.cancel { background: rgba(255,255,255,0.05); color: #94a3b8; }
-        .cd-modal-btn.confirm { background: #FF4D5E; color: #fff; }
-
-        .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10001; }
-        .custom-modal-content { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 440px; border-radius: 28px; padding: 28px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .close-x { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; }
-        .modal-footer { display: flex; gap: 12px; justify-content: flex-end; }
-        .modal-btn { padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
-        .modal-btn.primary { background: #FF4D5E; color: white; }
-        .modal-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
-        .bias-options { display: grid; gap: 12px; margin-bottom: 24px; }
-        .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #94a3b8; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; cursor: pointer; }
-        .bias-btn.active { background: rgba(255, 77, 94, 0.1); border-color: #FF4D5E; color: #FF4D5E; }
-        .kyc-pagination button:hover:not(:disabled) { background: #2a3341; border-color: #FF4D5E; color: #FF4D5E; }
-        .intensity-group { background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
-
-        .cd-select {
-          width: 100%; padding: 12px; background: rgba(0,0,0,0.2);
-          border: 1px solid #2a3341; borderRadius: 10px; color: #fff;
-          font-family: 'Inter', sans-serif; appearance: none;
-        }
-
-        .toggle-group { display: flex; gap: 8px; margin-bottom: 20px; }
-        .t-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #2a3341; background: rgba(255,255,255,0.03); color: #64748b; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .t-btn.active { color: #fff; }
-        .t-btn.increase.active { background: rgba(0,204,136,0.1); border-color: #00cc88; color: #00cc88; }
-        .t-btn.decrease.active { background: rgba(255,77,77,0.1); border-color: #ff4d4d; color: #ff4d4d; }
+        .cd-account-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+        .cd-acc-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: all 0.2s; }
+        .cd-acc-card:hover { background: rgba(255,255,255,0.04); transform: translateY(-4px); }
+        .cd-acc-label { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .cd-acc-value { font-size: 20px; font-weight: 800; color: #fff; font-family: 'Space Mono', monospace; }
         
-        .adm-mini-act { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
-        .adm-mini-act.approve { background: rgba(16,185,129,0.1); color: #10b981; border-color: rgba(16,185,129,0.2); }
-        .adm-mini-act.reject { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+        .cd-metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .cd-metric-card { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; position: relative; }
+        .cd-metric-num { position: absolute; top: 18px; right: 20px; font-size: 20px; opacity: 0.1; font-weight: 900; display: none; }
+        .cd-metric-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 14px; }
+        .cd-metric-label { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; }
+        .cd-metric-value { font-size: 18px; font-weight: 800; font-family: 'Space Mono', monospace; }
+
+        .cd-tabs { display: flex; gap: 8px; background: rgba(0,0,0,0.2); padding: 6px; border-radius: 14px; border: 1px solid var(--border); width: fit-content; margin-bottom: 24px; }
+        .cd-tab { padding: 10px 20px; border-radius: 10px; border: none; background: transparent; color: var(--text-dim); font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
+        .cd-tab.active { background: var(--brand-primary); color: #fff; box-shadow: 0 4px 12px rgba(255, 77, 94, 0.2); }
+        .cd-tab-count { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 6px; font-size: 10px; }
+        .cd-tab.active .cd-tab-count { background: rgba(0,0,0,0.15); }
+
+        .cd-trade-table-wrap { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: rgba(0,0,0,0.1); }
+        .adm-table th { background: rgba(0,0,0,0.2); padding: 16px 20px; text-align: left; font-size: 10px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .adm-table td { padding: 16px 20px; font-size: 13px; color: var(--text-main); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .adm-table-row:hover { background: rgba(255,255,255,0.02); }
+        .adm-uid-badge { background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 11px; border: 1px solid var(--border); }
+        
+        .cd-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 2000; animation: fadeIn 0.3s; }
+        .cd-modal { background: #0f172a; border: 1px solid var(--border); border-radius: 24px; width: 90%; box-shadow: 0 32px 64px rgba(0,0,0,0.5); overflow: hidden; animation: pop 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pop { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .cd-modal-header { padding: 24px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .cd-modal-header h3 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 12px; }
+        .cd-modal-header h3 i { color: var(--brand-primary); }
+        .cd-modal-body { padding: 30px; }
+        .cd-modal-footer { padding: 24px 30px; background: rgba(0,0,0,0.2); display: flex; gap: 12px; }
+        .cd-modal-btn { flex: 1; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; border: none; transition: 0.2s; font-family: 'Inter', sans-serif; }
+        .cd-modal-btn.cancel { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+        .cd-modal-btn.confirm { background: var(--brand-primary); color: #fff; box-shadow: 0 4px 12px rgba(255, 77, 94, 0.3); }
+
+        .adm-input { width: 100%; padding: 14px 16px; background: rgba(0,0,0,0.25); border: 2px solid var(--border); border-radius: 12px; color: #fff; font-size: 15px; transition: 0.2s; }
+        .adm-input:focus { border-color: var(--brand-primary); outline: none; background: rgba(0,0,0,0.3); }
+
+        .bias-options { display: grid; gap: 10px; }
+        .bias-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 16px; border-radius: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .bias-btn:hover { background: rgba(255,255,255,0.05); }
+        .bias-btn.active { background: rgba(255, 77, 94, 0.1); border-color: var(--brand-primary); color: #fff; }
+        .bias-btn i { font-size: 18px; }
+
+        .cd-type-badge { font-family: 'Space Mono', monospace; font-weight: 800; padding: 4px 8px; border-radius: 6px; font-size: 11px; }
+        .cd-type-badge.buy { background: rgba(0, 204, 136, 0.1); color: var(--success); }
+        .cd-type-badge.sell { background: rgba(255, 77, 77, 0.1); color: var(--danger); }
+
+        .cd-trade-status { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 30px; }
+        .cd-trade-status.open { background: rgba(0, 204, 136, 0.1); color: var(--success); }
+        .cd-trade-status.closed { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+        .cd-trade-status.pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .cd-trade-status.rejected { background: rgba(255, 77, 77, 0.1); color: var(--danger); }
+        .cd-trade-status.approved { background: rgba(0, 204, 136, 0.1); color: var(--success); }
+        .cd-trade-status.verified { background: rgba(0, 204, 136, 0.1); color: var(--success); }
+
+        .adm-mini-act { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-card); }
+        .adm-mini-act.approve:hover { background: var(--success); color: #fff; border-color: var(--success); }
+        .adm-mini-act.reject:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+        .t-btn { font-family: 'Inter', sans-serif; font-weight: 800; border: none; background: rgba(255,255,255,0.03); color: var(--text-dim); padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; }
+        .t-btn.increase.active { background: var(--success); color: #fff; box-shadow: 0 4px 10px rgba(0, 204, 136, 0.2); }
+        .t-btn.decrease.active { background: var(--danger); color: #fff; box-shadow: 0 4px 10px rgba(255, 77, 77, 0.2); }
       `}</style>
 
       {/* Balance Adjustment Modal */}
@@ -986,42 +1003,43 @@ const ClientDetail = ({ onAdminLogout }) => {
               </button>
             </div>
             <div className="cd-modal-body">
-              <div className="toggle-group">
+              <div className="toggle-group" style={{ marginBottom: '24px' }}>
                 <button 
                   className={`t-btn increase ${adjustData.type === 'increase' ? 'active' : ''}`}
                   onClick={() => setAdjustData({ ...adjustData, type: 'increase' })}
+                  style={{ flex: 1 }}
                 >
-                  <i className="fa-solid fa-plus" /> Deposit
+                  <i className="fa-solid fa-plus-circle" /> Increase
                 </button>
                 <button 
                   className={`t-btn decrease ${adjustData.type === 'decrease' ? 'active' : ''}`}
                   onClick={() => setAdjustData({ ...adjustData, type: 'decrease' })}
+                  style={{ flex: 1 }}
                 >
-                  <i className="fa-solid fa-minus" /> Deduct
+                  <i className="fa-solid fa-minus-circle" /> Decrease
                 </button>
               </div>
 
-              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Amount (USD)</label>
+              <div className="adm-input-group" style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '10px', fontWeight: 900, color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Amount (USD)</label>
                 <input 
                   type="number" 
                   className="adm-input"
-                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
                   value={adjustData.amount}
                   onChange={(e) => setAdjustData({ ...adjustData, amount: e.target.value })}
                   placeholder="0.00"
+                  autoFocus
                 />
               </div>
 
-              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Notes</label>
+              <div className="adm-input-group">
+                <label style={{ display: 'block', fontSize: '10px', fontWeight: 900, color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Internal Note</label>
                 <input 
                   type="text" 
                   className="adm-input"
-                  style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.2)', border: '1px solid #2a3341', borderRadius: '10px', color: '#fff' }}
                   value={adjustData.note}
                   onChange={(e) => setAdjustData({ ...adjustData, note: e.target.value })}
-                  placeholder="Reason for adjustment"
+                  placeholder="Audit reason..."
                 />
               </div>
             </div>
