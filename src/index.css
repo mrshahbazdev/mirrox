@@ -1310,7 +1310,7 @@ body {
 .ms-fill { background: var(--success); height: 100%; position: absolute; right: 0; }
 
 .change-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
-.change-stat-card { padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+.change-stat-card { padding: 10px; border-radius: 8px; background: var(--bg-card-alt); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
 .change-stat-card .label { font-size: 10px; color: var(--text-muted); font-weight: 700; }
 .change-stat-card .val { font-size: 12px; font-weight: 800; }
 .change-stat-card .val.neg { color: var(--danger); }
@@ -1329,7 +1329,7 @@ body {
   .spec-grid { grid-template-columns: 1fr; }
   .input-row-group { flex-direction: column; gap: 12px !important; }
 }
-.spec-item { padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--border); }
+.spec-item { padding: 10px; background: var(--bg-card-alt); border-radius: 8px; display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--border); }
 .spec-item .label { font-size: 10px; color: var(--text-muted); font-weight: 700; }
 .spec-item .val { font-size: 13px; font-weight: 700; color: var(--text-main); }
 .spec-val-swap { font-size: 11px; font-weight: 600; color: var(--text-dim); }
@@ -1341,11 +1341,175 @@ body {
 @media (max-width: 600px) {
   .hours-grid { grid-template-columns: 1fr; }
 }
-.hours-day-card { padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+.hours-day-card { padding: 12px; border-radius: 8px; background: var(--bg-card-alt); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
 .day-name { font-size: 12px; font-weight: 800; color: var(--text-muted); }
 .day-times { display: flex; flex-direction: column; gap: 2px; text-align: right; }
 .time-slot { font-size: 11px; font-weight: 700; color: var(--text-main); }
 .market-closed { color: var(--text-dim); font-size: 11px; font-weight: 600; font-style: italic; }
+
+/* =========================================
+   ASSET INFO - Trading Execution Panel
+   ========================================= */
+
+.trading-execution-panel {
+  margin-bottom: 24px;
+  background: var(--bg-card-alt);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+.exec-mode-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: var(--bg-hover);
+  padding: 4px;
+  border-radius: 10px;
+}
+.mode-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mode-btn.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 77, 94, 0.3);
+}
+.input-row-group {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.input-row-group .lot-input-wrapper {
+  flex: 1;
+  margin-bottom: 0;
+}
+.lot-input-wrapper {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lot-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+.lot-control {
+  display: flex;
+  align-items: center;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.lot-control.accent-border {
+  border-color: var(--accent);
+}
+.lot-btn {
+  width: 48px;
+  height: 48px;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lot-btn:hover {
+  background: var(--bg-card-alt);
+  color: var(--accent);
+}
+.lot-input {
+  flex: 1;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  color: var(--text-main);
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  outline: none;
+}
+.exec-buttons {
+  display: flex;
+  gap: 12px;
+}
+.exec-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.exec-btn.sell {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+.exec-btn.buy {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+.exec-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.exec-btn:active { transform: translateY(0); }
+.exec-btn.sell:hover { box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+.exec-btn.buy:hover { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+.exec-side {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+.exec-price {
+  font-size: 18px;
+  font-weight: 800;
+  font-family: 'Space Mono', monospace;
+}
+
+/* AssetInfo inline style replacements */
+.market-empty-msg { padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px; }
+.market-empty-icon { display: block; font-size: 24px; margin-bottom: 12px; opacity: 0.5; }
+.spec-val-accent { color: var(--accent); }
+.spec-val-warning { color: var(--warning); font-weight: 800; }
+.spec-val-sub { opacity: 0.6; }
+.hours-chevron { font-size: 12px; color: var(--accent); }
+.moon-icon { margin-right: 6px; color: #fbbf24; }
+
+@media (max-width: 600px) {
+  .trading-execution-panel { padding: 12px; }
+  .lot-btn { width: 44px; height: 44px; }
+  .lot-input { font-size: 15px; }
+  .exec-btn { padding: 14px; }
+  .input-row-group { flex-direction: column; gap: 12px; }
+  .input-row-group .lot-input-wrapper { margin-bottom: 4px; }
+}
+@media (max-width: 480px) {
+  .exec-buttons { flex-direction: column; gap: 10px; }
+  .input-row-group { flex-direction: column; gap: 12px; }
+  .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 16px 24px; border-radius: 16px; }
+  .exec-side { font-size: 12px; }
+  .exec-price { font-size: 18px; }
+  .lot-label { font-size: 10px; margin-bottom: 4px; }
+}
 
 /* Help Page - Support Cards Grid */
 .help-cards-grid {

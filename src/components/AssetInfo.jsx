@@ -9,8 +9,8 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
   const MarketView = () => (
     <div className="market-tab-content animate-fade">
        {!compact && (
-         <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>
-            <i className="fa-solid fa-chart-pie" style={{ display: 'block', fontSize: '24px', marginBottom: '12px', opacity: 0.5 }}></i>
+         <div className="market-empty-msg">
+            <i className="fa-solid fa-chart-pie market-empty-icon"></i>
             Market data for {symbol?.name || 'this asset'} is currently being updated.
          </div>
        )}
@@ -21,9 +21,8 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
     const precisionFactor = Math.pow(10, symbol?.precision || 5);
     const spreadInQuote = (symbol?.spread || 0) / precisionFactor;
     
-    // Margin Prediction for the UI
     const contractSize = symbol?.category === 'Metals' ? 100 : 100000;
-    const leverage = 100; // Simplified for UI, actual is per client
+    const leverage = 100;
     const marginReq = (parseFloat(symbol?.price || 0) * parseFloat(volume) * contractSize) / leverage;
 
     return (
@@ -39,13 +38,13 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
            </div>
            <div className="spec-item">
               <span className="label">Current Spread</span>
-              <span className="val" style={{ color: 'var(--accent)' }}>{symbol?.spread} points</span>
-              <small style={{ opacity: 0.6 }}>≈ {spreadInQuote.toFixed(symbol?.precision)} {symbol?.quoteCurrency}</small>
+              <span className="val spec-val-accent">{symbol?.spread} points</span>
+              <small className="spec-val-sub">≈ {spreadInQuote.toFixed(symbol?.precision)} {symbol?.quoteCurrency}</small>
            </div>
            <div className="spec-item">
               <span className="label">Required Margin</span>
-              <span className="val" style={{ color: 'var(--warning)', fontWeight: 800 }}>{marginReq.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
-              <small style={{ opacity: 0.6 }}>for {volume} lot(s)</small>
+              <span className="val spec-val-warning">{marginReq.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
+              <small className="spec-val-sub">for {volume} lot(s)</small>
            </div>
            <div className="spec-item">
               <span className="label">Min. Position Size</span>
@@ -72,7 +71,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
         <div className="market-hours-section">
            <div className="hours-title">
               Market Hours
-              <i className="fa-solid fa-chevron-up" style={{fontSize: '12px', color: 'var(--accent)'}}></i>
+              <i className="fa-solid fa-chevron-up hours-chevron"></i>
            </div>
            <div className="hours-grid">
               {[ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' ].map(day => (
@@ -86,7 +85,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
               <div className="hours-day-card">
                  <span className="day-name">Sat / Sun</span>
                  <span className="market-closed">
-                    <i className="fa-solid fa-moon" style={{marginRight: '6px', color: '#fbbf24'}}></i>
+                    <i className="fa-solid fa-moon moon-icon"></i>
                     Market closed
                  </span>
               </div>
@@ -107,19 +106,18 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
   );
 
   const [volume, setVolume] = useState('0.10');
-  const [execMode, setExecMode] = useState('Market'); // Market or Pending
+  const [execMode, setExecMode] = useState('Market');
   const [atPrice, setAtPrice] = useState('');
   const [stopLoss, setStopLoss] = useState('');
   const [takeProfit, setTakeProfit] = useState('');
   const [lastPopulatedSymbol, setLastPopulatedSymbol] = useState(null);
 
-  // Auto-populate TP/SL based on current prices when symbol changes
   useEffect(() => {
     if (symbol && symbol.id !== lastPopulatedSymbol) {
       const price = parseFloat(symbol.price || 0);
       if (price > 0) {
         const precision = symbol.precision || 2;
-        const offset = 100 / Math.pow(10, precision); // 100 points default
+        const offset = 100 / Math.pow(10, precision);
         
         setTakeProfit((price + offset).toFixed(precision));
         setStopLoss((price - offset).toFixed(precision));
@@ -128,7 +126,6 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
     }
   }, [symbol, lastPopulatedSymbol]);
 
-  // Sync At Price with market price when switching to Pending for convenience
   const handleModeToggle = (mode) => {
     setExecMode(mode);
     if (mode === 'Pending' && !atPrice) {
@@ -174,7 +171,6 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
       )}
 
       <div className="asset-info-body">
-         {/* Trading Input Area */}
          {symbol && (
            <div className="trading-execution-panel animate-fade">
               <div className="exec-mode-selector">
@@ -193,7 +189,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
               </div>
 
               <div className="input-row-group">
-                 <div className="lot-input-wrapper" style={{ flex: 1, marginBottom: 0 }}>
+                 <div className="lot-input-wrapper">
                     <span className="lot-label">Volume (Lots)</span>
                     <div className="lot-control">
                        <button className="lot-btn" onClick={() => setVolume((prev) => Math.max(0.01, parseFloat(prev) - 0.01).toFixed(2))}>-</button>
@@ -210,9 +206,9 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
                  </div>
 
                  {execMode === 'Pending' && (
-                   <div className="lot-input-wrapper animate-pop" style={{ flex: 1, marginBottom: 0 }}>
+                   <div className="lot-input-wrapper animate-pop">
                       <span className="lot-label">At Price</span>
-                      <div className="lot-control" style={{ borderColor: 'var(--accent)' }}>
+                      <div className="lot-control accent-border">
                          <input 
                            type="number" 
                            className="lot-input" 
@@ -226,7 +222,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
               </div>
 
               <div className="input-row-group">
-                 <div className="lot-input-wrapper" style={{ flex: 1, marginBottom: 0 }}>
+                 <div className="lot-input-wrapper">
                     <span className="lot-label">Take Profit (TP)</span>
                     <div className="lot-control">
                        <input 
@@ -240,7 +236,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
                     </div>
                  </div>
                  
-                 <div className="lot-input-wrapper" style={{ flex: 1, marginBottom: 0 }}>
+                 <div className="lot-input-wrapper">
                     <span className="lot-label">Stop Loss (SL)</span>
                     <div className="lot-control">
                        <input 
@@ -285,156 +281,6 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
          {activeTab === 'Market' && <MarketView />}
          {activeTab === 'Symbol info' && <SymbolInfoView />}
          {activeTab === 'Calendar' && <CalendarView />}
-
-         <style>{`
-            .trading-execution-panel {
-               margin-bottom: 24px;
-               background: rgba(255, 255, 255, 0.02);
-               padding: 20px;
-               border-radius: 16px;
-               border: 1px solid rgba(255, 255, 255, 0.05);
-            }
-            .exec-mode-selector {
-               display: flex;
-               gap: 8px;
-               margin-bottom: 20px;
-               background: rgba(0, 0, 0, 0.2);
-               padding: 4px;
-               border-radius: 10px;
-            }
-            .mode-btn {
-               flex: 1;
-               padding: 8px;
-               border-radius: 8px;
-               border: none;
-               background: none;
-               color: var(--text-muted);
-               font-size: 11px;
-               font-weight: 700;
-               cursor: pointer;
-               transition: all 0.2s;
-            }
-            .mode-btn.active {
-               background: var(--accent);
-               color: white;
-               box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            }
-            .lot-input-wrapper {
-               margin-bottom: 20px;
-               display: flex;
-               flex-direction: column;
-               gap: 8px;
-            }
-            .lot-label {
-               font-size: 11px;
-               font-weight: 700;
-               text-transform: uppercase;
-               letter-spacing: 1px;
-               color: var(--text-muted);
-            }
-            .lot-control {
-               display: flex;
-               align-items: center;
-               background: rgba(0, 0, 0, 0.2);
-               border: 1px solid var(--border-color);
-               border-radius: 12px;
-               overflow: hidden;
-            }
-            .lot-btn {
-               width: 48px;
-               height: 48px;
-               background: none;
-               border: none;
-               color: var(--text-primary);
-               font-size: 20px;
-               cursor: pointer;
-               transition: all 0.2s;
-            }
-            .lot-btn:hover {
-               background: rgba(255, 255, 255, 0.05);
-               color: var(--accent-color);
-            }
-            .lot-input {
-               flex: 1;
-               background: none;
-               border: none;
-               border-left: 1px solid var(--border-color);
-               border-right: 1px solid var(--border-color);
-               color: #fff;
-               text-align: center;
-               font-family: 'Space Mono', monospace;
-               font-size: 16px;
-               font-weight: 700;
-            }
-            .exec-buttons {
-               display: flex;
-               gap: 12px;
-            }
-            .exec-btn {
-               flex: 1;
-               padding: 16px;
-               border-radius: 14px;
-               border: none;
-               cursor: pointer;
-               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-               display: flex;
-               flex-direction: column;
-               align-items: center;
-               gap: 4px;
-            }
-            .exec-btn.sell {
-               background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.2) 100%);
-               border: 1px solid rgba(239, 68, 68, 0.3);
-               color: #f87171;
-            }
-            .exec-btn.buy {
-               background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.2) 100%);
-               border: 1px solid rgba(16, 185, 129, 0.3);
-               color: #34d399;
-            }
-            .exec-btn:hover {
-               transform: translateY(-2px);
-               filter: brightness(1.2);
-            }
-            .exec-btn:active {
-               transform: translateY(0);
-            }
-            .exec-btn.sell:hover {
-               box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
-            }
-            .exec-btn.buy:hover {
-               box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-            }
-             .exec-side {
-                font-size: 11px;
-                font-weight: 800;
-                letter-spacing: 2px;
-                opacity: 0.8;
-             }
-             .exec-price {
-                font-size: 18px;
-                font-weight: 800;
-                font-family: 'Space Mono', monospace;
-             }
-
-            @media (max-width: 600px) {
-               .trading-execution-panel { padding: 12px; }
-               .lot-btn { width: 44px; height: 44px; }
-               .lot-input { font-size: 15px; }
-               .exec-btn { padding: 14px; }
-               .input-row-group { flex-direction: column; gap: 12px; }
-               .lot-input-wrapper { margin-bottom: 4px !important; }
-            }
-
-            @media (max-width: 480px) {
-               .exec-buttons { flex-direction: column; gap: 10px; }
-               .input-row-group { flex-direction: column; gap: 12px; }
-               .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 16px 24px; border-radius: 16px; }
-               .exec-side { font-size: 12px; }
-               .exec-price { font-size: 18px; }
-               .lot-label { font-size: 10px; margin-bottom: 4px; }
-            }
-         `}</style>
       </div>
     </div>
   );
