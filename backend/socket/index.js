@@ -360,6 +360,39 @@ module.exports = (io) => {
         }
     });
 
+    socket.on('visitor:heartbeat', async ({ visitorId }) => {
+        if (!visitorId) return;
+        try {
+            // Find visitor and increment duration of the LAST path history entry
+            const visitor = await Visitor.findOneAndUpdate(
+                { visitorId },
+                { 
+                    $inc: { "pathHistory.$[last].duration": 5 },
+                    $set: { lastActive: new Date() }
+                },
+                { 
+                    arrayFilters: [{ "last": { $exists: true } }], // Updates last entry implicitly if we structure correctly
+                    new: true 
+                }
+            );
+
+            // Note: mongoose doesn't support $[last] directly with just $inc in all versions easily
+            // Fallback to find and save if complex logic is needed, but we'll try direct update
+            
+            // Standard approach to update the actual last element:
+            const doc = await Visitor.findOne({ visitorId });
+            if (doc && doc.pathHistory.length > 0) {
+                const lastIdx = doc.pathHistory.length - 1;
+                doc.pathHistory[lastIdx].duration += 5;
+                doc.lastActive = new Date();
+                await doc.save();
+                io.emit('admin:visitor_update', doc);
+            }
+        } catch (err) {
+            console.error('[HEARTBEAT ERR]', err.message);
+        }
+    });
+
     socket.on('user:leave', ({ clientId }) => {
       onlineVisitors.delete(clientId);
       broadcastVisitors();

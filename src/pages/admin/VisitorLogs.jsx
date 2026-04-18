@@ -69,7 +69,6 @@ const VisitorLogs = ({ onAdminLogout }) => {
 
   const handleSelectVisitor = (v) => {
     setSelectedVisitor(v);
-    // Auto-scroll on mobile
     if (window.innerWidth < 1100 && journeyRef.current) {
         setTimeout(() => {
             journeyRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -84,6 +83,14 @@ const VisitorLogs = ({ onAdminLogout }) => {
       setVisitors(prev => prev.filter(v => v._id !== id));
       if (selectedVisitor?._id === id) setSelectedVisitor(null);
     } catch (err) { alert('Failed to delete log'); }
+  };
+
+  const formatDuration = (seconds) => {
+    if (!seconds) return 'Active Now';
+    if (seconds < 60) return `${seconds}s`;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return s > 0 ? `${m}m ${s}s` : `${m}m`;
   };
 
   const filteredVisitors = visitors.filter(v => 
@@ -107,17 +114,16 @@ const VisitorLogs = ({ onAdminLogout }) => {
   return (
     <AdminLayout onAdminLogout={onAdminLogout}>
       <div className="visitor-logs-page">
-        {/* Harmonized Page Header */}
         <div className="adm-page-header">
             <div>
                 <h2 className="adm-page-title">
                     <i className="fa-solid fa-shoe-prints" /> Visitor Journeys
                 </h2>
                 <div className="header-meta-row">
-                    <p className="adm-page-sub">Real-time behavior analytics and navigation map</p>
+                    <p className="adm-page-sub">Live behavior tracking with stay-time analytics</p>
                     <div className={`live-indicator ${isLive ? 'active' : ''}`}>
                         <span className="pulse-dot" />
-                        <span>{isLive ? 'LIVE' : 'DISCONNECTED'}</span>
+                        <span>{isLive ? 'SYSTEM LIVE' : 'SYNCING...'}</span>
                     </div>
                 </div>
             </div>
@@ -125,7 +131,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
                 <i className="fa-solid fa-magnifying-glass" />
                 <input 
                     type="text" 
-                    placeholder="Search sessions..." 
+                    placeholder="Search active sessions..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -133,7 +139,6 @@ const VisitorLogs = ({ onAdminLogout }) => {
         </div>
 
         <div className="visitor-content-grid">
-          {/* Main List Column */}
           <div className="visitor-list-pane card-glass">
             <div className="pane-header">
                <span>PLATFORM TRAFFIC</span>
@@ -147,18 +152,18 @@ const VisitorLogs = ({ onAdminLogout }) => {
                     <th>ORIGIN</th>
                     <th className="hide-mobile">SYSTEM</th>
                     <th>LAST ACTIVE</th>
-                    <th>HITS</th>
+                    <th>TOTAL HITS</th>
                     <th />
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr><td colSpan="6" className="loading-state">Syncing history...</td></tr>
+                    <tr><td colSpan="6" className="loading-state">Syncing live analytics...</td></tr>
                   ) : filteredVisitors.length === 0 ? (
-                    <tr><td colSpan="6" className="empty-state">No visitors found matching filter.</td></tr>
+                    <tr><td colSpan="6" className="empty-state">No active visitors found.</td></tr>
                   ) : (
                     filteredVisitors.map(v => {
-                      const isActive = (new Date() - new Date(v.lastActive)) < 120000;
+                      const isActive = (new Date() - new Date(v.lastActive)) < 60000;
                       return (
                         <tr key={v._id} className={`${selectedVisitor?._id === v._id ? 'selected' : ''} ${isActive ? 'is-active' : ''}`} onClick={() => handleSelectVisitor(v)}>
                           <td>
@@ -184,8 +189,8 @@ const VisitorLogs = ({ onAdminLogout }) => {
                           </td>
                           <td>
                             <div className="time-cell">
-                               <strong>{new Date(v.lastActive).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
-                               <span>{new Date(v.lastActive).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                               <strong>{new Date(v.lastActive).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
+                               <span>{new Date(v.lastActive).toLocaleDateString()}</span>
                             </div>
                           </td>
                           <td><span className="view-badge">{(v.pathHistory?.length || 0)}</span></td>
@@ -201,44 +206,52 @@ const VisitorLogs = ({ onAdminLogout }) => {
             </div>
           </div>
 
-          {/* Journey Detail Column / Sidebar */}
           <div className="visitor-journey-sidebar card-glass" ref={journeyRef}>
             {selectedVisitor ? (
               <div className="journey-wrap">
                  <div className="journey-header">
                    <div className="journey-title-block">
                       <i className="fa-solid fa-route" />
-                      <h3>Journey Flow</h3>
+                      <h3>Journey Map</h3>
                    </div>
                    <span className="v-pill">{selectedVisitor.city || 'Global'} / {selectedVisitor.ip}</span>
                  </div>
                  
                  <div className="journey-stats-bar">
                     <div className="j-stat">
-                       <label>First Visit</label>
+                       <label>First Seen</label>
                        <span>{new Date(selectedVisitor.firstSeen).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                     <div className="j-stat">
-                       <label>Referrer</label>
-                       <span>{selectedVisitor.referrer}</span>
+                       <label>Total Stay</label>
+                       <span>{formatDuration(selectedVisitor.pathHistory.reduce((acc, p) => acc + (p.duration || 0), 0))}</span>
                     </div>
                  </div>
 
                  <div className="path-timeline">
-                    {[...selectedVisitor.pathHistory].reverse().map((step, idx) => (
-                      <div key={idx} className="path-entry">
-                         <div className="path-node">
-                            <i className={`fa-solid ${getPageIcon(step.path)}`} />
-                         </div>
-                         <div className="path-details">
-                            <div className="path-row">
-                               <span className="path-text">{step.path}</span>
-                               <span className="path-time">{new Date(step.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                            </div>
-                            {idx === 0 && <div className="path-status">Currently Viewing</div>}
-                         </div>
-                      </div>
-                    ))}
+                    {[...selectedVisitor.pathHistory].reverse().map((step, idx) => {
+                      const isCurrent = idx === 0 && (new Date() - new Date(selectedVisitor.lastActive)) < 30000;
+                      return (
+                        <div key={idx} className={`path-entry ${isCurrent ? 'active-path' : ''}`}>
+                           <div className="path-node">
+                              <i className={`fa-solid ${getPageIcon(step.path)}`} />
+                           </div>
+                           <div className="path-details">
+                              <div className="path-row">
+                                 <span className="path-text">{step.path}</span>
+                                 <div className="path-time-badge">
+                                    <i className="fa-regular fa-clock" />
+                                    {formatDuration(step.duration || 0)}
+                                 </div>
+                              </div>
+                              <div className="path-footer">
+                                 <span className="path-timestamp">{new Date(step.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                 {isCurrent && <span className="live-tag">LIVE NOW</span>}
+                              </div>
+                           </div>
+                        </div>
+                      );
+                    })}
                  </div>
               </div>
             ) : (
@@ -248,7 +261,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
                     <i className="fa-solid fa-satellite-dish" />
                  </div>
                  <h3>Select a Session</h3>
-                 <p>Analyze real-time navigation flow and intent by selecting a visitor session.</p>
+                 <p>Select any visitor session to analyze real-time stay-time and engagement across routes.</p>
               </div>
             )}
           </div>
@@ -285,7 +298,9 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .visitor-table { width: 100%; border-collapse: collapse; min-width: 600px; }
           .visitor-table th { position: sticky; top: 0; background: var(--bg-card); z-index: 10; padding: 14px 24px; text-align: left; font-size: 10px; font-weight: 800; color: var(--text-dim); border-bottom: 1px solid var(--border); }
           .visitor-table td { padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-          
+          .visitor-table tr:hover td { background: rgba(255, 77, 94, 0.02); }
+          .visitor-table tr.selected td { background: rgba(255, 77, 94, 0.04); }
+
           .visitor-id-cell { display: flex; align-items: center; gap: 12px; }
           .status-orb { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
           .status-orb.online { background: #00cc88; box-shadow: 0 0 10px rgba(0,204,136,0.3); }
@@ -304,32 +319,31 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .journey-wrap { padding: 20px; }
           .journey-header { margin-bottom: 20px; }
           .journey-title-block { display: flex; align-items: center; gap: 10px; color: #FF4D5E; margin-bottom: 8px; }
+          
           .path-timeline { padding-top: 10px; }
           .path-entry { position: relative; padding-left: 28px; padding-bottom: 24px; border-left: 2px solid var(--border); }
           .path-node { position: absolute; left: -12px; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-dim); }
           .path-entry:first-child .path-node { border-color: #FF4D5E; color: #FF4D5E; }
-          .path-details { background: var(--bg-deep); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); }
-          .path-text { font-size: 12px; font-weight: 700; display: block; }
-          .path-time { font-size: 9px; color: var(--text-dim); }
+          
+          .path-details { background: var(--bg-deep); padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); transition: all 0.3s; }
+          .active-path .path-details { border-color: #00cc88; box-shadow: 0 0 10px rgba(0,204,136,0.1); }
+          
+          .path-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+          .path-text { font-size: 12px; font-weight: 700; word-break: break-all; }
+          .path-time-badge { font-size: 10px; font-weight: 800; color: #FF4D5E; background: rgba(255, 77, 94, 0.05); padding: 2px 6px; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
+          
+          .path-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+          .path-timestamp { font-size: 10px; color: var(--text-dim); }
+          .live-tag { font-size: 9px; font-weight: 900; color: #00cc88; letter-spacing: 0.5px; }
 
           /* Responsive Breakpoints */
           @media (max-width: 1100px) {
             .visitor-content-grid { grid-template-columns: 1fr; gap: 24px; }
-            .visitor-journey-sidebar { min-height: 400px; }
           }
-
           @media (max-width: 768px) {
             .adm-page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
             .visitor-search { max-width: 100%; width: 100%; }
             .hide-mobile { display: none; }
-            .visitor-table { min-width: 500px; }
-            .visitor-table td, .visitor-table th { padding: 12px 16px; }
-          }
-
-          @media (max-width: 480px) {
-            .time-cell span { display: none; }
-            .visitor-id-cell strong { font-size: 12px; }
-            .country-tag { font-size: 9px; }
           }
         `}</style>
       </div>

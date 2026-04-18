@@ -11,7 +11,8 @@ const VisitorSchema = new mongoose.Schema({
   pathHistory: [
     {
       path: { type: String },
-      timestamp: { type: Date, default: Date.now }
+      timestamp: { type: Date, default: Date.now },
+      duration: { type: Number, default: 0 } // Stay time in seconds
     }
   ],
   firstSeen: { type: Date, default: Date.now },
