@@ -12,12 +12,17 @@
   --bg-hover: #e2e8f0;
   --accent: #FF4D5E;
   --accent-muted: rgba(255, 77, 94, 0.1);
+  --accent-gradient: linear-gradient(135deg, #FF4D5E 0%, #ff7582 100%);
   --text-main: #0f172a;
   --text-dim: #475569;
   --text-muted: #64748b;
   --border: #e2e8f0;
   --success: #10b981;
+  --success-muted: rgba(16, 185, 129, 0.1);
   --danger: #ef4444;
+  --danger-muted: rgba(239, 68, 68, 0.1);
+  --warning: #f59e0b;
+  --warning-muted: rgba(245, 158, 11, 0.1);
   --font-main: 'Inter', 'Outfit', sans-serif;
   --header-height: 56px;
   --sidebar-width: 68px;
@@ -4556,8 +4561,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .auth-btn-secondary {
   background: var(--bg-hover);
-  color: #94a3b8;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
@@ -4566,8 +4571,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .auth-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--bg-card-alt);
+  color: var(--text-main);
 }
 
 .auth-social {
@@ -4591,25 +4596,26 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 48px;
   border-radius: 12px;
   background: var(--bg-hover);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   font-size: 20px;
-  color: #fff;
+  color: var(--text-dim);
   transition: all 0.2s;
 }
 
 .auth-soc-btn:hover {
-  border-color: #00d2ff;
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-2px);
 }
 
 .auth-footer-link {
   margin-top: 32px;
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .auth-footer-link a {
-  color: #00d2ff;
+  color: var(--accent);
   font-weight: 600;
   text-decoration: none;
 }

@@ -10,8 +10,8 @@ const NotFound = () => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(circle at center, #0f172a, #020617)',
-      color: '#e0e6ed',
+      background: 'var(--bg-deep)',
+      color: 'var(--text-main)',
       textAlign: 'center',
       padding: '20px'
     }}>
@@ -27,7 +27,7 @@ const NotFound = () => {
         404
       </div>
       <h2 style={{ fontSize: '32px', marginBottom: '16px', fontWeight: 800 }}>Page Not Found</h2>
-      <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '32px', maxWidth: '400px' }}>
+      <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginBottom: '32px', maxWidth: '400px' }}>
         The trading route you are looking for does not exist, has been removed, or is temporarily unavailable.
       </p>
       

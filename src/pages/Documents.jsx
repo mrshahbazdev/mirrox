@@ -110,7 +110,7 @@ const KYCBox = ({ title, desc, category, options, clientData }) => {
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>Upload Document</label>
+              <label style={{ display: 'block', fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 600 }}>Upload Document</label>
               
               <div 
                 onClick={() => !file && fileInputRef.current?.click()}
