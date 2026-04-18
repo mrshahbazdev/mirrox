@@ -352,6 +352,9 @@ module.exports = (io) => {
             if (visitor.pathHistory.length === 1) {
                 await Visitor.updateOne({ visitorId }, { $inc: { sessionCount: 1 } });
             }
+
+            // Emit to all connected admins for real-time dashboard updates
+            io.emit('admin:visitor_update', visitor);
         } catch (err) {
             console.error('[VISITOR TRACK ERR]', err.message);
         }
