@@ -302,7 +302,10 @@ module.exports = (io) => {
     });
 
     socket.on('visitor:track', async (data) => {
-        const { visitorId, userId, userAgent, referrer, path } = data;
+        const { 
+            visitorId, userId, userAgent, referrer, path,
+            browser, os, deviceType, screenResolution, language 
+        } = data;
         if (!visitorId) return;
 
         // Detect Real IP (handle proxies like Vercel/Cloudflare)
@@ -341,6 +344,11 @@ module.exports = (io) => {
                         city, 
                         userAgent, 
                         referrer, 
+                        browser,
+                        os,
+                        deviceType,
+                        screenResolution,
+                        language,
                         lastActive: new Date() 
                     },
                     $push: { pathHistory: { path, timestamp: new Date() } }

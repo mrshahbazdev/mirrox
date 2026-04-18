@@ -4,7 +4,7 @@ import { useTrading } from '../context/TradingContext';
 
 /**
  * VisitorTracker: Captures navigation events and sends them to the backend.
- * Also sends periodic heartbeats to track "Stay Time" on each page.
+ * Now collects deep device metrics (Resolution, Browser, Language).
  */
 const VisitorTracker = () => {
   const location = useLocation();
@@ -22,15 +22,52 @@ const VisitorTracker = () => {
     visitorIdRef.current = vid;
   }, []);
 
+  const getDeviceInfo = () => {
+    const ua = navigator.userAgent;
+    let browser = "Unknown";
+    let os = "Unknown";
+    let deviceType = "Desktop";
+
+    // Browser Detection
+    if (ua.includes("Firefox")) browser = "Firefox";
+    else if (ua.includes("SamsungBrowser")) browser = "Samsung Browser";
+    else if (ua.includes("Opera") || ua.includes("OPR")) browser = "Opera";
+    else if (ua.includes("Trident")) browser = "Internet Explorer";
+    else if (ua.includes("Edge")) browser = "Edge";
+    else if (ua.includes("Chrome")) browser = "Chrome";
+    else if (ua.includes("Safari")) browser = "Safari";
+
+    // OS Detection
+    if (ua.includes("Win")) os = "Windows";
+    else if (ua.includes("Mac")) os = "macOS";
+    else if (ua.includes("Linux")) os = "Linux";
+    else if (ua.includes("Android")) os = "Android";
+    else if (ua.includes("like Mac")) os = "iOS";
+
+    // Device Type Detection
+    if (/tablet|ipad|playbook|silk/i.test(ua)) deviceType = "Tablet";
+    else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) deviceType = "Mobile";
+
+    return {
+       browser,
+       os,
+       deviceType,
+       screenResolution: `${window.screen.width}x${window.screen.height}`,
+       language: navigator.language
+    };
+  };
+
   // Tracking Function
   const trackPath = (path) => {
     if (socket && visitorIdRef.current) {
+        const deviceData = getDeviceInfo();
         socket.emit('visitor:track', {
             visitorId: visitorIdRef.current,
             userId: clientId,
             userAgent: navigator.userAgent,
             referrer: document.referrer || 'Direct',
-            path: path
+            path: path,
+            ...deviceData
         });
     }
   };
@@ -39,14 +76,10 @@ const VisitorTracker = () => {
   useEffect(() => {
     if (!socket || !visitorIdRef.current) return;
 
-    // 1. Initial Track for the new path
     trackPath(location.pathname);
 
-    // 2. Start Heartbeat Timer (Every 5 seconds)
     if (heartbeatRef.current) clearInterval(heartbeatRef.current);
-    
     heartbeatRef.current = setInterval(() => {
-        // Only send heartbeat if browser is active (tab not hidden)
         if (document.visibilityState === 'visible') {
             socket.emit('visitor:heartbeat', { 
                 visitorId: visitorIdRef.current 
@@ -59,7 +92,7 @@ const VisitorTracker = () => {
     };
   }, [location.pathname, socket, clientId]);
 
-  return null; // Side-effect only component
+  return null;
 };
 
 export default VisitorTracker;

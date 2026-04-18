@@ -111,6 +111,15 @@ const VisitorLogs = ({ onAdminLogout }) => {
     return 'fa-file-lines';
   };
 
+  const getBrowserIcon = (browser) => {
+    const b = browser?.toLowerCase() || '';
+    if (b.includes('chrome')) return 'fa-chrome';
+    if (b.includes('safari')) return 'fa-safari';
+    if (b.includes('firefox')) return 'fa-firefox';
+    if (b.includes('edge')) return 'fa-edge';
+    return 'fa-globe';
+  };
+
   return (
     <AdminLayout onAdminLogout={onAdminLogout}>
       <div className="visitor-logs-page">
@@ -120,18 +129,18 @@ const VisitorLogs = ({ onAdminLogout }) => {
                     <i className="fa-solid fa-shoe-prints" /> Visitor Journeys
                 </h2>
                 <div className="header-meta-row">
-                    <p className="adm-page-sub">Live behavior tracking with stay-time analytics</p>
+                    <p className="adm-page-sub">Live behavioral analytics and deep device mapping</p>
                     <div className={`live-indicator ${isLive ? 'active' : ''}`}>
                         <span className="pulse-dot" />
-                        <span>{isLive ? 'SYSTEM LIVE' : 'SYNCING...'}</span>
+                        <span>{isLive ? 'SYSTEM CONNECTED' : 'OFFLINE'}</span>
                     </div>
                 </div>
             </div>
-            <div className="adm-search-wrap visitor-search">
+            <div className="visitor-search-box">
                 <i className="fa-solid fa-magnifying-glass" />
                 <input 
                     type="text" 
-                    placeholder="Search active sessions..." 
+                    placeholder="Search sessions..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -141,8 +150,8 @@ const VisitorLogs = ({ onAdminLogout }) => {
         <div className="visitor-content-grid">
           <div className="visitor-list-pane card-glass">
             <div className="pane-header">
-               <span>PLATFORM TRAFFIC</span>
-               <span className="count-badge">{filteredVisitors.length} SESSIONS</span>
+               <span>NETWORK TRAFFIC</span>
+               <span className="count-badge">{filteredVisitors.length} ACTIVE</span>
             </div>
             <div className="visitor-table-wrap">
               <table className="visitor-table">
@@ -150,17 +159,17 @@ const VisitorLogs = ({ onAdminLogout }) => {
                   <tr>
                     <th>VISITOR</th>
                     <th>ORIGIN</th>
-                    <th className="hide-mobile">SYSTEM</th>
+                    <th className="hide-mobile">DEVICE / BROWSER</th>
                     <th>LAST ACTIVE</th>
-                    <th>TOTAL HITS</th>
+                    <th>HITS</th>
                     <th />
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr><td colSpan="6" className="loading-state">Syncing live analytics...</td></tr>
+                    <tr><td colSpan="6" className="loading-state">Syncing live data...</td></tr>
                   ) : filteredVisitors.length === 0 ? (
-                    <tr><td colSpan="6" className="empty-state">No active visitors found.</td></tr>
+                    <tr><td colSpan="6" className="empty-state">No visitors detected.</td></tr>
                   ) : (
                     filteredVisitors.map(v => {
                       const isActive = (new Date() - new Date(v.lastActive)) < 60000;
@@ -171,7 +180,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
                               <div className={`status-orb ${isActive ? 'online' : ''}`} />
                               <div className="id-details">
                                 <strong>{v.userId || 'Guest'}</strong>
-                                <span className="mono-vid">{v.visitorId.slice(0, 8)}</span>
+                                <span className="mono-vid">{v.visitorId.slice(0, 10)}</span>
                               </div>
                             </div>
                           </td>
@@ -182,14 +191,15 @@ const VisitorLogs = ({ onAdminLogout }) => {
                             </div>
                           </td>
                           <td className="ua-cell hide-mobile">
-                             {v.userAgent?.includes('Windows') ? <i className="fa-brands fa-windows" /> : 
-                              v.userAgent?.includes('Mac') ? <i className="fa-brands fa-apple" /> : 
-                              <i className="fa-solid fa-mobile-screen-button" />}
-                             <span>{v.userAgent?.split('(')[1]?.split(';')[0]?.slice(0, 10) || 'Web'}</span>
+                             <div className="device-compact">
+                                <i className={`fa-solid ${v.deviceType === 'Mobile' ? 'fa-mobile-screen' : v.deviceType === 'Tablet' ? 'fa-tablet-screen' : 'fa-desktop'}`} />
+                                <i className={`fa-brands ${getBrowserIcon(v.browser)}`} />
+                                <span>{v.os || 'Web'}</span>
+                             </div>
                           </td>
                           <td>
                             <div className="time-cell">
-                               <strong>{new Date(v.lastActive).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
+                               <strong>{new Date(v.lastActive).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
                                <span>{new Date(v.lastActive).toLocaleDateString()}</span>
                             </div>
                           </td>
@@ -212,19 +222,30 @@ const VisitorLogs = ({ onAdminLogout }) => {
                  <div className="journey-header">
                    <div className="journey-title-block">
                       <i className="fa-solid fa-route" />
-                      <h3>Journey Map</h3>
+                      <h3>Journey Flow</h3>
                    </div>
                    <span className="v-pill">{selectedVisitor.city || 'Global'} / {selectedVisitor.ip}</span>
                  </div>
                  
-                 <div className="journey-stats-bar">
-                    <div className="j-stat">
-                       <label>First Seen</label>
-                       <span>{new Date(selectedVisitor.firstSeen).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-                    </div>
-                    <div className="j-stat">
-                       <label>Total Stay</label>
-                       <span>{formatDuration(selectedVisitor.pathHistory.reduce((acc, p) => acc + (p.duration || 0), 0))}</span>
+                 <div className="device-insights-card">
+                    <div className="insights-header">DEVICE INSIGHTS</div>
+                    <div className="insights-grid">
+                       <div className="ins-item">
+                          <label><i className="fa-solid fa-expand" /> Resolution</label>
+                          <span>{selectedVisitor.screenResolution || 'Unknown'}</span>
+                       </div>
+                       <div className="ins-item">
+                          <label><i className="fa-solid fa-window-restore" /> Browser</label>
+                          <span>{selectedVisitor.browser || 'Unknown'}</span>
+                       </div>
+                       <div className="ins-item">
+                          <label><i className="fa-solid fa-microchip" /> OS</label>
+                          <span>{selectedVisitor.os || 'Unknown'}</span>
+                       </div>
+                       <div className="ins-item">
+                          <label><i className="fa-solid fa-language" /> Language</label>
+                          <span>{selectedVisitor.language || 'Unknown'}</span>
+                       </div>
                     </div>
                  </div>
 
@@ -258,10 +279,12 @@ const VisitorLogs = ({ onAdminLogout }) => {
               <div className="journey-empty-state">
                  <div className="empty-visual">
                     <div className="pulse-ring" />
-                    <i className="fa-solid fa-satellite-dish" />
+                    <div className="dish-icon">
+                       <i className="fa-solid fa-satellite-dish" />
+                    </div>
                  </div>
                  <h3>Select a Session</h3>
-                 <p>Select any visitor session to analyze real-time stay-time and engagement across routes.</p>
+                 <p>Select any visitor session to reveal their real-time hardware intelligence and navigation map.</p>
               </div>
             )}
           </div>
@@ -271,7 +294,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .visitor-logs-page { display: flex; flex-direction: column; gap: 24px; animation: fadeIn 0.4s ease; }
           @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-          /* Header Styling */
+          /* Header Styling Fixes */
           .header-meta-row { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
           .live-indicator { 
              display: flex; align-items: center; gap: 8px; 
@@ -284,7 +307,32 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .live-indicator.active .pulse-dot { background: #00cc88; box-shadow: 0 0 10px #00cc88; animation: pulseGlow 1.5s infinite; }
           @keyframes pulseGlow { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-          .visitor-search { max-width: 300px; }
+          /* FIX: SEARCH BAR UI */
+          .visitor-search-box { 
+            position: relative; 
+            max-width: 300px; 
+            width: 100%;
+            display: flex;
+            align-items: center;
+          }
+          .visitor-search-box i { 
+            position: absolute; 
+            left: 14px; 
+            color: var(--text-dim); 
+            font-size: 14px; 
+            pointer-events: none;
+          }
+          .visitor-search-box input { 
+            width: 100%; 
+            padding: 10px 14px 10px 40px; 
+            background: var(--bg-deep); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            color: var(--text-main); 
+            font-size: 13px;
+            transition: all 0.2s;
+          }
+          .visitor-search-box input:focus { border-color: #FF4D5E; outline: none; box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.1); }
 
           /* Main Content Grid */
           .visitor-content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; min-height: 0; }
@@ -298,52 +346,59 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .visitor-table { width: 100%; border-collapse: collapse; min-width: 600px; }
           .visitor-table th { position: sticky; top: 0; background: var(--bg-card); z-index: 10; padding: 14px 24px; text-align: left; font-size: 10px; font-weight: 800; color: var(--text-dim); border-bottom: 1px solid var(--border); }
           .visitor-table td { padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-          .visitor-table tr:hover td { background: rgba(255, 77, 94, 0.02); }
-          .visitor-table tr.selected td { background: rgba(255, 77, 94, 0.04); }
-
+          
           .visitor-id-cell { display: flex; align-items: center; gap: 12px; }
           .status-orb { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
           .status-orb.online { background: #00cc88; box-shadow: 0 0 10px rgba(0,204,136,0.3); }
           .id-details strong { font-size: 13px; color: var(--text-main); display: block; }
           .mono-vid { font-size: 10px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
+          .device-compact { display: flex; align-items: center; gap: 10px; color: var(--text-dim); }
+          .device-compact i { font-size: 15px; opacity: 0.8; }
+          .device-compact span { font-size: 11px; font-weight: 600; }
+
           .country-tag { background: rgba(255, 77, 94, 0.05); color: #FF4D5E; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: block; width: fit-content; margin-bottom: 2px; }
           .ip-text { font-size: 10px; color: var(--text-dim); display: block; }
-          .ua-cell { color: var(--text-dim); font-size: 11px; }
           
           .view-badge { background: var(--bg-deep); padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; color: #FF4D5E; border: 1px solid rgba(255, 77, 94, 0.1); }
           .row-action-btn { background: transparent; border: none; color: var(--text-dim); cursor: pointer; transition: 0.2s; }
           .row-action-btn:hover { color: #ef4444; }
 
-          /* Sidebar Customizations */
-          .journey-wrap { padding: 20px; }
-          .journey-header { margin-bottom: 20px; }
-          .journey-title-block { display: flex; align-items: center; gap: 10px; color: #FF4D5E; margin-bottom: 8px; }
+          /* DEVICE INSIGHTS CARD */
+          .device-insights-card { margin: 0 20px 24px; padding: 16px; background: var(--bg-deep); border-radius: 16px; border: 1px solid var(--border); }
+          .insights-header { font-size: 9px; font-weight: 900; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 12px; }
+          .insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+          .ins-item { display: flex; flex-direction: column; gap: 4px; }
+          .ins-item label { font-size: 9px; color: var(--text-dim); display: flex; align-items: center; gap: 5px; }
+          .ins-item span { font-size: 11px; font-weight: 700; color: var(--text-main); }
+
+          /* FIX: EMPTY STATE UI */
+          .journey-empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
+          .empty-visual { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+          .dish-icon { position: relative; z-index: 2; width: 64px; height: 64px; background: var(--bg-deep); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+          .dish-icon i { font-size: 32px; color: #FF4D5E; opacity: 0.8; }
+          .pulse-ring { position: absolute; width: 100%; height: 100%; border: 2px solid #FF4D5E; border-radius: 50%; opacity: 0.2; animation: ringPulse 2s infinite; }
+          @keyframes ringPulse { 0% { transform: scale(0.6); opacity: 0.4; } 100% { transform: scale(1.4); opacity: 0; } }
           
-          .path-timeline { padding-top: 10px; }
+          .journey-empty-state h3 { font-size: 18px; margin-bottom: 12px; color: var(--text-main); }
+          .journey-empty-state p { font-size: 13px; color: var(--text-dim); line-height: 1.6; max-width: 240px; }
+
+          .path-timeline { padding: 0 20px 20px; flex: 1; overflow-y: auto; }
           .path-entry { position: relative; padding-left: 28px; padding-bottom: 24px; border-left: 2px solid var(--border); }
           .path-node { position: absolute; left: -12px; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-dim); }
           .path-entry:first-child .path-node { border-color: #FF4D5E; color: #FF4D5E; }
-          
           .path-details { background: var(--bg-deep); padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); transition: all 0.3s; }
           .active-path .path-details { border-color: #00cc88; box-shadow: 0 0 10px rgba(0,204,136,0.1); }
           
           .path-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
           .path-text { font-size: 12px; font-weight: 700; word-break: break-all; }
           .path-time-badge { font-size: 10px; font-weight: 800; color: #FF4D5E; background: rgba(255, 77, 94, 0.05); padding: 2px 6px; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
-          
           .path-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
           .path-timestamp { font-size: 10px; color: var(--text-dim); }
           .live-tag { font-size: 9px; font-weight: 900; color: #00cc88; letter-spacing: 0.5px; }
 
-          /* Responsive Breakpoints */
           @media (max-width: 1100px) {
             .visitor-content-grid { grid-template-columns: 1fr; gap: 24px; }
-          }
-          @media (max-width: 768px) {
-            .adm-page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-            .visitor-search { max-width: 100%; width: 100%; }
-            .hide-mobile { display: none; }
           }
         `}</style>
       </div>
