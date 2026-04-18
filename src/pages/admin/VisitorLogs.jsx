@@ -43,31 +43,46 @@ const VisitorLogs = ({ onAdminLogout }) => {
     setIsLive(true);
 
     const handleVisitorUpdate = (updatedVisitor) => {
+      const vWithStatus = { ...updatedVisitor, isOnline: true };
       setVisitors(prev => {
-        const index = prev.findIndex(v => v.visitorId === updatedVisitor.visitorId);
+        const index = prev.findIndex(v => v.visitorId === vWithStatus.visitorId);
         if (index !== -1) {
           const newList = [...prev];
           newList.splice(index, 1);
-          return [updatedVisitor, ...newList];
+          return [vWithStatus, ...newList];
         } else {
-          return [updatedVisitor, ...prev];
+          return [vWithStatus, ...prev];
         }
       });
 
       setSelectedVisitor(prev => {
-        if (prev?.visitorId === updatedVisitor.visitorId) {
-          return updatedVisitor;
+        if (prev?.visitorId === vWithStatus.visitorId) {
+          return vWithStatus;
         }
         return prev;
       });
     };
 
+    const handleVisitorOffline = ({ visitorId }) => {
+       setVisitors(prev => prev.map(v => 
+         v.visitorId === visitorId ? { ...v, isOnline: false, lastActive: new Date() } : v
+       ));
+       setSelectedVisitor(prev => {
+         if (prev?.visitorId === visitorId) {
+           return { ...prev, isOnline: false, lastActive: new Date() };
+         }
+         return prev;
+       });
+    };
+
     socket.on('admin:visitor_update', handleVisitorUpdate);
+    socket.on('admin:visitor_offline', handleVisitorOffline);
     socket.on('connect', () => setIsLive(true));
     socket.on('disconnect', () => setIsLive(false));
 
     return () => {
       socket.off('admin:visitor_update', handleVisitorUpdate);
+      socket.off('admin:visitor_offline', handleVisitorOffline);
       socket.off('connect');
       socket.off('disconnect');
     };
@@ -91,8 +106,16 @@ const VisitorLogs = ({ onAdminLogout }) => {
     } catch (err) { alert('Failed to delete log'); }
   };
 
+  const formatLastActive = (v) => {
+    if (v.isOnline) return <span className="live-pill">LIVE</span>;
+    const diff = Math.floor((new Date() - new Date(v.lastActive)) / 1000);
+    if (diff < 30) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    return new Date(v.lastActive).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
   const formatDuration = (seconds) => {
-    if (!seconds) return 'Active Now';
+    if (!seconds || seconds < 5) return 'Active';
     if (seconds < 60) return `${seconds}s`;
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -178,7 +201,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
                     <tr><td colSpan="6" className="empty-state">No visitors detected.</td></tr>
                   ) : (
                     filteredVisitors.map(v => {
-                      const isActive = (new Date() - new Date(v.lastActive)) < 60000;
+                      const isActive = v.isOnline || (new Date() - new Date(v.lastActive)) < 30000;
                       return (
                         <tr key={v._id} className={`${selectedVisitor?._id === v._id ? 'selected' : ''} ${isActive ? 'is-active' : ''}`} onClick={() => handleSelectVisitor(v)}>
                           <td>
@@ -205,7 +228,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
                           </td>
                           <td>
                             <div className="time-cell">
-                               <strong>{new Date(v.lastActive).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
+                               <strong>{formatLastActive(v)}</strong>
                                <span>{new Date(v.lastActive).toLocaleDateString()}</span>
                             </div>
                           </td>
@@ -257,7 +280,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
 
                  <div className="path-timeline">
                     {[...selectedVisitor.pathHistory].reverse().map((step, idx) => {
-                      const isCurrent = idx === 0 && (new Date() - new Date(selectedVisitor.lastActive)) < 30000;
+                      const isCurrent = idx === 0 && (selectedVisitor.isOnline || (new Date() - new Date(selectedVisitor.lastActive)) < 30000);
                       return (
                         <div key={idx} className={`path-entry ${isCurrent ? 'active-path' : ''}`}>
                            <div className="path-node">
@@ -310,6 +333,18 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .pulse-dot { width: 5px; height: 5px; border-radius: 50%; background: #64748b; }
           .live-indicator.active .pulse-dot { background: #00cc88; box-shadow: 0 0 10px #00cc88; animation: pulseGlow 1.5s infinite; }
           @keyframes pulseGlow { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+          
+          .live-pill {
+            background: #00cc88;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(0,204,136,0.3);
+            animation: pulseGlow 2s infinite;
+          }
 
           /* SEARCH BAR UI */
           .adm-search-wrap.visitor-search { 

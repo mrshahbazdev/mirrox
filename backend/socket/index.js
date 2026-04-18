@@ -70,6 +70,7 @@ module.exports = (io) => {
     // ─── Online Visitor Tracking ────────────────────────────────────────────────
   const onlineVisitors = new Map(); // clientId → { clientName, clientUid, page, joinedAt, socketId }
   const adminOnline = new Map(); // adminId → { name, role, page, socketId }
+  const activeVisitorSessions = new Map(); // socket.id → visitorId
 
   const broadcastVisitors = () => {
     const now = Date.now();
@@ -307,6 +308,9 @@ module.exports = (io) => {
             browser, os, deviceType, screenResolution, language 
         } = data;
         if (!visitorId) return;
+
+        // Register active session mapping
+        activeVisitorSessions.set(socket.id, visitorId);
 
         // Detect Real IP (handle proxies like Vercel/Cloudflare)
         const ip = socket.handshake.headers['x-forwarded-for']?.split(',')[0].trim() || 
@@ -821,6 +825,15 @@ module.exports = (io) => {
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
       
+      // Handle Visitor Offline
+      if (activeVisitorSessions.has(socket.id)) {
+        const vid = activeVisitorSessions.get(socket.id);
+        activeVisitorSessions.delete(socket.id);
+        
+        // Broadcast to all admins that this visitor is now offline
+        io.emit('admin:visitor_offline', { visitorId: vid });
+      }
+
       if (socket.decoded) {
         const adminId = socket.decoded.id;
         if (adminOnline.has(adminId)) {
