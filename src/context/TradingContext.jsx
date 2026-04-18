@@ -52,16 +52,14 @@ export const TradingProvider = ({ children }) => {
   const currentClientExtended = allClients.find(c => c.id === clientId) || null;
 
   useEffect(() => {
-    // Only connect if we have a token (optional, but requested for security)
-    if (!token) return;
-
-    const s = io(import.meta.env.VITE_API_URL + '', {
-      auth: { token }
-    });
+    // Connect socket even without token (for guest visitor tracking)
+    const socketOptions = token ? { auth: { token } } : {};
+    
+    const s = io(import.meta.env.VITE_API_URL + '', socketOptions);
     setSocket(s);
 
     s.on('connect', () => {
-      console.log('Connected to Trading Server with Token');
+      console.log('Connected to Trading Server', token ? 'with Token' : 'as Guest');
     });
 
     s.on('connect_error', (err) => {
