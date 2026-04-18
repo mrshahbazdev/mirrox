@@ -96,7 +96,7 @@ const Login = ({ onLogin }) => {
                 />
               </div>
               {error && <div className="auth-error animate-fade">{error}</div>}
-              {resetMessage && <div style={{color: '#00cc88', fontSize: '13px', margin: '8px 0'}} className="animate-fade">{resetMessage}</div>}
+              {resetMessage && <div style={{color: 'var(--success)', fontSize: '13px', margin: '8px 0'}} className="animate-fade">{resetMessage}</div>}
               
               <button type="submit" className="auth-btn-primary" disabled={loading}>
                 {loading ? 'Processing...' : 'Send Reset Link'}

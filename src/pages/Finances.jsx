@@ -233,7 +233,7 @@ const Finances = () => {
                 {activeTab === 'deposit' && (
                   <div className="space-y-10">
                     <div className="flex items-center gap-4 border-b border-[var(--border)] pb-8">
-                      <div className="w-14 h-14 bg-[#FF4D5E]/10 text-[#FF4D5E] rounded-2xl flex items-center justify-center border border-[#FF4D5E]/20">
+                      <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[var(--accent)]/20">
                         <PlusCircle size={32} />
                       </div>
                       <div>
@@ -259,7 +259,7 @@ const Finances = () => {
                                 </div>
                                 <span className="block text-xs font-black uppercase tracking-widest">USDT (TRC20)</span>
                                 <span className="text-[9px] font-bold text-[var(--text-muted)] block mt-1">Instant Crypto</span>
-                                {method === 'crypto' && <div className="absolute top-3 right-3 w-2 h-2 bg-[#FF4D5E] rounded-full animate-pulse"></div>}
+                                {method === 'crypto' && <div className="absolute top-3 right-3 w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></div>}
                               </button>
 
                               <button
@@ -272,7 +272,7 @@ const Finances = () => {
                                 </div>
                                 <span className="block text-xs font-black uppercase tracking-widest">Bank Wire</span>
                                 <span className="text-[9px] font-bold text-[var(--text-muted)] block mt-1">Global IBAN</span>
-                                {method === 'bank_transfer' && <div className="absolute top-3 right-3 w-2 h-2 bg-[#FF4D5E] rounded-full animate-pulse"></div>}
+                                {method === 'bank_transfer' && <div className="absolute top-3 right-3 w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></div>}
                               </button>
                             </div>
                           </div>
@@ -300,8 +300,8 @@ const Finances = () => {
 
                         {/* RIGHT COLUMN: INSTRUCTIONS */}
                         <div className="space-y-6">
-                          <div className="instructions-card p-8 rounded-[2rem] bg-[#FF4D5E]/5 border border-dashed border-[#FF4D5E]/20">
-                            <h4 className="flex items-center gap-3 text-[10px] font-black text-[#FF4D5E] uppercase tracking-widest mb-6">
+                          <div className="instructions-card p-8 rounded-[2rem] bg-[var(--accent-muted)] border border-dashed border-[var(--accent)]/20">
+                            <h4 className="flex items-center gap-3 text-[10px] font-black text-[var(--accent)] uppercase tracking-widest mb-6">
                               <Info size={14} />
                               Transfer Protocol
                             </h4>
@@ -373,7 +373,7 @@ const Finances = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full py-8 bg-[#FF4D5E] hover:bg-[#ff7582] text-white rounded-[2.5rem] font-black text-lg tracking-widest shadow-2xl shadow-[#FF4D5E]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-4 group"
+                        className="w-full py-8 bg-[var(--accent)] hover:brightness-110 text-white rounded-[2.5rem] font-black text-lg tracking-widest shadow-2xl shadow-[var(--accent-muted)] active:scale-[0.98] transition-all flex items-center justify-center gap-4 group"
                       >
                         {isSubmitting ? (
                           <>
@@ -394,7 +394,7 @@ const Finances = () => {
                 {activeTab === 'withdrawal' && (
                   <div className="max-w-2xl mx-auto py-10 space-y-12">
                     <div className="text-center space-y-6">
-                      <div className="w-24 h-24 rounded-[2.5rem] bg-[#FF4D5E]/10 text-[#FF4D5E] flex items-center justify-center border border-[#FF4D5E]/20 mx-auto shadow-2xl shadow-[#FF4D5E]/10">
+                      <div className="w-24 h-24 rounded-[2.5rem] bg-[var(--accent-muted)] text-[var(--accent)] flex items-center justify-center border border-[var(--accent)]/20 mx-auto shadow-2xl shadow-[var(--accent-muted)]">
                         <Shield size={44} />
                       </div>
                       <div className="space-y-2">
@@ -465,9 +465,9 @@ const Finances = () => {
 
                 {activeTab === 'history' && (
                   <div className="space-y-10">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-200 pb-10">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-[var(--border)] pb-10">
                       <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-[#FF4D5E]/10 text-[#FF4D5E] rounded-2xl flex items-center justify-center border border-[#FF4D5E]/10">
+                        <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[var(--accent)]/10">
                           <History size={32} />
                         </div>
                         <div>
@@ -535,7 +535,7 @@ const Finances = () => {
           <div className="lg:col-span-4 space-y-8">
             {/* PORTFOLIO METRICS */}
             <div className="glass-metric-card-v3 p-10 bg-[var(--bg-card)] border border-[var(--border)] rounded-[2.5rem] relative overflow-hidden group shadow-sm">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF4D5E]/5 blur-[80px] -mr-16 -mt-16 group-hover:bg-[#FF4D5E]/10 transition-all duration-700"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 blur-[80px] -mr-16 -mt-16 group-hover:bg-[var(--accent)]/10 transition-all duration-700"></div>
               
               <div className="relative z-10 space-y-8">
                 <div className="flex items-center gap-4 border-b border-[var(--border)] pb-8">
@@ -572,11 +572,11 @@ const Finances = () => {
             </div>
 
             {/* QUICK SUPPORT */}
-            <div className="support-promo-v3 p-10 bg-[#FF4D5E] rounded-[2.5rem] relative overflow-hidden group shadow-2xl shadow-[#FF4D5E]/20">
+            <div className="support-promo-v3 p-10 bg-[var(--accent)] rounded-[2.5rem] relative overflow-hidden group shadow-2xl shadow-[var(--accent-muted)]">
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 blur-[100px] -mr-20 -mt-20 group-hover:scale-125 transition-transform duration-1000"></div>
               
               <div className="relative z-10 space-y-8 flex flex-col h-full">
-                <div className="w-16 h-16 bg-white text-[#FF4D5E] rounded-2xl flex items-center justify-center text-2xl shadow-xl transform group-hover:rotate-6 transition-transform">
+                <div className="w-16 h-16 bg-white text-[var(--accent)] rounded-2xl flex items-center justify-center text-2xl shadow-xl transform group-hover:rotate-6 transition-transform">
                   <Headphones size={32} />
                 </div>
                 <div className="space-y-4">
@@ -662,7 +662,7 @@ const Finances = () => {
           width: 100%;
           max-width: 440px;
           padding: 32px;
-          background: linear-gradient(135deg, #FF4D5E 0%, #ff7582 100%);
+          background: var(--accent-gradient);
           border-radius: 2.5rem;
           display: flex;
           flex-direction: column;
@@ -757,7 +757,7 @@ const Finances = () => {
           font-weight: 900;
           padding: 4px 10px;
           background: white;
-          color: #FF4D5E;
+          color: var(--accent);
           border-radius: 100px;
           text-transform: uppercase;
         }
