@@ -3747,8 +3747,8 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 1.5rem;
   padding: 1.25rem;
   width: 100%;
-  box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.2);
-  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  box-shadow: 0 20px 25px -5px rgba(255, 77, 94, 0.2);
+  background: var(--accent-gradient);
 }
 
 .dashboard-equity-card::before {
@@ -3766,7 +3766,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .equity-card-subtitle {
   font-size: 10px;
-  color: rgba(224, 231, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -3828,7 +3828,7 @@ input[type="number"]::-webkit-outer-spin-button {
   flex: 1;
   min-width: 0;
   background: #fff;
-  color: #4f46e5;
+  color: var(--accent);
   font-weight: 700;
   padding: 0.75rem;
   border-radius: 1rem;
@@ -3865,9 +3865,8 @@ input[type="number"]::-webkit-outer-spin-button {
    ========================================= */
 
 .mobile-chart-card {
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 1.5rem;
   padding: 1rem;
   margin: 0.5rem 0;
@@ -3924,12 +3923,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .chart-viewport-mobile {
-  height: 14rem;
+  min-height: 520px;
   width: 100%;
   position: relative;
-  background: linear-gradient(180deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+  background: var(--bg-hover);
   border-radius: 0.75rem;
-  margin-bottom: 1rem;
   overflow: hidden;
 }
 
@@ -4872,6 +4870,65 @@ input[type="number"]::-webkit-outer-spin-button {
 
 
 
+
+/* =========================================
+   DASHBOARD - Additional CSS (No Tailwind)
+   ========================================= */
+
+/* Mobile layout sections */
+.mobile-dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+  width: 100%;
+  overflow-x: hidden;
+  padding-bottom: 100px;
+}
+.dash-section-verify { padding: 0 16px; padding-top: 8px; }
+.dash-section-equity { padding: 0 16px; }
+.dash-section-chart { padding: 8px 0; }
+.dash-section-positions { padding-bottom: 40px; }
+.dash-equity-title-wrap { min-width: 0; }
+.dash-pl-icon { font-size: 12px; }
+.m-mini-change.positive { color: var(--success); }
+.m-mini-change.negative { color: var(--danger); }
+.chart-status-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Desktop verification banner */
+.dash-desktop-verify {
+  background: var(--warning-muted);
+  border: 1px solid var(--warning);
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dash-verify-icon { color: var(--warning); font-size: 20px; }
+.dash-verify-content { flex: 1; }
+.dash-verify-title {
+  color: var(--warning);
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: 800;
+}
+.dash-verify-desc {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.dash-verify-btn {
+  background: var(--warning);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+}
 
 /* =========================================
    BOTTOM NAVIGATION - Mobile
