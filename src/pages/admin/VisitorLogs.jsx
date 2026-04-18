@@ -136,11 +136,11 @@ const VisitorLogs = ({ onAdminLogout }) => {
                     </div>
                 </div>
             </div>
-            <div className="visitor-search-box">
+            <div className="adm-search-wrap visitor-search">
                 <i className="fa-solid fa-magnifying-glass" />
                 <input 
                     type="text" 
-                    placeholder="Search sessions..." 
+                    placeholder="Search active sessions..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -279,12 +279,10 @@ const VisitorLogs = ({ onAdminLogout }) => {
               <div className="journey-empty-state">
                  <div className="empty-visual">
                     <div className="pulse-ring" />
-                    <div className="dish-icon">
-                       <i className="fa-solid fa-satellite-dish" />
-                    </div>
+                    <i className="fa-solid fa-satellite-dish" />
                  </div>
                  <h3>Select a Session</h3>
-                 <p>Select any visitor session to reveal their real-time hardware intelligence and navigation map.</p>
+                 <p>Select any visitor session to analyze real-time stay-time and engagement across routes.</p>
               </div>
             )}
           </div>
@@ -307,24 +305,25 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .live-indicator.active .pulse-dot { background: #00cc88; box-shadow: 0 0 10px #00cc88; animation: pulseGlow 1.5s infinite; }
           @keyframes pulseGlow { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-          /* FIX: SEARCH BAR UI */
-          .visitor-search-box { 
+          /* SEARCH BAR UI */
+          .adm-search-wrap.visitor-search { 
             position: relative; 
             max-width: 300px; 
             width: 100%;
             display: flex;
             align-items: center;
           }
-          .visitor-search-box i { 
+          .adm-search-wrap.visitor-search i { 
             position: absolute; 
             left: 14px; 
             color: var(--text-dim); 
             font-size: 14px; 
             pointer-events: none;
+            z-index: 5;
           }
-          .visitor-search-box input { 
+          .adm-search-wrap.visitor-search input { 
             width: 100%; 
-            padding: 10px 14px 10px 40px; 
+            padding: 10px 14px 10px 42px; 
             background: var(--bg-deep); 
             border: 1px solid var(--border); 
             border-radius: 12px; 
@@ -332,7 +331,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
             font-size: 13px;
             transition: all 0.2s;
           }
-          .visitor-search-box input:focus { border-color: #FF4D5E; outline: none; box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.1); }
+          .adm-search-wrap.visitor-search input:focus { border-color: #FF4D5E; outline: none; box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.1); }
 
           /* Main Content Grid */
           .visitor-content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; min-height: 0; }
@@ -372,16 +371,76 @@ const VisitorLogs = ({ onAdminLogout }) => {
           .ins-item label { font-size: 9px; color: var(--text-dim); display: flex; align-items: center; gap: 5px; }
           .ins-item span { font-size: 11px; font-weight: 700; color: var(--text-main); }
 
-          /* FIX: EMPTY STATE UI */
-          .journey-empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
-          .empty-visual { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
-          .dish-icon { position: relative; z-index: 2; width: 64px; height: 64px; background: var(--bg-deep); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
-          .dish-icon i { font-size: 32px; color: #FF4D5E; opacity: 0.8; }
-          .pulse-ring { position: absolute; width: 100%; height: 100%; border: 2px solid #FF4D5E; border-radius: 50%; opacity: 0.2; animation: ringPulse 2s infinite; }
-          @keyframes ringPulse { 0% { transform: scale(0.6); opacity: 0.4; } 100% { transform: scale(1.4); opacity: 0; } }
+          /* JOURNEY HEADER PREMIUM FIX */
+          .journey-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 24px; 
+            padding: 0 4px;
+          }
+          .journey-title-block { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            color: #FF4D5E; 
+          }
+          .journey-title-block i { font-size: 18px; }
+          .journey-title-block h3 { font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0; }
           
-          .journey-empty-state h3 { font-size: 18px; margin-bottom: 12px; color: var(--text-main); }
-          .journey-empty-state p { font-size: 13px; color: var(--text-dim); line-height: 1.6; max-width: 240px; }
+          .v-pill { 
+            background: rgba(255, 77, 94, 0.05); 
+            color: #FF4D5E; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 77, 94, 0.1);
+          }
+
+          /* EMPTY STATE UI */
+          .journey-empty-state { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 40px; 
+          }
+          .empty-visual { 
+            position: relative; 
+            width: 100px; 
+            height: 100px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 24px; 
+          }
+          .empty-visual i.fa-satellite-dish { 
+            font-size: 40px; 
+            color: #FF4D5E; 
+            opacity: 0.9; 
+            position: relative; 
+            z-index: 2; 
+          }
+          .pulse-ring { 
+            position: absolute; 
+            width: 60px; 
+            height: 60px; 
+            border: 2px solid #FF4D5E; 
+            border-radius: 50%; 
+            opacity: 0.2; 
+            animation: ringPulse 2s infinite; 
+          }
+          @keyframes ringPulse { 
+            0% { transform: scale(0.8); opacity: 0.6; } 
+            100% { transform: scale(1.8); opacity: 0; } 
+          }
+          
+          .journey-empty-state h3 { font-size: 18px; margin-bottom: 12px; color: var(--text-main); font-weight: 700; }
+          .journey-empty-state p { font-size: 13px; color: var(--text-dim); line-height: 1.6; max-width: 260px; margin: 0 auto; }
 
           .path-timeline { padding: 0 20px 20px; flex: 1; overflow-y: auto; }
           .path-entry { position: relative; padding-left: 28px; padding-bottom: 24px; border-left: 2px solid var(--border); }
