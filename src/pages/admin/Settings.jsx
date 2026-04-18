@@ -52,9 +52,9 @@ const Settings = ({ onAdminLogout }) => {
   if (loading) {
     return (
       <AdminLayout onAdminLogout={onAdminLogout}>
-        <div style={{ color: '#64748b', textAlign: 'center', padding: '100px' }}>
-          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '32px', marginBottom: '16px' }}></i>
-          <p>Loading System Configuration...</p>
+        <div style={{ color: 'var(--text-dim)', textAlign: 'center', padding: '100px', fontWeight: 600 }}>
+          <i className="fa-solid fa-gear fa-spin" style={{ fontSize: '32px', marginBottom: '16px', color: 'var(--brand-primary)' }}></i>
+          <p>Synchronizing System Core...</p>
         </div>
       </AdminLayout>
     );
@@ -73,18 +73,18 @@ const Settings = ({ onAdminLogout }) => {
       <div className="adm-page-header">
         <div>
           <h2 className="adm-page-title">
-            <i className="fa-solid fa-gears" /> Platform Settings
+            <i className="fa-solid fa-sliders" /> Platform Settings
           </h2>
-          <p className="adm-page-sub">Configure global parameters and payment details</p>
+          <p className="adm-page-sub">Global configuration and systemic parameters</p>
         </div>
       </div>
 
-      <div style={{ maxWidth: '800px' }}>
+      <div style={{ maxWidth: '900px' }}>
         <form onSubmit={handleUpdate}>
           <div className="settings-section">
-            <h3 className="section-title"><i className="fa-solid fa-wallet" /> Cryptocurrency Instructions</h3>
-            <div className="setting-card">
-              <label className="setting-label">USDT (TRC20) Wallet Address</label>
+            <h3 className="section-title"><i className="fa-solid fa-wallet" /> Settlement Architecture</h3>
+            <div className="setting-card adm-card">
+              <label className="setting-label">USDT (TRC20) Master Vault</label>
               <input 
                 type="text" 
                 className="setting-input"
@@ -92,15 +92,15 @@ const Settings = ({ onAdminLogout }) => {
                 onChange={(e) => handleChange('usdt_address', e.target.value)}
                 placeholder="TXXXXXXXXXXXXXXXXXXXXXX"
               />
-              <p className="setting-help">This address will be displayed to users for crypto deposits.</p>
+              <p className="setting-help">Global destination for client cryptocurrency deposits.</p>
             </div>
           </div>
 
           <div className="settings-section">
-            <h3 className="section-title"><i className="fa-solid fa-building-columns" /> Bank Transfer Details</h3>
+            <h3 className="section-title"><i className="fa-solid fa-building-columns" /> Institutional Wiring</h3>
             <div className="setting-grid">
-              <div className="setting-card">
-                <label className="setting-label">Bank Name</label>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Receiving Institution</label>
                 <input 
                   type="text" 
                   className="setting-input"
@@ -108,8 +108,8 @@ const Settings = ({ onAdminLogout }) => {
                   onChange={(e) => handleChange('bank_name', e.target.value)}
                 />
               </div>
-              <div className="setting-card">
-                <label className="setting-label">Account Holder Name</label>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Beneficiary Name</label>
                 <input 
                   type="text" 
                   className="setting-input"
@@ -118,8 +118,8 @@ const Settings = ({ onAdminLogout }) => {
                 />
               </div>
             </div>
-            <div className="setting-card" style={{ marginTop: '16px' }}>
-              <label className="setting-label">IBAN / Account Number</label>
+            <div className="setting-card adm-card" style={{ marginTop: '20px' }}>
+              <label className="setting-label">International Bank Account Number (IBAN)</label>
               <input 
                 type="text" 
                 className="setting-input"
@@ -130,10 +130,10 @@ const Settings = ({ onAdminLogout }) => {
           </div>
 
           <div className="settings-section">
-            <h3 className="section-title"><i className="fa-solid fa-gauge-high" /> Global Constraints</h3>
+            <h3 className="section-title"><i className="fa-solid fa-shield-virus" /> System Thresholds</h3>
             <div className="setting-grid">
-              <div className="setting-card">
-                <label className="setting-label">Min. Deposit (USD)</label>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Floor Deposit (USD)</label>
                 <input 
                   type="number" 
                   className="setting-input"
@@ -141,8 +141,8 @@ const Settings = ({ onAdminLogout }) => {
                   onChange={(e) => handleChange('min_deposit', parseFloat(e.target.value))}
                 />
               </div>
-              <div className="setting-card">
-                <label className="setting-label">Min. Withdrawal (USD)</label>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Floor Withdrawal (USD)</label>
                 <input 
                   type="number" 
                   className="setting-input"
@@ -150,8 +150,8 @@ const Settings = ({ onAdminLogout }) => {
                   onChange={(e) => handleChange('min_withdrawal', parseFloat(e.target.value))}
                 />
               </div>
-              <div className="setting-card">
-                <label className="setting-label">Referral Bonus (USD)</label>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Incentive Unit (USD)</label>
                 <input 
                   type="number" 
                   className="setting-input"
@@ -163,42 +163,42 @@ const Settings = ({ onAdminLogout }) => {
           </div>
 
           <div className="settings-section">
-            <h3 className="section-title"><i className="fa-solid fa-headset" /> Support Chat Customization</h3>
-            <div className="setting-grid" style={{ marginBottom: '16px' }}>
-              <div className="setting-card">
-                <label className="setting-label">Support Display Name</label>
+            <h3 className="section-title"><i className="fa-solid fa-comments" /> Support Persona</h3>
+            <div className="setting-grid" style={{ marginBottom: '20px' }}>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Entity Alias</label>
                 <input 
                   type="text" 
                   className="setting-input"
                   value={configs.support_name || ''} 
                   onChange={(e) => handleChange('support_name', e.target.value)}
-                  placeholder="Bullvera Support"
+                  placeholder="Bullvera Intelligence"
                 />
               </div>
-              <div className="setting-card">
-                <label className="setting-label">Support Icon (FontAwesome)</label>
+              <div className="setting-card adm-card">
+                <label className="setting-label">Visual Glyph (FontAwesome)</label>
                 <input 
                   type="text" 
                   className="setting-input"
                   value={configs.support_icon || ''} 
                   onChange={(e) => handleChange('support_icon', e.target.value)}
-                  placeholder="fa-solid fa-headset"
+                  placeholder="fa-solid fa-shield-halved"
                 />
               </div>
             </div>
 
-            <div className="setting-card" style={{ marginBottom: '16px' }}>
-              <label className="setting-label">Support Team Avatar (Custom Image)</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid #FF4D5E' }}>
+            <div className="setting-card adm-card" style={{ marginBottom: '20px' }}>
+              <label className="setting-label">Tactical Support Avatar</label>
+              <div className="avatar-upload-box">
+                <div className="avatar-preview">
                   {configs.support_avatar ? (
-                    <img src={configs.support_avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={configs.support_avatar} alt="Avatar" />
                   ) : (
-                    <i className={configs.support_icon || 'fa-solid fa-headset'} style={{ fontSize: '20px', color: '#FF4D5E' }} />
+                    <i className={configs.support_icon || 'fa-solid fa-user-shield'} />
                   )}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px' }}>Recommended size: 100x100 (Square)</p>
+                <div className="avatar-controls">
+                  <p className="upload-tip">Optimized: 128x128 Squared Matrix</p>
                   <input 
                     type="file" 
                     id="support-avatar-input" 
@@ -216,28 +216,28 @@ const Settings = ({ onAdminLogout }) => {
                         });
                         handleChange('support_avatar', res.data.url);
                       } catch (err) {
-                        alert('Upload failed');
+                        showToast('Matrix integration failed', 'warn');
                       } finally {
                         setUploadingAvatar(false);
                       }
                     }} 
                   />
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div className="avatar-btn-group">
                     <button 
-                      className="qr-add-btn" 
-                      style={{ padding: '6px 12px', fontSize: '12px' }} 
+                      type="button"
+                      className="adm-upload-btn" 
                       disabled={uploadingAvatar}
                       onClick={() => document.getElementById('support-avatar-input').click()}
                     >
-                      {uploadingAvatar ? <i className="fa-solid fa-spinner fa-spin" /> : <><i className="fa-solid fa-upload" /> Upload Image</>}
+                      {uploadingAvatar ? <i className="fa-solid fa-circle-notch fa-spin" /> : <><i className="fa-solid fa-arrow-up-from-bracket" /> Upload Material</>}
                     </button>
                     {configs.support_avatar && (
                       <button 
-                         className="qr-add-btn" 
-                         style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }} 
+                         type="button"
+                         className="adm-delete-btn" 
                          onClick={() => handleChange('support_avatar', '')}
                       >
-                         <i className="fa-solid fa-trash" /> Remove
+                         <i className="fa-solid fa-trash" /> Purge
                       </button>
                     )}
                   </div>
@@ -245,17 +245,15 @@ const Settings = ({ onAdminLogout }) => {
               </div>
             </div>
 
-            <div className="setting-card" style={{ marginBottom: '16px' }}>
-              <label className="setting-label">Chat Notification Sounds</label>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="setting-card adm-card" style={{ marginBottom: '20px' }}>
+              <label className="setting-label">Acoustic Alerts</label>
+              <div className="sound-setting-grid">
                 {/* Admin Sound */}
-                <div style={{ background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 600, marginBottom: '8px' }}>Admin Dashboard Sound</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <i className="fa-solid fa-bell" style={{ color: '#FF4D5E' }} />
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {configs.admin_notification_sound ? 'Custom Sound Set' : 'Default Beep'}
-                    </span>
+                <div className="sound-item">
+                  <p className="sound-title">Command Dashboard</p>
+                  <div className="sound-meta">
+                    <i className="fa-solid fa-tower-broadcast" />
+                    <span>{configs.admin_notification_sound ? 'Tactical Sound Engaged' : 'Default Frequency'}</span>
                   </div>
                   <input type="file" id="admin-sound-input" accept="audio/*" style={{ display: 'none' }} onChange={async (e) => {
                     const file = e.target.files[0];
@@ -266,28 +264,26 @@ const Settings = ({ onAdminLogout }) => {
                       formData.append('file', file);
                       const res = await axios.post(`${API}/api/upload`, formData);
                       handleChange('admin_notification_sound', res.data.url);
-                    } catch (err) { alert('Upload failed'); } finally { setUploadingAdminSound(false); }
+                    } catch (err) { showToast('Sound uplink failed', 'warn'); } finally { setUploadingAdminSound(false); }
                   }} />
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => document.getElementById('admin-sound-input').click()} disabled={uploadingAdminSound}>
-                      {uploadingAdminSound ? <i className="fa-solid fa-spinner fa-spin" /> : <><i className="fa-solid fa-upload" /> Upload</>}
+                  <div className="sound-controls">
+                    <button type="button" className="adm-upload-btn" onClick={() => document.getElementById('admin-sound-input').click()} disabled={uploadingAdminSound}>
+                      {uploadingAdminSound ? <i className="fa-solid fa-circle-notch fa-spin" /> : <><i className="fa-solid fa-upload" /> Uplink</>}
                     </button>
                     {configs.admin_notification_sound && (
-                      <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px', color: '#ef4444' }} onClick={() => handleChange('admin_notification_sound', '')}>
-                        <i className="fa-solid fa-rotate-left" /> Reset
+                      <button type="button" className="adm-delete-btn" onClick={() => handleChange('admin_notification_sound', '')}>
+                        <i className="fa-solid fa-trash" /> Reset
                       </button>
                     )}
                   </div>
                 </div>
 
                 {/* User Sound */}
-                <div style={{ background: 'var(--bg-card-alt)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 600, marginBottom: '8px' }}>User Chat-box Sound</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <i className="fa-solid fa-volume-high" style={{ color: 'var(--success)' }} />
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {configs.user_notification_sound ? 'Custom Sound Set' : 'Default Ping'}
-                    </span>
+                <div className="sound-item">
+                  <p className="sound-title">In-Field Chat Terminal</p>
+                  <div className="sound-meta">
+                    <i className="fa-solid fa-users-viewfinder" style={{ color: 'var(--success)' }} />
+                    <span>{configs.user_notification_sound ? 'Tactical Sound Engaged' : 'Default Frequency'}</span>
                   </div>
                   <input type="file" id="user-sound-input" accept="audio/*" style={{ display: 'none' }} onChange={async (e) => {
                     const file = e.target.files[0];
@@ -298,15 +294,15 @@ const Settings = ({ onAdminLogout }) => {
                       formData.append('file', file);
                       const res = await axios.post(`${API}/api/upload`, formData);
                       handleChange('user_notification_sound', res.data.url);
-                    } catch (err) { alert('Upload failed'); } finally { setUploadingUserSound(false); }
+                    } catch (err) { showToast('Sound uplink failed', 'warn'); } finally { setUploadingUserSound(false); }
                   }} />
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => document.getElementById('user-sound-input').click()} disabled={uploadingUserSound}>
-                      {uploadingUserSound ? <i className="fa-solid fa-spinner fa-spin" /> : <><i className="fa-solid fa-upload" /> Upload</>}
+                  <div className="sound-controls">
+                    <button type="button" className="adm-upload-btn" onClick={() => document.getElementById('user-sound-input').click()} disabled={uploadingUserSound}>
+                      {uploadingUserSound ? <i className="fa-solid fa-circle-notch fa-spin" /> : <><i className="fa-solid fa-upload" /> Uplink</>}
                     </button>
                     {configs.user_notification_sound && (
-                      <button type="button" className="qr-add-btn" style={{ padding: '4px 8px', fontSize: '11px', color: '#ef4444' }} onClick={() => handleChange('user_notification_sound', '')}>
-                        <i className="fa-solid fa-rotate-left" /> Reset
+                      <button type="button" className="adm-delete-btn" onClick={() => handleChange('user_notification_sound', '')}>
+                        <i className="fa-solid fa-trash" /> Reset
                       </button>
                     )}
                   </div>
@@ -314,16 +310,16 @@ const Settings = ({ onAdminLogout }) => {
               </div>
             </div>
 
-            <div className="setting-card">
-              <label className="setting-label">Quick Response Templates</label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className="setting-card adm-card">
+              <label className="setting-label">Standard Operational Responses</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {(() => {
                   try {
                     const replies = JSON.parse(configs.support_quick_replies || '[]');
                     return (
                       <>
                         {replies.map((r, i) => (
-                          <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                          <div key={i} className="qr-template-row">
                             <input 
                               type="text" 
                               className="setting-input" 
@@ -336,7 +332,7 @@ const Settings = ({ onAdminLogout }) => {
                             />
                             <button 
                               type="button" 
-                              style={{ background: '#2d1a1a', border: '1px solid #7c2d2d', color: '#f87171', borderRadius: '8px', padding: '0 12px', cursor: 'pointer' }}
+                              className="qr-delete-btn"
                               onClick={() => {
                                 const newReplies = replies.filter((_, idx) => idx !== i);
                                 handleChange('support_quick_replies', JSON.stringify(newReplies));
@@ -348,18 +344,18 @@ const Settings = ({ onAdminLogout }) => {
                         ))}
                         <button 
                           type="button"
-                          className="qr-add-btn"
+                          className="adm-add-qr-btn"
                           onClick={() => {
-                            const newReplies = [...replies, "New Quick Reply..."];
+                            const newReplies = [...replies, "Initialize new tactical response..."];
                             handleChange('support_quick_replies', JSON.stringify(newReplies));
                           }}
                         >
-                          <i className="fa-solid fa-plus" /> Add Template
+                          <i className="fa-solid fa-plus" /> Append Directive
                         </button>
                       </>
                     );
                   } catch (e) {
-                    return <p style={{ color: '#ef4444' }}>Error parsing quick replies</p>;
+                    return <p style={{ color: 'var(--danger)' }}>Matrix parsing error</p>;
                   }
                 })()}
               </div>
@@ -379,67 +375,93 @@ const Settings = ({ onAdminLogout }) => {
       </div>
 
       <style>{`
-        .settings-section { margin-bottom: 32px; }
+        .settings-section { margin-bottom: 40px; }
         .section-title {
-          font-size: 15px; font-weight: 800; color: #FF4D5E;
-          display: flex; align-items: center; gap: 8px;
-          margin-bottom: 16px;
-          text-transform: uppercase; letter-spacing: 0.5px;
+          font-size: 14px; font-weight: 900; color: var(--brand-primary);
+          display: flex; align-items: center; gap: 12px;
+          margin-bottom: 24px;
+          text-transform: uppercase; letter-spacing: 0.1em;
         }
         .setting-grid {
-          display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+          display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
         }
         .setting-card {
-          background: #0f1520;
-          border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 12px; padding: 20px;
+           padding: 24px !important;
         }
         .setting-label {
-          display: block; font-size: 11px; font-weight: 800;
-          color: #64748b; text-transform: uppercase;
-          margin-bottom: 8px; letter-spacing: 0.5px;
+          display: block; font-size: 10px; font-weight: 900;
+          color: var(--text-dim); text-transform: uppercase;
+          margin-bottom: 12px; letter-spacing: 0.08em;
         }
         .setting-input {
-          width: 100%; background: #080c14;
-          border: 1px solid #1e293b; border-radius: 8px;
-          padding: 12px 14px; color: #fff; font-size: 14px;
-          outline: none; transition: border-color 0.2s;
-          font-family: 'Inter', sans-serif;
+          width: 100%; background: rgba(0,0,0,0.1) !important;
+          border: 1px solid var(--border) !important; border-radius: 12px !important;
+          padding: 14px 18px !important; color: var(--text-main) !important; font-size: 14px !important;
+          outline: none; transition: all 0.2s;
+          font-family: var(--font-main); font-weight: 500;
         }
-        .setting-input:focus { border-color: #FF4D5E; }
-        .setting-help { font-size: 12px; color: #4a5568; margin-top: 8px; }
+        .setting-input:focus { border-color: var(--brand-primary) !important; background: var(--bg-card) !important; box-shadow: 0 0 0 4px rgba(255, 77, 94, 0.05); }
+        .setting-help { font-size: 12px; color: var(--text-dim); margin-top: 12px; font-weight: 500; }
 
         .save-settings-btn {
-          background: #FF4D5E; color: #fff;
-          border: none; border-radius: 12px;
-          padding: 16px 32px; font-size: 15px; font-weight: 800;
-          cursor: pointer; transition: all 0.2s;
-          display: flex; align-items: center; gap: 10px;
-          box-shadow: 0 4px 14px rgba(255, 77, 94, 0.2);
+          background: var(--brand-primary); color: #fff;
+          border: none; border-radius: 14px;
+          padding: 18px 40px; font-size: 15px; font-weight: 800;
+          cursor: pointer; transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+          display: flex; align-items: center; gap: 12px;
+          box-shadow: 0 10px 25px rgba(255, 77, 94, 0.3);
         }
-        .save-settings-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
+        .save-settings-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 77, 94, 0.4); }
         .save-settings-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .adm-toast {
-          position: fixed; top: 24px; right: 24px; z-index: 9999;
-          padding: 12px 20px; border-radius: 10px;
-          display: flex; align-items: center; gap: 10px;
-          font-size: 13px; font-weight: 600;
-          animation: toastIn 0.3s ease;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        .avatar-upload-box { display: flex; align-items: center; gap: 24px; }
+        .avatar-preview { 
+           width: 64px; height: 64px; border-radius: 20px; background: rgba(0,0,0,0.2);
+           display: flex; align-items: center; justify-content: center; overflow: hidden;
+           border: 2px solid var(--brand-primary); box-shadow: 0 0 20px rgba(255, 77, 94, 0.1);
         }
-        .adm-toast.success { background: #0f2a1e; border: 1px solid #00cc88; color: #00cc88; }
-        .adm-toast.warn { background: #2a1a0a; border: 1px solid #f59e0b; color: #f59e0b; }
+        .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-preview i { font-size: 24px; color: var(--brand-primary); }
+        .avatar-controls { flex: 1; }
+        .upload-tip { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; font-weight: 600; }
+        .avatar-btn-group, .sound-controls { display: flex; gap: 10px; }
 
-        .qr-add-btn {
-          background: rgba(255, 77, 94, 0.1); color: #FF4D5E;
-          border: 1px dashed #FF4D5E; border-radius: 8px;
-          padding: 10px; font-size: 13px; font-weight: 700;
-          cursor: pointer; transition: all 0.2s;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          margin-top: 8px;
+        .adm-upload-btn, .adm-add-qr-btn {
+          flex: 1; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);
+          background: var(--bg-hover); color: var(--text-main); font-size: 12px; font-weight: 800;
+          cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .qr-add-btn:hover { background: rgba(255, 77, 94, 0.15); }
+        .adm-upload-btn:hover, .adm-add-qr-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--brand-primary); color: var(--brand-primary); }
+
+        .adm-delete-btn, .qr-delete-btn {
+          padding: 10px 16px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.2);
+          background: rgba(255, 77, 77, 0.05); color: var(--danger); font-size: 12px; font-weight: 800;
+          cursor: pointer; transition: 0.2s;
+        }
+        .adm-delete-btn:hover, .qr-delete-btn:hover { background: var(--danger); color: #fff; }
+
+        .sound-setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .sound-item { background: rgba(0,0,0,0.1); padding: 16px; border-radius: 16px; border: 1px solid var(--border); }
+        .sound-title { font-size: 12px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; }
+        .sound-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+        .sound-meta i { color: var(--brand-primary); font-size: 14px; }
+        .sound-meta span { font-size: 11px; color: var(--text-dim); font-weight: 600; }
+
+        .qr-template-row { display: flex; gap: 10px; align-items: center; }
+
+        .adm-toast {
+          position: fixed; top: 32px; right: 32px; z-index: 9999;
+          padding: 16px 28px; border-radius: 16px;
+          display: flex; align-items: center; gap: 14px;
+          font-size: 14px; font-weight: 700;
+          backdrop-filter: blur(20px);
+          animation: toastIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .adm-toast.success { background: rgba(0, 204, 136, 0.1); border: 1px solid var(--success); color: var(--success); }
+        .adm-toast.warn { background: rgba(255, 77, 77, 0.1); border: 1px solid var(--danger); color: var(--danger); }
+
+        @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
       `}</style>
     </AdminLayout>
   );

@@ -29,9 +29,9 @@ const ActiveTraders = ({ onAdminLogout }) => {
   if (loading) {
      return (
        <AdminLayout onAdminLogout={onAdminLogout}>
-         <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
-           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
-           <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Scanning Market Risks...</p>
+         <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-dim)' }}>
+           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block', color: 'var(--brand-primary)' }} />
+           <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>Scanning Market Risks...</p>
          </div>
        </AdminLayout>
      );
@@ -81,7 +81,7 @@ const ActiveTraders = ({ onAdminLogout }) => {
 
       <div className="adm-table-wrap">
         {data.clients.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-dim)' }}>
              <i className="fa-solid fa-mug-hot" style={{ fontSize: 40, opacity: 0.3, marginBottom: 10 }} />
              <p>No open trades at the moment. The market is quiet.</p>
           </div>
@@ -146,10 +146,10 @@ const ActiveTraders = ({ onAdminLogout }) => {
         
         .adm-live-pulse-badge {
           display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800;
-          color: #00cc88; background: rgba(0,204,136,0.1); padding: 6px 14px; border-radius: 20px;
-          border: 1px solid rgba(0,204,136,0.25); letter-spacing: 0.5px;
+          color: var(--success); background: rgba(0,204,136,0.1); padding: 6px 14px; border-radius: 20px;
+          border: 1px solid rgba(0,204,136,0.2); letter-spacing: 0.5px;
         }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #00cc88; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
         .dot.pulse { animation: pulseGreen 2s infinite; }
         @keyframes pulseGreen { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
@@ -157,55 +157,44 @@ const ActiveTraders = ({ onAdminLogout }) => {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
         }
         .risk-card {
-          background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; padding: 20px; display: flex; align-items: center; gap: 16px;
+          background: var(--bg-card); border: 1px solid var(--border);
+          border-radius: 20px; padding: 24px; display: flex; align-items: center; gap: 16px;
+          backdrop-filter: blur(10px);
         }
         .risk-icon {
           width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;
         }
-        .risk-icon.users { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
-        .risk-icon.docs { background: rgba(168,85,247,0.1); color: #a855f7; }
-        .risk-icon.money { background: rgba(245,158,11,0.1); color: #f59e0b; }
-        .risk-label { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .risk-value { font-size: 24px; font-weight: 800; color: #e0e6ed; font-family: 'Space Mono', monospace; }
+        .risk-icon.users { background: rgba(255, 77, 94, 0.08); color: var(--brand-primary); }
+        .risk-icon.docs { background: rgba(168,85,247,0.08); color: #a855f7; }
+        .risk-icon.money { background: rgba(245,158,11,0.08); color: var(--warning); }
+        .risk-label { font-size: 12px; font-weight: 700; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .risk-value { font-size: 24px; font-weight: 800; color: var(--text-main); font-family: 'Space Mono', monospace; }
 
-        .adm-table-wrap {
-          background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; overflow: hidden;
-        }
-        .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr { background: rgba(255, 77, 94, 0.05); border-bottom: 1px solid rgba(255, 77, 94, 0.1); }
-        .adm-table th { padding: 14px 18px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; }
-        .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(255, 77, 94, 0.03); }
-        .adm-table-row:last-child { border-bottom: none; }
-        .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
-        
         .trader-name-cell { display: flex; align-items: center; gap: 12px; }
         .trader-avatar {
-          width: 36px; height: 36px; border-radius: 8px;
-          background: rgba(255, 77, 94, 0.15); border: 1px solid rgba(255, 77, 94, 0.25);
+          width: 36px; height: 36px; border-radius: 10px;
+          background: rgba(255, 77, 94, 0.08); border: 1px solid rgba(255, 77, 94, 0.2);
           display: flex; align-items: center; justify-content: center;
-          color: #FF4D5E; font-size: 14px; font-weight: 800; text-transform: uppercase;
+          color: var(--brand-primary); font-size: 14px; font-weight: 800; text-transform: uppercase;
         }
         
         .trade-count-badge {
           display: inline-flex; align-items: center; justify-content: center;
-          padding: 4px 10px; background: rgba(168,85,247,0.15); color: #a855f7;
+          padding: 4px 10px; background: rgba(168,85,247,0.1); color: #a855f7;
           border-radius: 20px; font-weight: 800; font-family: 'Space Mono', monospace; font-size: 12px;
         }
 
         .adm-mono { font-family: 'Space Mono', monospace; }
-        .pos { color: #00cc88 !important; font-weight: 700; }
-        .neg { color: #ff4d4d !important; font-weight: 700; }
+        .pos { color: var(--success) !important; font-weight: 700; }
+        .neg { color: var(--danger) !important; font-weight: 700; }
 
         .adm-act-btn {
           width: 30px; height: 30px; border-radius: 7px;
           display: flex; align-items: center; justify-content: center;
           border: 1px solid transparent; cursor: pointer; font-size: 12px; transition: all 0.2s;
         }
-        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; border-color: rgba(255, 77, 94, 0.2); }
-        .adm-act-btn.view:hover { background: #FF4D5E; color: #fff; }
+        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: var(--brand-primary); border-color: rgba(255, 77, 94, 0.2); }
+        .adm-act-btn.view:hover { background: var(--brand-primary); color: #fff; }
       `}</style>
     </AdminLayout>
   );

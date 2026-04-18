@@ -146,7 +146,7 @@ const Verifications = ({ onAdminLogout }) => {
       </div>
 
       {/* Main List Area */}
-      <div className="kyc-container">
+      <div className="kyc-container adm-card">
         {filteredRequests.length === 0 ? (
           <div className="kyc-empty">
             <i className="fa-solid fa-folder-open empty-icon" />
@@ -155,7 +155,7 @@ const Verifications = ({ onAdminLogout }) => {
         ) : (
           <div className="kyc-list">
             {paginatedRequests.map((req, idx) => (
-              <div className="kyc-card" key={req.client.id + req.category + idx}>
+              <div className="kyc-card" key={(req.client.id || req.client._id) + req.category + idx}>
                 {/* Client Info Left */}
                 <div className="kyc-card-left">
                   <div className="kyc-avatar">{req.client.name.charAt(0)}</div>
@@ -163,20 +163,24 @@ const Verifications = ({ onAdminLogout }) => {
                     <h4>{req.client.name}</h4>
                     <span className="kyc-uid">{req.client.uid}</span>
                   </div>
+                  
+                  <div className="kyc-divider" />
+
                   <div className="kyc-doc-info">
                     <div className="doc-label">Document Type</div>
                     <div className="doc-type" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <i className={`fa-solid ${req.category === 'selfie' ? 'fa-camera-retro' : 'fa-file-lines'}`} style={{ color: req.category === 'poi' ? '#FF4D5E' : (req.category === 'por' ? '#f59e0b' : '#10b981') }} /> 
-                      <strong style={{ color: '#fff' }}>{req.type}</strong>
+                      <i className={`fa-solid ${req.category === 'selfie' ? 'fa-camera-retro' : 'fa-file-lines'}`} style={{ color: req.category === 'poi' ? 'var(--brand-primary)' : (req.category === 'por' ? 'var(--warning)' : 'var(--success)') }} /> 
+                      <strong style={{ color: 'var(--text-main)' }}>{req.type}</strong>
                       {req.data.url && (
-                        <a href={req.data.url} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: '#FF4D5E', fontSize: 11, textDecoration: 'none', background: 'rgba(255, 77, 94, 0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                        <a href={req.data.url} target="_blank" rel="noreferrer" style={{ marginLeft: 6, color: 'var(--brand-primary)', fontSize: 11, textDecoration: 'none', background: 'rgba(255, 77, 94, 0.14)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
                           <i className="fa-solid fa-external-link-alt" /> View Image
                         </a>
                       )}
                     </div>
                   </div>
+
                   <div className="kyc-doc-info">
-                    <div className="doc-label">Date</div>
+                    <div className="doc-label">Submitted On</div>
                     <div className="doc-date">{new Date(req.data.submittedAt).toLocaleDateString()}</div>
                   </div>
                 </div>
@@ -189,10 +193,10 @@ const Verifications = ({ onAdminLogout }) => {
                   
                   {req.data.status === 'pending' && (
                     <div className="kyc-actions">
-                      <button className="kyc-btn approve" onClick={() => handleReview(req.client.id, 'approve', req.category)}>
+                      <button className="kyc-btn approve" onClick={() => handleReview(req.client.id || req.client._id, 'approve', req.category)}>
                         <i className="fa-solid fa-check" /> Approve
                       </button>
-                      <button className="kyc-btn reject" onClick={() => handleReview(req.client.id, 'reject', req.category)}>
+                      <button className="kyc-btn reject" onClick={() => handleReview(req.client.id || req.client._id, 'reject', req.category)}>
                         <i className="fa-solid fa-xmark" /> Reject
                       </button>
                     </div>
@@ -265,83 +269,85 @@ const Verifications = ({ onAdminLogout }) => {
         }
         .kyc-tab {
           display: flex; align-items: center; gap: 8px;
-          padding: 10px 20px; background: #0f1520; border: 1px solid #2a3341;
-          border-radius: 10px; color: #94a3b8; font-size: 13px; font-weight: 700;
+          padding: 10px 20px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border);
+          border-radius: 12px; color: var(--text-dim); font-size: 13px; font-weight: 700;
           cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .kyc-tab:hover { background: rgba(255, 77, 94, 0.05); color: #e0e6ed; }
-        .kyc-tab.active { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.4); color: #FF4D5E; }
+        .kyc-tab:hover { background: rgba(255, 77, 94, 0.05); color: var(--text-main); }
+        .kyc-tab.active { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.4); color: var(--brand-primary); }
         
         .kyc-badge {
-          background: #ff4d4d; color: #fff; padding: 2px 6px;
+          background: var(--brand-primary); color: #fff; padding: 2px 6px;
           border-radius: 6px; font-size: 10px; font-weight: 800;
         }
 
         .kyc-container {
-          background: #0f1520; border: 1px solid #1e293b;
-          border-radius: 16px; padding: 24px; min-height: 400px;
+          min-height: 400px;
         }
         
         .kyc-empty {
           display: flex; flexDirection: column; align-items: center; justify-content: center;
-          height: 300px; color: #64748b; font-size: 14px; font-weight: 600; text-align: center;
+          height: 300px; color: var(--text-dim); font-size: 14px; font-weight: 600; text-align: center;
         }
         .empty-icon { font-size: 48px; opacity: 0.5; margin-bottom: 16px; }
 
         .kyc-list { display: flex; flex-direction: column; gap: 16px; }
         .kyc-card {
           display: flex; justify-content: space-between; align-items: center;
-          padding: 20px; background: #1e293b; border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.05);
-          transition: transform 0.2s, box-shadow 0.2s;
+          padding: 24px; background: rgba(255,255,255,0.02); border-radius: 16px;
+          border: 1px solid var(--border);
+          transition: all 0.2s;
         }
-        .kyc-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        .kyc-card:hover { transform: translateY(-2px); border-color: rgba(255,77,94,0.3); background: rgba(255,255,255,0.04); }
 
         .kyc-card-left { display: flex; align-items: center; gap: 24px; flex: 1; }
         .kyc-avatar {
-          width: 48px; height: 48px; border-radius: 10px; background: rgba(255, 77, 94, 0.1);
-          color: #FF4D5E; display: flex; align-items: center; justify-content: center;
-          font-size: 20px; font-weight: 800;
+          width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 77, 94, 0.08);
+          color: var(--brand-primary); display: flex; align-items: center; justify-content: center;
+          font-size: 20px; font-weight: 800; border: 1px solid rgba(255,77,94,0.2);
         }
-        .kyc-user-info h4 { margin: 0 0 4px 0; color: #e0e6ed; font-size: 15px; }
-        .kyc-uid { font-size: 12px; color: #94a3b8; font-family: monospace; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; }
+        .kyc-user-info h4 { margin: 0 0 4px 0; color: var(--text-main); font-size: 15px; font-weight: 700; }
+        .kyc-uid { font-size: 11px; color: var(--text-dim); font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 6px; }
+
+        .kyc-divider { width: 1px; height: 40px; background: var(--border); margin: 0 10px; }
 
         .kyc-doc-info { display: flex; flex-direction: column; gap: 4px; min-width: 140px; }
-        .doc-label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; }
-        .doc-type { font-size: 13px; color: #e0e6ed; font-weight: 600; }
-        .doc-date { font-size: 13px; color: #94a3b8; }
+        .doc-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; }
+        .doc-type { font-size: 14px; color: var(--text-main); font-weight: 700; }
+        .doc-date { font-size: 12px; color: var(--text-dim); }
 
         .kyc-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         .kyc-status-badge {
-          padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+          padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+          border: 1px solid transparent;
         }
-        .kyc-status-badge.pending { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
-        .kyc-status-badge.approved { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
-        .kyc-status-badge.rejected { background: rgba(2ef,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .kyc-status-badge.pending { background: rgba(245,158,11,0.08); color: var(--warning); border-color: rgba(245,158,11,0.2); }
+        .kyc-status-badge.approved { background: rgba(0,204,136,0.08); color: var(--success); border-color: rgba(0,204,136,0.2); }
+        .kyc-status-badge.rejected { background: rgba(255,77,77,0.08); color: var(--danger); border-color: rgba(255,77,77,0.2); }
 
         .kyc-actions { display: flex; gap: 8px; }
         .kyc-btn {
-          border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700;
-          cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+          border: none; padding: 10px 18px; border-radius: 10px; font-size: 12px; font-weight: 700;
+          cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;
         }
-        .kyc-btn.approve { background: #10b981; color: #fff; }
-        .kyc-btn.approve:hover { background: #0d9668; }
-        .kyc-btn.reject { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
-        .kyc-btn.reject:hover { background: rgba(239,68,68,0.1); }
+        .kyc-btn.approve { background: var(--success); color: #fff; box-shadow: 0 4px 10px rgba(0,204,136,0.2); }
+        .kyc-btn.approve:hover { opacity: 0.9; transform: translateY(-1px); }
+        .kyc-btn.reject { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        .kyc-btn.reject:hover { background: rgba(255,77,77,0.1); }
 
-        .kyc-reason { font-size: 12px; color: #ef4444; background: rgba(239,68,68,0.1); padding: 6px 12px; border-radius: 6px; max-width: 250px; text-align: right; }
+        .kyc-reason { font-size: 12px; color: var(--danger); background: rgba(255,77,77,0.08); padding: 8px 14px; border-radius: 8px; max-width: 300px; text-align: right; border: 1px solid rgba(255,77,77,0.1); }
 
         .kyc-pagination {
-          display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 24px;
+          display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 32px;
         }
         .kyc-pagination button {
-          background: #1e293b; border: 1px solid #2a3341; color: #e0e6ed;
-          padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+          background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border); color: var(--text-main);
+          padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
           display: flex; align-items: center; gap: 8px; transition: all 0.2s;
         }
-        .kyc-pagination button:hover:not(:disabled) { background: #2a3341; border-color: #FF4D5E; color: #FF4D5E; }
-        .kyc-pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .page-indicator { color: #94a3b8; font-size: 13px; font-weight: 600; }
+        .kyc-pagination button:hover:not(:disabled) { border-color: var(--brand-primary); color: var(--brand-primary); }
+        .kyc-pagination button:disabled { opacity: 0.35; cursor: not-allowed; }
+        .page-indicator { color: var(--text-dim); font-size: 13px; font-weight: 700; }
       `}</style>
     </AdminLayout>
   );

@@ -84,9 +84,9 @@ const Reports = ({ onAdminLogout }) => {
   if (loading) {
     return (
       <AdminLayout onAdminLogout={onAdminLogout}>
-        <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
-          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
-          <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Compiling Reports...</p>
+        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-dim)' }}>
+          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block', color: 'var(--brand-primary)' }} />
+          <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>Compiling Reports...</p>
         </div>
       </AdminLayout>
     );
@@ -106,22 +106,22 @@ const Reports = ({ onAdminLogout }) => {
   const kpiCards = [
     {
       label: 'Active Traders', value: activeTraderCount.toString(),
-      icon: 'fa-chart-line', color: '#00cc88',
+      icon: 'fa-chart-line', color: 'var(--success)',
       sub: 'Clients with open positions',
     },
     {
       label: 'Total Deposits', value: `$${totalDeposits.toLocaleString()}`,
-      icon: 'fa-download', color: '#FF4D5E',
+      icon: 'fa-download', color: 'var(--brand-primary)',
       sub: `${allDeposits.filter(d => d.status === 'approved').length} approved transactions`,
     },
     {
       label: 'Total Withdrawals', value: `$${totalWithdrawals.toLocaleString()}`,
-      icon: 'fa-upload', color: '#ff4d4d',
+      icon: 'fa-upload', color: 'var(--danger)',
       sub: `${allWithdrawals.filter(w => w.status === 'approved').length} processed`,
     },
     {
       label: 'Net P / L', value: (totalPL >= 0 ? '+' : '') + `$${totalPL.toLocaleString()}`,
-      icon: 'fa-scale-unbalanced', color: totalPL >= 0 ? '#00cc88' : '#ff4d4d',
+      icon: 'fa-scale-unbalanced', color: totalPL >= 0 ? 'var(--success)' : 'var(--danger)',
       sub: 'Platform wide profitability',
     },
     {
@@ -132,9 +132,9 @@ const Reports = ({ onAdminLogout }) => {
   ];
 
   const statusBreakdown = [
-    { label: 'Active', count: mockClients.filter(c=>c.status==='active').length, color: '#00cc88' },
-    { label: 'Pending', count: mockClients.filter(c=>c.status==='pending').length, color: '#f59e0b' },
-    { label: 'Suspended', count: mockClients.filter(c=>c.status==='suspended').length, color: '#ff4d4d' },
+    { label: 'Active', count: mockClients.filter(c=>c.status==='active').length, color: 'var(--success)' },
+    { label: 'Pending', count: mockClients.filter(c=>c.status==='pending').length, color: 'var(--warning)' },
+    { label: 'Suspended', count: mockClients.filter(c=>c.status==='suspended').length, color: 'var(--danger)' },
   ];
 
   const topClients = [...mockClients]
@@ -198,9 +198,9 @@ const Reports = ({ onAdminLogout }) => {
       {/* Two Column Layout */}
       <div className="rpt-two-col">
         {/* Client Status Breakdown */}
-        <div className="rpt-panel">
+        <div className="rpt-panel adm-card">
           <div className="rpt-panel-header">
-            <span><i className="fa-solid fa-users" style={{ color: '#FF4D5E', marginRight: 8 }} />Client Status</span>
+            <span><i className="fa-solid fa-users" style={{ color: 'var(--brand-primary)', marginRight: 8 }} />Client Status</span>
           </div>
           <div className="rpt-status-list">
             {statusBreakdown.map((s) => {
@@ -226,22 +226,22 @@ const Reports = ({ onAdminLogout }) => {
           {/* Deposit vs Withdrawal */}
           <div className="rpt-dw-compare">
             <div className="rpt-dw-row">
-              <span style={{ color: '#64748b', fontSize: 12, fontWeight: 600 }}>Total Deposits</span>
-              <span style={{ color: '#00cc88', fontWeight: 800, fontFamily: 'Space Mono', fontSize: 14 }}>
+              <span style={{ color: 'var(--text-dim)', fontSize: 12, fontWeight: 700, textTransform: 'uppercase' }}>Total Deposits</span>
+              <span style={{ color: 'var(--success)', fontWeight: 800, fontFamily: 'Space Mono', fontSize: 14 }}>
                 +${totalDeposits.toLocaleString()}
               </span>
             </div>
             <div className="rpt-dw-row">
-              <span style={{ color: '#64748b', fontSize: 12, fontWeight: 600 }}>Total Withdrawals</span>
-              <span style={{ color: '#ff4d4d', fontWeight: 800, fontFamily: 'Space Mono', fontSize: 14 }}>
+              <span style={{ color: 'var(--text-dim)', fontSize: 12, fontWeight: 700, textTransform: 'uppercase' }}>Total Withdrawals</span>
+              <span style={{ color: 'var(--danger)', fontWeight: 800, fontFamily: 'Space Mono', fontSize: 14 }}>
                 -${totalWithdrawals.toLocaleString()}
               </span>
             </div>
             <div className="rpt-divider" />
             <div className="rpt-dw-row">
-              <span style={{ color: '#94a3b8', fontSize: 13, fontWeight: 700 }}>Net</span>
+              <span style={{ color: 'var(--text-main)', fontSize: 13, fontWeight: 800 }}>NET BALANCE</span>
               <span style={{
-                color: (totalDeposits - totalWithdrawals) >= 0 ? '#00cc88' : '#ff4d4d',
+                color: (totalDeposits - totalWithdrawals) >= 0 ? 'var(--success)' : 'var(--danger)',
                 fontWeight: 800, fontFamily: 'Space Mono', fontSize: 16
               }}>
                 ${(totalDeposits - totalWithdrawals).toLocaleString()}
@@ -251,9 +251,9 @@ const Reports = ({ onAdminLogout }) => {
         </div>
 
         {/* Top Clients by Deposit */}
-        <div className="rpt-panel">
+        <div className="rpt-panel adm-card">
           <div className="rpt-panel-header">
-            <span><i className="fa-solid fa-trophy" style={{ color: '#f59e0b', marginRight: 8 }} />Top Clients by Deposit</span>
+            <span><i className="fa-solid fa-trophy" style={{ color: 'var(--warning)', marginRight: 8 }} />Top Clients by Deposit</span>
           </div>
           <table className="rpt-mini-table">
             <thead>
@@ -267,22 +267,22 @@ const Reports = ({ onAdminLogout }) => {
                 const medals = ['🥇', '🥈', '🥉'];
                 return (
                   <tr key={c.id}>
-                    <td style={{ color: '#f59e0b', fontWeight: 800, fontSize: 16 }}>
+                    <td style={{ color: 'var(--warning)', fontWeight: 800, fontSize: 16 }}>
                       {medals[i] || `${i + 1}.`}
                     </td>
                     <td>
                       <div className="rpt-client-mini">
                         <div className="rpt-mini-avatar">{c.name.charAt(0)}</div>
                         <div>
-                          <div style={{ fontWeight: 700, color: '#e0e6ed', fontSize: 13 }}>{c.name}</div>
-                          <div style={{ fontSize: 11, color: '#64748b' }}>{c.uid}</div>
+                          <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: 13 }}>{c.name}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>{c.uid}</div>
                         </div>
                       </div>
                     </td>
-                    <td style={{ fontFamily: 'Space Mono', fontSize: 13, color: '#e0e6ed', fontWeight: 700 }}>
+                    <td style={{ fontFamily: 'Space Mono', fontSize: 13, color: 'var(--text-main)', fontWeight: 700 }}>
                       ${c.accountSummary.deposit.toLocaleString()}
                     </td>
-                    <td style={{ fontFamily: 'Space Mono', fontSize: 13, fontWeight: 700, color: pl >= 0 ? '#00cc88' : '#ff4d4d' }}>
+                    <td style={{ fontFamily: 'Space Mono', fontSize: 13, fontWeight: 700, color: pl >= 0 ? 'var(--success)' : 'var(--danger)' }}>
                       {pl >= 0 ? '+' : ''}{pl.toFixed(0)}
                     </td>
                   </tr>
@@ -296,13 +296,13 @@ const Reports = ({ onAdminLogout }) => {
       {/* Pending Actions Row */}
       <div className="rpt-two-col">
         {/* Pending Withdrawals */}
-        <div className="rpt-panel">
+        <div className="rpt-panel adm-card">
           <div className="rpt-panel-header">
             <span>
-              <i className="fa-solid fa-clock" style={{ color: '#f59e0b', marginRight: 8 }} />
+              <i className="fa-solid fa-clock" style={{ color: 'var(--warning)', marginRight: 8 }} />
               Pending Withdrawals
             </span>
-            <span className="rpt-count-badge" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.2)' }}>
+            <span className="rpt-count-badge" style={{ background: 'rgba(245,158,11,0.08)', color: 'var(--warning)', border: '1px solid rgba(245,158,11,0.2)' }}>
               {pendingWithdrawals.length}
             </span>
           </div>
@@ -314,10 +314,10 @@ const Reports = ({ onAdminLogout }) => {
               <tbody>
                 {pendingWithdrawals.map((w) => (
                   <tr key={w.id}>
-                    <td style={{ color: '#94a3b8', fontSize: 13 }}>{w.clientName}</td>
-                    <td style={{ fontFamily: 'Space Mono', color: '#ff4d4d', fontWeight: 700 }}>${parseFloat(w.amount).toLocaleString()}</td>
-                    <td style={{ color: '#64748b', fontSize: 12 }}>{w.method}</td>
-                    <td style={{ color: '#64748b', fontSize: 12 }}>{w.date}</td>
+                    <td style={{ color: 'var(--text-main)', fontSize: 13, fontWeight: 600 }}>{w.clientName}</td>
+                    <td style={{ fontFamily: 'Space Mono', color: 'var(--danger)', fontWeight: 800 }}>${parseFloat(w.amount).toLocaleString()}</td>
+                    <td style={{ color: 'var(--text-dim)', fontSize: 12 }}>{w.method}</td>
+                    <td style={{ color: 'var(--text-dim)', fontSize: 12 }}>{w.date}</td>
                     <td style={{ textAlign: 'right' }}>
                        <div className="finance-actions">
                          <button className="fin-action-btn approve" onClick={() => handleFinanceAction('withdrawals', w.id, 'approved')} title="Approve Payout">
@@ -336,13 +336,13 @@ const Reports = ({ onAdminLogout }) => {
         </div>
 
         {/* Pending Deposits */}
-        <div className="rpt-panel">
+        <div className="rpt-panel adm-card">
           <div className="rpt-panel-header">
             <span>
-              <i className="fa-solid fa-hourglass" style={{ color: '#FF4D5E', marginRight: 8 }} />
+              <i className="fa-solid fa-hourglass" style={{ color: 'var(--brand-primary)', marginRight: 8 }} />
               Pending Deposits
             </span>
-            <span className="rpt-count-badge" style={{ background: 'rgba(255, 77, 94, 0.1)', color: '#FF4D5E', border: '1px solid rgba(255, 77, 94, 0.2)' }}>
+            <span className="rpt-count-badge" style={{ background: 'rgba(255, 77, 94, 0.08)', color: 'var(--brand-primary)', border: '1px solid rgba(255, 77, 94, 0.2)' }}>
               {pendingDeposits.length}
             </span>
           </div>
@@ -354,10 +354,10 @@ const Reports = ({ onAdminLogout }) => {
               <tbody>
                 {pendingDeposits.map((d) => (
                   <tr key={d.id}>
-                    <td style={{ color: '#94a3b8', fontSize: 13 }}>{d.clientName}</td>
-                    <td style={{ fontFamily: 'Space Mono', color: '#00cc88', fontWeight: 700 }}>${parseFloat(d.amount).toLocaleString()}</td>
-                    <td style={{ color: '#64748b', fontSize: 12 }}>{d.method}</td>
-                    <td style={{ fontFamily: 'Space Mono', color: '#64748b', fontSize: 11 }}>{d.ref}</td>
+                    <td style={{ color: 'var(--text-main)', fontSize: 13, fontWeight: 600 }}>{d.clientName}</td>
+                    <td style={{ fontFamily: 'Space Mono', color: 'var(--success)', fontWeight: 800 }}>${parseFloat(d.amount).toLocaleString()}</td>
+                    <td style={{ color: 'var(--text-dim)', fontSize: 12 }}>{d.method}</td>
+                    <td style={{ fontFamily: 'Space Mono', color: 'var(--text-dim)', fontSize: 11 }}>{d.ref}</td>
                     <td style={{ textAlign: 'right' }}>
                        <div className="finance-actions">
                          <button className="fin-action-btn approve" onClick={() => handleFinanceAction('deposits', d.id, 'approved')} title="Approve & Credit">
@@ -393,14 +393,14 @@ const Reports = ({ onAdminLogout }) => {
               {recentTrades.map((t) => (
                 <tr className="adm-table-row" key={`${t.clientId}-${t.id}`}>
                   <td><span className="adm-uid-badge">{t.id}</span></td>
-                  <td style={{ color: '#e0e6ed', fontWeight: 600 }}>{t.clientName}</td>
-                  <td style={{ fontWeight: 700, color: '#e0e6ed' }}>{t.symbol}</td>
+                  <td style={{ color: 'var(--text-main)', fontWeight: 600 }}>{t.clientName}</td>
+                  <td style={{ fontWeight: 700, color: 'var(--text-main)' }}>{t.symbol}</td>
                   <td>
                     <span className={`cd-type-badge ${t.type === 'BUY' ? 'buy' : 'sell'}`}>{t.type}</span>
                   </td>
                   <td className="adm-mono">{t.lots}</td>
                   <td className="adm-mono">{t.openPrice}</td>
-                  <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? '#FF4D5E' : '#64748b' }}>
+                  <td className="adm-mono" style={{ color: (t.status === 'Closed' || t.selectedPrice) ? 'var(--brand-primary)' : 'var(--text-dim)' }}>
                     {(() => {
                         if (t.status === 'Closed') return t.closePrice ? parseFloat(t.closePrice).toFixed(2) : '---';
                         return t.selectedPrice ? parseFloat(t.selectedPrice).toFixed(2) : '---';
@@ -428,146 +428,134 @@ const Reports = ({ onAdminLogout }) => {
 
       <style>{`
         .rpt-live-badge {
-          display: flex; align-items: center; gap: 6px;
-          padding: 7px 14px; border-radius: 8px;
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 16px; border-radius: 12px;
           background: rgba(0,204,136,0.08); border: 1px solid rgba(0,204,136,0.2);
-          color: #00cc88; font-size: 12px; font-weight: 700;
+          color: var(--success); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
         }
         .adm-stat-dot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: #00cc88; box-shadow: 0 0 6px #00cc88;
+          width: 8px; height: 8px; border-radius: 50%;
+          background: var(--success); box-shadow: 0 0 10px var(--success);
           display: inline-block; animation: pulse 2s infinite;
         }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-        .adm-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-        .adm-page-title { font-size: 22px; font-weight: 800; color: #e0e6ed; display: flex; align-items: center; gap: 10px; }
-        .adm-page-title i { color: #FF4D5E; }
-        .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
         .adm-export-btn {
           display: flex; align-items: center; gap: 8px;
-          padding: 10px 20px; border-radius: 10px;
-          background: rgba(255, 77, 94, 0.1); border: 1px solid rgba(255, 77, 94, 0.25);
-          color: #FF4D5E; font-size: 13px; font-weight: 700; cursor: pointer;
+          padding: 10px 20px; border-radius: 12px;
+          background: rgba(255, 77, 94, 0.08); border: 1px solid rgba(255, 77, 94, 0.2);
+          color: var(--brand-primary); font-size: 13px; font-weight: 700; cursor: pointer;
           transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-export-btn:hover { background: rgba(255, 77, 94, 0.2); }
+        .adm-export-btn:hover { background: var(--brand-primary); color: #fff; transform: translateY(-1px); }
 
         /* KPI Cards */
         .rpt-kpi-grid {
           display: grid; grid-template-columns: repeat(5, 1fr);
-          gap: 16px; margin-bottom: 20px;
+          gap: 16px; margin-bottom: 24px;
         }
         .rpt-kpi-card {
-          background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; padding: 20px;
-          transition: all 0.25s; cursor: default;
+          background: var(--bg-card); border: 1px solid var(--border);
+          border-radius: 20px; padding: 24px;
+          transition: all 0.25s; cursor: default; backdrop-filter: blur(10px);
         }
-        .rpt-kpi-card:hover { border-color: rgba(255, 77, 94, 0.15); transform: translateY(-2px); }
-        .rpt-kpi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .rpt-kpi-card:hover { border-color: rgba(255, 77, 94, 0.3); transform: translateY(-4px); background: rgba(255,255,255,0.03); }
+        .rpt-kpi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .rpt-kpi-icon {
-          width: 44px; height: 44px; border-radius: 10px; font-size: 18px;
+          width: 48px; height: 48px; border-radius: 14px; font-size: 20px;
           display: flex; align-items: center; justify-content: center;
+          border: 1px solid rgba(255,255,255,0.05);
         }
-        .rpt-mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 48px; }
-        .rpt-kpi-value { font-size: 24px; font-weight: 800; font-family: 'Space Mono', monospace; letter-spacing: -1px; margin-bottom: 4px; }
-        .rpt-kpi-label { font-size: 13px; font-weight: 700; color: #94a3b8; margin-bottom: 4px; }
-        .rpt-kpi-sub { font-size: 11px; color: #4a5568; }
+        .rpt-mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 48px; opacity: 0.6; }
+        .rpt-kpi-value { font-size: 24px; font-weight: 800; font-family: 'Space Mono', monospace; letter-spacing: -1px; margin-bottom: 6px; }
+        .rpt-kpi-label { font-size: 13px; font-weight: 700; color: var(--text-dim); margin-bottom: 4px; }
+        .rpt-kpi-sub { font-size: 11px; color: var(--text-dim); opacity: 0.7; }
 
         /* Two column */
         .rpt-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
         /* Panel */
         .rpt-panel {
-          background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; padding: 20px; margin-bottom: 0;
+          padding: 24px; margin-bottom: 0;
         }
         .rpt-panel-header {
-          font-size: 14px; font-weight: 700; color: #e0e6ed;
-          margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;
+          font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em;
+          margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;
         }
         .rpt-count-badge {
-          font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 20px;
+          font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px;
         }
 
         /* Status list */
-        .rpt-status-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
-        .rpt-status-row { display: flex; flex-direction: column; gap: 6px; }
-        .rpt-status-info { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .rpt-status-list { display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px; }
+        .rpt-status-row { display: flex; flex-direction: column; gap: 8px; }
+        .rpt-status-info { display: flex; align-items: center; gap: 10px; }
         .rpt-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .rpt-status-name { font-size: 13px; font-weight: 700; color: #94a3b8; flex: 1; }
-        .rpt-status-count { font-size: 12px; color: #4a5568; }
-        .rpt-bar-wrap { display: flex; align-items: center; gap: 10px; }
+        .rpt-status-name { font-size: 13px; font-weight: 700; color: var(--text-main); flex: 1; }
+        .rpt-status-count { font-size: 11px; color: var(--text-dim); font-weight: 700; }
+        .rpt-bar-wrap { display: flex; align-items: center; gap: 12px; }
         .rpt-bar-track {
-          flex: 1; height: 5px; background: rgba(255,255,255,0.04);
-          border-radius: 3px; overflow: hidden;
+          flex: 1; height: 6px; background: rgba(255,255,255,0.05);
+          border-radius: 4px; overflow: hidden;
         }
-        .rpt-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
-        .rpt-bar-pct { font-size: 12px; font-weight: 800; width: 32px; text-align: right; }
+        .rpt-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+        .rpt-bar-pct { font-size: 12px; font-weight: 800; width: 36px; text-align: right; }
 
         /* Deposit/Withdraw compare */
         .rpt-dw-compare {
-          border-top: 1px solid rgba(255,255,255,0.04);
-          padding-top: 16px; display: flex; flex-direction: column; gap: 10px;
+          border-top: 1px solid var(--border);
+          padding-top: 20px; display: flex; flex-direction: column; gap: 12px;
         }
         .rpt-dw-row { display: flex; justify-content: space-between; align-items: center; }
-        .rpt-divider { height: 1px; background: rgba(255,255,255,0.04); }
+        .rpt-divider { height: 1px; background: var(--border); opacity: 0.5; }
 
         /* Mini table */
         .rpt-mini-table { width: 100%; border-collapse: collapse; }
         .rpt-mini-table th {
-          text-align: left; font-size: 11px; font-weight: 800;
-          color: #4a5568; text-transform: uppercase; letter-spacing: 0.8px;
-          padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+          text-align: left; font-size: 10px; font-weight: 800;
+          color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em;
+          padding-bottom: 14px; border-bottom: 1px solid var(--border);
         }
         .rpt-mini-table td {
-          padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.02);
-          color: #94a3b8; font-size: 13px;
+          padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+          color: var(--text-dim); font-size: 13px;
         }
         .rpt-mini-table tr:last-child td { border-bottom: none; }
 
-        .rpt-client-mini { display: flex; align-items: center; gap: 8px; }
+        .rpt-client-mini { display: flex; align-items: center; gap: 10px; }
         .rpt-mini-avatar {
-          width: 28px; height: 28px; border-radius: 7px;
-          background: rgba(255, 77, 94, 0.15); border: 1px solid rgba(255, 77, 94, 0.25);
-          color: #FF4D5E; font-size: 12px; font-weight: 800;
+          width: 32px; height: 32px; border-radius: 8px;
+          background: rgba(255, 77, 94, 0.08); border: 1px solid rgba(255, 77, 94, 0.2);
+          color: var(--brand-primary); font-size: 13px; font-weight: 800;
           display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
 
-        .rpt-empty { color: #4a5568; font-size: 13px; text-align: center; padding: 24px; }
+        .rpt-empty { color: var(--text-dim); font-size: 13px; text-align: center; padding: 32px; opacity: 0.6; font-style: italic; }
         
-        .finance-actions { display: flex; gap: 6px; justify-content: flex-end; }
+        .finance-actions { display: flex; gap: 8px; justify-content: flex-end; }
         .fin-action-btn {
-          width: 28px; height: 28px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s;
+          width: 30px; height: 30px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s;
           display: flex; align-items: center; justify-content: center; font-size: 13px;
         }
-        .fin-action-btn.approve { background: rgba(0,204,136,0.1); color: #00cc88; }
-        .fin-action-btn.approve:hover { background: #00cc88; color: #fff; }
-        .fin-action-btn.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; }
-        .fin-action-btn.reject:hover { background: #ff4d4d; color: #fff; }
+        .fin-action-btn.approve { background: rgba(0,204,136,0.1); color: var(--success); border: 1px solid rgba(0,204,136,0.2); }
+        .fin-action-btn.approve:hover { background: var(--success); color: #fff; }
+        .fin-action-btn.reject { background: rgba(255,77,77,0.1); color: var(--danger); border: 1px solid rgba(255,77,77,0.2); }
+        .fin-action-btn.reject:hover { background: var(--danger); color: #fff; }
 
-        /* Trades table styling */
-        .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr { background: rgba(255, 77, 94, 0.04); border-bottom: 1px solid rgba(255, 77, 94, 0.08); }
-        .adm-table th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; }
-        .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.02); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(255, 77, 94, 0.03); }
-        .adm-table-row:last-child { border-bottom: none; }
-        .adm-table td { padding: 12px 16px; font-size: 13px; color: #94a3b8; }
         .adm-uid-badge {
-          padding: 2px 8px; border-radius: 5px;
-          background: rgba(255,255,255,0.04); border: 1px solid #2a3341;
-          font-size: 11px; font-weight: 700; color: #64748b; font-family: 'Space Mono', monospace;
+          padding: 3px 8px; border-radius: 6px;
+          background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+          font-size: 11px; font-weight: 700; color: var(--text-dim); font-family: 'Space Mono', monospace;
         }
         .adm-mono { font-family: 'Space Mono', monospace; }
-        .pos { color: #00cc88 !important; font-weight: 700; }
-        .neg { color: #ff4d4d !important; font-weight: 700; }
-        .cd-type-badge { padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 800; }
-        .cd-type-badge.buy { background: rgba(16,185,129,0.15); color: #10b981; }
-        .cd-type-badge.sell { background: rgba(239,68,68,0.15); color: #ef4444; }
-        .cd-trade-status { padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: capitalize; }
-        .cd-trade-status.open { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
-        .cd-trade-status.closed { background: rgba(100,116,139,0.1); color: #64748b; }
+        .pos { color: var(--success) !important; font-weight: 700; }
+        .neg { color: var(--danger) !important; font-weight: 700; }
+        .cd-type-badge { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .cd-type-badge.buy { background: rgba(0,204,136,0.1); color: var(--success); }
+        .cd-type-badge.sell { background: rgba(255,77,77,0.1); color: var(--danger); }
+        .cd-trade-status { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .cd-trade-status.open { background: rgba(255, 77, 94, 0.08); color: var(--brand-primary); }
+        .cd-trade-status.closed { background: rgba(255,255,255,0.05); color: var(--text-dim); }
       `}</style>
     </AdminLayout>
   );

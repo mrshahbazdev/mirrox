@@ -6,9 +6,9 @@ import { useTrading } from '../../context/TradingContext';
 import { useModal } from '../../context/ModalContext';
 
 const statusConfig = {
-  active: { label: 'Active', color: '#00cc88', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.25)' },
-  pending: { label: 'Pending', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.25)' },
-  suspended: { label: 'Suspended', color: '#ff4d4d', bg: 'rgba(255,77,77,0.1)', border: 'rgba(255,77,77,0.25)' },
+  active: { label: 'Active', color: 'var(--success)', bg: 'rgba(0,204,136,0.1)', border: 'rgba(0,204,136,0.25)' },
+  pending: { label: 'Pending', color: 'var(--warning)', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.25)' },
+  suspended: { label: 'Suspended', color: 'var(--danger)', bg: 'rgba(255,77,77,0.1)', border: 'rgba(255,77,77,0.25)' },
 };
 
 const PAGE_SIZE = 8;
@@ -184,10 +184,10 @@ const ClientsList = ({ onAdminLogout }) => {
       {/* Stats Row */}
       <div className="adm-stats-row">
         {[
-          { label: 'Total Clients', value: stats.total, icon: 'fa-users', color: '#FF4D5E' },
-          { label: 'Active', value: stats.active, icon: 'fa-circle-check', color: '#00cc88' },
-          { label: 'Pending', value: stats.pending, icon: 'fa-clock', color: '#f59e0b' },
-          { label: 'Suspended', value: stats.suspended, icon: 'fa-ban', color: '#ff4d4d' },
+          { label: 'Total Clients', value: stats.total, icon: 'fa-users', color: 'var(--brand-primary)' },
+          { label: 'Active', value: stats.active, icon: 'fa-circle-check', color: 'var(--success)' },
+          { label: 'Pending', value: stats.pending, icon: 'fa-clock', color: 'var(--warning)' },
+          { label: 'Suspended', value: stats.suspended, icon: 'fa-ban', color: 'var(--danger)' },
         ].map((s) => (
           <div className="adm-stat-card" key={s.label}>
             <div className="adm-stat-icon" style={{ color: s.color, background: `${s.color}15` }}>
@@ -660,26 +660,26 @@ const ClientsList = ({ onAdminLogout }) => {
         .adm-client-cell { display: flex; align-items: center; gap: 12px; }
         .adm-avatar-circle {
           width: 36px; height: 36px; border-radius: 10px;
-          background: linear-gradient(135deg, rgba(255, 77, 94, 0.1), rgba(255, 77, 94, 0.2));
-          border: 1px solid rgba(255, 77, 94, 0.3);
-          color: #FF4D5E; font-size: 15px; font-weight: 800;
+          background: rgba(255, 77, 94, 0.08);
+          border: 1px solid rgba(255, 77, 94, 0.2);
+          color: var(--brand-primary); font-size: 15px; font-weight: 800;
           display: flex; align-items: center; justify-content: center;
           flex-shrink: 0;
         }
-        .adm-client-name { font-size: 14px; font-weight: 700; color: #e0e6ed; }
-        .adm-client-email { font-size: 12px; color: #64748b; margin-top: 2px; }
+        .adm-client-name { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .adm-client-email { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
 
         .adm-uid-badge {
           padding: 3px 10px; border-radius: 6px;
           background: rgba(255,255,255,0.04);
-          border: 1px solid #2a3341;
+          border: 1px solid var(--border);
           font-size: 12px; font-weight: 700;
-          color: #94a3b8; font-family: 'Space Mono', monospace;
+          color: var(--text-dim); font-family: 'Space Mono', monospace;
         }
         .adm-contact { font-size: 12px; }
         .adm-mono { font-family: 'Space Mono', monospace; font-size: 13px; }
-        .adm-pl.pos { color: #00cc88; font-weight: 700; }
-        .adm-pl.neg { color: #ff4d4d; font-weight: 700; }
+        .adm-pl.pos { color: var(--success); font-weight: 700; }
+        .adm-pl.neg { color: var(--danger); font-weight: 700; }
 
         .adm-status-badge {
           display: inline-flex; align-items: center; gap: 6px;
@@ -695,15 +695,15 @@ const ClientsList = ({ onAdminLogout }) => {
           border: 1px solid transparent; cursor: pointer;
           font-size: 12px; transition: all 0.2s;
         }
-        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; border-color: rgba(255, 77, 94, 0.2); }
-        .adm-act-btn.view:hover { background: #FF4D5E; color: #fff; }
-        .adm-act-btn.approve { background: rgba(0,204,136,0.1); color: #00cc88; border-color: rgba(0,204,136,0.2); }
-        .adm-act-btn.approve:hover { background: #00cc88; color: #fff; }
-        .adm-act-btn.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; border-color: rgba(255,77,77,0.2); }
-        .adm-act-btn.reject:hover { background: #ff4d4d; color: #fff; }
+        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: var(--brand-primary); border-color: rgba(255, 77, 94, 0.2); }
+        .adm-act-btn.view:hover { background: var(--brand-primary); color: #fff; }
+        .adm-act-btn.approve { background: rgba(0,204,136,0.1); color: var(--success); border-color: rgba(0,204,136,0.2); }
+        .adm-act-btn.approve:hover { background: var(--success); color: #fff; }
+        .adm-act-btn.reject { background: rgba(255,77,77,0.1); color: var(--danger); border-color: rgba(255,77,77,0.2); }
+        .adm-act-btn.reject:hover { background: var(--danger); color: #fff; }
 
         .adm-no-data {
-          text-align: center; padding: 48px; color: #4a5568;
+          text-align: center; padding: 48px; color: var(--text-dim);
           display: flex; align-items: center; justify-content: center; gap: 8px;
           font-size: 14px;
         }
@@ -711,17 +711,17 @@ const ClientsList = ({ onAdminLogout }) => {
         .adm-pagination {
           display: flex; align-items: center; justify-content: space-between;
         }
-        .adm-page-info { font-size: 13px; color: #64748b; }
+        .adm-page-info { font-size: 13px; color: var(--text-dim); }
         .adm-page-btns { display: flex; gap: 6px; }
         .adm-pg-btn {
           width: 34px; height: 34px; border-radius: 8px;
-          background: #0f1520; border: 1px solid #2a3341;
-          color: #94a3b8; font-size: 13px; font-weight: 600;
+          background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border);
+          color: var(--text-dim); font-size: 13px; font-weight: 600;
           cursor: pointer; display: flex; align-items: center; justify-content: center;
           transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-pg-btn:hover:not(:disabled) { border-color: #FF4D5E; color: #FF4D5E; }
-        .adm-pg-btn.active { background: #FF4D5E; border-color: #FF4D5E; color: #fff; }
+        .adm-pg-btn:hover:not(:disabled) { border-color: var(--brand-primary); color: var(--brand-primary); }
+        .adm-pg-btn.active { background: var(--brand-primary); border-color: var(--brand-primary); color: #fff; }
         .adm-pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
       `}</style>
     </AdminLayout>

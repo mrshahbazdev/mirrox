@@ -4,10 +4,10 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import { useModal } from '../../context/ModalContext';
 
 const categoryColors = {
-  Forex: { color: '#FF4D5E', bg: 'rgba(255, 77, 94, 0.1)' },
-  Metals: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-  Crypto: { color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
-  Indices: { color: '#06b6d4', bg: 'rgba(6,182,212,0.1)' },
+  Forex: { color: 'var(--brand-primary)', bg: 'rgba(255, 77, 94, 0.08)' },
+  Metals: { color: 'var(--warning)', bg: 'rgba(245,158,11,0.08)' },
+  Crypto: { color: '#a855f7', bg: 'rgba(168,85,247,0.08)' },
+  Indices: { color: '#06b6d4', bg: 'rgba(6,182,212,0.08)' },
 };
 
 const SymbolsManager = ({ onAdminLogout }) => {
@@ -125,9 +125,9 @@ const SymbolsManager = ({ onAdminLogout }) => {
   if (loading) {
      return (
        <AdminLayout onAdminLogout={onAdminLogout}>
-         <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
-           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
-           <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Loading Symbols Config...</p>
+         <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-dim)' }}>
+           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block', color: 'var(--brand-primary)' }} />
+           <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>Loading Symbols Config...</p>
          </div>
        </AdminLayout>
      );
@@ -247,8 +247,8 @@ const SymbolsManager = ({ onAdminLogout }) => {
                         {sym.symbol.substring(0, 2)}
                       </div>
                       <div>
-                        <div style={{ fontWeight: 700, color: '#e0e6ed', fontSize: 14 }}>{sym.symbol}</div>
-                        <div style={{ fontSize: 11, color: '#64748b' }}>{sym.name}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: 14 }}>{sym.symbol}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>{sym.name}</div>
                       </div>
                     </div>
                   </td>
@@ -322,30 +322,30 @@ const SymbolsManager = ({ onAdminLogout }) => {
                   {sym.symbol.substring(0, 2)}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, color: '#e0e6ed', fontSize: 16 }}>{sym.symbol}</div>
-                  <div style={{ fontSize: 12, color: '#64748b' }}>{sym.name}</div>
+                  <div style={{ fontWeight: 800, color: 'var(--text-main)', fontSize: 16 }}>{sym.symbol}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>{sym.name}</div>
                 </div>
               </div>
               <div className="sym-detail-grid">
                 <div className="sym-detail-item">
                   <div className="cd-acc-label">Spread</div>
                   <div className="cd-acc-value" style={{ fontSize: 14 }}>{sym.spread.toLocaleString()}</div>
-                  <div style={{ fontSize: 10, color: '#64748b' }}>Val: {(sym.spread * 0.1).toFixed(0)}</div>
+                  <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>Val: {(sym.spread * 0.1).toFixed(0)}</div>
                 </div>
                 <div className="sym-detail-item">
                   <div className="cd-acc-label">Commission</div>
                   <div className="cd-acc-value" style={{ fontSize: 14 }}>
                     {sym.commissionType === 'spread-only' ? (
-                      <span style={{ color: '#64748b', fontSize: 12 }}>0 (spread-only)</span>
+                      <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>0 (spread-only)</span>
                     ) : sym.commission.toLocaleString()}
                   </div>
                 </div>
                 <div className="sym-detail-item" style={{ background: 'rgba(245,158,11,0.07)', borderColor: 'rgba(245,158,11,0.2)' }}>
                   <div className="cd-acc-label" style={{ color: '#f59e0b' }}>Lot Sizes</div>
-                  <div style={{ color: '#f59e0b', fontWeight: 800, fontSize: 14 }}>
+                  <div style={{ color: 'var(--warning)', fontWeight: 800, fontSize: 14 }}>
                     {sym.lotMax} / {sym.lotStep} / {sym.lotMin}
                   </div>
-                  <div style={{ fontSize: 10, color: '#64748b' }}>max / step / min</div>
+                  <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>max / step / min</div>
                 </div>
               </div>
             </div>
@@ -366,132 +366,125 @@ const SymbolsManager = ({ onAdminLogout }) => {
         @keyframes toastIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
 
         .adm-page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-        .adm-page-title { font-size: 22px; font-weight: 800; color: #e0e6ed; display: flex; align-items: center; gap: 10px; }
-        .adm-page-title i { color: #FF4D5E; }
-        .adm-page-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
+        .adm-page-title { font-size: 22px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .adm-page-title i { color: var(--brand-primary); }
+        .adm-page-sub { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
 
         .adm-filter-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
-        .adm-search-wrap {
+         .adm-search-wrap {
           position: relative; flex: 1; min-width: 220px;
-          background: #0f1520; border: 1px solid #2a3341; border-radius: 10px;
+          background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border); border-radius: 12px;
           display: flex; align-items: center; transition: all 0.2s;
         }
-        .adm-search-wrap:focus-within { border-color: rgba(255, 77, 94, 0.4); }
-        .adm-search-wrap i { position: absolute; left: 14px; color: #4a5568; font-size: 13px; }
+        .adm-search-wrap:focus-within { border-color: var(--brand-primary); background: rgba(255, 77, 94, 0.04); }
+        .adm-search-wrap i { position: absolute; left: 14px; color: var(--text-dim); font-size: 13px; }
         .adm-search-wrap input {
-          width: 100%; padding: 11px 14px 11px 40px;
+          width: 100%; padding: 12px 14px 12px 40px;
           background: transparent; border: none; outline: none;
-          color: #e0e6ed; font-size: 13px; font-family: 'Inter', sans-serif;
+          color: var(--text-main); font-size: 13px; font-family: 'Inter', sans-serif;
         }
-        .adm-search-wrap input::placeholder { color: #4a5568; }
+        .adm-search-wrap input::placeholder { color: var(--text-dim); }
 
         .adm-status-filters { display: flex; gap: 6px; }
         .adm-filter-pill {
-          padding: 8px 16px; border-radius: 8px;
-          background: #0f1520; border: 1px solid #2a3341;
-          color: #64748b; font-size: 12px; font-weight: 700;
+          padding: 8px 16px; border-radius: 10px;
+          background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border);
+          color: var(--text-dim); font-size: 12px; font-weight: 700;
           cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .adm-filter-pill:hover { color: #e0e6ed; }
-        .adm-filter-pill.active { background: rgba(255, 77, 94, 0.12); border-color: rgba(255, 77, 94, 0.35); color: #FF4D5E; }
-
-        .adm-table-wrap {
-          background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; overflow: hidden; margin-bottom: 0;
-        }
-        .adm-table { width: 100%; border-collapse: collapse; }
-        .adm-table thead tr { background: rgba(255, 77, 94, 0.05); border-bottom: 1px solid rgba(255, 77, 94, 0.1); }
-        .adm-table th { padding: 14px 18px; text-align: left; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; }
-        .adm-table-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        .adm-table-row:hover { background: rgba(255, 77, 94, 0.03); }
-        .adm-table-row:last-child { border-bottom: none; }
-        .adm-table td { padding: 14px 18px; font-size: 13px; color: #94a3b8; }
+        .adm-filter-pill:hover { color: var(--text-main); }
+        .adm-filter-pill.active { background: rgba(255, 77, 94, 0.1); border-color: rgba(255, 77, 94, 0.4); color: var(--brand-primary); }
 
         .sym-name-cell { display: flex; align-items: center; gap: 12px; }
         .sym-icon-box {
-          width: 36px; height: 36px; border-radius: 8px;
+          width: 36px; height: 36px; border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
-          font-size: 11px; font-weight: 800; flex-shrink: 0;
+          font-size: 11px; font-weight: 800; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05);
         }
-        .sym-icon-box.lg { width: 48px; height: 48px; font-size: 14px; }
+        .sym-icon-box.lg { width: 48px; height: 48px; font-size: 14px; border-radius: 14px; }
 
         .sym-cat-badge {
           padding: 3px 10px; border-radius: 20px;
-          font-size: 11px; font-weight: 700;
+          font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
         }
 
         .sym-edit-input {
-          width: 80px; padding: 6px 10px;
-          background: rgba(255, 77, 94, 0.08);
-          border: 1px solid rgba(255, 77, 94, 0.3);
-          border-radius: 6px; color: #e0e6ed;
+          width: 80px; padding: 8px 10px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid var(--border);
+          border-radius: 8px; color: var(--text-main);
           font-size: 13px; font-family: 'Space Mono', monospace;
-          outline: none;
+          outline: none; transition: all 0.2s;
         }
-        .sym-edit-input:focus { border-color: #FF4D5E; box-shadow: 0 0 0 2px rgba(255, 77, 94, 0.15); }
+        .sym-edit-input:focus { border-color: var(--brand-primary); background: rgba(255, 77, 94, 0.05); }
 
         .adm-act-btn {
-          width: 30px; height: 30px; border-radius: 7px;
+          width: 32px; height: 32px; border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
           border: 1px solid transparent; cursor: pointer; font-size: 12px; transition: all 0.2s;
         }
-        .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; border-color: rgba(255, 77, 94, 0.2); }
-        .adm-act-btn.view:hover { background: #FF4D5E; color: #fff; }
-        .adm-act-btn.approve { background: rgba(0,204,136,0.1); color: #00cc88; border-color: rgba(0,204,136,0.2); }
-        .adm-act-btn.approve:hover { background: #00cc88; color: #fff; }
-        .adm-act-btn.reject { background: rgba(255,77,77,0.1); color: #ff4d4d; border-color: rgba(255,77,77,0.2); }
-        .adm-act-btn.reject:hover { background: #ff4d4d; color: #fff; }
+        .adm-act-btn.view { background: rgba(255, 77, 94, 0.08); color: var(--brand-primary); border-color: rgba(255, 77, 94, 0.2); }
+        .adm-act-btn.view:hover { background: var(--brand-primary); color: #fff; transform: translateY(-1px); }
+        .adm-act-btn.approve { background: rgba(0,204,136,0.08); color: var(--success); border-color: rgba(0,204,136,0.2); }
+        .adm-act-btn.approve:hover { background: var(--success); color: #fff; transform: translateY(-1px); }
+        .adm-act-btn.reject { background: rgba(255,77,77,0.08); color: var(--danger); border-color: rgba(255,77,77,0.2); }
+        .adm-act-btn.reject:hover { background: var(--danger); color: #fff; transform: translateY(-1px); }
 
         .adm-btn-create {
           display: flex; align-items: center; gap: 8px;
-          background: #FF4D5E; color: #fff; border: none;
-          padding: 10px 18px; border-radius: 8px; font-weight: 700;
+          background: var(--brand-primary); color: #fff; border: none;
+          padding: 10px 20px; border-radius: 12px; font-weight: 800;
           font-size: 13px; cursor: pointer; transition: all 0.2s;
+          box-shadow: 0 4px 12px rgba(255, 77, 94, 0.2);
         }
-        .adm-btn-create:hover { transform: translateY(-1px); background: #D43A4A; }
+        .adm-btn-create:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255, 77, 94, 0.3); }
 
         .adm-modal-overlay {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+          background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
           display: flex; align-items: center; justify-content: center; z-index: 10000;
         }
         .adm-modal {
-          background: #0a0e17; border-radius: 20px; padding: 24px;
+          background: var(--bg-deep); border: 1px solid var(--border); border-radius: 24px; padding: 32px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
         .adm-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .adm-modal-header h3 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; }
-        .adm-modal-header .close-btn { background: none; border: none; color: #64748b; cursor: pointer; font-size: 18px; }
-        .adm-modal-body label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 700; }
+        .adm-modal-header h3 { margin: 0; font-size: 20px; font-weight: 800; color: var(--text-main); }
+        .adm-modal-header .close-btn { background: rgba(255,255,255,0.05); border: none; color: var(--text-dim); cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .adm-modal-header .close-btn:hover { background: rgba(255,77,77,0.1); color: var(--danger); }
+        .adm-modal-body label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
         .adm-modal-body input, .adm-modal-body select {
-          width: 100%; padding: 12px; background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-          color: #fff; font-size: 14px; outline: none; margin-bottom: 12px;
+          width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.03);
+          border: 1px solid var(--border); border-radius: 12px;
+          color: var(--text-main); font-size: 14px; outline: none; margin-bottom: 16px;
+          transition: all 0.2s;
         }
-        .adm-btn-submit { background: #FF4D5E; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
-        .adm-btn-submit:hover { background: #D43A4A; }
+        .adm-modal-body input:focus, .adm-modal-body select:focus { border-color: var(--brand-primary); background: rgba(255, 77, 94, 0.04); }
+        .adm-btn-submit { background: var(--brand-primary); color: #fff; border: none; border-radius: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(255,77,94,0.2); }
+        .adm-btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255,77,94,0.3); }
 
         .cd-trade-status {
-          padding: 3px 10px; border-radius: 20px;
-          font-size: 11px; font-weight: 700;
+          padding: 4px 12px; border-radius: 20px;
+          font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
         }
-        .cd-trade-status.open { background: rgba(255, 77, 94, 0.1); color: #FF4D5E; }
-        .cd-trade-status.approved { background: rgba(0,204,136,0.1); color: #00cc88; }
+        .cd-trade-status.open { background: rgba(255, 77, 94, 0.08); color: var(--brand-primary); }
+        .cd-trade-status.approved { background: rgba(0,204,136,0.08); color: var(--success); }
 
         .adm-mono { font-family: 'Space Mono', monospace; }
 
         /* Bottom detail cards */
         .sym-detail-card {
-          background: #0f1520; border: 1px solid rgba(255,255,255,0.05);
-          border-radius: 14px; padding: 20px;
+          background: var(--bg-card); border: 1px solid var(--border);
+          border-radius: 20px; padding: 24px; backdrop-filter: blur(10px);
         }
         .sym-detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .sym-detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .sym-detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .sym-detail-item {
-          padding: 12px; border-radius: 8px;
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+          padding: 14px; border-radius: 12px;
+          background: rgba(255,255,255,0.02); border: 1px solid var(--border);
         }
-        .cd-acc-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 4px; }
-        .cd-acc-value { font-size: 16px; font-weight: 800; color: #e0e6ed; font-family: 'Space Mono', monospace; }
+        .cd-acc-label { font-size: 10px; color: var(--text-dim); font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .cd-acc-value { font-size: 16px; font-weight: 800; color: var(--text-main); font-family: 'Space Mono', monospace; }
       `}</style>
     </AdminLayout>
   );

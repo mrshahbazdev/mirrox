@@ -79,49 +79,53 @@ const Admin2FA = ({ onAdminLogout }) => {
     <AdminLayout onAdminLogout={onAdminLogout}>
       <div className="adm-page-header">
         <div>
-          <h2 className="adm-page-title"><i className="fa-solid fa-shield-halved" /> Security Center</h2>
-          <p className="adm-page-sub">Enable Two-Factor Authentication for maximum account protection</p>
+          <h2 className="adm-page-title"><i className="fa-solid fa-shield-halved" /> Security Architecture</h2>
+          <p className="adm-page-sub">Dual-factor cryptographic synchronization and access hardening</p>
         </div>
       </div>
 
-      <div className="two-factor-card">
-        {!setupData ? (
+      <div className="two-factor-card adm-card">
+        {!setupData && !success ? (
           <div className="setup-intro">
             <div className="security-icon-big">
-               <i className="fa-solid fa-user-lock" />
+               <i className="fa-solid fa-user-shield" />
             </div>
-            <h3>Protect Your Admin Account</h3>
-            <p>Two-factor authentication adds an extra layer of security. Once enabled, you'll need to enter a 6-digit code from your phone whenever you log in.</p>
+            <h3>Account Hardening Required</h3>
+            <p>Deploy a secondary cryptographic layer to secure your administrative terminal. Once synchronized, all access attempts will require a time-based authentication token.</p>
             <button className="setup-start-btn" onClick={startSetup} disabled={loading}>
-                {loading ? <i className="fa-solid fa-circle-notch fa-spin" /> : 'Get Started'}
+                {loading ? <i className="fa-solid fa-circle-notch fa-spin" /> : <><i className="fa-solid fa-bolt" /> Initialize Setup</>}
             </button>
           </div>
         ) : success ? (
           <div className="setup-success">
              <i className="fa-solid fa-circle-check" />
-             <h3>Sovereign Protection Active</h3>
-             <p>Your admin account is currently secured with two-factor authentication. You will be prompted for a 6-digit code during every login attempt from an unauthorized device.</p>
-             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                <button className="setup-start-btn" style={{ background: '#1a2230' }} onClick={() => window.location.reload()}>Refresh Status</button>
-                <button className="setup-start-btn" style={{ background: '#ef4444' }} onClick={handleDisable}>Disable 2FA</button>
+             <h3>Protection Matrix Active</h3>
+             <p>Your administrative terminal is currently protected by a Sovereign-grade cryptographic layer. Access is strictly governed by time-based token validation.</p>
+             <div className="success-controls">
+                <button className="setup-secondary-btn" onClick={() => window.location.reload()}>Sync Status</button>
+                <button className="setup-danger-btn" onClick={handleDisable} disabled={loading}>
+                   {loading ? <i className="fa-solid fa-circle-notch fa-spin" /> : 'Revoke Protection'}
+                </button>
              </div>
           </div>
         ) : (
           <div className="setup-wizard">
             <div className="wizard-step">
-               <span className="step-num">1</span>
-               <p>Scan this QR code with your Google Authenticator or Authy app.</p>
-               <div className="qr-container">
-                  <img src={setupData.qr} alt="2FA QR Code" />
+               <span className="step-num">Step 1</span>
+               <p>Scan the cryptographic matrix using your authorized authenticator app.</p>
+               <div className="qr-wrap">
+                  <div className="qr-container">
+                     <img src={setupData.qr} alt="2FA QR Code" />
+                  </div>
                </div>
                <div className="secret-manual">
-                  <small>Secret Key: <code>{setupData.secret}</code></small>
+                  <small>Manual Link Pattern: <code>{setupData.secret}</code></small>
                </div>
             </div>
 
             <div className="wizard-step">
-               <span className="step-num">2</span>
-               <p>Enter the 6-digit code from your app to verify.</p>
+               <span className="step-num">Step 2</span>
+               <p>Submit the 6-digit synchronization token to finalize deployment.</p>
                <form onSubmit={handleVerify}>
                  <input 
                    type="text" 
@@ -131,9 +135,9 @@ const Admin2FA = ({ onAdminLogout }) => {
                    className="otp-input"
                    required
                  />
-                 {error && <p className="error-text">{error}</p>}
+                 {error && <p className="error-text"><i className="fa-solid fa-triangle-exclamation" /> {error}</p>}
                  <button className="verify-setup-btn" disabled={loading || code.length !== 6}>
-                    {loading ? <i className="fa-solid fa-spinner fa-spin" /> : 'Verify & Enable'}
+                    {loading ? <i className="fa-solid fa-circle-notch fa-spin" /> : 'Deploy Protocol'}
                  </button>
                </form>
             </div>
@@ -143,47 +147,77 @@ const Admin2FA = ({ onAdminLogout }) => {
 
       <style>{`
         .two-factor-card {
-          max-width: 600px; margin: 40px auto;
-          background: #0f1520; border: 1px solid rgba(255, 77, 94, 0.1);
-          border-radius: 24px; padding: 48px; text-align: center;
+          max-width: 650px; margin: 40px auto;
+          text-align: center; padding: 60px !important;
         }
         .security-icon-big {
-           font-size: 64px; color: #FF4D5E; margin-bottom: 24px;
-           opacity: 0.8;
+           font-size: 80px; color: var(--brand-primary); margin-bottom: 32px;
+           text-shadow: 0 0 40px rgba(255, 77, 94, 0.2);
+           animation: float 3s ease-in-out infinite;
         }
-        .setup-intro h3, .setup-success h3 { color: #fff; font-size: 22px; margin-bottom: 16px; }
-        .setup-intro p, .setup-success p { color: #64748b; font-size: 14px; line-height: 1.6; margin-bottom: 32px; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .setup-intro h3, .setup-success h3 { color: var(--text-main); font-size: 24px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .setup-intro p, .setup-success p { color: var(--text-dim); font-size: 14px; line-height: 1.7; margin-bottom: 40px; font-weight: 500; }
         
         .setup-start-btn {
-          background: #FF4D5E; color: #fff; border: none; padding: 14px 32px;
-          border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+          background: linear-gradient(135deg, var(--brand-primary) 0%, #D43A4A 100%); 
+          color: #fff; border: none; padding: 16px 40px;
+          border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; transition: all 0.3s;
+          box-shadow: 0 10px 25px rgba(255, 77, 94, 0.3);
+          display: inline-flex; align-items: center; gap: 12px;
         }
-        .setup-start-btn:hover { background: #e03e4d; transform: scale(1.02); }
+        .setup-start-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 77, 94, 0.4); }
 
-        .setup-success i { font-size: 64px; color: #00cc88; margin-bottom: 24px; }
+        .setup-success i { font-size: 80px; color: var(--success); margin-bottom: 32px; text-shadow: 0 0 40px rgba(0, 204, 136, 0.2); }
+        .success-controls { display: flex; gap: 16px; justify-content: center; }
+        
+        .setup-secondary-btn {
+           background: var(--bg-hover); color: var(--text-main); border: 1px solid var(--border);
+           padding: 14px 28px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .setup-secondary-btn:hover { background: rgba(255,255,255,0.05); }
+
+        .setup-danger-btn {
+           background: rgba(255, 77, 77, 0.08); color: var(--danger); border: 1px solid rgba(255, 77, 77, 0.2);
+           padding: 14px 28px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .setup-danger-btn:hover { background: var(--danger); color: #fff; }
 
         .setup-wizard { display: flex; flex-direction: column; gap: 40px; }
-        .wizard-step { text-align: left; background: #080c14; padding: 24px; border-radius: 16px; position: relative; }
+        .wizard-step { text-align: left; background: rgba(0,0,0,0.2); padding: 32px; border-radius: 20px; position: relative; border: 1px solid var(--border); }
         .step-num { 
-          position: absolute; top: -15px; left: -15px; width: 30px; height: 30px; 
-          background: #FF4D5E; color: #fff; border-radius: 50%; 
-          display: flex; align-items: center; justify-content: center; font-weight: 800;
+          position: absolute; top: -14px; left: 24px; padding: 4px 16px;
+          background: var(--brand-primary); color: #fff; border-radius: 20px; 
+          font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
+          box-shadow: 0 4px 12px rgba(255, 77, 94, 0.3);
         }
-        .wizard-step p { font-size: 14px; color: #e2e8f0; margin-bottom: 20px; font-weight: 500; }
-        .qr-container { background: #fff; padding: 12px; border-radius: 12px; width: fit-content; margin: 0 auto; }
-        .secret-manual { text-align: center; margin-top: 12px; color: #475569; }
-        .secret-manual code { color: #94a3b8; font-weight: 700; margin-left: 6px; }
+        .wizard-step p { font-size: 14px; color: var(--text-main); margin-bottom: 24px; font-weight: 600; line-height: 1.6; }
+        .qr-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
+        .qr-container { background: #fff; padding: 16px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .qr-container img { width: 100%; max-width: 200px; display: block; }
+        
+        .secret-manual { text-align: center; color: var(--text-dim); }
+        .secret-manual code { color: var(--brand-primary); font-weight: 800; margin-left: 8px; font-family: 'Space Mono', monospace; font-size: 13px; }
 
         .otp-input {
-          width: 100%; background: #0f1520; border: 1px solid #1a2230; padding: 16px;
-          border-radius: 12px; color: #fff; font-size: 24px; text-align: center;
-          letter-spacing: 8px; font-weight: 800; margin-bottom: 16px;
+          width: 100%; background: var(--bg-deep) !important; border: 1px solid var(--border) !important; padding: 20px;
+          border-radius: 16px; color: var(--text-main) !important; font-size: 32px !important; text-align: center;
+          letter-spacing: 12px; font-weight: 800; margin-bottom: 24px; outline: none; transition: 0.2s;
+          font-family: 'Space Mono', monospace;
         }
+        .otp-input:focus { border-color: var(--brand-primary) !important; box-shadow: 0 0 0 4px rgba(255, 77, 94, 0.05); }
+        
         .verify-setup-btn {
-          width: 100%; background: #00cc88; color: #fff; border: none; padding: 14px;
-          border-radius: 12px; font-weight: 700; cursor: pointer;
+          width: 100%; background: linear-gradient(135deg, var(--success) 0%, #059669 100%); 
+          color: #fff; border: none; padding: 18px;
+          border-radius: 16px; font-weight: 800; font-size: 15px; cursor: pointer; transition: 0.3s;
+          box-shadow: 0 10px 25px rgba(0, 204, 136, 0.2);
         }
-        .error-text { color: #ef4444; font-size: 12px; margin-bottom: 12px; text-align: center; }
+        .verify-setup-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0, 204, 136, 0.3); }
+        .verify-setup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .error-text { color: var(--danger); font-size: 13px; font-weight: 700; margin-bottom: 16px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
       `}</style>
     </AdminLayout>
   );

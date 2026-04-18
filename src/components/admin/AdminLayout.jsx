@@ -227,12 +227,28 @@ const AdminLayout = ({ children, onAdminLogout }) => {
       </div>
 
       <style>{`
+        :root {
+          --brand-primary: #FF4D5E;
+          --bg-deep: #0a0f18;
+          --bg-card: rgba(15, 23, 42, 0.6);
+          --bg-hover: rgba(255, 255, 255, 0.05);
+          --border: rgba(255, 255, 255, 0.08);
+          --glass: rgba(15, 23, 42, 0.6);
+          --text-main: #f1f5f9;
+          --text-dim: #94a3b8;
+          --success: #00cc88;
+          --warning: #f59e0b;
+          --danger: #ff4d4d;
+          --accent: #FF4D5E;
+        }
+
         .adm-layout {
           display: flex;
           width: 100vw; height: 100vh;
           background: var(--bg-deep);
           font-family: 'Inter', sans-serif;
           overflow: hidden;
+          color: var(--text-main);
         }
 
         /* Sidebar */
@@ -245,17 +261,18 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           padding: 16px 0;
           flex-shrink: 0;
           z-index: 100;
+          backdrop-filter: blur(10px);
         }
 
         .adm-sidebar-logo {
           position: relative;
-          color: #FF4D5E; font-size: 22px;
+          color: var(--brand-primary); font-size: 22px;
           margin-bottom: 32px;
         }
         .adm-logo-badge {
           position: absolute; top: -6px; right: -10px;
           font-size: 7px; font-weight: 800; letter-spacing: 0.5px;
-          background: #FF4D5E; color: #fff;
+          background: var(--brand-primary); color: #fff;
           padding: 1px 4px; border-radius: 4px;
         }
 
@@ -277,7 +294,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
         }
         .adm-nav-item:hover, .adm-nav-item.active {
           background: rgba(255, 77, 94, 0.08);
-          color: #FF4D5E;
+          color: var(--brand-primary);
         }
         .adm-nav-item.active {
           background: rgba(255, 77, 94, 0.12) !important;
@@ -285,16 +302,16 @@ const AdminLayout = ({ children, onAdminLogout }) => {
         }
         .adm-active-bar {
           position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
-          background: #FF4D5E; border-radius: 0 4px 4px 0;
+          background: var(--brand-primary); border-radius: 0 4px 4px 0;
           opacity: 0; transition: all 0.2s;
-          box-shadow: 0 0 10px #FF4D5E;
+          box-shadow: 0 0 10px var(--brand-primary);
         }
         .adm-nav-item.active .adm-active-bar {
           opacity: 1;
         }
         .adm-nav-tooltip {
           position: absolute; left: 74px;
-          background: var(--bg-card);
+          background: #1e293b;
           border: 1px solid var(--border);
           color: var(--text-main); font-size: 12px; font-weight: 600;
           padding: 6px 12px; border-radius: 8px;
@@ -302,7 +319,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           opacity: 0; transform: translateX(-4px);
           transition: all 0.15s;
           z-index: 200;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         .adm-nav-item:hover .adm-nav-tooltip {
           opacity: 1; transform: translateX(0);
@@ -325,52 +342,116 @@ const AdminLayout = ({ children, onAdminLogout }) => {
         }
 
         .adm-header {
-          height: 56px; background: var(--bg-card);
+          height: 64px; background: var(--bg-card);
           border-bottom: 1px solid var(--border);
           display: flex; align-items: center; justify-content: space-between;
-          padding: 0 28px; flex-shrink: 0;
+          padding: 0 32px; flex-shrink: 0;
+          backdrop-filter: blur(10px);
         }
 
         .adm-header-left { display: flex; align-items: center; }
         .adm-header-title {
-          display: flex; align-items: center; gap: 10px;
-          font-size: 15px; font-weight: 700; color: var(--text-main);
+          display: flex; align-items: center; gap: 12px;
+          font-size: 15px; font-weight: 800; color: var(--text-main);
+          letter-spacing: 0.5px;
         }
 
-        .adm-header-right { display: flex; align-items: center; gap: 20px; }
+        .adm-header-right { display: flex; align-items: center; gap: 24px; }
 
         .adm-header-stat {
-          display: flex; align-items: center; gap: 6px;
+          display: flex; align-items: center; gap: 8px;
           font-size: 12px; color: var(--text-dim);
+          background: rgba(16, 185, 129, 0.05); padding: 6px 14px; border-radius: 20px;
+          border: 1px solid rgba(16, 185, 129, 0.1);
         }
         .adm-stat-dot {
           width: 7px; height: 7px; border-radius: 50%;
-          background: #10b981;
-          box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+          background: var(--success);
+          box-shadow: 0 0 10px var(--success);
           animation: pulse 2s infinite;
         }
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.9); }
         }
 
         .adm-avatar {
-          display: flex; align-items: center; gap: 8px;
-          background: rgba(255, 77, 94, 0.05);
-          border: 1px solid rgba(255, 77, 94, 0.15);
-          border-radius: 8px; padding: 6px 14px;
-          font-size: 13px; font-weight: 600; color: #FF4D5E;
+          display: flex; align-items: center; gap: 10px;
+          background: rgba(255, 77, 94, 0.08);
+          border: 1px solid rgba(255, 77, 94, 0.2);
+          border-radius: 12px; padding: 8px 18px;
+          font-size: 13px; font-weight: 700; color: var(--brand-primary);
         }
 
         /* Content Area */
         .adm-content {
-          flex: 1; overflow-y: auto; padding: 28px;
+          flex: 1; overflow-y: auto; padding: 32px;
           background: var(--bg-deep);
         }
-        .adm-content::-webkit-scrollbar { width: 4px; }
+        .adm-content::-webkit-scrollbar { width: 5px; }
         .adm-content::-webkit-scrollbar-track { background: transparent; }
         .adm-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* Global Utility Components for Pages */
+        .adm-page-header { 
+          display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; 
+          animation: fadeInDown 0.5s ease-out;
+        }
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .adm-page-title { 
+          font-size: 24px; font-weight: 800; color: var(--text-main); 
+          display: flex; align-items: center; gap: 12px; letter-spacing: -0.02em;
+        }
+        .adm-page-title i { color: var(--brand-primary); }
+        .adm-page-sub { font-size: 14px; color: var(--text-dim); margin-top: 6px; font-weight: 500; }
+
+        .adm-card {
+          background: var(--bg-card);
+          backdrop-filter: blur(20px);
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          padding: 24px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .adm-table-wrap {
+          background: var(--bg-card); border: 1px solid var(--border);
+          border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .adm-table { width: 100%; border-collapse: collapse; }
+        .adm-table thead tr { background: rgba(255, 77, 94, 0.05); border-bottom: 1px solid var(--border); }
+        .adm-table th { 
+          padding: 16px 20px; text-align: left; font-size: 11px; font-weight: 800; 
+          color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; 
+        }
+        .adm-table-row { border-bottom: 1px solid var(--border); transition: background 0.2s; cursor: pointer; }
+        .adm-table-row:hover { background: var(--bg-hover); }
+        .adm-table-row:last-child { border-bottom: none; }
+        .adm-table td { padding: 16px 20px; font-size: 14px; color: var(--text-dim); vertical-align: middle; }
+
+        .adm-badge {
+          padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;
+          text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .adm-badge.success { background: rgba(0,204,136,0.1); color: var(--success); border: 1px solid rgba(0,204,136,0.2); }
+        .adm-badge.warning { background: rgba(245,158,11,0.1); color: var(--warning); border: 1px solid rgba(245,158,11,0.2); }
+        .adm-badge.danger { background: rgba(255,77,77,0.1); color: var(--danger); border: 1px solid rgba(255,77,77,0.2); }
+
+        .adm-btn {
+          padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+          border: 1px solid transparent; font-family: 'Inter', sans-serif;
+        }
+        .adm-btn-primary { background: var(--brand-primary); color: #fff; box-shadow: 0 4px 15px rgba(255, 77, 94, 0.3); }
+        .adm-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .adm-btn-secondary { background: var(--bg-hover); color: var(--text-main); border-color: var(--border); }
+        .adm-btn-secondary:hover { background: rgba(255,255,255,0.08); }
       `}</style>
+
     </div>
   );
 };

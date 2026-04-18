@@ -18,9 +18,9 @@ const AdminLogin = ({ onAdminLogin }) => {
     setError('');
 
     try {
-      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', { 
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', {
         email: username.includes('@') ? username : 'admin@bullvera.com',
-        password: password 
+        password: password
       });
 
       if (res.data.require2FA) {
@@ -136,14 +136,14 @@ const AdminLogin = ({ onAdminLogin }) => {
               <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600 }}>Two-Factor Authentication</p>
               <p style={{ color: '#64748b', fontSize: '12px' }}>Enter the 6-digit code from your authenticator app.</p>
             </div>
-            
+
             <div className="adm-input-wrap">
               <i className="fa-solid fa-key adm-inp-icon" />
               <input
                 type="text"
                 placeholder="000 000"
                 value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0,6))}
+                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 required
                 autoFocus
                 style={{ textAlign: 'center', letterSpacing: '4px', fontSize: '18px' }}

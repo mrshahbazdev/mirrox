@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
+import AdminLayout from '../../components/admin/AdminLayout';
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -407,7 +408,9 @@ export default function SupportChat({ onAdminLogout }) {
   }, {});
 
   return (
-    <div className={`support-chat-layout ${selectedTicket ? 'has-open-ticket' : ''}`}>
+  return (
+    <AdminLayout onAdminLogout={onAdminLogout}>
+      <div className={`support-chat-layout ${selectedTicket ? 'has-open-ticket' : ''}`}>
       {/* LEFT — Ticket List */}
       <div className="support-inbox">
         <div className="support-inbox-header">
@@ -838,5 +841,6 @@ export default function SupportChat({ onAdminLogout }) {
         </div>
       )}
     </div>
+    </AdminLayout>
   );
 }
