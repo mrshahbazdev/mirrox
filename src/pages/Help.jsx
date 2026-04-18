@@ -76,7 +76,7 @@ const Help = () => {
                       </div>
                       <span className="item-label">{item.label}</span>
                   </div>
-                  <i className="fa-solid fa-chevron-right text-slate-700 text-xs"></i>
+                  <i className="fa-solid fa-chevron-right text-[var(--text-dim)] text-xs"></i>
                 </button>
               ))}
             </div>

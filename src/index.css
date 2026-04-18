@@ -796,7 +796,7 @@ body {
     grid-template-rows: auto;
     overflow-y: auto;
     height: auto;
-    background: #0f172a;
+    background: var(--bg-deep);
     padding: 0;
   }
 }
@@ -2740,28 +2740,28 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .finance-input-large:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-  background: #0f172a;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(255, 77, 94, 0.1);
+  background: var(--bg-card);
 }
 
 .finance-quick-btn {
   flex: 1;
   padding: 0.5rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(30, 41, 59, 1);
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   font-size: 9px;
   font-weight: 900;
-  color: #64748b;
+  color: var(--text-muted);
   text-transform: uppercase;
   transition: all 0.2s ease;
 }
 
 .finance-quick-btn:hover {
-  color: #818cf8;
-  border-color: rgba(99, 102, 241, 0.3);
-  background: rgba(15, 23, 42, 0.8);
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--bg-hover);
 }
 
 .finance-submit-btn {
@@ -2957,7 +2957,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .chart-symbol-label {
   font-size: 10px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -2974,12 +2974,12 @@ input[type="number"]::-webkit-outer-spin-button {
   font-weight: 600;
   transition: all 0.2s;
   background: transparent;
-  color: #94a3b8;
+  color: var(--text-muted);
   border: 1px solid transparent;
 }
 
 .chart-pill-btn.active {
-  background: #6366f1;
+  background: var(--accent);
   color: #fff;
 }
 
@@ -3014,7 +3014,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .help-header-v2 h1 {
   font-size: 1.5rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -3022,12 +3022,12 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 1rem;
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .help-identity-card {
@@ -3054,8 +3054,8 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #0f172a;
-  border: 4px solid #0f172a;
+  background: var(--bg-card);
+  border: 4px solid var(--bg-card);
   overflow: hidden;
 }
 
@@ -3066,14 +3066,14 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 1.5rem;
   height: 1.5rem;
   background: #10b981;
-  border: 4px solid #0f172a;
+  border: 4px solid var(--bg-card);
   border-radius: 50%;
 }
 
 .user-name-label {
   font-size: 1.25rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -3100,15 +3100,15 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .help-badge.primary {
-  background: rgba(99, 102, 241, 0.1);
-  color: #818cf8;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: var(--accent-muted);
+  color: var(--accent);
+  border: 1px solid rgba(255, 77, 94, 0.2);
 }
 
 .help-badge.secondary {
-  background: #1e293b;
-  color: #94a3b8;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-card-alt);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
 }
 
 .verification-banner {
@@ -3149,14 +3149,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .banner-desc {
   font-size: 10px;
-  color: #cbd5e1;
+  color: var(--text-muted);
   line-height: 1.2;
   margin-top: 0.25rem;
 }
 
 .banner-btn {
   background: #f59e0b;
-  color: #0f172a;
+  color: #fff;
   font-size: 10px;
   font-weight: 900;
   padding: 0.625rem 1rem;
@@ -3190,11 +3190,11 @@ input[type="number"]::-webkit-outer-spin-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   padding: 1rem;
   border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
   transition: transform 0.2s;
 }
 
@@ -3220,7 +3220,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .item-label {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-main);
 }
 
 .signout-btn {
@@ -3248,11 +3248,11 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   justify-content: space-between;
   padding: 24px 20px 16px 20px;
-  background: #0f172a;
+  background: var(--bg-card);
   position: sticky;
   top: 0;
   z-index: 900;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
 .m-header-user {
@@ -3278,7 +3278,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .m-user-info .m-welcome {
   font-size: 10px;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -3288,7 +3288,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-user-info .m-name {
   font-size: 14px;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -3301,9 +3301,9 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3324,14 +3324,14 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 8px;
   background: #ef4444;
   border-radius: 50%;
-  border: 2px solid #1e293b;
+  border: 2px solid var(--bg-card-alt);
 }
 
 /* Notification Overlay */
 .mobile-notif-overlay {
   position: fixed;
   inset: 0;
-  background: #0f172a;
+  background: var(--bg-deep);
   z-index: 2000;
   display: flex;
   flex-direction: column;
@@ -3348,20 +3348,20 @@ input[type="number"]::-webkit-outer-spin-button {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
 .notif-overlay-header h2 {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-main);
   margin: 0;
 }
 
 .close-notif-btn {
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  color: var(--text-main);
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
@@ -3381,15 +3381,15 @@ input[type="number"]::-webkit-outer-spin-button {
   gap: 1rem;
   padding: 1.25rem;
   border-radius: 1.25rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-card);
   margin-bottom: 0.75rem;
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   transition: all 0.2s;
 }
 
 .mobile-notif-item.unread {
-  background: rgba(99, 102, 241, 0.05);
-  border-color: rgba(99, 102, 241, 0.1);
+  background: var(--accent-muted);
+  border-color: rgba(255, 77, 94, 0.2);
 }
 
 .m-notif-icon {
@@ -3412,7 +3412,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .m-notif-message {
   font-size: 0.875rem;
-  color: #e2e8f0;
+  color: var(--text-main);
   line-height: 1.4;
   margin: 0;
 }
@@ -3450,7 +3450,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-explore-header h1 {
   font-size: 24px;
   font-weight: 900;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 24px;
   letter-spacing: -0.5px;
 }
@@ -3470,19 +3470,19 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .m-search-input {
   width: 100%;
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card-alt);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 16px 16px 16px 48px;
   font-size: 14px;
-  color: white;
+  color: var(--text-main);
   outline: none;
   transition: all 0.2s;
 }
 
 .m-search-input:focus {
-  border-color: rgba(99, 102, 241, 0.5);
-  background: rgba(30, 41, 59, 0.6);
+  border-color: var(--accent);
+  background: var(--bg-card);
 }
 
 .m-categories-scroller {
@@ -3500,16 +3500,16 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 12px;
   font-weight: 700;
   border: 1px solid var(--border);
-  background: rgba(30, 41, 59, 0.4);
-  color: #94a3b8;
+  background: var(--bg-card-alt);
+  color: var(--text-muted);
   transition: all 0.2s;
 }
 
 .m-category-pill.active {
-  background: #6366f1;
-  border-color: #6366f1;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
-  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 16px rgba(255, 77, 94, 0.2);
 }
 
 .m-section-header {
@@ -3523,15 +3523,15 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-section-header h3 {
   font-size: 18px;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
 }
 
 .m-section-header span {
-  color: #6366f1;
+  color: var(--accent);
 }
 
 .m-asset-list-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -3543,7 +3543,7 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
 }
 
 .m-trending-item:last-child {
@@ -3560,20 +3560,20 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   object-fit: cover;
 }
 
 .m-asset-name-group .m-symbol {
   font-size: 12px;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   text-transform: uppercase;
 }
 
 .m-asset-name-group .m-label {
   font-size: 10px;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .m-asset-price-group {
@@ -3583,7 +3583,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-asset-price-group .m-price {
   font-size: 12px;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   font-family: var(--font-mono);
 }
 
@@ -3613,11 +3613,11 @@ input[type="number"]::-webkit-outer-spin-button {
   gap: 8px;
   font-size: 12px;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
 }
 
 .m-sentiment-symbol i {
-  color: #6366f1;
+  color: var(--accent);
   font-size: 12px;
 }
 
@@ -3632,7 +3632,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-sentiment-rail {
   width: 100%;
   height: 6px;
-  background: rgba(30, 41, 59, 0.6);
+  background: var(--bg-card-alt);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -3640,12 +3640,12 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .m-sentiment-fill {
   height: 100%;
-  background: #6366f1;
+  background: var(--success);
   transition: width 1s ease;
 }
 
 .m-mover-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -3664,18 +3664,18 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: rgba(99, 102, 241, 0.1);
+  background: var(--accent-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  color: #6366f1;
+  color: var(--accent);
   font-size: 14px;
 }
 
 .m-mover-range {
   font-size: 9px;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .m-mover-pct {
@@ -3704,14 +3704,14 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-finance-title-group h2 {
   font-size: 20px;
   font-weight: 900;
-  color: white;
+  color: var(--text-main);
   letter-spacing: -0.5px;
   margin: 0;
 }
 
 .m-finance-title-group p {
   font-size: 10px;
-  color: #64748b;
+  color: var(--text-muted);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -3733,17 +3733,17 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card-alt);
   border: 1px solid var(--border);
-  color: #94a3b8;
+  color: var(--text-muted);
   transition: all 0.2s;
 }
 
 .m-action-tab-btn.active {
-  background: #6366f1;
-  border-color: #6366f1;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
-  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 16px rgba(255, 77, 94, 0.2);
 }
 
 .m-action-tab-btn i {
@@ -3759,12 +3759,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-history-section h4 {
   font-size: 18px;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 16px;
 }
 
 .m-transaction-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -3791,13 +3791,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-tx-details .m-type {
   font-size: 12px;
   font-weight: 900;
-  color: white;
+  color: var(--text-main);
   text-transform: uppercase;
 }
 
 .m-tx-details .m-date {
   font-size: 9px;
-  color: #64748b;
+  color: var(--text-muted);
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -3832,7 +3832,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-status-text {
   font-size: 8px;
   font-weight: 900;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -3856,13 +3856,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-market-watch-header h3 {
   font-size: 18px;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
 }
 
 .m-see-all-link {
   font-size: 12px;
   font-weight: 600;
-  color: #6366f1;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -3879,16 +3879,16 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 140px;
   padding: 16px;
   border-radius: 20px;
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   border: 1px solid var(--border);
   transition: all 0.2s;
 }
 
 .m-asset-mini-card.selected {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.4);
+  background: var(--accent-muted);
+  border-color: var(--accent);
   transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(255, 77, 94, 0.1);
 }
 
 .m-mini-card-top {
@@ -3902,11 +3902,11 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  background: rgba(99, 102, 241, 0.15);
+  background: var(--accent-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6366f1;
+  color: var(--accent);
   font-size: 12px;
 }
 
@@ -3918,13 +3918,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-mini-card-bottom .m-symbol {
   font-size: 12px;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   text-transform: uppercase;
 }
 
 .m-mini-card-bottom .m-price {
   font-size: 10px;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-family: var(--font-mono);
   margin-top: 2px;
 }
@@ -3943,16 +3943,16 @@ input[type="number"]::-webkit-outer-spin-button {
   left: 0;
   right: 0;
   height: 80px;
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border);
   z-index: 1000;
   border-radius: 32px 32px 0 0;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .m-nav-item {
@@ -3978,7 +3978,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .m-nav-item.active {
-  color: #6366f1;
+  color: var(--accent);
 }
 
 .m-nav-center {
@@ -3992,7 +3992,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-nav-plus {
   width: 56px;
   height: 56px;
-  background: #6366f1;
+  background: var(--accent);
   border-radius: 50%;
   border: 4px solid var(--bg-deep);
   color: white;
@@ -4000,7 +4000,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 20px rgba(255, 77, 94, 0.4);
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -4011,7 +4011,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .m-nav-plus.active {
   background: white;
-  color: #6366f1;
+  color: var(--accent);
 }
 
 /* =========================================
@@ -4032,7 +4032,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-kyc-header h1 {
   font-size: 24px;
   font-weight: 900;
-  color: white;
+  color: var(--text-main);
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -4052,7 +4052,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .m-kyc-success-view {
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 32px;
@@ -4080,18 +4080,18 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-kyc-success-view h3 {
   font-size: 20px;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 12px;
 }
 
 .m-kyc-success-view p {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
 .m-kyc-guidelines {
-  background: rgba(30, 41, 59, 0.2);
+  background: var(--bg-card-alt);
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 24px;
@@ -4101,7 +4101,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .m-kyc-guidelines h4 {
   font-size: 11px;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 16px;
@@ -4127,7 +4127,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .m-kyc-list-item p {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.4;
   margin: 0;
 }
@@ -4467,7 +4467,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .auth-logo-area p {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 14px;
   margin: 0;
 }
@@ -4520,7 +4520,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
