@@ -163,7 +163,7 @@ const Finances = () => {
   }
 
   return (
-    <div className="finances-page-v3 animate-fade-in no-scrollbar">
+    <div className="finances-page-v3 animate-fade-in no-scrollbar" style={{ gridColumn: '1 / -1', height: '100%', overflowY: 'auto' }}>
       {/* --- BACKGROUND DECORATION --- */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--accent-muted)] blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--accent-muted)] blur-[100px] rounded-full pointer-events-none"></div>
@@ -233,7 +233,7 @@ const Finances = () => {
                 {activeTab === 'deposit' && (
                   <div className="space-y-10">
                     <div className="flex items-center gap-4 border-b border-[var(--border)] pb-8">
-                      <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[var(--accent)]/20">
+                      <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[rgba(255,77,94,0.2)]">
                         <PlusCircle size={32} />
                       </div>
                       <div>
@@ -300,7 +300,7 @@ const Finances = () => {
 
                         {/* RIGHT COLUMN: INSTRUCTIONS */}
                         <div className="space-y-6">
-                          <div className="instructions-card p-8 rounded-[2rem] bg-[var(--accent-muted)] border border-dashed border-[var(--accent)]/20">
+                          <div className="instructions-card p-8 rounded-[2rem] bg-[var(--accent-muted)] border border-dashed border-[rgba(255,77,94,0.2)]">
                             <h4 className="flex items-center gap-3 text-[10px] font-black text-[var(--accent)] uppercase tracking-widest mb-6">
                               <Info size={14} />
                               Transfer Protocol
@@ -346,7 +346,7 @@ const Finances = () => {
                                 </div>
                                 <div className="space-y-2">
                                   <span className="text-[9px] text-[var(--text-muted)] uppercase font-black ml-1">Transfer IBAN</span>
-                                  <div className="p-4 bg-[var(--bg-card-alt)] border border-[var(--accent)]/20 rounded-2xl text-[var(--accent)] font-mono text-xs break-all">
+                                  <div className="p-4 bg-[var(--bg-card-alt)] border border-[rgba(255,77,94,0.2)] rounded-2xl text-[var(--accent)] font-mono text-xs break-all">
                                     {platformConfig.bank_iban}
                                   </div>
                                 </div>
@@ -394,7 +394,7 @@ const Finances = () => {
                 {activeTab === 'withdrawal' && (
                   <div className="max-w-2xl mx-auto py-10 space-y-12">
                     <div className="text-center space-y-6">
-                      <div className="w-24 h-24 rounded-[2.5rem] bg-[var(--accent-muted)] text-[var(--accent)] flex items-center justify-center border border-[var(--accent)]/20 mx-auto shadow-2xl shadow-[var(--accent-muted)]">
+                      <div className="w-24 h-24 rounded-[2.5rem] bg-[var(--accent-muted)] text-[var(--accent)] flex items-center justify-center border border-[rgba(255,77,94,0.2)] mx-auto shadow-2xl shadow-[var(--accent-muted)]">
                         <Shield size={44} />
                       </div>
                       <div className="space-y-2">
@@ -467,7 +467,7 @@ const Finances = () => {
                   <div className="space-y-10">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-[var(--border)] pb-10">
                       <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[var(--accent)]/10">
+                        <div className="w-14 h-14 bg-[var(--accent-muted)] text-[var(--accent)] rounded-2xl flex items-center justify-center border border-[rgba(255,77,94,0.1)]">
                           <History size={32} />
                         </div>
                         <div>
@@ -535,7 +535,7 @@ const Finances = () => {
           <div className="lg:col-span-4 space-y-8">
             {/* PORTFOLIO METRICS */}
             <div className="glass-metric-card-v3 p-10 bg-[var(--bg-card)] border border-[var(--border)] rounded-[2.5rem] relative overflow-hidden group shadow-sm">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 blur-[80px] -mr-16 -mt-16 group-hover:bg-[var(--accent)]/10 transition-all duration-700"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[rgba(255,77,94,0.05)] blur-[80px] -mr-16 -mt-16 group-hover:bg-[rgba(255,77,94,0.1)] transition-all duration-700"></div>
               
               <div className="relative z-10 space-y-8">
                 <div className="flex items-center gap-4 border-b border-[var(--border)] pb-8">
