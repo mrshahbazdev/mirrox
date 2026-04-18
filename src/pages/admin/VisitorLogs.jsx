@@ -12,13 +12,19 @@ const VisitorLogs = ({ onAdminLogout }) => {
   const [isLive, setIsLive] = useState(false);
   const journeyRef = useRef(null);
 
-  const adminToken = localStorage.getItem('bullvera_admin_token');
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  const authHeader = useMemo(() => ({ headers: { Authorization: `Bearer ${adminToken}` } }), [adminToken]);
 
   const fetchVisitors = useCallback(async () => {
     try {
-      const res = await axios.get(`${apiUrl}/api/admin/visitors`, authHeader);
+      const token = localStorage.getItem('bullvera_admin_token');
+      if (!token) {
+          onAdminLogout();
+          return;
+      }
+      
+      const res = await axios.get(`${apiUrl}/api/admin/visitors`, {
+          headers: { Authorization: `Bearer ${token}` }
+      });
       setVisitors(res.data);
     } catch (err) {
       console.error('Failed to fetch visitors', err);
@@ -26,7 +32,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
     } finally {
       setLoading(false);
     }
-  }, [apiUrl, authHeader, onAdminLogout]);
+  }, [apiUrl, onAdminLogout]);
 
   useEffect(() => {
     fetchVisitors();

@@ -162,6 +162,7 @@ const verifyAdminToken = async (req, res, next) => {
     req.user = decoded; // { id, role, sessionId }
     next();
   } catch (err) {
+    console.warn(`[AUTH] Admin 401: ${err.message} | IP: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`);
     res.status(401).json({ error: 'Invalid or expired admin token' });
   }
 };

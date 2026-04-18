@@ -48,11 +48,16 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
   const fetchAdminStats = useCallback(async () => {
     try {
+      const token = localStorage.getItem('bullvera_admin_token');
+      if (!token) return;
+      
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
       const [clientRes, activeRes, depRes, withRes] = await Promise.all([
-        axios.get(import.meta.env.VITE_API_URL + '/api/clients'),
-        axios.get(import.meta.env.VITE_API_URL + '/api/active-traders'),
-        axios.get(import.meta.env.VITE_API_URL + '/api/deposits'),
-        axios.get(import.meta.env.VITE_API_URL + '/api/withdrawals')
+        axios.get(import.meta.env.VITE_API_URL + '/api/clients', config),
+        axios.get(import.meta.env.VITE_API_URL + '/api/active-traders', config),
+        axios.get(import.meta.env.VITE_API_URL + '/api/deposits', config),
+        axios.get(import.meta.env.VITE_API_URL + '/api/withdrawals', config)
       ]);
       
       const count = clientRes.data.filter(c => c.kyc && c.kyc.status === 'pending').length;
@@ -65,8 +70,11 @@ const AdminLayout = ({ children, onAdminLogout }) => {
       setPendingFinanceCount(pendingFinances);
     } catch (err) {
       console.error('Failed to fetch admin stats', err);
+      if (err.response?.status === 401) {
+          onAdminLogout();
+      }
     }
-  }, []);
+  }, [onAdminLogout]);
 
   useEffect(() => {
     fetchAdminStats();
