@@ -21,9 +21,9 @@ const Dashboard = () => {
 
   if (!prices || prices.length === 0) {
     return (
-      <div style={{ padding: 40, color: 'var(--text-muted)' }}>
-        <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: 8 }}></i>
-        Connecting to Trading Server...
+      <div className="fin-loading">
+        <i className="fa-solid fa-spinner fa-spin"></i>
+        <p className="fin-loading-text">Connecting to Trading Server...</p>
       </div>
     );
   }
@@ -36,10 +36,10 @@ const Dashboard = () => {
 
   if (isMobile) {
     return (
-      <div className="mobile-dashboard-content w-full overflow-x-hidden">
+      <div className="mobile-dashboard-content">
         {/* Verification Alert */}
         {!isVerified && (
-          <section className="px-4 pt-2">
+          <section className="dash-section-verify">
               <div className="verification-banner">
                   <div className="banner-icon">
                       <i className="fa-solid fa-triangle-exclamation"></i>
@@ -48,16 +48,16 @@ const Dashboard = () => {
                       <p className="banner-title">Verify Account</p>
                       <p className="banner-desc">Verification is required for real trading.</p>
                   </div>
-                  <Link to="/app/documents" className="banner-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>VERIFY</Link>
+                  <Link to="/app/documents" className="banner-btn">VERIFY</Link>
               </div>
           </section>
         )}
 
         {/* Equity Section */}
-        <section className="px-4">
+        <section className="dash-section-equity">
           <div className="dashboard-equity-card">
             <div className="equity-card-header">
-              <div className="min-w-0">
+              <div className="dash-equity-title-wrap">
                 <p className="equity-card-subtitle">Total Equity</p>
                 <h1 className="equity-card-title">${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h1>
               </div>
@@ -66,7 +66,7 @@ const Dashboard = () => {
               </span>
             </div>
             <div className={`equity-card-pl ${floatingPL >= 0 ? 'positive' : 'negative'}`}>
-              <i className={`fa-solid ${floatingPL >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'} text-xs`}></i>
+              <i className={`fa-solid ${floatingPL >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'} dash-pl-icon`}></i>
               <span>
                 {floatingPL >= 0 ? '+' : ''}${floatingPL.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
@@ -95,7 +95,7 @@ const Dashboard = () => {
                   <div className="m-mini-icon">
                     <i className="fa-solid fa-coins"></i>
                   </div>
-                  <span className={`m-mini-change ${parseFloat(sym.change) >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
+                  <span className={`m-mini-change ${parseFloat(sym.change) >= 0 ? 'positive' : 'negative'}`}>
                     {parseFloat(sym.change) >= 0 ? '+' : ''}{sym.change}%
                   </span>
                 </div>
@@ -109,11 +109,11 @@ const Dashboard = () => {
         </section>
 
         {/* Simplified Asset Info / Quick Trade */}
-        <section className="py-2">
+        <section className="dash-section-chart">
           <div className="mobile-chart-card">
             <div className="chart-card-header">
               <div className="chart-asset-info">
-                <div className="chart-status-dot animate-pulse"></div>
+                <div className="chart-status-dot"></div>
                 <span className="chart-symbol-label">{selectedSymbol.name} LIVE</span>
               </div>
               <div className="chart-timeframe-selector">
@@ -138,28 +138,9 @@ const Dashboard = () => {
         </section>
 
         {/* Active Positions */}
-        <section className="pb-10">
+        <section className="dash-section-positions">
            <PositionTabs />
         </section>
-
-        <style>{`
-          .mobile-dashboard-content {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-top: 4px;
-            width: 100%;
-            overflow-x: hidden;
-            padding-bottom: 100px;
-          }
-          .chart-viewport-mobile {
-            min-height: 520px;
-            width: 100%;
-            background: var(--bg-hover);
-            border-radius: 12px;
-            overflow: hidden;
-          }
-        `}</style>
       </div>
     );
   }
@@ -177,13 +158,13 @@ const Dashboard = () => {
 
       <div className="main-column">
         {!isVerified && (
-          <div style={{ background: 'var(--warning-muted)', border: '1px solid var(--warning)', padding: '12px 16px', borderRadius: '12px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-             <i className="fa-solid fa-triangle-exclamation" style={{ color: 'var(--warning)', fontSize: '20px' }}></i>
-             <div style={{ flex: 1 }}>
-                <h4 style={{ color: 'var(--warning)', margin: '0 0 4px 0', fontSize: '13px', fontWeight: 800 }}>DEMO ACCOUNT MODE</h4>
-                <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>Please verify your identity with a valid ID card to unlock Real Trading.</p>
+          <div className="dash-desktop-verify">
+             <i className="fa-solid fa-triangle-exclamation dash-verify-icon"></i>
+             <div className="dash-verify-content">
+                <h4 className="dash-verify-title">DEMO ACCOUNT MODE</h4>
+                <p className="dash-verify-desc">Please verify your identity with a valid ID card to unlock Real Trading.</p>
              </div>
-             <Link to="/app/documents" style={{ background: 'var(--warning)', color: '#fff', padding: '8px 16px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>Verify Now</Link>
+             <Link to="/app/documents" className="dash-verify-btn">Verify Now</Link>
           </div>
         )}
 
