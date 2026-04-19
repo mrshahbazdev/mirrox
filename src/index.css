@@ -1353,35 +1353,42 @@ body {
 
 .trading-execution-panel {
   margin-bottom: 24px;
-  background: var(--bg-card-alt);
-  padding: 20px;
+  background: var(--bg-card);
+  padding: 24px;
   border-radius: 16px;
   border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 .exec-mode-selector {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  background: var(--bg-hover);
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg-card-alt);
   padding: 4px;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 .mode-btn {
   flex: 1;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
   border: none;
-  background: none;
+  background: transparent;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
+  letter-spacing: 0.3px;
+}
+.mode-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-hover);
 }
 .mode-btn.active {
   background: var(--accent);
-  color: white;
-  box-shadow: 0 4px 12px rgba(255, 77, 94, 0.3);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255, 77, 94, 0.35);
 }
 .input-row-group {
   display: flex;
@@ -1393,63 +1400,86 @@ body {
   margin-bottom: 0;
 }
 .lot-input-wrapper {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .lot-label {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
+  letter-spacing: 1.2px;
+  color: var(--text-dim);
+  padding-left: 2px;
 }
 .lot-control {
   display: flex;
   align-items: center;
-  background: var(--bg-hover);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.lot-control:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.1);
 }
 .lot-control.accent-border {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.08);
 }
 .lot-btn {
-  width: 48px;
-  height: 48px;
-  background: none;
+  width: 46px;
+  height: 46px;
+  background: var(--bg-card-alt);
   border: none;
-  color: var(--text-main);
-  font-size: 20px;
+  color: var(--text-dim);
+  font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 .lot-btn:hover {
-  background: var(--bg-card-alt);
+  background: var(--bg-hover);
   color: var(--accent);
+}
+.lot-btn:active {
+  transform: scale(0.92);
 }
 .lot-input {
   flex: 1;
-  background: none;
+  height: 46px;
+  background: transparent;
   border: none;
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
+  border-left: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
   color: var(--text-main);
   text-align: center;
   font-family: 'Space Mono', monospace;
   font-size: 16px;
   font-weight: 700;
   outline: none;
+  padding: 0 8px;
+}
+.lot-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 500;
+  opacity: 0.7;
 }
 .exec-buttons {
   display: flex;
   gap: 12px;
+  margin-top: 8px;
 }
 .exec-btn {
   flex: 1;
-  padding: 16px;
+  padding: 18px 16px;
   border-radius: 14px;
   border: none;
   cursor: pointer;
@@ -1457,32 +1487,47 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
 }
 .exec-btn.sell {
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.06) 100%);
+  border: 1.5px solid rgba(239, 68, 68, 0.25);
+  color: #dc2626;
 }
 .exec-btn.buy {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.06) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.25);
+  color: #059669;
 }
-.exec-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-.exec-btn:active { transform: translateY(0); }
-.exec-btn.sell:hover { box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
-.exec-btn.buy:hover { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+.exec-btn:hover {
+  transform: translateY(-2px);
+}
+.exec-btn:active {
+  transform: translateY(0);
+}
+.exec-btn.sell:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(239, 68, 68, 0.1) 100%);
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.15);
+}
+.exec-btn.buy:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+}
 .exec-side {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
-  opacity: 0.8;
+  text-transform: uppercase;
 }
 .exec-price {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   font-family: 'Space Mono', monospace;
+  letter-spacing: -0.5px;
 }
 
 /* AssetInfo inline style replacements */
@@ -1495,20 +1540,23 @@ body {
 .moon-icon { margin-right: 6px; color: #fbbf24; }
 
 @media (max-width: 600px) {
-  .trading-execution-panel { padding: 12px; }
-  .lot-btn { width: 44px; height: 44px; }
-  .lot-input { font-size: 15px; }
-  .exec-btn { padding: 14px; }
+  .trading-execution-panel { padding: 16px; }
+  .lot-btn { width: 42px; height: 42px; font-size: 16px; }
+  .lot-input { height: 42px; font-size: 15px; }
+  .exec-btn { padding: 14px 12px; }
   .input-row-group { flex-direction: column; gap: 12px; }
   .input-row-group .lot-input-wrapper { margin-bottom: 4px; }
+  .exec-price { font-size: 18px; }
 }
 @media (max-width: 480px) {
+  .trading-execution-panel { padding: 14px; }
   .exec-buttons { flex-direction: column; gap: 10px; }
   .input-row-group { flex-direction: column; gap: 12px; }
-  .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 16px 24px; border-radius: 16px; }
+  .exec-btn { width: 100%; flex-direction: row; justify-content: space-between; padding: 16px 20px; border-radius: 14px; }
   .exec-side { font-size: 12px; }
   .exec-price { font-size: 18px; }
-  .lot-label { font-size: 10px; margin-bottom: 4px; }
+  .lot-label { font-size: 10px; margin-bottom: 2px; }
+  .exec-mode-selector { margin-bottom: 18px; }
 }
 
 /* Help Page - Support Cards Grid */
