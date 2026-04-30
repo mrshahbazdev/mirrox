@@ -411,13 +411,23 @@ module.exports = (io) => {
     });
 
     socket.on('open_trade', (data) => {
-      if (!socket.decoded) return;
+      if (!socket.decoded) {
+        socket.emit('trade_error', { message: 'Session expired. Please log in again to execute trades.' });
+        return;
+      }
       const { symbol, volume, type, pendingPrice, stopLoss, takeProfit } = data;
       const clientId = socket.decoded.id; // Enforce ID from Token
       const symData = symbolsList.find(s => s.symbol === symbol);
       const client = clients.find(c => c.id === clientId);
       
-      if (!symData || !client) return;
+      if (!symData) {
+        socket.emit('trade_error', { message: 'Symbol not found. Please refresh and try again.' });
+        return;
+      }
+      if (!client) {
+        socket.emit('trade_error', { message: 'Account not found. Please log in again.' });
+        return;
+      }
       
       // Force sync metrics before check to ensure balance/equity is up to date
       syncClientMetrics(clientId);

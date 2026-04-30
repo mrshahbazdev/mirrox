@@ -116,11 +116,17 @@ export const TradingProvider = ({ children }) => {
 
   // Method to open a trade from Frontend
   const openPosition = (symbol, volume, type, pendingPrice = null, stopLoss = null, takeProfit = null) => {
-    if (socket) {
-      socket.emit('open_trade', {
-        symbol, volume, type, clientId, pendingPrice, stopLoss, takeProfit
-      });
+    if (!socket) {
+      showAlert('Not connected to trading server. Please refresh the page.', 'Connection Error', 'error');
+      return;
     }
+    if (!clientId || !token) {
+      showAlert('Please log in to execute trades.', 'Authentication Required', 'warning');
+      return;
+    }
+    socket.emit('open_trade', {
+      symbol, volume, type, clientId, pendingPrice, stopLoss, takeProfit
+    });
   };
 
   // Method to close a trade from Frontend
