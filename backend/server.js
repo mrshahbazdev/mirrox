@@ -587,6 +587,77 @@ app.put('/api/clients/:id/pin', verifyAdminToken, async (req, res) => {
   }
 });
 
+// --- PROFILE APIS ---
+app.put('/api/clients/:id/profile', verifyClientToken, ensureSelfOrAdmin('id'), async (req, res) => {
+  const client = clients.find(c => c.id === req.params.id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  const allowedFields = ['name', 'lastName', 'contact', 'dateOfBirth', 'country', 'city', 'address', 'zipCode'];
+  const updates = {};
+  for (const field of allowedFields) {
+    if (req.body[field] !== undefined) {
+      updates[field] = req.body[field];
+      client[field] = req.body[field];
+    }
+  }
+
+  if (mongoose.connection.readyState === 1) {
+    await Client.updateOne({ id: client.id }, { $set: updates }).catch(err => console.warn('DB Update failed:', err.message));
+  }
+
+  saveData();
+  const { password: p, withdrawalPin: wp, adminNote: an, ...sanitizedClient } = client;
+  sanitizedClient.hasPin = !!wp;
+  res.json(sanitizedClient);
+});
+
+app.put('/api/clients/:id/notification-settings', verifyClientToken, ensureSelfOrAdmin('id'), async (req, res) => {
+  const client = clients.find(c => c.id === req.params.id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  if (!client.notificationSettings) {
+    client.notificationSettings = { emails: false, sms: false, pushNotifications: false, calls: false };
+  }
+
+  const { emails, sms, pushNotifications, calls } = req.body;
+  if (emails !== undefined) client.notificationSettings.emails = emails;
+  if (sms !== undefined) client.notificationSettings.sms = sms;
+  if (pushNotifications !== undefined) client.notificationSettings.pushNotifications = pushNotifications;
+  if (calls !== undefined) client.notificationSettings.calls = calls;
+
+  if (mongoose.connection.readyState === 1) {
+    await Client.updateOne({ id: client.id }, { $set: { notificationSettings: client.notificationSettings } }).catch(err => console.warn('DB Update failed:', err.message));
+  }
+
+  saveData();
+  res.json({ success: true, notificationSettings: client.notificationSettings });
+});
+
+app.put('/api/clients/:id/password', verifyClientToken, ensureSelfOrAdmin('id'), async (req, res) => {
+  const client = clients.find(c => c.id === req.params.id);
+  if (!client) return res.status(404).json({ error: 'Client not found' });
+
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Both current and new password are required' });
+
+  const isMatch = await bcrypt.compare(currentPassword, client.password);
+  if (!isMatch) return res.status(401).json({ error: 'Current password is incorrect' });
+
+  if (newPassword.length < 8 || newPassword.length > 15) {
+    return res.status(400).json({ error: 'Password must be 8-15 characters' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  client.password = hashedPassword;
+
+  if (mongoose.connection.readyState === 1) {
+    await Client.updateOne({ id: client.id }, { password: hashedPassword }).catch(err => console.warn('DB Update failed:', err.message));
+  }
+
+  saveData();
+  res.json({ success: true, message: 'Password updated successfully' });
+});
+
 // --- SYMBOLS APIS ---
 app.get('/api/symbols', (req, res) => res.json(symbolsList));
 

@@ -23,6 +23,7 @@ import Register from './pages/Register';
 import Finances from './pages/Finances';
 import Affiliate from './pages/Affiliate';
 import Help from './pages/Help';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
 import PublicLayout from './components/PublicLayout';
@@ -199,6 +200,7 @@ function App() {
           <Route path="finances" element={<Finances />} />
           <Route path="affiliate" element={<Affiliate />} />
           <Route path="help" element={<Help />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
         </Route>
 
