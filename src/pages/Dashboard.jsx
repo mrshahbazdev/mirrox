@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
   const { prices, openPosition, currentClientExtended, activeTrades } = useTrading();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [openConfirm, setOpenConfirm] = useState(null);
+  const [openToast, setOpenToast] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -18,6 +20,20 @@ const Dashboard = () => {
   }, []);
 
   const [selectedSymbolId, setSelectedSymbolId] = useState(prices?.[0]?.id || 1);
+
+  const handleTradeRequest = (symbol, volume, type, pendingPrice, stopLoss, takeProfit) => {
+    const sym = prices.find(s => s.symbol === symbol);
+    setOpenConfirm({ symbol, volume, type, pendingPrice, stopLoss, takeProfit, price: sym?.price || '---', name: sym?.name || symbol });
+  };
+
+  const confirmOpenTrade = () => {
+    if (!openConfirm) return;
+    const { symbol, volume, type, pendingPrice, stopLoss, takeProfit, price, name } = openConfirm;
+    openPosition(symbol, volume, type, pendingPrice, stopLoss, takeProfit);
+    setOpenConfirm(null);
+    setOpenToast({ message: `Position opened — ${type} ${volume} ${name} at ${price}` });
+    setTimeout(() => setOpenToast(null), 4000);
+  };
 
   if (!prices || prices.length === 0) {
     return (
@@ -33,6 +49,38 @@ const Dashboard = () => {
 
   const totalEquity = currentClientExtended?.tradingMetrics?.equity || 0;
   const floatingPL = currentClientExtended?.accountSummary?.profitLoss || activeTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
+
+  const openConfirmModal = openConfirm && (
+    <div className="pos-modal-overlay" onClick={() => setOpenConfirm(null)}>
+      <div className="pos-modal" onClick={e => e.stopPropagation()}>
+        <div className="pos-modal-header">
+          <h3>Open Position</h3>
+          <i className="fa-solid fa-xmark pos-modal-close" onClick={() => setOpenConfirm(null)}></i>
+        </div>
+        <div className="pos-modal-body">
+          <p className="pos-modal-text">
+            Do you want to open <span className={`pos-modal-type ${openConfirm.type === 'BUY' ? 'buy' : 'sell'}`}>{openConfirm.type}</span> {openConfirm.volume} <span className="pos-modal-sym">{openConfirm.name}</span> at {openConfirm.price} ?
+          </p>
+          <label className="pos-modal-checkbox">
+            <input type="checkbox" />
+            <span>Turn off trade confirmations</span>
+          </label>
+        </div>
+        <div className="pos-modal-footer">
+          <button className="pos-modal-btn cancel" onClick={() => setOpenConfirm(null)}>Cancel</button>
+          <button className="pos-modal-btn confirm" onClick={confirmOpenTrade}>Confirm</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const toastEl = openToast && (
+    <div className="pos-toast success" style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 10001 }}>
+      <i className="fa-solid fa-circle-check"></i>
+      <span>{openToast.message}</span>
+      <i className="fa-solid fa-xmark pos-toast-close" onClick={() => setOpenToast(null)}></i>
+    </div>
+  );
 
   if (isMobile) {
     return (
@@ -133,7 +181,7 @@ const Dashboard = () => {
                </ErrorBoundary>
             </div>
 
-            <AssetInfo symbol={selectedSymbol} onTrade={openPosition} compact />
+            <AssetInfo symbol={selectedSymbol} onTrade={handleTradeRequest} compact />
           </div>
         </section>
 
@@ -141,6 +189,8 @@ const Dashboard = () => {
         <section className="dash-section-positions">
            <PositionTabs />
         </section>
+        {openConfirmModal}
+        {toastEl}
       </div>
     );
   }
@@ -148,12 +198,14 @@ const Dashboard = () => {
   // Desktop View
   return (
     <>
+      {openConfirmModal}
+      {toastEl}
       <div className="market-column">
         <MarketWatch 
           symbols={prices} 
           selectedSymbol={selectedSymbol}
           onSelectSymbol={(sym) => setSelectedSymbolId(sym.id)}
-          onTrade={openPosition}
+          onTrade={handleTradeRequest}
         />
       </div>
 
@@ -180,7 +232,7 @@ const Dashboard = () => {
         </div>
 
         <div className="bottom-sections">
-           <AssetInfo symbol={selectedSymbol} onTrade={openPosition} />
+           <AssetInfo symbol={selectedSymbol} onTrade={handleTradeRequest} />
            <PositionTabs />
         </div>
       </div>

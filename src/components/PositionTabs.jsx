@@ -4,7 +4,7 @@ import { useTrading } from '../context/TradingContext';
 import { useModal } from '../context/ModalContext';
 
 const PositionTabs = () => {
-  const { activeTrades, prices, closePosition, currentClientExtended, allTrades, clientId, currentUser } = useTrading();
+  const { prices, closePosition, currentClientExtended, allTrades, clientId, currentUser } = useTrading();
   const { showAlert } = useModal();
   const [activeTab, setActiveTab] = useState('open'); 
   const [showConfirm, setShowConfirm] = useState(false);
@@ -17,9 +17,23 @@ const PositionTabs = () => {
   // Trade Modification State
   const [showModify, setShowModify] = useState(false);
   const [modifyingTrade, setModifyingTrade] = useState(null);
-  const [newSL, setNewSL] = useState('');
-  const [newTP, setNewTP] = useState('');
+  const [modSL, setModSL] = useState('');
+  const [modTP, setModTP] = useState('');
+  const [modSlEnabled, setModSlEnabled] = useState(false);
+  const [modTpEnabled, setModTpEnabled] = useState(false);
+  const [modTrailingStop, setModTrailingStop] = useState(false);
   const [isModifying, setIsModifying] = useState(false);
+
+  // Position info tooltip
+  const [infoTrade, setInfoTrade] = useState(null);
+
+  // Toast notification
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     if (activeTab === 'closed' && clientId) {
@@ -41,7 +55,7 @@ const PositionTabs = () => {
   const freeMargin = metrics.freeMargin || (equity - margin);
   const marginLevel = metrics.marginLevel || 0;
 
-  // Health indicator for Margin Level (Image notes: mini = 300)
+  // Health indicator for Margin Level
   const getMarginLevelColor = () => {
     if (marginLevel === 0) return 'var(--text-muted)';
     if (marginLevel < 300) return 'var(--danger)';
@@ -58,11 +72,8 @@ const PositionTabs = () => {
     if (activeTab === 'open') return openTrades;
     if (activeTab === 'pending') return pendingTrades;
     
-    // Merge In-memory closed trades (pre-sync) with historical DB result
     const closedFromMemory = clientTrades.filter(t => t.status === 'Closed');
     const combinedHistory = [...closedFromMemory, ...historyTrades];
-    
-    // Deduplicate by ID to prevent double-showing during the 1s sync window
     return Array.from(new Map(combinedHistory.map(item => [item.id, item])).values());
   })().sort((a, b) => (new Date(b.closeTime || b.openTime || 0)) - (new Date(a.closeTime || a.openTime || 0)));
 
@@ -73,16 +84,25 @@ const PositionTabs = () => {
 
   const handleConfirmClose = () => {
     if (closingTrade) {
+      const sym = closingTrade.symbol;
+      const type = closingTrade.type;
+      const lots = closingTrade.lots;
+      const p = prices.find(it => it.symbol === sym);
+      const price = p?.price || '---';
       closePosition(closingTrade.id);
       setShowConfirm(false);
       setClosingTrade(null);
+      showToast(`Position closed — ${type} ${lots} ${sym} at ${price}`);
     }
   };
 
   const handleOpenModify = (trade) => {
     setModifyingTrade(trade);
-    setNewSL(trade.stopLoss || '');
-    setNewTP(trade.takeProfit || '');
+    setModSL(trade.stopLoss || '');
+    setModTP(trade.takeProfit || '');
+    setModSlEnabled(!!trade.stopLoss);
+    setModTpEnabled(!!trade.takeProfit);
+    setModTrailingStop(false);
     setShowModify(true);
   };
 
@@ -92,16 +112,47 @@ const PositionTabs = () => {
     try {
       await axios.put(`${import.meta.env.VITE_API_URL}/api/trades/${modifyingTrade.id}`, {
         clientId,
-        stopLoss: newSL,
-        takeProfit: newTP
+        stopLoss: modSlEnabled ? modSL : '',
+        takeProfit: modTpEnabled ? modTP : ''
       });
       setShowModify(false);
       setModifyingTrade(null);
+      showToast('Trade modified successfully');
     } catch (err) {
       showAlert(err.response?.data?.error || 'Failed to modify trade', 'Adjustment Error', 'error');
     } finally {
       setIsModifying(false);
     }
+  };
+
+  const getModSlInfo = () => {
+    if (!modifyingTrade || !modSL) return null;
+    const p = prices.find(it => it.symbol === modifyingTrade.symbol);
+    const precision = p?.precision || 5;
+    const precisionFactor = Math.pow(10, precision);
+    const openPrice = modifyingTrade.openPrice || 0;
+    const slPrice = parseFloat(modSL) || 0;
+    const diff = modifyingTrade.type === 'BUY' ? (slPrice - openPrice) : (openPrice - slPrice);
+    const points = Math.round(diff * precisionFactor);
+    const contractSize = p?.category === 'Metals' ? 100 : 100000;
+    const usdVal = (diff * (modifyingTrade.lots || 0.01) * contractSize).toFixed(2);
+    const pct = openPrice ? ((diff / openPrice) * 100).toFixed(2) : '0.00';
+    return { usdVal, pct, points };
+  };
+
+  const getModTpInfo = () => {
+    if (!modifyingTrade || !modTP) return null;
+    const p = prices.find(it => it.symbol === modifyingTrade.symbol);
+    const precision = p?.precision || 5;
+    const precisionFactor = Math.pow(10, precision);
+    const openPrice = modifyingTrade.openPrice || 0;
+    const tpPrice = parseFloat(modTP) || 0;
+    const diff = modifyingTrade.type === 'BUY' ? (tpPrice - openPrice) : (openPrice - tpPrice);
+    const points = Math.round(diff * precisionFactor);
+    const contractSize = p?.category === 'Metals' ? 100 : 100000;
+    const usdVal = (diff * (modifyingTrade.lots || 0.01) * contractSize).toFixed(2);
+    const pct = openPrice ? ((diff / openPrice) * 100).toFixed(2) : '0.00';
+    return { usdVal, pct, points };
   };
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -113,15 +164,24 @@ const PositionTabs = () => {
 
   return (
     <div className="card positions-card">
+      {/* Toast notification */}
+      {toast && (
+        <div className={`pos-toast ${toast.type}`}>
+          <i className={`fa-solid ${toast.type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark'}`}></i>
+          <span>{toast.message}</span>
+          <i className="fa-solid fa-xmark pos-toast-close" onClick={() => setToast(null)}></i>
+        </div>
+      )}
+
       <div className="tabs-header">
         <div className={`tab-item ${activeTab === 'open' ? 'active' : ''}`} onClick={() => setActiveTab('open')}>
-          Open ({openTrades.length})
+          Open Positions {openTrades.length > 0 && <span className="pos-tab-count">{openTrades.length}</span>}
         </div>
         <div className={`tab-item ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>
-          Pending ({pendingTrades.length})
+          Pending Orders
         </div>
         <div className={`tab-item ${activeTab === 'closed' ? 'active' : ''}`} onClick={() => setActiveTab('closed')}>
-          History
+          Closed Positions
         </div>
         {!isMobile && <div className="tab-item">Finance</div>}
       </div>
@@ -132,80 +192,73 @@ const PositionTabs = () => {
             <thead>
               <tr>
                 <th>Symbol</th>
-                <th>Type</th>
                 <th>Volume</th>
                 <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
-                {activeTab === 'open' && <th>Current Price</th>}
-                {(activeTab === 'open' || activeTab === 'closed') && <th>Target / Close Price</th>}
-                {activeTab !== 'pending' && <th>Profit / Loss</th>}
-                {activeTab !== 'pending' && <th>Swap</th>}
-                {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Action</th>}
+                {activeTab === 'open' && <th>TP/SL</th>}
+                {activeTab !== 'pending' && <th>Profit</th>}
+                {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Actions</th>}
               </tr>
             </thead>
             <tbody>
               {displayTrades.map(trade => {
                   const profit = trade.profit || 0;
-                  const swap = trade.swap || 0;
+                  const p = prices.find(it => it.symbol === trade.symbol);
+                  const openPrice = trade.openPrice || 0;
+                  const pctReturn = openPrice ? ((profit / (openPrice * (trade.lots || 0.01) * (p?.category === 'Metals' ? 100 : 100000))) * 100).toFixed(2) : '0.00';
                   return (
                     <tr key={trade.id}>
-                      <td style={{ fontWeight: 600 }}>{trade.symbol}</td>
-                      <td style={{ color: trade.type === 'BUY' ? 'var(--success)' : 'var(--danger)' }}>{trade.type}</td>
+                      <td>
+                        <div className="pos-symbol-cell">
+                          <span className="pos-symbol-name">{trade.symbol}</span>
+                          <span className={`pos-type-badge ${trade.type === 'BUY' ? 'buy' : 'sell'}`}>{trade.type === 'BUY' ? 'Buy' : 'Sell'}</span>
+                        </div>
+                      </td>
                       <td>{trade.lots}</td>
-                      <td>{(trade.openPrice || 0).toFixed(2)}</td>
+                      <td>{openPrice.toFixed(p?.precision || 2)}</td>
                       
                       {activeTab === 'open' && (
-                        <td>{prices.find(p=>p.symbol===trade.symbol)?.price || '...'}</td>
-                      )}
-
-                      {(activeTab === 'open' || activeTab === 'closed') && (
                         <td>
-                          {(() => {
-                            const precision = prices.find(p => p.symbol === trade.symbol)?.precision || 2;
-                            if (activeTab === 'open') {
-                                const target = trade.takeProfit || trade.selectedPrice;
-                                return target ? parseFloat(target).toFixed(precision) : '---';
-                            }
-                            return trade.closePrice ? parseFloat(trade.closePrice).toFixed(precision) : '...';
-                          })()}
+                          <div className="pos-tpsl-cell">
+                            <span className="pos-tpsl-line">TP: {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '-'}</span>
+                            <span className="pos-tpsl-line">SL: {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '-'}</span>
+                          </div>
                         </td>
                       )}
 
                       {activeTab !== 'pending' && (
-                        <>
-                          <td style={{ color: profit >= 0 ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold' }}>
-                              {profit >= 0 ? '+' : ''}{profit.toFixed(2)} USD
-                          </td>
-                          <td style={{ color: swap < 0 ? 'var(--danger)' : 'var(--success)', fontWeight: '500' }}>
-                              {(() => {
-                                const tradeAgeMs = Date.now() - new Date(trade.openTime).getTime();
-                                const isOldEnough = tradeAgeMs >= 24 * 60 * 60 * 1000;
-                                const shouldShowSwap = trade.status === 'Closed' || isOldEnough;
-                                const visibleSwap = shouldShowSwap ? swap : 0;
-                                
-                                return (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <span>{visibleSwap >= 0 ? '+' : ''}{visibleSwap.toFixed(2)} USD</span>
-                                    {trade.swapLocked && <span title="Swap manually set by admin" style={{ fontSize: '10px' }}>🔒</span>}
-                                  </div>
-                                );
-                              })()}
-                          </td>
-                        </>
+                        <td>
+                          <div className="pos-profit-cell">
+                            <span className={`pos-profit-val ${profit >= 0 ? 'up' : 'down'}`}>
+                              {profit >= 0 ? '+' : ''}{profit.toFixed(2)}
+                            </span>
+                            <span className={`pos-profit-pct ${profit >= 0 ? 'up' : 'down'}`}>
+                              {profit >= 0 ? '+' : ''}{pctReturn}%
+                            </span>
+                          </div>
+                        </td>
                       )}
 
                       {activeTab !== 'closed' && (
-                        <td style={{ textAlign: 'right' }}>
-                          {activeTab === 'pending' && (
-                            <button 
-                              className="close-trade-btn" style={{ background: 'transparent', color: 'var(--success)', marginRight: '8px' }}
-                              onClick={() => handleOpenModify(trade)}
-                            >
+                        <td>
+                          <div className="pos-actions-cell">
+                            <button className="pos-action-btn" title="Edit TP/SL" onClick={() => handleOpenModify(trade)}>
                               <i className="fa-solid fa-pen"></i>
                             </button>
+                            <button className="pos-action-btn" title="Position Info" onClick={() => setInfoTrade(infoTrade?.id === trade.id ? null : trade)}>
+                              <i className="fa-solid fa-circle-info"></i>
+                            </button>
+                            <button className="pos-action-btn close" title="Close Position" onClick={() => handleOpenConfirm(trade)}>
+                              <i className="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                          {infoTrade?.id === trade.id && (
+                            <div className="pos-info-tooltip">
+                              <div className="pos-info-row"><span>ID:</span><span>{trade.id}</span></div>
+                              <div className="pos-info-row"><span>Open Time:</span><span>{trade.openTime ? new Date(trade.openTime).toLocaleDateString() : '-'}</span></div>
+                              <div className="pos-info-row"><span>Swap:</span><span>{(trade.swap || 0).toFixed(2)}</span></div>
+                              <div className="pos-info-row"><span>Commission:</span><span>{(trade.commission || 0).toFixed(2)}</span></div>
+                            </div>
                           )}
-                          <button className="close-trade-btn" onClick={() => handleOpenConfirm(trade)}>
-                            {activeTab === 'pending' ? 'Cancel' : 'Close'}
-                          </button>
                         </td>
                       )}
                     </tr>
@@ -218,6 +271,8 @@ const PositionTabs = () => {
              {displayTrades.map(trade => {
                 const profit = trade.profit || 0;
                 const p = prices.find(it => it.symbol === trade.symbol);
+                const openPrice = trade.openPrice || 0;
+                const pctReturn = openPrice ? ((profit / (openPrice * (trade.lots || 0.01) * (p?.category === 'Metals' ? 100 : 100000))) * 100).toFixed(2) : '0.00';
                 return (
                   <div key={trade.id} className="mobile-trade-card">
                     <div className="flex justify-between items-start mb-3">
@@ -225,7 +280,7 @@ const PositionTabs = () => {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-[var(--text-main)] font-bold">{trade.symbol}</span>
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded ${trade.type === 'BUY' ? 'bg-[var(--success-muted)] text-[var(--success)]' : 'bg-[var(--danger-muted)] text-[var(--danger)]'}`}>
-                            {trade.type}
+                            {trade.type === 'BUY' ? 'Buy' : 'Sell'}
                           </span>
                         </div>
                         <div className="text-[11px] text-[var(--text-muted)]">Vol: <span className="text-[var(--text-dim)] font-mono">{trade.lots}</span></div>
@@ -234,36 +289,38 @@ const PositionTabs = () => {
                         <div className={`text-base font-bold ${profit >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
                            {profit >= 0 ? '+' : ''}{profit.toFixed(2)} <span className="text-[10px] opacity-60">USD</span>
                         </div>
-                        <div className="text-[10px] text-[var(--text-muted)]">Net Return</div>
+                        <div className={`text-[10px] ${profit >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>{profit >= 0 ? '+' : ''}{pctReturn}%</div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 p-3 bg-[var(--bg-hover)] rounded-xl mb-3">
                       <div>
                         <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Open Price</div>
-                        <div className="text-xs text-[var(--text-main)] font-mono">{(trade.openPrice || 0).toFixed(p?.precision || 2)}</div>
+                        <div className="text-xs text-[var(--text-main)] font-mono">{openPrice.toFixed(p?.precision || 2)}</div>
                       </div>
-                      <div>
-                        <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Market</div>
-                        <div className="text-xs text-[var(--accent)] font-mono">{p?.price || '...'}</div>
-                      </div>
+                      {activeTab === 'open' && (
+                        <div>
+                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">TP / SL</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">
+                            {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '-'} / {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '-'}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {activeTab !== 'closed' && (
                       <div className="flex gap-2">
-                        {activeTab === 'pending' && (
-                          <button 
-                            className="flex-1 bg-[var(--bg-hover)] text-[var(--text-muted)] py-2.5 rounded-xl font-bold text-xs"
-                            onClick={() => handleOpenModify(trade)}
-                          >
-                            Modify
-                          </button>
-                        )}
                         <button 
-                          className={`flex-1 ${activeTab === 'pending' ? 'bg-[var(--danger-muted)] text-[var(--danger)] border border-[var(--danger)]' : 'bg-[var(--danger)] text-white'} py-2.5 rounded-xl font-bold text-xs shadow-lg`}
+                          className="flex-1 bg-[var(--bg-hover)] text-[var(--text-muted)] py-2.5 rounded-xl font-bold text-xs"
+                          onClick={() => handleOpenModify(trade)}
+                        >
+                          <i className="fa-solid fa-pen" style={{ marginRight: '4px' }}></i> Modify
+                        </button>
+                        <button 
+                          className="flex-1 bg-[var(--danger)] text-white py-2.5 rounded-xl font-bold text-xs shadow-lg"
                           onClick={() => handleOpenConfirm(trade)}
                         >
-                          {activeTab === 'pending' ? 'Cancel Order' : 'Close Position'}
+                          <i className="fa-solid fa-xmark" style={{ marginRight: '4px' }}></i> Close
                         </button>
                       </div>
                     )}
@@ -283,9 +340,9 @@ const PositionTabs = () => {
           <div className="empty-state">
              <i className="fa-solid fa-book-open"></i>
              <p className="empty-title">
-               {activeTab === 'open' ? "You don't have any open positions." : "No trade history available yet."}
+               {activeTab === 'open' ? "You don't have any open positions." : activeTab === 'pending' ? "No pending orders." : "No trade history available yet."}
              </p>
-             <p className="empty-subtitle">Start trading and here you'll see your activity.</p>
+             <p className="empty-subtitle">Start trading and here you'll see your {activeTab === 'open' ? 'open positions' : 'activity'}.</p>
           </div>
         )}
       </div>
@@ -303,168 +360,147 @@ const PositionTabs = () => {
          </div>
       </div>
 
-      {/* Custom Global Confirmation Modal */}
-      {showConfirm && (
-        <div className="confirm-modal-overlay">
-          <div className="confirm-modal-content animate-pop">
-            <div className="modal-header-simple">
-              <i className="fa-solid fa-circle-exclamation" style={{ color: 'var(--danger)', fontSize: '24px' }}></i>
-              <h3>Close Position?</h3>
+      {/* Close Position Confirmation Modal */}
+      {showConfirm && closingTrade && (
+        <div className="pos-modal-overlay" onClick={() => setShowConfirm(false)}>
+          <div className="pos-modal" onClick={e => e.stopPropagation()}>
+            <div className="pos-modal-header">
+              <h3>Close Position</h3>
+              <i className="fa-solid fa-xmark pos-modal-close" onClick={() => setShowConfirm(false)}></i>
             </div>
-            <div className="modal-body-simple">
-              <p>Are you sure you want to close <strong>{closingTrade?.symbol}</strong> ({closingTrade?.type}) at market price?</p>
-              <div className="confirm-profit-preview">
-                <span className="label">Estimated Result</span>
-                <span className={`value ${(closingTrade?.profit || 0) >= 0 ? 'up' : 'down'}`}>
-                  {(closingTrade?.profit || 0) >= 0 ? '+' : ''}{(closingTrade?.profit || 0).toFixed(2)} USD
-                </span>
-              </div>
-            </div>
-            <div className="modal-footer-simple">
-              <button className="confirm-btn secondary" onClick={() => setShowConfirm(false)}>Cancel</button>
-              <button className="confirm-btn danger" onClick={handleConfirmClose}>Close Position</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modify Trade Modal */}
-      {showModify && (
-        <div className="confirm-modal-overlay">
-          <div className="confirm-modal-content animate-pop" style={{ maxWidth: '400px' }}>
-            <div className="modal-header-simple">
-              <i className="fa-solid fa-pen-to-square" style={{ color: 'var(--success)', fontSize: '24px' }}></i>
-              <h3>Modify Order</h3>
-            </div>
-            <div className="modal-body-simple">
-              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--text-muted)' }}>
-                Modify Stop Loss and Take Profit for <strong>{modifyingTrade?.symbol}</strong> ({modifyingTrade?.type})
+            <div className="pos-modal-body">
+              <p className="pos-modal-text">
+                Do you want to close <span className={`pos-modal-type ${closingTrade.type === 'BUY' ? 'buy' : 'sell'}`}>{closingTrade.type === 'BUY' ? 'BUY' : 'SELL'}</span> {closingTrade.lots} <span className="pos-modal-sym">{closingTrade.symbol}</span> at {prices.find(it => it.symbol === closingTrade.symbol)?.price || '---'} ?
               </p>
-              
-              <div style={{ marginBottom: '16px', textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>Stop Loss Price</label>
-                <input 
-                  type="number" 
-                  step="0.00001"
-                  value={newSL} 
-                  onChange={e => setNewSL(e.target.value)}
-                  placeholder="0.00"
-                  style={{ width: '100%', padding: '12px', background: 'var(--bg-hover)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '16px' }}
-                />
-              </div>
- 
-              <div style={{ marginBottom: '16px', textAlign: 'left' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>Take Profit Price</label>
-                <input 
-                  type="number" 
-                  step="0.00001"
-                  value={newTP} 
-                  onChange={e => setNewTP(e.target.value)}
-                  placeholder="0.00"
-                  style={{ width: '100%', padding: '12px', background: 'var(--bg-hover)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '16px' }}
-                />
-              </div>
+              <label className="pos-modal-checkbox">
+                <input type="checkbox" />
+                <span>Turn off trade confirmations</span>
+              </label>
             </div>
-            <div className="modal-footer-simple">
-               <button className="confirm-btn secondary" onClick={() => setShowModify(false)}>Cancel</button>
-               <button className="confirm-btn" style={{ background: 'var(--success)', color: 'white' }} onClick={submitModifyTrade} disabled={isModifying}>
-                 {isModifying ? 'Saving...' : 'Save Settings'}
-               </button>
+            <div className="pos-modal-footer">
+              <button className="pos-modal-btn cancel" onClick={() => setShowConfirm(false)}>Cancel</button>
+              <button className="pos-modal-btn confirm" onClick={handleConfirmClose}>Confirm</button>
             </div>
           </div>
         </div>
       )}
 
-      <style>{`
-        .close-trade-btn {
-          background: var(--danger-muted);
-          color: var(--danger);
-          border: 1px solid var(--danger-muted);
-          padding: 4px 12px;
-          border-radius: 6px;
-          font-size: 11px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .close-trade-btn:hover { background: var(--danger); color: white; }
+      {/* Modify TP/SL Modal */}
+      {showModify && modifyingTrade && (
+        <div className="pos-modal-overlay" onClick={() => setShowModify(false)}>
+          <div className="pos-modify-modal" onClick={e => e.stopPropagation()}>
+            {/* Stop Loss */}
+            <div className="pos-mod-section">
+              <div className="pos-mod-toggle-row" onClick={() => setModSlEnabled(!modSlEnabled)}>
+                <div className={`mw-toggle ${modSlEnabled ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+                <span className="pos-mod-label">Stop Loss</span>
+              </div>
+              {modSlEnabled && (
+                <>
+                  <div className="pos-mod-input-row">
+                    <button className="pos-mod-btn" onClick={() => {
+                      const p = prices.find(it => it.symbol === modifyingTrade.symbol);
+                      const step = 1 / Math.pow(10, p?.precision || 5);
+                      setModSL(prev => (parseFloat(prev || modifyingTrade.openPrice) - step).toFixed(p?.precision || 5));
+                    }}>
+                      <i className="fa-solid fa-minus"></i>
+                    </button>
+                    <input
+                      type="number"
+                      className="pos-mod-input"
+                      value={modSL}
+                      onChange={e => setModSL(e.target.value)}
+                      placeholder={String(modifyingTrade.openPrice || '')}
+                    />
+                    <button className="pos-mod-btn" onClick={() => {
+                      const p = prices.find(it => it.symbol === modifyingTrade.symbol);
+                      const step = 1 / Math.pow(10, p?.precision || 5);
+                      setModSL(prev => (parseFloat(prev || modifyingTrade.openPrice) + step).toFixed(p?.precision || 5));
+                    }}>
+                      <i className="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                  {(() => {
+                    const info = getModSlInfo();
+                    if (!info) return null;
+                    return (
+                      <div className={`pos-mod-info ${parseFloat(info.usdVal) >= 0 ? 'up' : 'down'}`}>
+                        <i className={`fa-solid ${parseFloat(info.usdVal) >= 0 ? 'fa-caret-up' : 'fa-caret-down'}`}></i>
+                        <span>{info.usdVal} USD</span>
+                        <span>{info.pct}%</span>
+                        <span>{info.points} Points</span>
+                      </div>
+                    );
+                  })()}
+                  <label className="pos-mod-trailing">
+                    <input type="checkbox" checked={modTrailingStop} onChange={() => setModTrailingStop(!modTrailingStop)} />
+                    <span>Trailing Stop</span>
+                    <i className="fa-solid fa-circle-info" style={{ color: 'var(--text-muted)', fontSize: '11px', marginLeft: '4px' }}></i>
+                  </label>
+                </>
+              )}
+            </div>
 
-        /* Confirm Modal Styles */
-        .confirm-modal-overlay {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
-          backdrop-filter: blur(8px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-        }
-        .confirm-modal-content {
-          background: var(--bg-card);
-          border: 1px solid var(--border);
-          width: 90%;
-          max-width: 380px;
-          border-radius: 28px;
-          padding: 32px;
-          text-align: center;
-          box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.1);
-        }
-        .modal-header-simple h3 { margin: 16px 0 8px; font-size: 20px; color: var(--text-main); font-weight: 800; }
-        .modal-body-simple p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
-        
-        .confirm-profit-preview {
-          background: var(--bg-hover);
-          border-radius: 16px;
-          padding: 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          margin-bottom: 32px;
-          border: 1px dashed var(--border);
-        }
-        .confirm-profit-preview .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; }
-        .confirm-profit-preview .value { font-size: 20px; font-weight: 800; }
-        .confirm-profit-preview .value.up { color: var(--success); }
-        .confirm-profit-preview .value.down { color: var(--danger); }
+            {/* Take Profit */}
+            <div className="pos-mod-section">
+              <div className="pos-mod-toggle-row" onClick={() => setModTpEnabled(!modTpEnabled)}>
+                <div className={`mw-toggle ${modTpEnabled ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+                <span className="pos-mod-label">Take Profit</span>
+              </div>
+              {modTpEnabled && (
+                <>
+                  <div className="pos-mod-input-row">
+                    <button className="pos-mod-btn" onClick={() => {
+                      const p = prices.find(it => it.symbol === modifyingTrade.symbol);
+                      const step = 1 / Math.pow(10, p?.precision || 5);
+                      setModTP(prev => (parseFloat(prev || modifyingTrade.openPrice) - step).toFixed(p?.precision || 5));
+                    }}>
+                      <i className="fa-solid fa-minus"></i>
+                    </button>
+                    <input
+                      type="number"
+                      className="pos-mod-input"
+                      value={modTP}
+                      onChange={e => setModTP(e.target.value)}
+                      placeholder={String(modifyingTrade.openPrice || '')}
+                    />
+                    <button className="pos-mod-btn" onClick={() => {
+                      const p = prices.find(it => it.symbol === modifyingTrade.symbol);
+                      const step = 1 / Math.pow(10, p?.precision || 5);
+                      setModTP(prev => (parseFloat(prev || modifyingTrade.openPrice) + step).toFixed(p?.precision || 5));
+                    }}>
+                      <i className="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                  {(() => {
+                    const info = getModTpInfo();
+                    if (!info) return null;
+                    return (
+                      <div className={`pos-mod-info ${parseFloat(info.usdVal) >= 0 ? 'up' : 'down'}`}>
+                        <i className={`fa-solid ${parseFloat(info.usdVal) >= 0 ? 'fa-caret-up' : 'fa-caret-down'}`}></i>
+                        <span>{info.usdVal} USD</span>
+                        <span>{info.pct}%</span>
+                        <span>{info.points} Points</span>
+                      </div>
+                    );
+                  })()}
+                </>
+              )}
+            </div>
 
-        .modal-footer-simple { display: flex; gap: 12px; }
-        .confirm-btn { flex: 1; padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; transition: all 0.2s; }
-        .confirm-btn.danger { background: var(--danger); color: white; }
-        .confirm-btn.danger:hover { background: #dc2626; transform: translateY(-2px); }
-        .confirm-btn.secondary { background: var(--bg-hover); color: var(--text-muted); }
-        .confirm-btn.secondary:hover { background: var(--border); }
-
-        /* Mobile Card Styles */
-        .mobile-trade-list {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          padding: 12px;
-          background: var(--bg-deep);
-        }
-        .mobile-trade-card {
-           background: var(--bg-card);
-           backdrop-filter: blur(10px);
-           border: 1px solid var(--border);
-           border-radius: 20px;
-           padding: 16px;
-           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-        .text-emerald-400 { color: var(--success); }
-        .bg-emerald-500\/20 { background: var(--success-muted); }
-        .text-rose-400 { color: var(--danger); }
-        .bg-rose-500\/20 { background: var(--danger-muted); }
-        .text-slate-500 { color: var(--text-muted); }
-        .text-slate-300 { color: var(--text-main); }
-        .tracking-tight { letter-spacing: -0.025em; }
-
-        @media (max-width: 600px) {
-           .tabs-header { overflow-x: auto; white-space: nowrap; gap: 8px; height: 48px; }
-           .tab-item { flex-shrink: 0; padding: 0 12px; font-size: 12px; }
-           .positions-footer { font-size: 10px; padding: 10px; gap: 8px; }
-        }
-      `}</style>
+            <div className="pos-modal-footer">
+              <button className="pos-modal-btn cancel" onClick={() => setShowModify(false)}>Cancel</button>
+              <button className="pos-modal-btn save" onClick={submitModifyTrade} disabled={isModifying}>
+                {isModifying ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
