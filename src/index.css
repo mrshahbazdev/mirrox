@@ -711,20 +711,176 @@ body {
 .mw-toggle-sm.on .mw-toggle-knob {
   left: 15px;
 }
-.mw-adv-risk-info {
+.mw-risk-info-icon {
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+.mw-risk-invalid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px;
+  font-size: 12px;
+}
+.mw-risk-invalid-title {
+  color: var(--text-main);
+  font-weight: 600;
+}
+.mw-risk-invalid-sub {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.mw-risk-slider-section {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: var(--accent-muted);
-  border-radius: 6px;
+  gap: 10px;
+  padding: 4px 0;
+}
+.mw-risk-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--card-border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.mw-risk-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.mw-risk-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+.mw-risk-slider-label {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+}
+.mw-risk-sl-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0 4px;
+}
+.mw-risk-sl-left, .mw-risk-sl-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mw-risk-sl-right { align-items: flex-end; }
+.mw-risk-sl-title {
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+.mw-risk-sl-type {
   font-size: 11px;
   color: var(--text-muted);
 }
-.mw-adv-risk-info i {
-  color: var(--accent);
+.mw-risk-sl-inputs {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0 6px;
+}
+.mw-risk-input-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 4px;
+}
+.mw-risk-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+  width: 60px;
+  min-width: 0;
+}
+.mw-risk-input::-webkit-inner-spin-button,
+.mw-risk-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.mw-risk-input[type=number] { -moz-appearance: textfield; }
+.mw-risk-sl-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0 8px;
   font-size: 12px;
-  flex-shrink: 0;
+}
+.mw-risk-sl-points {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.mw-risk-sl-pct {
+  color: var(--text-muted);
+}
+.mw-risk-side-section {
+  padding: 8px 0;
+}
+.mw-risk-side-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+.mw-risk-side-btns {
+  display: flex;
+  gap: 8px;
+}
+.mw-risk-side-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mw-risk-side-btn:hover { border-color: var(--text-muted); }
+.mw-risk-side-btn.active.sell {
+  background: rgba(255, 77, 94, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.mw-risk-side-btn.active.buy {
+  background: rgba(0, 200, 150, 0.15);
+  border-color: #00c896;
+  color: #00c896;
 }
 .mw-adv-volume-control {
   display: flex;

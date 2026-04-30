@@ -19,6 +19,11 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
   const [slEnabled, setSlEnabled] = useState(false);
   const [tpEnabled, setTpEnabled] = useState(false);
   const [riskMode, setRiskMode] = useState(false);
+  const [riskPercent, setRiskPercent] = useState(0);
+  const [riskSide, setRiskSide] = useState('Sell');
+  const [riskSlPrice, setRiskSlPrice] = useState('');
+  const [riskAmount, setRiskAmount] = useState('0.00');
+  const [trailingStop, setTrailingStop] = useState(false);
 
   const displaySymbols = (() => {
     let baseList = [...symbols];
@@ -59,6 +64,11 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
     setSlEnabled(false);
     setTpEnabled(false);
     setRiskMode(false);
+    setRiskPercent(0);
+    setRiskSide('Sell');
+    setRiskSlPrice('');
+    setRiskAmount('0.00');
+    setTrailingStop(false);
   };
 
   const closeAdvancedOrder = () => {
@@ -108,6 +118,10 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
     const marginReq = (parseFloat(sym?.price || 0) * parseFloat(advVolume) * contractSize) / leverage;
     const precisionFactor = Math.pow(10, sym?.precision || 5);
     const spreadVal = (sym?.spread || 0) / precisionFactor;
+    const currentPrice = parseFloat(sym?.price || 0);
+    const slPriceNum = parseFloat(riskSlPrice) || 0;
+    const riskPoints = slPriceNum && currentPrice ? Math.abs(Math.round((currentPrice - slPriceNum) * precisionFactor)) : 0;
+    const riskPctOfPrice = currentPrice ? ((riskPoints / precisionFactor) / currentPrice * 100).toFixed(2) : '0.00';
 
     return (
       <div className="card market-watch-card mw-advanced-panel">
@@ -133,36 +147,54 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
               <span>Volume</span>
               <div className="mw-adv-risk-mode" onClick={() => setRiskMode(!riskMode)}>
                 <span>Risk Mode</span>
+                <i className="fa-solid fa-circle-info mw-risk-info-icon"></i>
                 <div className={`mw-toggle mw-toggle-sm ${riskMode ? 'on' : ''}`}>
                   <span className="mw-toggle-knob" />
                 </div>
               </div>
             </div>
-            {riskMode && (
-              <div className="mw-adv-risk-info">
-                <i className="fa-solid fa-circle-info"></i>
-                <span>Volume is calculated as % of your free margin</span>
+
+            {riskMode ? (
+              <>
+                {(!riskSlPrice || parseFloat(riskAmount) <= 0) && (
+                  <div className="mw-risk-invalid">
+                    <span className="mw-risk-invalid-title">Invalid volume</span>
+                    <span className="mw-risk-invalid-sub">Change Stop Loss or Risk Amount</span>
+                  </div>
+                )}
+                <div className="mw-risk-slider-section">
+                  <input
+                    type="range"
+                    className="mw-risk-slider"
+                    min="0"
+                    max="100"
+                    value={riskPercent}
+                    onChange={(e) => setRiskPercent(Number(e.target.value))}
+                  />
+                  <span className="mw-risk-slider-label">{riskPercent}%</span>
+                </div>
+              </>
+            ) : (
+              <div className="mw-adv-volume-control">
+                <button className="mw-adv-vol-btn" onClick={() => setAdvVolume(prev => Math.max(0.01, parseFloat(prev) - 0.01).toFixed(2))}>
+                  <i className="fa-solid fa-minus"></i>
+                </button>
+                <div className="mw-adv-vol-display">
+                  <input
+                    type="number"
+                    className="mw-adv-vol-input"
+                    value={advVolume}
+                    onChange={(e) => setAdvVolume(e.target.value)}
+                    step="0.01"
+                    min="0.01"
+                  />
+                  <span className="mw-adv-vol-usd">≈ {getContractValue(sym, advVolume)} USD</span>
+                </div>
+                <button className="mw-adv-vol-btn" onClick={() => setAdvVolume(prev => (parseFloat(prev) + 0.01).toFixed(2))}>
+                  <i className="fa-solid fa-plus"></i>
+                </button>
               </div>
             )}
-            <div className="mw-adv-volume-control">
-              <button className="mw-adv-vol-btn" onClick={() => setAdvVolume(prev => Math.max(0.01, parseFloat(prev) - 0.01).toFixed(2))}>
-                <i className="fa-solid fa-minus"></i>
-              </button>
-              <div className="mw-adv-vol-display">
-                <input
-                  type="number"
-                  className="mw-adv-vol-input"
-                  value={advVolume}
-                  onChange={(e) => setAdvVolume(e.target.value)}
-                  step="0.01"
-                  min="0.01"
-                />
-                <span className="mw-adv-vol-usd">≈ {getContractValue(sym, advVolume)} USD</span>
-              </div>
-              <button className="mw-adv-vol-btn" onClick={() => setAdvVolume(prev => (parseFloat(prev) + 0.01).toFixed(2))}>
-                <i className="fa-solid fa-plus"></i>
-              </button>
-            </div>
           </div>
 
           {advExecMode === 'Pending' && (
@@ -178,69 +210,194 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
             </div>
           )}
 
-          <div className="mw-adv-toggle-row" onClick={() => setSlEnabled(!slEnabled)}>
-            <div className={`mw-toggle ${slEnabled ? 'on' : ''}`}>
-              <span className="mw-toggle-knob" />
-            </div>
-            <span className="mw-adv-toggle-label">Stop Loss</span>
-          </div>
-          {slEnabled && (
-            <div className="mw-adv-field">
-              <input
-                type="number"
-                className="mw-adv-field-input"
-                value={advStopLoss}
-                onChange={(e) => setAdvStopLoss(e.target.value)}
-                placeholder="Stop Loss price"
-                step="0.0001"
-              />
-            </div>
+          {riskMode ? (
+            <>
+              <div className="mw-risk-sl-header">
+                <div className="mw-risk-sl-left">
+                  <span className="mw-risk-sl-title">Stop Loss</span>
+                  <span className="mw-risk-sl-type">Price</span>
+                </div>
+                <div className="mw-risk-sl-right">
+                  <span className="mw-risk-sl-title">Risk Amount</span>
+                  <span className="mw-risk-sl-type">Value</span>
+                </div>
+              </div>
+              <div className="mw-risk-sl-inputs">
+                <div className="mw-risk-input-group">
+                  <button className="mw-adv-vol-btn" onClick={() => setRiskSlPrice(prev => (parseFloat(prev || currentPrice) - 1 / precisionFactor).toFixed(sym?.precision || 5))}>
+                    <i className="fa-solid fa-minus"></i>
+                  </button>
+                  <input
+                    type="number"
+                    className="mw-risk-input"
+                    value={riskSlPrice}
+                    onChange={(e) => setRiskSlPrice(e.target.value)}
+                    placeholder={currentPrice.toFixed(sym?.precision || 5)}
+                    step={1 / precisionFactor}
+                  />
+                  <button className="mw-adv-vol-btn" onClick={() => setRiskSlPrice(prev => (parseFloat(prev || currentPrice) + 1 / precisionFactor).toFixed(sym?.precision || 5))}>
+                    <i className="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                <div className="mw-risk-input-group">
+                  <button className="mw-adv-vol-btn" onClick={() => setRiskAmount(prev => Math.max(0, parseFloat(prev) - 0.10).toFixed(2))}>
+                    <i className="fa-solid fa-minus"></i>
+                  </button>
+                  <input
+                    type="number"
+                    className="mw-risk-input"
+                    value={riskAmount}
+                    onChange={(e) => setRiskAmount(e.target.value)}
+                    step="0.10"
+                    min="0"
+                  />
+                  <button className="mw-adv-vol-btn" onClick={() => setRiskAmount(prev => (parseFloat(prev) + 0.10).toFixed(2))}>
+                    <i className="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <div className="mw-risk-sl-meta">
+                <span className="mw-risk-sl-points">
+                  <i className="fa-solid fa-caret-down" style={{ color: 'var(--accent)' }}></i>
+                  {riskPoints} Points
+                </span>
+                <span className="mw-risk-sl-pct">{riskPctOfPrice} %</span>
+              </div>
+
+              <div className="mw-adv-toggle-row" onClick={() => setTrailingStop(!trailingStop)}>
+                <div className={`mw-toggle ${trailingStop ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+                <span className="mw-adv-toggle-label">Trailing Stop</span>
+                <i className="fa-solid fa-circle-info mw-risk-info-icon" style={{ marginLeft: '6px' }}></i>
+              </div>
+
+              <div className="mw-adv-toggle-row" onClick={() => setTpEnabled(!tpEnabled)}>
+                <div className={`mw-toggle ${tpEnabled ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+                <span className="mw-adv-toggle-label">Take Profit</span>
+              </div>
+              {tpEnabled && (
+                <div className="mw-adv-field">
+                  <input
+                    type="number"
+                    className="mw-adv-field-input"
+                    value={advTakeProfit}
+                    onChange={(e) => setAdvTakeProfit(e.target.value)}
+                    placeholder="Take Profit price"
+                    step="0.0001"
+                  />
+                </div>
+              )}
+
+              <div className="mw-risk-side-section">
+                <span className="mw-risk-side-label">Side</span>
+                <div className="mw-risk-side-btns">
+                  <button
+                    className={`mw-risk-side-btn ${riskSide === 'Sell' ? 'active sell' : ''}`}
+                    onClick={() => setRiskSide('Sell')}
+                  >
+                    <i className="fa-solid fa-arrow-trend-down"></i> Sell
+                  </button>
+                  <button
+                    className={`mw-risk-side-btn ${riskSide === 'Buy' ? 'active buy' : ''}`}
+                    onClick={() => setRiskSide('Buy')}
+                  >
+                    <i className="fa-solid fa-arrow-trend-up"></i> Buy
+                  </button>
+                </div>
+              </div>
+
+              <div className="mw-adv-info-grid">
+                <div className="mw-adv-info-row">
+                  <span>Required margin:</span>
+                  <span>-</span>
+                </div>
+                <div className="mw-adv-info-row">
+                  <span>Free funds:</span>
+                  <span>- USD</span>
+                </div>
+              </div>
+
+              <div className="mw-adv-exec-buttons">
+                <button className="mw-adv-exec-btn sell" onClick={() => handleAdvancedTrade('SELL')}>
+                  <span className="mw-adv-exec-label">SELL</span>
+                  <span className="mw-adv-exec-price">{getBidPrice(sym)}</span>
+                </button>
+                <button className="mw-adv-exec-btn buy" onClick={() => handleAdvancedTrade('BUY')}>
+                  <span className="mw-adv-exec-label">BUY</span>
+                  <span className="mw-adv-exec-price">{getAskPrice(sym)}</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mw-adv-toggle-row" onClick={() => setSlEnabled(!slEnabled)}>
+                <div className={`mw-toggle ${slEnabled ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+                <span className="mw-adv-toggle-label">Stop Loss</span>
+              </div>
+              {slEnabled && (
+                <div className="mw-adv-field">
+                  <input
+                    type="number"
+                    className="mw-adv-field-input"
+                    value={advStopLoss}
+                    onChange={(e) => setAdvStopLoss(e.target.value)}
+                    placeholder="Stop Loss price"
+                    step="0.0001"
+                  />
+                </div>
+              )}
+
+              <div className="mw-adv-toggle-row" onClick={() => setTpEnabled(!tpEnabled)}>
+                <div className={`mw-toggle ${tpEnabled ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+                <span className="mw-adv-toggle-label">Take Profit</span>
+              </div>
+              {tpEnabled && (
+                <div className="mw-adv-field">
+                  <input
+                    type="number"
+                    className="mw-adv-field-input"
+                    value={advTakeProfit}
+                    onChange={(e) => setAdvTakeProfit(e.target.value)}
+                    placeholder="Take Profit price"
+                    step="0.0001"
+                  />
+                </div>
+              )}
+
+              <div className="mw-adv-info-grid">
+                <div className="mw-adv-info-row">
+                  <span>Required margin:</span>
+                  <span>{marginReq.toFixed(2)} USD</span>
+                </div>
+                <div className="mw-adv-info-row">
+                  <span>Spread:</span>
+                  <span>{spreadVal.toFixed(sym?.precision || 2)} USD</span>
+                </div>
+                <div className="mw-adv-info-row">
+                  <span>Commission:</span>
+                  <span>0.00 USD</span>
+                </div>
+              </div>
+
+              <div className="mw-adv-exec-buttons">
+                <button className="mw-adv-exec-btn sell" onClick={() => handleAdvancedTrade('SELL')}>
+                  <span className="mw-adv-exec-label">SELL</span>
+                  <span className="mw-adv-exec-price">{getBidPrice(sym)}</span>
+                </button>
+                <button className="mw-adv-exec-btn buy" onClick={() => handleAdvancedTrade('BUY')}>
+                  <span className="mw-adv-exec-label">BUY</span>
+                  <span className="mw-adv-exec-price">{getAskPrice(sym)}</span>
+                </button>
+              </div>
+            </>
           )}
-
-          <div className="mw-adv-toggle-row" onClick={() => setTpEnabled(!tpEnabled)}>
-            <div className={`mw-toggle ${tpEnabled ? 'on' : ''}`}>
-              <span className="mw-toggle-knob" />
-            </div>
-            <span className="mw-adv-toggle-label">Take Profit</span>
-          </div>
-          {tpEnabled && (
-            <div className="mw-adv-field">
-              <input
-                type="number"
-                className="mw-adv-field-input"
-                value={advTakeProfit}
-                onChange={(e) => setAdvTakeProfit(e.target.value)}
-                placeholder="Take Profit price"
-                step="0.0001"
-              />
-            </div>
-          )}
-
-          <div className="mw-adv-info-grid">
-            <div className="mw-adv-info-row">
-              <span>Required margin:</span>
-              <span>{marginReq.toFixed(2)} USD</span>
-            </div>
-            <div className="mw-adv-info-row">
-              <span>Spread:</span>
-              <span>{spreadVal.toFixed(sym?.precision || 2)} USD</span>
-            </div>
-            <div className="mw-adv-info-row">
-              <span>Commission:</span>
-              <span>0.00 USD</span>
-            </div>
-          </div>
-
-          <div className="mw-adv-exec-buttons">
-            <button className="mw-adv-exec-btn sell" onClick={() => handleAdvancedTrade('SELL')}>
-              <span className="mw-adv-exec-label">SELL</span>
-              <span className="mw-adv-exec-price">{getBidPrice(sym)}</span>
-            </button>
-            <button className="mw-adv-exec-btn buy" onClick={() => handleAdvancedTrade('BUY')}>
-              <span className="mw-adv-exec-label">BUY</span>
-              <span className="mw-adv-exec-price">{getAskPrice(sym)}</span>
-            </button>
-          </div>
         </div>
       </div>
     );
