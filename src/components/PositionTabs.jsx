@@ -209,7 +209,7 @@ const PositionTabs = () => {
                     <tr key={trade.id}>
                       <td>
                         <div className="pos-symbol-cell">
-                          <span className="pos-symbol-name">{trade.symbol}</span>
+                          <span className="pos-symbol-name">{p?.name || trade.symbol}</span>
                           <span className={`pos-type-badge ${trade.type === 'BUY' ? 'buy' : 'sell'}`}>{trade.type === 'BUY' ? 'Buy' : 'Sell'}</span>
                         </div>
                       </td>
@@ -278,7 +278,7 @@ const PositionTabs = () => {
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[var(--text-main)] font-bold">{trade.symbol}</span>
+                          <span className="text-[var(--text-main)] font-bold">{p?.name || trade.symbol}</span>
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded ${trade.type === 'BUY' ? 'bg-[var(--success-muted)] text-[var(--success)]' : 'bg-[var(--danger-muted)] text-[var(--danger)]'}`}>
                             {trade.type === 'BUY' ? 'Buy' : 'Sell'}
                           </span>
