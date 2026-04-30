@@ -18,6 +18,7 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
   const [advTakeProfit, setAdvTakeProfit] = useState('');
   const [slEnabled, setSlEnabled] = useState(false);
   const [tpEnabled, setTpEnabled] = useState(false);
+  const [riskMode, setRiskMode] = useState(false);
 
   const displaySymbols = (() => {
     let baseList = [...symbols];
@@ -51,12 +52,13 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
   const openAdvancedOrder = (sym) => {
     setAdvancedOrderSymbol(sym);
     setAdvExecMode('Market');
-    setAdvVolume('0.01');
+    setAdvVolume(quickVolume);
     setAdvAtPrice(sym.price || '');
     setAdvStopLoss('');
     setAdvTakeProfit('');
     setSlEnabled(false);
     setTpEnabled(false);
+    setRiskMode(false);
   };
 
   const closeAdvancedOrder = () => {
@@ -129,7 +131,19 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
           <div className="mw-adv-volume-section">
             <div className="mw-adv-volume-label">
               <span>Volume</span>
+              <div className="mw-adv-risk-mode" onClick={() => setRiskMode(!riskMode)}>
+                <span>Risk Mode</span>
+                <div className={`mw-toggle mw-toggle-sm ${riskMode ? 'on' : ''}`}>
+                  <span className="mw-toggle-knob" />
+                </div>
+              </div>
             </div>
+            {riskMode && (
+              <div className="mw-adv-risk-info">
+                <i className="fa-solid fa-circle-info"></i>
+                <span>Volume is calculated as % of your free margin</span>
+              </div>
+            )}
             <div className="mw-adv-volume-control">
               <button className="mw-adv-vol-btn" onClick={() => setAdvVolume(prev => Math.max(0.01, parseFloat(prev) - 0.01).toFixed(2))}>
                 <i className="fa-solid fa-minus"></i>

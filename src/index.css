@@ -682,9 +682,49 @@ body {
 .mw-adv-volume-label {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12px;
   color: var(--text-muted);
   font-weight: 600;
+}
+.mw-adv-risk-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.mw-adv-risk-mode:hover { color: var(--text-main); }
+.mw-toggle-sm {
+  width: 30px;
+  height: 16px;
+  border-radius: 8px;
+}
+.mw-toggle-sm .mw-toggle-knob {
+  width: 12px;
+  height: 12px;
+  top: 1px;
+  left: 1px;
+}
+.mw-toggle-sm.on .mw-toggle-knob {
+  left: 15px;
+}
+.mw-adv-risk-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--accent-muted);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.mw-adv-risk-info i {
+  color: var(--accent);
+  font-size: 12px;
+  flex-shrink: 0;
 }
 .mw-adv-volume-control {
   display: flex;
