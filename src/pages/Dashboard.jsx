@@ -153,6 +153,7 @@ const Dashboard = () => {
           symbols={prices} 
           selectedSymbol={selectedSymbol}
           onSelectSymbol={(sym) => setSelectedSymbolId(sym.id)}
+          onTrade={openPosition}
         />
       </div>
 
