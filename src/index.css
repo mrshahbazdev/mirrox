@@ -1359,6 +1359,18 @@ body {
   border: 1px solid var(--border);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
+.selected-asset-name {
+  text-align: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.asset-name-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.3px;
+}
 .exec-mode-selector {
   display: flex;
   gap: 4px;
