@@ -114,15 +114,9 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
 
   useEffect(() => {
     if (symbol && symbol.id !== lastPopulatedSymbol) {
-      const price = parseFloat(symbol.price || 0);
-      if (price > 0) {
-        const precision = symbol.precision || 2;
-        const offset = 100 / Math.pow(10, precision);
-        
-        setTakeProfit((price + offset).toFixed(precision));
-        setStopLoss((price - offset).toFixed(precision));
-        setLastPopulatedSymbol(symbol.id);
-      }
+      setTakeProfit('');
+      setStopLoss('');
+      setLastPopulatedSymbol(symbol.id);
     }
   }, [symbol, lastPopulatedSymbol]);
 
@@ -173,6 +167,9 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
       <div className="asset-info-body">
          {symbol && (
            <div className="trading-execution-panel animate-fade">
+              <div className="selected-asset-name">
+                <span className="asset-name-text">{symbol?.name || 'Select Asset'}</span>
+              </div>
               <div className="exec-mode-selector">
                  <button 
                    className={`mode-btn ${execMode === 'Market' ? 'active' : ''}`}
@@ -256,7 +253,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
                    className="exec-btn sell"
                    onClick={handleSell}
                  >
-                    <div className="exec-side">{execMode === 'Market' ? 'SELL' : 'SELL LIMIT'}</div>
+                    <div className="exec-side">SELL</div>
                     <div className="exec-price">
                        {parseFloat(symbol?.price || 0).toFixed(symbol?.precision || 2)}
                     </div>
@@ -265,7 +262,7 @@ const AssetInfo = ({ symbol, onTrade, compact }) => {
                    className="exec-btn buy"
                    onClick={handleBuy}
                  >
-                    <div className="exec-side">{execMode === 'Market' ? 'BUY' : 'BUY LIMIT'}</div>
+                    <div className="exec-side">BUY</div>
                     <div className="exec-price">
                        {(() => {
                           const precisionFactor = Math.pow(10, symbol?.precision || 5);
