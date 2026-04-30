@@ -8,6 +8,7 @@ const Sidebar = ({ currentUser, onLogout }) => {
     { icon: 'fa-solid fa-wallet', path: '/app/finances', label: 'Finances' },
     { icon: 'fa-solid fa-file-lines', path: '/app/documents', label: 'Documents' },
     { icon: 'fa-solid fa-handshake', path: '/app/affiliate', label: 'Affiliate Program' },
+    { icon: 'fa-solid fa-user', path: '/app/profile', label: 'My Profile' },
   ];
 
   return (

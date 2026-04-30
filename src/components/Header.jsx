@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 
@@ -142,11 +142,11 @@ const Header = ({ currentUser }) => {
           </div>
         </div>
         
-        <div className="user-profile">
+        <Link to="/app/profile" className="user-profile" style={{ textDecoration: 'none' }}>
           <div className="avatar" style={{ background: 'var(--bg-hover)', color: 'var(--text-main)' }}>
             {realTimeClient?.name ? realTimeClient.name.charAt(0).toUpperCase() : <i className="fa-solid fa-user" style={{ fontSize: '14px', color: 'var(--text-dim)' }}></i>}
           </div>
-        </div>
+        </Link>
       </div>
 
       <style>{`

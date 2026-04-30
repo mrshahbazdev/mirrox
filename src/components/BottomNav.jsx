@@ -25,7 +25,7 @@ const BottomNav = () => {
         <span>Finances</span>
       </NavLink>
 
-      <NavLink to="/app/help" className={({ isActive }) => `m-nav-item ${isActive ? 'active' : ''}`}>
+      <NavLink to="/app/profile" className={({ isActive }) => `m-nav-item ${isActive ? 'active' : ''}`}>
         <i className="fa-solid fa-user-gear"></i>
         <span>Profile</span>
       </NavLink>
