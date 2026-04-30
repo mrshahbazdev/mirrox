@@ -333,42 +333,101 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
             </>
           ) : (
             <>
-              <div className="mw-adv-toggle-row" onClick={() => setSlEnabled(!slEnabled)}>
-                <div className={`mw-toggle ${slEnabled ? 'on' : ''}`}>
-                  <span className="mw-toggle-knob" />
+              <div className="mw-adv-sl-header">
+                <div className="mw-adv-toggle-row" onClick={() => { setSlEnabled(!slEnabled); if (!slEnabled && !advStopLoss) setAdvStopLoss(currentPrice.toFixed(sym?.precision || 5)); }}>
+                  <div className={`mw-toggle ${slEnabled ? 'on' : ''}`}>
+                    <span className="mw-toggle-knob" />
+                  </div>
+                  <span className="mw-adv-toggle-label">Stop Loss</span>
                 </div>
-                <span className="mw-adv-toggle-label">Stop Loss</span>
+                {slEnabled && <span className="mw-adv-price-type">Price</span>}
               </div>
               {slEnabled && (
-                <div className="mw-adv-field">
-                  <input
-                    type="number"
-                    className="mw-adv-field-input"
-                    value={advStopLoss}
-                    onChange={(e) => setAdvStopLoss(e.target.value)}
-                    placeholder="Stop Loss price"
-                    step="0.0001"
-                  />
-                </div>
+                <>
+                  <div className="mw-adv-tpsl-input-row">
+                    <button className="mw-adv-vol-btn" onClick={() => setAdvStopLoss(prev => (parseFloat(prev || currentPrice) - 1 / precisionFactor).toFixed(sym?.precision || 5))}>
+                      <i className="fa-solid fa-minus"></i>
+                    </button>
+                    <input
+                      type="number"
+                      className="mw-adv-tpsl-input"
+                      value={advStopLoss}
+                      onChange={(e) => setAdvStopLoss(e.target.value)}
+                      step={1 / precisionFactor}
+                    />
+                    <button className="mw-adv-vol-btn" onClick={() => setAdvStopLoss(prev => (parseFloat(prev || currentPrice) + 1 / precisionFactor).toFixed(sym?.precision || 5))}>
+                      <i className="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                  {(() => {
+                    const slVal = parseFloat(advStopLoss) || 0;
+                    const diff = slVal - currentPrice;
+                    const pts = Math.abs(Math.round(diff * precisionFactor));
+                    const usd = (diff * parseFloat(advVolume) * contractSize).toFixed(2);
+                    const pct = currentPrice ? ((Math.abs(diff) / currentPrice) * 100).toFixed(2) : '0.00';
+                    const isUp = parseFloat(usd) >= 0;
+                    return (
+                      <div className={`mw-adv-tpsl-info ${isUp ? 'up' : 'down'}`}>
+                        <i className={`fa-solid ${isUp ? 'fa-caret-up' : 'fa-caret-down'}`}></i>
+                        <span>{usd} USD</span>
+                        <span>{pct}%</span>
+                        <span>{pts} Points</span>
+                      </div>
+                    );
+                  })()}
+                  <div className="mw-adv-toggle-row" onClick={() => setTrailingStop(!trailingStop)}>
+                    <div className={`mw-toggle ${trailingStop ? 'on' : ''}`}>
+                      <span className="mw-toggle-knob" />
+                    </div>
+                    <span className="mw-adv-toggle-label">Trailing Stop</span>
+                    <i className="fa-solid fa-circle-info mw-risk-info-icon" style={{ marginLeft: '6px' }}></i>
+                  </div>
+                </>
               )}
 
-              <div className="mw-adv-toggle-row" onClick={() => setTpEnabled(!tpEnabled)}>
-                <div className={`mw-toggle ${tpEnabled ? 'on' : ''}`}>
-                  <span className="mw-toggle-knob" />
+              <div className="mw-adv-sl-header">
+                <div className="mw-adv-toggle-row" onClick={() => { setTpEnabled(!tpEnabled); if (!tpEnabled && !advTakeProfit) setAdvTakeProfit(currentPrice.toFixed(sym?.precision || 5)); }}>
+                  <div className={`mw-toggle ${tpEnabled ? 'on' : ''}`}>
+                    <span className="mw-toggle-knob" />
+                  </div>
+                  <span className="mw-adv-toggle-label">Take Profit</span>
                 </div>
-                <span className="mw-adv-toggle-label">Take Profit</span>
+                {tpEnabled && <span className="mw-adv-price-type">Price</span>}
               </div>
               {tpEnabled && (
-                <div className="mw-adv-field">
-                  <input
-                    type="number"
-                    className="mw-adv-field-input"
-                    value={advTakeProfit}
-                    onChange={(e) => setAdvTakeProfit(e.target.value)}
-                    placeholder="Take Profit price"
-                    step="0.0001"
-                  />
-                </div>
+                <>
+                  <div className="mw-adv-tpsl-input-row">
+                    <button className="mw-adv-vol-btn" onClick={() => setAdvTakeProfit(prev => (parseFloat(prev || currentPrice) - 1 / precisionFactor).toFixed(sym?.precision || 5))}>
+                      <i className="fa-solid fa-minus"></i>
+                    </button>
+                    <input
+                      type="number"
+                      className="mw-adv-tpsl-input"
+                      value={advTakeProfit}
+                      onChange={(e) => setAdvTakeProfit(e.target.value)}
+                      step={1 / precisionFactor}
+                    />
+                    <button className="mw-adv-vol-btn" onClick={() => setAdvTakeProfit(prev => (parseFloat(prev || currentPrice) + 1 / precisionFactor).toFixed(sym?.precision || 5))}>
+                      <i className="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                  {(() => {
+                    const tpVal = parseFloat(advTakeProfit) || 0;
+                    const diff = tpVal - currentPrice;
+                    const pts = Math.abs(Math.round(diff * precisionFactor));
+                    const usd = (diff * parseFloat(advVolume) * contractSize).toFixed(2);
+                    const pct = currentPrice ? ((Math.abs(diff) / currentPrice) * 100).toFixed(2) : '0.00';
+                    const isUp = parseFloat(usd) >= 0;
+                    return (
+                      <div className={`mw-adv-tpsl-info ${isUp ? 'up' : 'down'}`}>
+                        <i className={`fa-solid ${isUp ? 'fa-caret-up' : 'fa-caret-down'}`}></i>
+                        <span>{usd} USD</span>
+                        <span>{pct}%</span>
+                        <span>{pts} Points</span>
+                      </div>
+                    );
+                  })()}
+                </>
               )}
 
               <div className="mw-adv-info-grid">
