@@ -25,8 +25,10 @@ const Dashboard = () => {
     document.body.style.userSelect = 'none';
 
     const onMouseMove = (moveEvent) => {
-      if (!isDragging.current || !mainColRef.current) return;
-      const rect = mainColRef.current.getBoundingClientRect();
+      if (!isDragging.current || !marketColRef.current) return;
+      const dashEl = marketColRef.current.parentElement;
+      if (!dashEl) return;
+      const rect = dashEl.getBoundingClientRect();
       const newBottom = rect.bottom - moveEvent.clientY;
       setBottomHeight(Math.max(120, Math.min(newBottom, rect.height - 120)));
     };
@@ -268,7 +270,7 @@ const Dashboard = () => {
         <span className="horiz-resize-icon">&#x25C7;</span>
       </div>
 
-      <div className="main-column" ref={mainColRef} style={{ gridTemplateRows: `1fr auto ${bottomHeight}px` }}>
+      <div className="main-column" ref={mainColRef}>
         {!isVerified && (
           <div className="dash-desktop-verify">
              <i className="fa-solid fa-triangle-exclamation dash-verify-icon"></i>
@@ -289,15 +291,15 @@ const Dashboard = () => {
             />
           </ErrorBoundary>
         </div>
+      </div>
 
-        <div className="bottom-resize-handle" onMouseDown={handleResizeStart}>
-          <span className="bottom-resize-icon">&#x25C7;</span>
-        </div>
+      <div className="bottom-resize-handle" onMouseDown={handleResizeStart}>
+        <span className="bottom-resize-icon">&#x25C7;</span>
+      </div>
 
-        <div className="bottom-sections" style={{ gridTemplateColumns: `${marketWidth}px 1fr` }}>
-           <AssetInfo symbol={selectedSymbol} onTrade={handleTradeRequest} />
-           <PositionTabs />
-        </div>
+      <div className="bottom-sections" style={{ gridTemplateColumns: `${marketWidth}px 1fr`, height: bottomHeight }}>
+         <AssetInfo symbol={selectedSymbol} onTrade={handleTradeRequest} />
+         <PositionTabs />
       </div>
     </>
   );
