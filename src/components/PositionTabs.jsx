@@ -254,21 +254,23 @@ const PositionTabs = () => {
                         <td>{trade.openTime ? new Date(trade.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.openTime ? new Date(trade.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
                       )}
 
+                      {activeTab === 'closed' && (
+                        <td>{trade.closeTime ? new Date(trade.closeTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.closeTime ? new Date(trade.closeTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
+                      )}
+
                       {activeTab !== 'pending' && (
                         <td>
                           <div className="pos-profit-cell">
                             <span className={`pos-profit-val ${profit >= 0 ? 'up' : 'down'}`}>
                               {profit >= 0 ? '+' : ''}{profit.toFixed(2)}
                             </span>
-                            <span className={`pos-profit-pct ${profit >= 0 ? 'up' : 'down'}`}>
-                              {profit >= 0 ? '+' : ''}{pctReturn}%
-                            </span>
+                            {activeTab === 'open' && (
+                              <span className={`pos-profit-pct ${profit >= 0 ? 'up' : 'down'}`}>
+                                {profit >= 0 ? '+' : ''}{pctReturn}%
+                              </span>
+                            )}
                           </div>
                         </td>
-                      )}
-
-                      {activeTab === 'closed' && (
-                        <td>{trade.closeTime ? new Date(trade.closeTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.closeTime ? new Date(trade.closeTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
                       )}
 
                       {activeTab !== 'closed' && (
