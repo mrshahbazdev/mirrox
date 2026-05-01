@@ -85,14 +85,30 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
 
   const handleAdvancedTrade = (side) => {
     if (onTrade && advancedOrderSymbol) {
-      const sym = advancedOrderSymbol;
+      const sym = symbols.find(s => s.id === advancedOrderSymbol.id) || advancedOrderSymbol;
+      const currentPrice = parseFloat(sym?.price || 0);
+      const isPending = advExecMode === 'Pending';
+
+      let tp = tpEnabled ? (parseFloat(advTakeProfit) || null) : null;
+      let sl = slEnabled ? (parseFloat(advStopLoss) || null) : null;
+
+      // Validate TP/SL direction for market orders
+      if (!isPending && tp) {
+        if (side === 'BUY' && tp <= currentPrice) tp = null;
+        if (side === 'SELL' && tp >= currentPrice) tp = null;
+      }
+      if (!isPending && sl) {
+        if (side === 'BUY' && sl >= currentPrice) sl = null;
+        if (side === 'SELL' && sl <= currentPrice) sl = null;
+      }
+
       onTrade(
         sym.symbol,
         parseFloat(advVolume),
         side,
-        advExecMode === 'Pending' ? parseFloat(advAtPrice) : null,
-        slEnabled ? (parseFloat(advStopLoss) || null) : null,
-        tpEnabled ? (parseFloat(advTakeProfit) || null) : null
+        isPending ? parseFloat(advAtPrice) : null,
+        sl,
+        tp
       );
     }
   };
