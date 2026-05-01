@@ -4,16 +4,36 @@ import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 
 const Header = ({ currentUser }) => {
-  const { activeTrades, currentClientExtended } = useTrading();
+  const { activeTrades, currentClientExtended, prices } = useTrading();
   const [showNotifs, setShowNotifs] = useState(false);
   
   // Use real-time synchronized data if available, fallback to static props
   const realTimeClient = currentClientExtended || currentUser;
-  const floatingPL = realTimeClient?.accountSummary?.profitLoss || activeTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
-  const totalEquity = realTimeClient?.tradingMetrics?.equity || 0;
+
+  // Compute real-time floating P/L from live prices
+  const computeLiveProfit = () => {
+    const openTrades = activeTrades.filter(t => t.status === 'Open');
+    if (openTrades.length === 0) return 0;
+    return openTrades.reduce((sum, t) => {
+      const p = prices.find(it => it.symbol === t.symbol);
+      if (!p) return sum + (t.profit || 0);
+      const currentPrice = parseFloat(p.price) || 0;
+      const openPrice = t.openPrice || 0;
+      const contractSize = p.category === 'Metals' ? 100 : 100000;
+      const lots = t.lots || 0.01;
+      const diff = t.type === 'BUY'
+        ? (currentPrice - openPrice) * lots * contractSize
+        : (openPrice - currentPrice) * lots * contractSize;
+      return sum + diff;
+    }, 0);
+  };
+  const floatingPL = computeLiveProfit();
+
   const balance = realTimeClient?.tradingMetrics?.balance || 0;
-  const freeMargin = realTimeClient?.tradingMetrics?.freeMargin || 0;
-  const marginLevel = realTimeClient?.tradingMetrics?.marginLevel || 0;
+  const totalEquity = balance + floatingPL;
+  const margin = realTimeClient?.tradingMetrics?.marginUsed || 0;
+  const freeMargin = totalEquity - margin;
+  const marginLevel = margin > 0 ? (totalEquity / margin) * 100 : 0;
 
   const [localNotifications, setLocalNotifications] = useState([]);
 
