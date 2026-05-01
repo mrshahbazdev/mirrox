@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTrading } from '../context/TradingContext';
 
 const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
+  const { currentClientExtended } = useTrading();
   const [activeTab, setActiveTab] = useState('Favorites');
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -312,20 +314,20 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
               <div className="mw-adv-info-grid">
                 <div className="mw-adv-info-row">
                   <span>Required margin:</span>
-                  <span>-</span>
+                  <span>{marginReq.toFixed(2)} USD</span>
                 </div>
                 <div className="mw-adv-info-row">
                   <span>Free funds:</span>
-                  <span>- USD</span>
+                  <span>{(currentClientExtended?.tradingMetrics?.freeMargin || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
                 </div>
               </div>
 
               <div className="mw-adv-exec-buttons">
-                <button className="mw-adv-exec-btn sell" onClick={() => handleAdvancedTrade('SELL')}>
+                <button className={`mw-adv-exec-btn sell ${riskSide === 'Sell' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('SELL')}>
                   <span className="mw-adv-exec-label">SELL</span>
                   <span className="mw-adv-exec-price">{getBidPrice(sym)}</span>
                 </button>
-                <button className="mw-adv-exec-btn buy" onClick={() => handleAdvancedTrade('BUY')}>
+                <button className={`mw-adv-exec-btn buy ${riskSide === 'Buy' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('BUY')}>
                   <span className="mw-adv-exec-label">BUY</span>
                   <span className="mw-adv-exec-price">{getAskPrice(sym)}</span>
                 </button>
@@ -434,6 +436,10 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
                 <div className="mw-adv-info-row">
                   <span>Required margin:</span>
                   <span>{marginReq.toFixed(2)} USD</span>
+                </div>
+                <div className="mw-adv-info-row">
+                  <span>Free funds:</span>
+                  <span>{(currentClientExtended?.tradingMetrics?.freeMargin || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
                 </div>
                 <div className="mw-adv-info-row">
                   <span>Spread:</span>
