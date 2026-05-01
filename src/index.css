@@ -318,6 +318,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: auto;
   grid-row: 1;
   grid-column: 1;
 }
@@ -342,6 +343,8 @@ body {
 .bottom-sections {
   grid-column: 1 / -1;
   grid-row: 3;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* Horizontal resize handle (between market-column and chart) */

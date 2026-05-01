@@ -76,6 +76,15 @@ const Dashboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (marketColRef.current) {
+      const parent = marketColRef.current.parentElement;
+      if (parent) {
+        parent.style.gridTemplateRows = `1fr 8px ${bottomHeight}px`;
+      }
+    }
+  }, [bottomHeight]);
+
   const [selectedSymbolId, setSelectedSymbolId] = useState(prices?.[0]?.id || 1);
 
   const handleTradeRequest = (symbol, volume, type, pendingPrice, stopLoss, takeProfit) => {
@@ -297,7 +306,7 @@ const Dashboard = () => {
         <span className="bottom-resize-icon">&#x25C7;</span>
       </div>
 
-      <div className="bottom-sections" style={{ gridTemplateColumns: `${marketWidth}px 1fr`, height: bottomHeight }}>
+      <div className="bottom-sections" style={{ gridTemplateColumns: `${marketWidth}px 1fr` }}>
          <AssetInfo symbol={selectedSymbol} onTrade={handleTradeRequest} />
          <PositionTabs />
       </div>
