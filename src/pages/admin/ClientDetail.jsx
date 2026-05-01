@@ -685,8 +685,9 @@ const ClientDetail = ({ onAdminLogout }) => {
                   <th>Symbol</th>
                   <th>Type</th>
                   <th>Volume</th>
-                  <th>Entry Price</th>
-                  <th>Current/Close</th>
+                  <th>Open Price</th>
+                  <th>Current Price</th>
+                  <th>Close Price</th>
                   <th>Swap</th>
                   <th>Profit/Loss</th>
                   <th>Status</th>
@@ -729,7 +730,10 @@ const ClientDetail = ({ onAdminLogout }) => {
                           <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{t.lots} lots</td>
                           <td style={{ opacity: 0.7 }}>${t.openPrice}</td>
                           <td style={{ fontWeight: 700 }}>
-                             {activeTab === 'trades' ? (prices.find(p=>p.symbol===t.symbol)?.price || '...') : t.closePrice}
+                             {prices.find(p=>p.symbol===t.symbol)?.price || '...'}
+                          </td>
+                          <td style={{ fontWeight: 700, opacity: t.closePrice ? 1 : 0.4 }}>
+                             {t.closePrice || '—'}
                           </td>
                           <td style={{ 
                             color: (t.swap || 0) < 0 ? '#ef4444' : '#10b981',
