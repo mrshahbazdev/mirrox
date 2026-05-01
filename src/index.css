@@ -1038,6 +1038,8 @@ body {
   background: #10b981;
   color: #fff;
 }
+.mw-adv-exec-btn.side-dimmed { opacity: 0.35; }
+.mw-adv-exec-btn.side-active { opacity: 1; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
 .mw-adv-exec-btn:hover { opacity: 0.9; }
 .mw-adv-exec-label {
   font-size: 11px;
