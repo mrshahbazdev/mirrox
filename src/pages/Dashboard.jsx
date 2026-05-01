@@ -13,8 +13,10 @@ const Dashboard = () => {
   const [openConfirm, setOpenConfirm] = useState(null);
   const [openToast, setOpenToast] = useState(null);
   const [bottomHeight, setBottomHeight] = useState(340);
+  const [marketWidth, setMarketWidth] = useState(320);
   const isDragging = useRef(false);
   const mainColRef = useRef(null);
+  const marketColRef = useRef(null);
 
   const handleResizeStart = useCallback((e) => {
     e.preventDefault();
@@ -27,6 +29,31 @@ const Dashboard = () => {
       const rect = mainColRef.current.getBoundingClientRect();
       const newBottom = rect.bottom - moveEvent.clientY;
       setBottomHeight(Math.max(120, Math.min(newBottom, rect.height - 120)));
+    };
+
+    const onMouseUp = () => {
+      isDragging.current = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }, []);
+
+  const handleHorizResizeStart = useCallback((e) => {
+    e.preventDefault();
+    isDragging.current = true;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    const onMouseMove = (moveEvent) => {
+      if (!isDragging.current || !marketColRef.current) return;
+      const parentRect = marketColRef.current.parentElement.getBoundingClientRect();
+      const newWidth = moveEvent.clientX - parentRect.left;
+      setMarketWidth(Math.max(200, Math.min(newWidth, 500)));
     };
 
     const onMouseUp = () => {
@@ -228,13 +255,17 @@ const Dashboard = () => {
     <>
       {openConfirmModal}
       {toastEl}
-      <div className="market-column">
+      <div className="market-column" ref={marketColRef} style={{ width: marketWidth }}>
         <MarketWatch 
           symbols={prices} 
           selectedSymbol={selectedSymbol}
           onSelectSymbol={(sym) => setSelectedSymbolId(sym.id)}
           onTrade={handleTradeRequest}
         />
+      </div>
+
+      <div className="horiz-resize-handle" onMouseDown={handleHorizResizeStart}>
+        <span className="horiz-resize-icon">&#x25C7;</span>
       </div>
 
       <div className="main-column" ref={mainColRef} style={{ gridTemplateRows: `1fr auto ${bottomHeight}px` }}>
@@ -260,10 +291,10 @@ const Dashboard = () => {
         </div>
 
         <div className="bottom-resize-handle" onMouseDown={handleResizeStart}>
-          <span className="resize-handle-grip"></span>
+          <span className="bottom-resize-icon">&#x25C7;</span>
         </div>
 
-        <div className="bottom-sections">
+        <div className="bottom-sections" style={{ gridTemplateColumns: `${marketWidth}px 1fr` }}>
            <AssetInfo symbol={selectedSymbol} onTrade={handleTradeRequest} />
            <PositionTabs />
         </div>

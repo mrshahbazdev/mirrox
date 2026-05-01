@@ -73,8 +73,8 @@ body {
 .dashboard-content {
   grid-area: content;
   display: grid;
-  grid-template-columns: var(--marketwatch-width) 1fr;
-  gap: 1px;
+  grid-template-columns: auto 6px 1fr;
+  gap: 0;
   background-color: var(--border);
   overflow: hidden;
 }
@@ -304,8 +304,8 @@ body {
 .dashboard-content {
   grid-area: content;
   display: grid;
-  grid-template-columns: var(--marketwatch-width) 1fr;
-  gap: 1px;
+  grid-template-columns: auto 6px 1fr;
+  gap: 0;
   background-color: var(--border);
   overflow: hidden;
   height: calc(100vh - var(--header-height));
@@ -326,6 +326,34 @@ body {
   overflow: hidden;
 }
 
+/* Horizontal resize handle (between market-column and chart) */
+.horiz-resize-handle {
+  width: 6px;
+  background: var(--bg-deep);
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+.horiz-resize-handle:hover,
+.horiz-resize-handle:active {
+  background: var(--accent);
+}
+.horiz-resize-icon {
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.horiz-resize-handle:hover .horiz-resize-icon,
+.horiz-resize-handle:active .horiz-resize-icon {
+  color: #fff;
+  opacity: 1;
+}
+
+/* Vertical resize handle (between chart and bottom sections) */
 .bottom-resize-handle {
   height: 6px;
   background: var(--bg-deep);
@@ -334,23 +362,21 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: background 0.15s;
 }
 .bottom-resize-handle:hover,
 .bottom-resize-handle:active {
   background: var(--accent);
 }
-.resize-handle-grip {
-  width: 36px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--text-muted);
-  opacity: 0.5;
+.bottom-resize-icon {
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.6;
+  pointer-events: none;
 }
-.bottom-resize-handle:hover .resize-handle-grip,
-.bottom-resize-handle:active .resize-handle-grip {
-  background: #fff;
-  opacity: 0.9;
+.bottom-resize-handle:hover .bottom-resize-icon,
+.bottom-resize-handle:active .bottom-resize-icon {
+  color: #fff;
+  opacity: 1;
 }
 
 @media (max-width: 1023px) {
@@ -369,7 +395,8 @@ body {
      height: auto;
      overflow: visible;
   }
-  .bottom-resize-handle {
+  .bottom-resize-handle,
+  .horiz-resize-handle {
      display: none;
   }
   .bottom-sections {
