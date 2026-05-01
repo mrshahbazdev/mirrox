@@ -460,6 +460,18 @@ module.exports = (io) => {
          return;
       }
 
+      // Validate TP/SL direction for market orders
+      let validTP = takeProfit ? parseFloat(takeProfit) : null;
+      let validSL = stopLoss ? parseFloat(stopLoss) : null;
+      if (!isPending && validTP) {
+        if (type === 'BUY' && validTP <= entryPrice) validTP = null;
+        if (type === 'SELL' && validTP >= entryPrice) validTP = null;
+      }
+      if (!isPending && validSL) {
+        if (type === 'BUY' && validSL >= entryPrice) validSL = null;
+        if (type === 'SELL' && validSL <= entryPrice) validSL = null;
+      }
+
       const newTrade = {
         id: 'T' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 900 + 100),
         clientId: clientId, // ATTACH OWNER ID
@@ -467,8 +479,8 @@ module.exports = (io) => {
         type,
         lots: parseFloat(volume),
         openPrice: entryPrice,
-        stopLoss: stopLoss || null,
-        takeProfit: takeProfit || null,
+        stopLoss: validSL || null,
+        takeProfit: validTP || null,
         profit: 0,
         marginUsed: marginUsed,
         swap: 0,
