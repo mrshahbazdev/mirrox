@@ -27,6 +27,10 @@ const PositionTabs = () => {
   // Position info tooltip
   const [infoTrade, setInfoTrade] = useState(null);
 
+  // Share trade modal
+  const [shareTrade, setShareTrade] = useState(null);
+  const [shareTitle, setShareTitle] = useState('');
+
   // Toast notification
   const [toast, setToast] = useState(null);
 
@@ -292,7 +296,7 @@ const PositionTabs = () => {
                             <button className="pos-action-btn" title="Position Info" onClick={() => setInfoTrade(infoTrade?.id === trade.id ? null : trade)}>
                               <i className="fa-solid fa-circle-info"></i>
                             </button>
-                            <button className="pos-action-btn" title="Share">
+                            <button className="pos-action-btn" title="Share" onClick={() => { setShareTrade(trade); setShareTitle(''); }}>
                               <i className="fa-solid fa-share-nodes"></i>
                             </button>
                           </div>
@@ -547,6 +551,72 @@ const PositionTabs = () => {
           </div>
         </div>
       )}
+
+      {/* Share My Trade Modal */}
+      {shareTrade && (() => {
+        const sp = prices.find(it => it.symbol === shareTrade.symbol);
+        return (
+          <div className="pos-modal-overlay" onClick={() => setShareTrade(null)}>
+            <div className="pos-share-modal" onClick={e => e.stopPropagation()}>
+              <div className="pos-share-header">
+                <h3>Share My Trade</h3>
+                <i className="fa-solid fa-xmark pos-modal-close" onClick={() => setShareTrade(null)}></i>
+              </div>
+              <div className="pos-share-body">
+                <label className="pos-share-label">Trade title</label>
+                <input
+                  type="text"
+                  className="pos-share-input"
+                  placeholder="Enter a title for your trade"
+                  value={shareTitle}
+                  onChange={e => setShareTitle(e.target.value)}
+                />
+                <h4 className="pos-share-details-title">Trade Details</h4>
+                <div className="pos-share-details">
+                  <div className="pos-share-row">
+                    <span>Symbol</span>
+                    <span className="pos-share-val">{sp?.name || shareTrade.symbol}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Side</span>
+                    <span className={`pos-type-badge ${shareTrade.type === 'BUY' ? 'buy' : 'sell'}`}>{shareTrade.type === 'BUY' ? 'Buy' : 'Sell'}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Close Time</span>
+                    <span className="pos-share-val">{shareTrade.closeTime ? new Date(shareTrade.closeTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + new Date(shareTrade.closeTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '-'}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Volume</span>
+                    <span className="pos-share-val">{shareTrade.lots}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Open Price</span>
+                    <span className="pos-share-val">{(shareTrade.openPrice || 0).toFixed(sp?.precision || 2)}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Close Price</span>
+                    <span className="pos-share-val">{(shareTrade.closePrice || 0).toFixed(sp?.precision || 2)}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Take Profit</span>
+                    <span className="pos-share-val">{shareTrade.takeProfit ? parseFloat(shareTrade.takeProfit).toFixed(sp?.precision || 2) : '0.00'}</span>
+                  </div>
+                  <div className="pos-share-row">
+                    <span>Stop Loss</span>
+                    <span className="pos-share-val">{shareTrade.stopLoss ? parseFloat(shareTrade.stopLoss).toFixed(sp?.precision || 2) : '0.00'}</span>
+                  </div>
+                </div>
+              </div>
+              <button className="pos-share-generate-btn" onClick={() => {
+                showToast('Trade image generated!');
+                setShareTrade(null);
+              }}>
+                Generate image
+              </button>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
