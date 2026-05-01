@@ -206,9 +206,10 @@ const PositionTabs = () => {
                 <th>Symbol</th>
                 <th>Volume</th>
                 <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
+                {activeTab === 'open' && <th>Current Price</th>}
                 {activeTab === 'closed' && <th>Close Price</th>}
                 {activeTab === 'open' && <th>TP/SL</th>}
-                {activeTab === 'closed' && <th>Open Time</th>}
+                {(activeTab === 'open' || activeTab === 'closed') && <th>Open Time</th>}
                 {activeTab === 'closed' && <th>Close Time</th>}
                 {activeTab !== 'pending' && <th>Profit</th>}
                 {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Actions</th>}
@@ -232,6 +233,10 @@ const PositionTabs = () => {
                       <td>{trade.lots}</td>
                       <td>{openPrice.toFixed(p?.precision || 2)}</td>
 
+                      {activeTab === 'open' && (
+                        <td>{p?.price ? parseFloat(p.price).toFixed(p?.precision || 2) : '---'}</td>
+                      )}
+
                       {activeTab === 'closed' && (
                         <td>{(trade.closePrice || 0).toFixed(p?.precision || 2)}</td>
                       )}
@@ -245,6 +250,10 @@ const PositionTabs = () => {
                         </td>
                       )}
 
+                      {(activeTab === 'open' || activeTab === 'closed') && (
+                        <td>{trade.openTime ? new Date(trade.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.openTime ? new Date(trade.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
+                      )}
+
                       {activeTab !== 'pending' && (
                         <td>
                           <div className="pos-profit-cell">
@@ -256,10 +265,6 @@ const PositionTabs = () => {
                             </span>
                           </div>
                         </td>
-                      )}
-
-                      {activeTab === 'closed' && (
-                        <td>{trade.openTime ? new Date(trade.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.openTime ? new Date(trade.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
                       )}
 
                       {activeTab === 'closed' && (
@@ -350,10 +355,22 @@ const PositionTabs = () => {
                       </div>
                       {activeTab === 'open' && (
                         <div>
+                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Current Price</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">{p?.price ? parseFloat(p.price).toFixed(p?.precision || 2) : '---'}</div>
+                        </div>
+                      )}
+                      {activeTab === 'open' && (
+                        <div>
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">TP / SL</div>
                           <div className="text-xs text-[var(--text-main)] font-mono">
                             {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '-'} / {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '-'}
                           </div>
+                        </div>
+                      )}
+                      {activeTab === 'open' && trade.openTime && (
+                        <div>
+                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Open Time</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">{new Date(trade.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}<br />{new Date(trade.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
                         </div>
                       )}
                     </div>
