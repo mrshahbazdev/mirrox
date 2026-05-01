@@ -223,9 +223,12 @@ const PositionTabs = () => {
             </thead>
             <tbody>
               {displayTrades.map(trade => {
-                  const profit = trade.profit || 0;
                   const p = prices.find(it => it.symbol === trade.symbol);
                   const openPrice = trade.openPrice || 0;
+                  const currentPrice = parseFloat(p?.price || 0);
+                  const multiplier = trade.symbol.includes('USD') && !trade.symbol.includes('BTC') ? 10000 : 1;
+                  const diff = trade.type === 'BUY' ? (currentPrice - openPrice) : (openPrice - currentPrice);
+                  const profit = (activeTab === 'closed') ? (trade.profit || 0) : (p ? diff * (trade.lots || 0.01) * multiplier : (trade.profit || 0));
                   const pctReturn = openPrice ? ((profit / (openPrice * (trade.lots || 0.01) * (p?.category === 'Metals' ? 100 : 100000))) * 100).toFixed(2) : '0.00';
                   return (
                     <tr key={trade.id}>
@@ -331,9 +334,12 @@ const PositionTabs = () => {
         ) : (
           <div className="mobile-trade-list">
              {displayTrades.map(trade => {
-                const profit = trade.profit || 0;
                 const p = prices.find(it => it.symbol === trade.symbol);
                 const openPrice = trade.openPrice || 0;
+                const currentPrice = parseFloat(p?.price || 0);
+                const multiplier = trade.symbol.includes('USD') && !trade.symbol.includes('BTC') ? 10000 : 1;
+                const diff = trade.type === 'BUY' ? (currentPrice - openPrice) : (openPrice - currentPrice);
+                const profit = (activeTab === 'closed') ? (trade.profit || 0) : (p ? diff * (trade.lots || 0.01) * multiplier : (trade.profit || 0));
                 const pctReturn = openPrice ? ((profit / (openPrice * (trade.lots || 0.01) * (p?.category === 'Metals' ? 100 : 100000))) * 100).toFixed(2) : '0.00';
                 return (
                   <div key={trade.id} className="mobile-trade-card">
