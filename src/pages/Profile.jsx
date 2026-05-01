@@ -25,7 +25,6 @@ const Profile = () => {
   const { currentClientExtended } = useTrading();
   const { showAlert } = useModal();
   const [activeTab, setActiveTab] = useState('personal');
-  const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
@@ -83,7 +82,6 @@ const Profile = () => {
         zipCode: form.zipCode
       });
       showAlert('Profile updated successfully.', 'Success', 'success');
-      setIsEditing(false);
     } catch (err) {
       showAlert(err.response?.data?.error || 'Failed to update profile.', 'Error', 'error');
     } finally {
@@ -134,10 +132,6 @@ const Profile = () => {
     }
   };
 
-  const maskPhone = (phone) => {
-    if (!phone || phone.length < 4) return phone || '';
-    return '*'.repeat(phone.length - 3) + phone.slice(-3);
-  };
 
   const tabs = [
     { id: 'personal', label: 'Personal' },
@@ -169,7 +163,6 @@ const Profile = () => {
               <input
                 type="text"
                 value={form.name}
-                disabled={!isEditing}
                 onChange={e => setForm({ ...form, name: e.target.value })}
               />
             </div>
@@ -178,21 +171,16 @@ const Profile = () => {
               <input
                 type="text"
                 value={form.lastName}
-                disabled={!isEditing}
                 onChange={e => setForm({ ...form, lastName: e.target.value })}
               />
             </div>
             <div className="profile-field">
               <label>Phone number</label>
-              <div className="profile-input-with-icon">
-                <input
-                  type="text"
-                  value={isEditing ? form.contact : maskPhone(form.contact)}
-                  disabled={!isEditing}
-                  onChange={e => setForm({ ...form, contact: e.target.value })}
-                />
-                {!isEditing && <i className="fa-solid fa-circle-info profile-field-icon"></i>}
-              </div>
+              <input
+                type="text"
+                value={form.contact}
+                onChange={e => setForm({ ...form, contact: e.target.value })}
+              />
             </div>
             <div className="profile-field">
               <label>Email</label>
@@ -200,36 +188,27 @@ const Profile = () => {
             </div>
             <div className="profile-field">
               <label>Date of birth</label>
-              <div className="profile-input-with-icon">
-                <input
-                  type={isEditing ? 'date' : 'text'}
-                  value={form.dateOfBirth}
-                  disabled={!isEditing}
-                  onChange={e => setForm({ ...form, dateOfBirth: e.target.value })}
-                />
-                {!isEditing && <i className="fa-regular fa-calendar profile-field-icon"></i>}
-              </div>
+              <input
+                type="date"
+                value={form.dateOfBirth}
+                onChange={e => setForm({ ...form, dateOfBirth: e.target.value })}
+              />
             </div>
             <div className="profile-field">
               <label>Country of residence</label>
-              {isEditing ? (
-                <select
-                  value={form.country}
-                  onChange={e => setForm({ ...form, country: e.target.value })}
-                >
-                  <option value="">Select country</option>
-                  {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              ) : (
-                <input type="text" value={form.country} disabled />
-              )}
+              <select
+                value={form.country}
+                onChange={e => setForm({ ...form, country: e.target.value })}
+              >
+                <option value="">Select country</option>
+                {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
             <div className="profile-field">
               <label>City</label>
               <input
                 type="text"
                 value={form.city}
-                disabled={!isEditing}
                 onChange={e => setForm({ ...form, city: e.target.value })}
               />
             </div>
@@ -238,7 +217,6 @@ const Profile = () => {
               <input
                 type="text"
                 value={form.address}
-                disabled={!isEditing}
                 onChange={e => setForm({ ...form, address: e.target.value })}
               />
             </div>
@@ -247,21 +225,13 @@ const Profile = () => {
               <input
                 type="text"
                 value={form.zipCode}
-                disabled={!isEditing}
                 onChange={e => setForm({ ...form, zipCode: e.target.value })}
               />
             </div>
 
-            {isEditing ? (
-              <div className="profile-btn-row">
-                <button className="profile-btn secondary" onClick={() => setIsEditing(false)}>Cancel</button>
-                <button className="profile-btn primary" onClick={handleSaveProfile} disabled={saving}>
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
-              </div>
-            ) : (
-              <button className="profile-btn primary full" onClick={() => setIsEditing(true)}>Edit</button>
-            )}
+            <button className="profile-btn primary full" onClick={handleSaveProfile} disabled={saving}>
+              {saving ? 'Saving...' : 'Save'}
+            </button>
           </div>
         )}
 
