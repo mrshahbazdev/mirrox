@@ -237,7 +237,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="main-column" ref={mainColRef} style={{ gridTemplateRows: `1fr ${bottomHeight}px` }}>
+      <div className="main-column" ref={mainColRef} style={{ gridTemplateRows: `1fr auto ${bottomHeight}px` }}>
         {!isVerified && (
           <div className="dash-desktop-verify">
              <i className="fa-solid fa-triangle-exclamation dash-verify-icon"></i>
