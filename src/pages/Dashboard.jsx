@@ -113,8 +113,21 @@ const Dashboard = () => {
   const selectedSymbol = prices.find(s => s.id === selectedSymbolId) || prices[0];
   const isVerified = currentClientExtended?.kyc?.status === 'verified' || currentClientExtended?.accountType === 'live';
 
-  const totalEquity = currentClientExtended?.tradingMetrics?.equity || 0;
-  const floatingPL = currentClientExtended?.accountSummary?.profitLoss || activeTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
+  // Compute real-time floating P/L from live prices
+  const floatingPL = activeTrades.filter(t => t.status === 'Open').reduce((sum, t) => {
+    const p = prices.find(it => it.symbol === t.symbol);
+    if (!p) return sum + (t.profit || 0);
+    const currentPrice = parseFloat(p.price) || 0;
+    const openPrice = t.openPrice || 0;
+    const contractSize = p.category === 'Metals' ? 100 : 100000;
+    const lots = t.lots || 0.01;
+    const diff = t.type === 'BUY'
+      ? (currentPrice - openPrice) * lots * contractSize
+      : (openPrice - currentPrice) * lots * contractSize;
+    return sum + diff;
+  }, 0);
+  const balance = currentClientExtended?.tradingMetrics?.balance || 0;
+  const totalEquity = balance + floatingPL;
 
   const openConfirmModal = openConfirm && (
     <div className="pos-modal-overlay" onClick={() => setOpenConfirm(null)}>
