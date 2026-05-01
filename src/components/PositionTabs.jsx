@@ -184,6 +184,14 @@ const PositionTabs = () => {
           Closed Positions
         </div>
         {!isMobile && <div className="tab-item">Finance</div>}
+        {activeTab === 'closed' && displayTrades.length > 0 && (
+          <div className="pos-closed-total">
+            <span className="pos-closed-total-label">Total</span>
+            <span className={`pos-closed-total-value ${displayTrades.reduce((s, t) => s + (t.profit || 0), 0) >= 0 ? 'up' : 'down'}`}>
+              {displayTrades.reduce((s, t) => s + (t.profit || 0), 0).toFixed(2)}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="table-container">
@@ -194,9 +202,13 @@ const PositionTabs = () => {
                 <th>Symbol</th>
                 <th>Volume</th>
                 <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
+                {activeTab === 'closed' && <th>Close Price</th>}
                 {activeTab === 'open' && <th>TP/SL</th>}
+                {activeTab === 'closed' && <th>Open Time</th>}
+                {activeTab === 'closed' && <th>Close Time</th>}
                 {activeTab !== 'pending' && <th>Profit</th>}
                 {activeTab !== 'closed' && <th style={{ textAlign: 'right' }}>Actions</th>}
+                {activeTab === 'closed' && <th style={{ textAlign: 'right' }}></th>}
               </tr>
             </thead>
             <tbody>
@@ -215,6 +227,10 @@ const PositionTabs = () => {
                       </td>
                       <td>{trade.lots}</td>
                       <td>{openPrice.toFixed(p?.precision || 2)}</td>
+
+                      {activeTab === 'closed' && (
+                        <td>{(trade.closePrice || 0).toFixed(p?.precision || 2)}</td>
+                      )}
                       
                       {activeTab === 'open' && (
                         <td>
@@ -238,6 +254,14 @@ const PositionTabs = () => {
                         </td>
                       )}
 
+                      {activeTab === 'closed' && (
+                        <td>{trade.openTime ? new Date(trade.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.openTime ? new Date(trade.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
+                      )}
+
+                      {activeTab === 'closed' && (
+                        <td>{trade.closeTime ? new Date(trade.closeTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}<br /><span className="pos-time-sub">{trade.closeTime ? new Date(trade.closeTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span></td>
+                      )}
+
                       {activeTab !== 'closed' && (
                         <td>
                           <div className="pos-actions-cell">
@@ -255,6 +279,28 @@ const PositionTabs = () => {
                             <div className="pos-info-tooltip">
                               <div className="pos-info-row"><span>ID:</span><span>{trade.id}</span></div>
                               <div className="pos-info-row"><span>Open Time:</span><span>{trade.openTime ? new Date(trade.openTime).toLocaleDateString() : '-'}</span></div>
+                              <div className="pos-info-row"><span>Swap:</span><span>{(trade.swap || 0).toFixed(2)}</span></div>
+                              <div className="pos-info-row"><span>Commission:</span><span>{(trade.commission || 0).toFixed(2)}</span></div>
+                            </div>
+                          )}
+                        </td>
+                      )}
+
+                      {activeTab === 'closed' && (
+                        <td>
+                          <div className="pos-actions-cell">
+                            <button className="pos-action-btn" title="Position Info" onClick={() => setInfoTrade(infoTrade?.id === trade.id ? null : trade)}>
+                              <i className="fa-solid fa-circle-info"></i>
+                            </button>
+                            <button className="pos-action-btn" title="Share">
+                              <i className="fa-solid fa-share-nodes"></i>
+                            </button>
+                          </div>
+                          {infoTrade?.id === trade.id && (
+                            <div className="pos-info-tooltip">
+                              <div className="pos-info-row"><span>ID:</span><span>{trade.id}</span></div>
+                              <div className="pos-info-row"><span>Open Time:</span><span>{trade.openTime ? new Date(trade.openTime).toLocaleDateString() : '-'}</span></div>
+                              <div className="pos-info-row"><span>Close Time:</span><span>{trade.closeTime ? new Date(trade.closeTime).toLocaleDateString() : '-'}</span></div>
                               <div className="pos-info-row"><span>Swap:</span><span>{(trade.swap || 0).toFixed(2)}</span></div>
                               <div className="pos-info-row"><span>Commission:</span><span>{(trade.commission || 0).toFixed(2)}</span></div>
                             </div>
