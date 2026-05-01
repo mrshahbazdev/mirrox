@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import MarketWatch from '../components/MarketWatch';
 import PositionTabs from '../components/PositionTabs';
 import AssetInfo from '../components/AssetInfo';
@@ -12,6 +12,34 @@ const Dashboard = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [openConfirm, setOpenConfirm] = useState(null);
   const [openToast, setOpenToast] = useState(null);
+  const [bottomHeight, setBottomHeight] = useState(340);
+  const isDragging = useRef(false);
+  const mainColRef = useRef(null);
+
+  const handleResizeStart = useCallback((e) => {
+    e.preventDefault();
+    isDragging.current = true;
+    document.body.style.cursor = 'row-resize';
+    document.body.style.userSelect = 'none';
+
+    const onMouseMove = (moveEvent) => {
+      if (!isDragging.current || !mainColRef.current) return;
+      const rect = mainColRef.current.getBoundingClientRect();
+      const newBottom = rect.bottom - moveEvent.clientY;
+      setBottomHeight(Math.max(120, Math.min(newBottom, rect.height - 120)));
+    };
+
+    const onMouseUp = () => {
+      isDragging.current = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -209,7 +237,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="main-column">
+      <div className="main-column" ref={mainColRef} style={{ gridTemplateRows: `1fr ${bottomHeight}px` }}>
         {!isVerified && (
           <div className="dash-desktop-verify">
              <i className="fa-solid fa-triangle-exclamation dash-verify-icon"></i>
@@ -229,6 +257,10 @@ const Dashboard = () => {
               isMobile={false}
             />
           </ErrorBoundary>
+        </div>
+
+        <div className="bottom-resize-handle" onMouseDown={handleResizeStart}>
+          <span className="resize-handle-grip"></span>
         </div>
 
         <div className="bottom-sections">
