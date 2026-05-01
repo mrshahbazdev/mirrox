@@ -22,7 +22,7 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
   const [tpEnabled, setTpEnabled] = useState(false);
   const [riskMode, setRiskMode] = useState(false);
   const [riskPercent, setRiskPercent] = useState(0);
-  const [riskSide, setRiskSide] = useState('Sell');
+  const [advSide, setAdvSide] = useState('Sell');
   const [riskSlPrice, setRiskSlPrice] = useState('');
   const [riskAmount, setRiskAmount] = useState('0.00');
   const [trailingStop, setTrailingStop] = useState(false);
@@ -67,7 +67,7 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
     setTpEnabled(false);
     setRiskMode(false);
     setRiskPercent(0);
-    setRiskSide('Sell');
+    setAdvSide('Sell');
     setRiskSlPrice('');
     setRiskAmount('0.00');
     setTrailingStop(false);
@@ -297,14 +297,14 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
                 <span className="mw-risk-side-label">Side</span>
                 <div className="mw-risk-side-btns">
                   <button
-                    className={`mw-risk-side-btn ${riskSide === 'Sell' ? 'active sell' : ''}`}
-                    onClick={() => setRiskSide('Sell')}
+                    className={`mw-risk-side-btn ${advSide === 'Sell' ? 'active sell' : ''}`}
+                    onClick={() => setAdvSide('Sell')}
                   >
                     <i className="fa-solid fa-arrow-trend-down"></i> Sell
                   </button>
                   <button
-                    className={`mw-risk-side-btn ${riskSide === 'Buy' ? 'active buy' : ''}`}
-                    onClick={() => setRiskSide('Buy')}
+                    className={`mw-risk-side-btn ${advSide === 'Buy' ? 'active buy' : ''}`}
+                    onClick={() => setAdvSide('Buy')}
                   >
                     <i className="fa-solid fa-arrow-trend-up"></i> Buy
                   </button>
@@ -323,11 +323,11 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
               </div>
 
               <div className="mw-adv-exec-buttons">
-                <button className={`mw-adv-exec-btn sell ${riskSide === 'Sell' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('SELL')}>
+                <button className={`mw-adv-exec-btn sell ${advSide === 'Sell' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('SELL')}>
                   <span className="mw-adv-exec-label">SELL</span>
                   <span className="mw-adv-exec-price">{getBidPrice(sym)}</span>
                 </button>
-                <button className={`mw-adv-exec-btn buy ${riskSide === 'Buy' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('BUY')}>
+                <button className={`mw-adv-exec-btn buy ${advSide === 'Buy' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('BUY')}>
                   <span className="mw-adv-exec-label">BUY</span>
                   <span className="mw-adv-exec-price">{getAskPrice(sym)}</span>
                 </button>
@@ -432,6 +432,24 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
                 </>
               )}
 
+              <div className="mw-risk-side-section">
+                <span className="mw-risk-side-label">Side</span>
+                <div className="mw-risk-side-btns">
+                  <button
+                    className={`mw-risk-side-btn ${advSide === 'Sell' ? 'active sell' : ''}`}
+                    onClick={() => setAdvSide('Sell')}
+                  >
+                    <i className="fa-solid fa-arrow-trend-down"></i> Sell
+                  </button>
+                  <button
+                    className={`mw-risk-side-btn ${advSide === 'Buy' ? 'active buy' : ''}`}
+                    onClick={() => setAdvSide('Buy')}
+                  >
+                    <i className="fa-solid fa-arrow-trend-up"></i> Buy
+                  </button>
+                </div>
+              </div>
+
               <div className="mw-adv-info-grid">
                 <div className="mw-adv-info-row">
                   <span>Required margin:</span>
@@ -452,11 +470,11 @@ const MarketWatch = ({ symbols, selectedSymbol, onSelectSymbol, onTrade }) => {
               </div>
 
               <div className="mw-adv-exec-buttons">
-                <button className="mw-adv-exec-btn sell" onClick={() => handleAdvancedTrade('SELL')}>
+                <button className={`mw-adv-exec-btn sell ${advSide === 'Sell' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('SELL')}>
                   <span className="mw-adv-exec-label">SELL</span>
                   <span className="mw-adv-exec-price">{getBidPrice(sym)}</span>
                 </button>
-                <button className="mw-adv-exec-btn buy" onClick={() => handleAdvancedTrade('BUY')}>
+                <button className={`mw-adv-exec-btn buy ${advSide === 'Buy' ? 'side-active' : 'side-dimmed'}`} onClick={() => handleAdvancedTrade('BUY')}>
                   <span className="mw-adv-exec-label">BUY</span>
                   <span className="mw-adv-exec-price">{getAskPrice(sym)}</span>
                 </button>
