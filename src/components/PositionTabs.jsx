@@ -250,12 +250,7 @@ const PositionTabs = () => {
                       )}
                       
                       {activeTab === 'open' && (
-                        <td>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
-                            <span style={{ color: 'var(--success)' }}>TP: {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '—'}</span>
-                            <span style={{ color: 'var(--danger)' }}>SL: {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '—'}</span>
-                          </div>
-                        </td>
+                        <td>{(trade.closePrice || 0).toFixed(p?.precision || 2)}</td>
                       )}
 
                       {(activeTab === 'open' || activeTab === 'closed') && (
@@ -375,10 +370,7 @@ const PositionTabs = () => {
                       {activeTab === 'open' && (
                         <div>
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Price</div>
-                          <div className="text-xs font-mono" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                            <span style={{ color: 'var(--success)' }}>TP: {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '—'}</span>
-                            <span style={{ color: 'var(--danger)' }}>SL: {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '—'}</span>
-                          </div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">{(trade.closePrice || 0).toFixed(p?.precision || 2)}</div>
                         </div>
                       )}
                       {activeTab === 'open' && trade.openTime && (
