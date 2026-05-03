@@ -1035,6 +1035,7 @@ app.put('/api/trades/:id', verifyClientToken, (req, res) => {
 
   saveData();
   console.log(`[REAL-TIME ADJ] Trade ${id} updated: SL=${trade.stopLoss}, TP=${trade.takeProfit}`);
+  io.emit('trade_update', activeTrades);
   res.json(trade);
 });
 
