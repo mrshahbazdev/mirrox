@@ -694,6 +694,8 @@ const ClientDetail = ({ onAdminLogout }) => {
                   <th>Close Price</th>
                   <th>Swap</th>
                   <th>Profit/Loss</th>
+                  <th>Open Time</th>
+                  {activeTab === 'history' && <th>Close Time</th>}
                   <th>Status</th>
                   <th>Operations</th>
                 </tr>
@@ -754,6 +756,18 @@ const ClientDetail = ({ onAdminLogout }) => {
                             {t.profit >= 0 ? '+' : ''}{t.profit?.toFixed(2)}
                             {t.bias === 'lock' && <i className="fa-solid fa-lock" style={{ marginLeft: 8, fontSize: 10, color: '#f59e0b' }} />}
                           </td>
+                          <td style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
+                             {t.openTime ? new Date(t.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—'}
+                             <br />
+                             <span style={{ opacity: 0.5 }}>{t.openTime ? new Date(t.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span>
+                          </td>
+                          {activeTab === 'history' && (
+                            <td style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
+                               {t.closeTime ? new Date(t.closeTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—'}
+                               <br />
+                               <span style={{ opacity: 0.5 }}>{t.closeTime ? new Date(t.closeTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span>
+                            </td>
+                          )}
                           <td>
                             <span className={`cd-trade-status ${t.status?.toLowerCase() || 'open'}`}>
                                {t.status || 'Open'}
