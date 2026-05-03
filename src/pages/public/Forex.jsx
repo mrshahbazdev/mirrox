@@ -77,8 +77,8 @@ const Forex = () => {
                                 alt="Mobile App"
                              />
                              <div style={{ position: 'absolute', bottom: '0', left: '0', right: '0', padding: '32px', background: 'linear-gradient(to top, #0b0e14, transparent)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                 <button style={{ background: '#10b981', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase' }}>BUY EUR/USD</button>
-                                 <button style={{ background: '#ef4444', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase' }}>SELL EUR/USD</button>
+                                 <button style={{ background: '#10b981', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase', cursor: 'pointer' }} onClick={() => navigate('/register')}>BUY EUR/USD</button>
+                                 <button style={{ background: '#ef4444', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase', cursor: 'pointer' }} onClick={() => navigate('/register')}>SELL EUR/USD</button>
                              </div>
                          </div>
                     </div>

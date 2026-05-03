@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 
 const Glossary = () => {
+    const navigate = (path) => { window.location.href = path; };
     const [activeLetter, setActiveLetter] = useState('A');
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -104,7 +105,7 @@ const Glossary = () => {
             <section className="lp-cta-block">
                 <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Start Now</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
                 </div>
             </section>
         </div>
