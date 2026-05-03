@@ -250,7 +250,7 @@ const PositionTabs = () => {
                       )}
                       
                       {activeTab === 'open' && (
-                        <td>{(trade.closePrice || 0).toFixed(p?.precision || 2)}</td>
+                        <td>{(trade.takeProfit ? parseFloat(trade.takeProfit) : (trade.closePrice || 0)).toFixed(p?.precision || 2)}</td>
                       )}
 
                       {(activeTab === 'open' || activeTab === 'closed') && (
@@ -370,7 +370,7 @@ const PositionTabs = () => {
                       {activeTab === 'open' && (
                         <div>
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Price</div>
-                          <div className="text-xs text-[var(--text-main)] font-mono">{(trade.closePrice || 0).toFixed(p?.precision || 2)}</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">{(trade.takeProfit ? parseFloat(trade.takeProfit) : (trade.closePrice || 0)).toFixed(p?.precision || 2)}</div>
                         </div>
                       )}
                       {activeTab === 'open' && trade.openTime && (
