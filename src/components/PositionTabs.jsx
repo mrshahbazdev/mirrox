@@ -213,7 +213,7 @@ const PositionTabs = () => {
                 <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
                 {activeTab === 'open' && <th>Current Price</th>}
                 {activeTab === 'closed' && <th>Close Price</th>}
-                {activeTab === 'open' && <th>Close Price</th>}
+                {activeTab === 'open' && <th>TP / SL</th>}
                 {(activeTab === 'open' || activeTab === 'closed') && <th>Open Time</th>}
                 {activeTab === 'closed' && <th>Close Time</th>}
                 {activeTab !== 'pending' && <th>Profit</th>}
@@ -250,7 +250,12 @@ const PositionTabs = () => {
                       )}
                       
                       {activeTab === 'open' && (
-                        <td>{(trade.closePrice || 0).toFixed(p?.precision || 2)}</td>
+                        <td>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                            <span style={{ color: '#10b981' }}>TP: {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 5) : '—'}</span>
+                            <span style={{ color: '#ef4444' }}>SL: {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 5) : '—'}</span>
+                          </div>
+                        </td>
                       )}
 
                       {(activeTab === 'open' || activeTab === 'closed') && (
@@ -369,8 +374,11 @@ const PositionTabs = () => {
                       )}
                       {activeTab === 'open' && (
                         <div>
-                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Price</div>
-                          <div className="text-xs text-[var(--text-main)] font-mono">{(trade.closePrice || 0).toFixed(p?.precision || 2)}</div>
+                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">TP / SL</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">
+                            <span style={{ color: '#10b981' }}>TP: {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 5) : '—'}</span>{' / '}
+                            <span style={{ color: '#ef4444' }}>SL: {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 5) : '—'}</span>
+                          </div>
                         </div>
                       )}
                       {activeTab === 'open' && trade.openTime && (
