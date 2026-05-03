@@ -250,8 +250,8 @@ const PositionTabs = () => {
                       )}
                       
                       {activeTab === 'open' && (
-                        <td style={{ fontWeight: 700, opacity: trade.closePrice ? 1 : 0.4 }}>
-                          {trade.closePrice ? parseFloat(trade.closePrice).toFixed(p?.precision || 2) : '—'}
+                        <td style={{ fontWeight: 700, opacity: trade.takeProfit ? 1 : 0.4 }}>
+                          {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '—'}
                         </td>
                       )}
 
@@ -373,7 +373,7 @@ const PositionTabs = () => {
                         <div>
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Price</div>
                           <div className="text-xs text-[var(--text-main)] font-mono">
-                            {trade.closePrice ? parseFloat(trade.closePrice).toFixed(p?.precision || 2) : '—'}
+                            {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '—'}
                           </div>
                         </div>
                       )}
