@@ -213,7 +213,7 @@ const PositionTabs = () => {
                 <th>{activeTab === 'pending' ? 'Target Price' : 'Open Price'}</th>
                 {activeTab === 'open' && <th>Current Price</th>}
                 {activeTab === 'closed' && <th>Close Price</th>}
-                {activeTab === 'open' && <th>TP/SL</th>}
+                {activeTab === 'open' && <th>Close Price</th>}
                 {(activeTab === 'open' || activeTab === 'closed') && <th>Open Time</th>}
                 {activeTab === 'closed' && <th>Close Time</th>}
                 {activeTab !== 'pending' && <th>Profit</th>}
@@ -250,11 +250,8 @@ const PositionTabs = () => {
                       )}
                       
                       {activeTab === 'open' && (
-                        <td>
-                          <div className="pos-tpsl-cell">
-                            <span className="pos-tpsl-line">TP: {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '-'}</span>
-                            <span className="pos-tpsl-line">SL: {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '-'}</span>
-                          </div>
+                        <td style={{ fontWeight: 700, opacity: trade.closePrice ? 1 : 0.4 }}>
+                          {trade.closePrice ? parseFloat(trade.closePrice).toFixed(p?.precision || 2) : '—'}
                         </td>
                       )}
 
@@ -374,9 +371,9 @@ const PositionTabs = () => {
                       )}
                       {activeTab === 'open' && (
                         <div>
-                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">TP / SL</div>
+                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Price</div>
                           <div className="text-xs text-[var(--text-main)] font-mono">
-                            {trade.takeProfit ? parseFloat(trade.takeProfit).toFixed(p?.precision || 2) : '-'} / {trade.stopLoss ? parseFloat(trade.stopLoss).toFixed(p?.precision || 2) : '-'}
+                            {trade.closePrice ? parseFloat(trade.closePrice).toFixed(p?.precision || 2) : '—'}
                           </div>
                         </div>
                       )}
