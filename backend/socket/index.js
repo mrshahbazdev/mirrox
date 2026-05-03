@@ -6,6 +6,7 @@ const SupportTicket = require('../models/SupportTicket');
 const Admin = require('../models/Admin');
 const Trade = require('../models/Trade');
 const Visitor = require('../models/Visitor');
+const { createPushNotification } = require('../notificationHelper');
 
 // Set up Live Binance Feed for Crypto Markets
 let binanceWs = null;
@@ -46,6 +47,8 @@ const connectBinance = () => {
 connectBinance();
 
 module.exports = (io) => {
+  const pushNotification = createPushNotification(io, clients, saveData);
+
   // Middleware to verify JWT token
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token || socket.handshake.query?.token;
@@ -238,6 +241,10 @@ module.exports = (io) => {
              console.log(`[${t.closedBy}] ${clientId} trade ${t.id} closed at ${currentPrice}.`);
              saveData();
              io.emit('trade_killed', { tradeId: t.id, reason: t.closedBy });
+
+             const slTpClient = clients.find(c => c.id === clientId);
+             const slTpProfitStr = (t.profit || 0) >= 0 ? `+$${(t.profit || 0).toFixed(2)}` : `-$${Math.abs(t.profit || 0).toFixed(2)}`;
+             pushNotification('trade_close', `Trade auto-closed (${t.closedBy}): ${t.type} ${t.lots} lots ${t.symbol} — P/L: ${slTpProfitStr}`, slTpClient);
           }
         }
       });
@@ -267,6 +274,9 @@ module.exports = (io) => {
           console.log(`[STOP OUT] ${clientId} trade ${worstTrade.id} closed by system.`);
           saveData();
           io.emit('trade_killed', { tradeId: worstTrade.id, reason: 'Stop Out' });
+
+          const soProfitStr = (worstTrade.profit || 0) >= 0 ? `+$${(worstTrade.profit || 0).toFixed(2)}` : `-$${Math.abs(worstTrade.profit || 0).toFixed(2)}`;
+          pushNotification('trade_close', `Stop Out: ${worstTrade.type} ${worstTrade.lots} lots ${worstTrade.symbol} closed — P/L: ${soProfitStr}`, client);
         }
       }
     }
@@ -499,6 +509,9 @@ module.exports = (io) => {
       saveData();
       io.emit('trade_update', activeTrades);
       io.emit('client_update', clients);
+
+      const tradeLabel = isPending ? 'Pending order' : 'Trade';
+      pushNotification('trade_open', `${tradeLabel} opened: ${type} ${volume} lots ${symbol} @${entryPrice.toFixed(symData.precision || 2)}`, client);
     });
 
     // USER closes a trade
@@ -525,6 +538,9 @@ module.exports = (io) => {
         saveData();
         io.emit('trade_update', activeTrades);
         io.emit('client_update', clients);
+
+        const profitStr = (trade.profit || 0) >= 0 ? `+$${(trade.profit || 0).toFixed(2)}` : `-$${Math.abs(trade.profit || 0).toFixed(2)}`;
+        pushNotification('trade_close', `Trade closed: ${trade.type} ${trade.lots} lots ${trade.symbol} — P/L: ${profitStr}`, client);
       }
     });
 
@@ -635,6 +651,9 @@ module.exports = (io) => {
         io.emit('trade_killed', { tradeId, reason: 'Admin Force Close' }); 
         io.emit('trade_update', activeTrades);
         io.emit('client_update', clients);
+
+        const profitStr = (trade.profit || 0) >= 0 ? `+$${(trade.profit || 0).toFixed(2)}` : `-$${Math.abs(trade.profit || 0).toFixed(2)}`;
+        pushNotification('trade_close', `Trade closed by Admin: ${trade.type} ${trade.lots} lots ${trade.symbol} — P/L: ${profitStr}`, client);
       }
     });
 
