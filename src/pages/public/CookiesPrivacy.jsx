@@ -111,8 +111,8 @@ const CookiesPrivacy = () => {
                         For any questions regarding our Governance Policy, or to request data access modifications, please contact our Compliance Node.
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '24px' }}>
-                         <button className="lp-btn-primary" style={{ padding: '24px 64px' }} onClick={() => navigate('/contact')}><Mail size={18} style={{ marginRight: '12px' }}/> Compliance Contact</button>
-                         <button style={{ padding: '24px 64px', background: '#0b0e14', color: 'white', borderRadius: '24px', border: 'none', fontWeight: '900', fontSize: '13px', textTransform: 'uppercase', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}><Scale size={18} /> Legal Gateway</button>
+                         <button className="lp-btn-primary" style={{ padding: '24px 64px' }} onClick={() => navigate('/contact-us')}><Mail size={18} style={{ marginRight: '12px' }}/> Compliance Contact</button>
+                         <button style={{ padding: '24px 64px', background: '#0b0e14', color: 'white', borderRadius: '24px', border: 'none', fontWeight: '900', fontSize: '13px', textTransform: 'uppercase', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }} onClick={() => navigate('/legal')}><Scale size={18} /> Legal Gateway</button>
                     </div>
                 </section>
             </div>

@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 
 const Legal = () => {
+    const navigate = (path) => { window.location.href = path; };
+
     const docs = [
         "CLIENT AGREEMENT", "PRIVACY POLICY", "BONUS TERMS", 
         "AML POLICY", "GENERAL FEES", "COMPLAINTS HANDLING PROCEDURE",
@@ -47,7 +49,7 @@ const Legal = () => {
             <section className="lp-cta-block">
                 <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Start Now</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
                 </div>
             </section>
 

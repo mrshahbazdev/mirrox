@@ -91,7 +91,7 @@ const HomePublic = () => {
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '19px', lineHeight: '1.7', marginBottom: '40px' }}>
                             Our high-performance web platform provides institutional-grade tools on any device. Execute trades with zero latency and advanced charting capabilities.
                         </p>
-                        <button className="lp-btn-primary" onClick={() => navigate('/trading')}>
+                        <button className="lp-btn-primary" onClick={() => navigate('/web-trader')}>
                             Launch Web Trader
                         </button>
                     </div>
@@ -144,7 +144,7 @@ const HomePublic = () => {
                             <div className="lp-icon-box" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }}><Headphones size={28} /></div>
                             <h3 style={{ color: 'white', textTransform: 'uppercase' }}>Expert Support</h3>
                             <p style={{ color: '#94a3b8' }}>Dedicated account managers and 24/7 multilingual support from local industry veterans.</p>
-                            <button className="lp-cta-white" style={{ marginTop: '40px', width: '100%', padding: '20px' }}>Contact Specialist</button>
+                            <button className="lp-cta-white" style={{ marginTop: '40px', width: '100%', padding: '20px' }} onClick={() => navigate('/contact-us')}>Contact Specialist</button>
                         </div>
                     </div>
                 </div>
@@ -186,7 +186,7 @@ const HomePublic = () => {
                                         </div>
                                     </td>
                                     <td style={{ textAlign: 'right' }}>
-                                        <button style={{ padding: '12px 24px', borderRadius: '12px', background: '#0b0e14', color: 'white', border: 'none', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer' }}>Trade Now</button>
+                                        <button style={{ padding: '12px 24px', borderRadius: '12px', background: '#0b0e14', color: 'white', border: 'none', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer' }} onClick={() => navigate('/register')}>Trade Now</button>
                                     </td>
                                 </tr>
                             ))}
@@ -200,7 +200,7 @@ const HomePublic = () => {
                 <h2 style={{ lineHeight: '1' }}>Start Your Trading<br/>Journey Today</h2>
                 <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '60px' }}>
                     <button className="lp-cta-white" onClick={() => navigate('/register')}>Get Started</button>
-                    <button style={{ background: 'transparent', border: '2px solid white', color: 'white', padding: '24px 64px', borderRadius: '24px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer', fontSize: '14px' }}>View Markets</button>
+                    <button style={{ background: 'transparent', border: '2px solid white', color: 'white', padding: '24px 64px', borderRadius: '24px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer', fontSize: '14px' }} onClick={() => navigate('/forex')}>View Markets</button>
                 </div>
             </section>
         </div>

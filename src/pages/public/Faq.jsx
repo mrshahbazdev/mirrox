@@ -181,7 +181,7 @@ const Faq = () => {
                             </div>
                             <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', textTransform: 'uppercase', lineHeight: '1.1', marginBottom: '32px', letterSpacing: '-2px' }}>Still Have <span style={{ color: 'var(--pub-red)' }}>Questions</span>?</h2>
                             <p style={{ opacity: 0.6, fontSize: '20px', maxWidth: '650px', margin: '0 auto 64px auto', lineHeight: '1.6' }}>Our elite support nodes are synchronized 24/5 to provide immediate resolution for any inquiries.</p>
-                            <button className="lp-btn-primary" style={{ padding: '24px 80px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/contact')}>Open Dynamic Ticket</button>
+                            <button className="lp-btn-primary" style={{ padding: '24px 80px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/contact-us')}>Open Dynamic Ticket</button>
                         </div>
                     </div>
                 </section>

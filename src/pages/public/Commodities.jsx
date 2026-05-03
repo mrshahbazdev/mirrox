@@ -82,7 +82,7 @@ const Commodities = () => {
                                  <div style={{ color: '#10b981', fontSize: '18px', fontWeight: '900', marginTop: '8px' }}>+2.45%</div>
                              </div>
                              <div style={{ position: 'absolute', bottom: '32px', left: '32px', right: '32px' }}>
-                                 <button style={{ width: '100%', background: 'var(--pub-red)', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: '900', textTransform: 'uppercase', fontSize: '11px' }}>Quick Trade</button>
+                                 <button style={{ width: '100%', background: 'var(--pub-red)', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: '900', textTransform: 'uppercase', fontSize: '11px', cursor: 'pointer' }} onClick={() => navigate('/register')}>Quick Trade</button>
                              </div>
                          </div>
                     </div>

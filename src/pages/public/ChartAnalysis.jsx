@@ -2,6 +2,8 @@ import React from 'react';
 import { Lock, ArrowRight, Shield, Zap, BarChart3, TrendingUp } from 'lucide-react';
 
 const ChartAnalysis = () => {
+    const navigate = (path) => { window.location.href = path; };
+
     return (
         <div className="lp-wrapper">
             
@@ -27,8 +29,8 @@ const ChartAnalysis = () => {
                         <p style={{ color: '#64748b', fontSize: '16px', lineHeight: '1.6', fontWeight: '500' }}>Please sign up or log in to unlock access to our professional real-time chart analysis tools and expert insights.</p>
                     </div>
                     <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <button className="lp-btn-primary" style={{ padding: '16px 40px' }}>Login</button>
-                        <button style={{ padding: '16px 40px', borderRadius: '16px', background: 'white', border: '1px solid #e2e8f0', color: '#111', fontWeight: '900', fontSize: '11px', textTransform: 'uppercase', cursor: 'pointer' }}>Create Account</button>
+                        <button className="lp-btn-primary" style={{ padding: '16px 40px' }} onClick={() => navigate('/login')}>Login</button>
+                        <button style={{ padding: '16px 40px', borderRadius: '16px', background: 'white', border: '1px solid #e2e8f0', color: '#111', fontWeight: '900', fontSize: '11px', textTransform: 'uppercase', cursor: 'pointer' }} onClick={() => navigate('/register')}>Create Account</button>
                     </div>
                 </div>
             </div>
@@ -37,7 +39,7 @@ const ChartAnalysis = () => {
             <section className="lp-cta-block" style={{ marginTop: '0' }}>
                 <h2 style={{ textAlign: 'center' }}>Ready to Unlock Full Potential?</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Join Bullvera Now</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Join Bullvera Now</button>
                 </div>
             </section>
         </div>

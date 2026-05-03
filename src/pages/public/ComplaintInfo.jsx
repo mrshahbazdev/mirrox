@@ -29,7 +29,7 @@ const ComplaintInfo = () => {
                          <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.6', marginBottom: '40px' }}>
                             To ensure a quick response, please submit your feedback through our official complaint form or via email. Include your account details and a clear description of the issue.
                          </p>
-                         <button className="lp-btn-primary">Process My Complaint <Send size={18} /></button>
+                         <button className="lp-btn-primary" onClick={() => navigate('/contact-us')}>Process My Complaint <Send size={18} /></button>
                     </div>
                     <div style={{ position: 'relative', background: '#f8fafc', borderRadius: '48px', padding: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                         <div style={{ background: 'white', padding: '40px', borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', width: '100%', maxWidth: '300px' }}>
@@ -146,7 +146,7 @@ const ComplaintInfo = () => {
             <section className="lp-cta-block">
                 <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Start Now</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
                 </div>
             </section>
         </div>

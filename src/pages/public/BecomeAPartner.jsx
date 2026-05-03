@@ -98,7 +98,7 @@ const BecomeAPartner = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                <button className="lp-btn-primary" style={{ width: '100%', marginTop: '24px' }}>{plan.cta}</button>
+                                <button className="lp-btn-primary" style={{ width: '100%', marginTop: '24px' }} onClick={() => navigate('/register')}>{plan.cta}</button>
                             </div>
                         ))}
                     </div>
@@ -158,7 +158,7 @@ const BecomeAPartner = () => {
                                 <label style={{ fontSize: '11px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Work Identifier</label>
                                 <input type="email" style={{ padding: '24px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '24px', outline: 'none', fontWeight: '900', fontSize: '16px' }} placeholder="professional@email.com" />
                             </div>
-                            <button className="lp-btn-primary" style={{ width: '100%', padding: '24px', fontSize: '14px' }}>Launch Application <ArrowRight size={18} style={{ marginLeft: '12px' }}/></button>
+                            <button className="lp-btn-primary" style={{ width: '100%', padding: '24px', fontSize: '14px' }} type="submit" onClick={(e) => { e.preventDefault(); navigate('/register'); }}>Launch Application <ArrowRight size={18} style={{ marginLeft: '12px' }}/></button>
                         </form>
                     </div>
                 </div>

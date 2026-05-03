@@ -1,6 +1,8 @@
 import { BookOpen, PlayCircle, ArrowRight, Zap, Globe, Shield } from 'lucide-react';
 
 const Education = () => {
+    const navigate = (path) => { window.location.href = path; };
+
     return (
         <div className="lp-wrapper">
             {/* --- HERO SECTION --- */}
@@ -31,7 +33,7 @@ const Education = () => {
                             </div>
                             <h3 style={{ fontSize: '20px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '16px' }}>{course.title}</h3>
                             <p style={{ color: 'var(--pub-text-muted)', lineHeight: '1.6', fontSize: '15px', marginBottom: '32px' }}>{course.desc}</p>
-                            <button className="lp-btn-primary" style={{ padding: '12px 24px', fontSize: '11px' }}>
+                            <button className="lp-btn-primary" style={{ padding: '12px 24px', fontSize: '11px' }} onClick={() => navigate('/register')}>
                                 Start Course
                             </button>
                         </div>
@@ -49,7 +51,7 @@ const Education = () => {
                              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '18px', lineHeight: '1.7', marginBottom: '48px' }}>
                                 Get access to high-definition video tutorials led by industry experts. From platform walkthroughs to live market analysis sessions.
                              </p>
-                             <button className="lp-cta-white" style={{ alignSelf: 'flex-start' }}>Enter Library</button>
+                             <button className="lp-cta-white" style={{ alignSelf: 'flex-start' }} onClick={() => navigate('/register')}>Enter Library</button>
                          </div>
                          <div style={{ position: 'relative', borderRadius: '64px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 40px 100px rgba(0,0,0,0.5)' }}>
                             <img 
@@ -84,7 +86,7 @@ const Education = () => {
             <section className="lp-cta-block" style={{ marginBottom: '120px' }}>
                 <h2 style={{ textAlign: 'center' }}>Ready to Begin Your Journey?</h2>
                 <div style={{ marginTop: '60px', textAlign: 'center' }}>
-                    <button className="lp-cta-white">Join Bullvera University</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Join Bullvera University</button>
                 </div>
             </section>
         </div>
