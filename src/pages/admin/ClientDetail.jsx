@@ -691,7 +691,7 @@ const ClientDetail = ({ onAdminLogout }) => {
                   <th>Volume</th>
                   <th>Open Price</th>
                   <th>Current Price</th>
-                  <th>TP / SL</th>
+                  <th>Close Price</th>
                   <th>Swap</th>
                   <th>Profit/Loss</th>
                   <th>Open Time</th>
@@ -738,11 +738,8 @@ const ClientDetail = ({ onAdminLogout }) => {
                           <td style={{ fontWeight: 700 }}>
                              {prices.find(p=>p.symbol===t.symbol)?.price || '...'}
                           </td>
-                          <td>
-                             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
-                               <span style={{ color: '#10b981' }}>TP: {t.takeProfit ? parseFloat(t.takeProfit).toFixed(5) : '—'}</span>
-                               <span style={{ color: '#ef4444' }}>SL: {t.stopLoss ? parseFloat(t.stopLoss).toFixed(5) : '—'}</span>
-                             </div>
+                          <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                            {t.closePrice ? parseFloat(t.closePrice).toFixed(5) : '—'}
                           </td>
                           <td style={{ 
                             color: (t.swap || 0) < 0 ? '#ef4444' : '#10b981',
