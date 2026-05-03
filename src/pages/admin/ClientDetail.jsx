@@ -642,10 +642,8 @@ const ClientDetail = ({ onAdminLogout }) => {
               <div className="cd-acc-label">Active Power</div>
               <div className="cd-acc-value">{acc?.leverage || '1:100'}</div>
            </div>
-           <div className="cd-acc-card">
-              <div className="cd-acc-label">Margin Health</div>
-              <div className="cd-acc-value" style={{ color: (acc?.marginLevel || 0) < 100 ? '#ef4444' : '#10b981' }}>{acc?.marginLevel || 0}%</div>
-           </div>
+
+
         </div>
 
         <div className="cd-metrics-grid">
