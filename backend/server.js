@@ -13,6 +13,8 @@ const { Server } = require('socket.io');
 const setupSockets = require('./socket/index');
 const { clients, activeTrades, symbolsList, deposits, withdrawals, admins, configs, saveData, initializeDB } = require('./store');
 const AdminActivity = require('./models/AdminActivity');
+const Notification = require('./models/Notification');
+const { createPushNotification } = require('./notificationHelper');
 const Visitor = require('./models/Visitor');
 const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
@@ -93,6 +95,8 @@ const io = new Server(server, {
     credentials: true
   }
 });
+
+const pushNotification = createPushNotification(io, clients, saveData);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -790,6 +794,10 @@ app.post('/api/clients/:id/kyc/submit', verifyClientToken, ensureSelfOrAdmin('id
       
       client.kyc.status = 'pending';
       saveData();
+
+      const catLabel = cat === 'poi' ? 'Proof of Identity' : cat === 'por' ? 'Proof of Residence' : 'Selfie';
+      pushNotification('kyc_submitted', `${client.name} submitted ${catLabel} for verification.`, client);
+
       res.json({ message: 'Submitted', kyc: client.kyc });
   });
   streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
@@ -815,8 +823,11 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
   if (poiStatus === 'approved' && porStatus === 'approved' && selfieStatus === 'approved') {
      client.kyc.status = 'verified';
      client.accountType = 'live';
+     pushNotification('kyc_verified', 'Your account has been fully verified! You now have a Live account.', client);
   } else if (poiStatus === 'rejected' || porStatus === 'rejected' || selfieStatus === 'rejected') {
      client.kyc.status = 'rejected';
+     const catLabel = cat === 'poi' ? 'Proof of Identity' : cat === 'por' ? 'Proof of Residence' : 'Selfie';
+     pushNotification('kyc_rejected', `Your ${catLabel} document has been rejected.${rejectionReason ? ' Reason: ' + rejectionReason : ''}`, client);
   } else {
      client.kyc.status = 'pending';
   }
@@ -842,6 +853,13 @@ app.put('/api/clients/:id/kyc', verifyAdminToken, async (req, res) => {
   client.kyc.reviewedAt = new Date();
   
   saveData();
+
+  if (status === 'approved') {
+    pushNotification('kyc_verified', 'Your account has been fully verified! You now have a Live account.', client);
+  } else if (status === 'rejected') {
+    pushNotification('kyc_rejected', `Your verification has been rejected.${rejectionReason ? ' Reason: ' + rejectionReason : ''}`, client);
+  }
+
   res.json(client);
 });
 
@@ -879,6 +897,10 @@ app.post('/api/deposits', verifyClientToken, (req, res) => {
   deposits.push(newDep);
   saveData();
   io.emit('finance_update');
+
+  const depositClient = clients.find(c => c.id === req.user.id);
+  pushNotification('info', `New deposit request of $${newDep.amount} submitted.`, depositClient);
+
   res.status(201).json(newDep);
 });
 
@@ -900,6 +922,14 @@ app.put('/api/deposits/:id/status', verifyAdminToken, (req, res) => {
   
   saveData();
   io.emit('finance_update');
+
+  const depClient = clients.find(c => c.id === dep.clientId);
+  if (req.body.status === 'approved') {
+    pushNotification('deposit_approved', `Your deposit of $${dep.amount} has been approved.`, depClient);
+  } else if (req.body.status === 'rejected') {
+    pushNotification('deposit_rejected', `Your deposit of $${dep.amount} has been rejected.${dep.reason ? ' Reason: ' + dep.reason : ''}`, depClient);
+  }
+
   res.json(dep);
 });
 
@@ -938,6 +968,9 @@ app.post('/api/withdrawals', verifyClientToken, async (req, res) => {
   withdrawals.push(newWit);
   saveData();
   io.emit('finance_update');
+
+  pushNotification('info', `New withdrawal request of $${amount} submitted.`, client);
+
   res.status(201).json(newWit);
 });
 
@@ -956,6 +989,14 @@ app.put('/api/withdrawals/:id/status', verifyAdminToken, (req, res) => {
 
   saveData();
   io.emit('finance_update');
+
+  const witClient = clients.find(c => c.id === wit.clientId);
+  if (req.body.status === 'approved') {
+    pushNotification('withdrawal_approved', `Your withdrawal of $${wit.amount} has been approved.`, witClient);
+  } else if (req.body.status === 'rejected') {
+    pushNotification('withdrawal_rejected', `Your withdrawal of $${wit.amount} has been rejected.${wit.reason ? ' Reason: ' + wit.reason : ''}`, witClient);
+  }
+
   res.json(wit);
 });
 
@@ -1265,6 +1306,37 @@ app.put('/api/clients/:clientId/notifications/:notifId/read', verifyClientToken,
   } catch (err) {
     console.error('Failed to mark notification read:', err);
     res.status(500).json({ error: 'Failed to mark read' });
+  }
+});
+
+// --- ADMIN NOTIFICATION APIS ---
+app.get('/api/admin/notifications', verifyAdminToken, async (req, res) => {
+  try {
+    const notifications = await Notification.find().sort({ date: -1 }).limit(100);
+    res.json(notifications);
+  } catch (err) {
+    console.error('Failed to fetch admin notifications:', err);
+    res.status(500).json({ error: 'Failed to fetch notifications' });
+  }
+});
+
+app.put('/api/admin/notifications/:notifId/read', verifyAdminToken, async (req, res) => {
+  try {
+    await Notification.updateOne({ id: req.params.notifId }, { $set: { read: true } });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Failed to mark admin notification read:', err);
+    res.status(500).json({ error: 'Failed to mark read' });
+  }
+});
+
+app.put('/api/admin/notifications/read-all', verifyAdminToken, async (req, res) => {
+  try {
+    await Notification.updateMany({ read: false }, { $set: { read: true } });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Failed to mark all admin notifications read:', err);
+    res.status(500).json({ error: 'Failed to mark all read' });
   }
 });
 

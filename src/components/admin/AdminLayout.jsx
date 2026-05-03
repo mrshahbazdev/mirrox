@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTrading } from '../../context/TradingContext';
@@ -18,6 +18,9 @@ const AdminLayout = ({ children, onAdminLogout }) => {
   const [supportUnreadCount, setSupportUnreadCount] = useState(0);
   const [onlineVisitorCount, setOnlineVisitorCount] = useState(0);
   const [broadcast, setBroadcast] = useState(null);
+  const [adminNotifs, setAdminNotifs] = useState([]);
+  const [showAdminNotifs, setShowAdminNotifs] = useState(false);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     if (!socket) return;
@@ -76,12 +79,50 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     }
   }, [onAdminLogout]);
 
+  const fetchAdminNotifs = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('bullvera_admin_token');
+      if (!token) return;
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/admin/notifications', config);
+      setAdminNotifs(res.data);
+    } catch (err) {
+      console.error('Failed to fetch admin notifications', err);
+    }
+  }, []);
+
+  const markAdminNotifRead = async (notifId) => {
+    try {
+      const token = localStorage.getItem('bullvera_admin_token');
+      await axios.put(import.meta.env.VITE_API_URL + `/api/admin/notifications/${notifId}/read`, {}, { headers: { Authorization: `Bearer ${token}` } });
+      setAdminNotifs(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
+    } catch (err) {
+      console.error('Failed to mark admin notification read', err);
+    }
+  };
+
+  const markAllAdminNotifsRead = async () => {
+    try {
+      const token = localStorage.getItem('bullvera_admin_token');
+      await axios.put(import.meta.env.VITE_API_URL + '/api/admin/notifications/read-all', {}, { headers: { Authorization: `Bearer ${token}` } });
+      setAdminNotifs(prev => prev.map(n => ({ ...n, read: true })));
+    } catch (err) {
+      console.error('Failed to mark all admin notifications read', err);
+    }
+  };
+
   useEffect(() => {
     fetchAdminStats();
+    fetchAdminNotifs();
     const interval = setInterval(fetchAdminStats, 10000);
+    const notifInterval = setInterval(fetchAdminNotifs, 15000);
     
     if (socket) {
       socket.on('finance_update', fetchAdminStats);
+
+      socket.on('notification:new', (notif) => {
+        setAdminNotifs(prev => [notif, ...prev].slice(0, 100));
+      });
 
       // Support unread badge
       socket.on('chat:ticket_update', (data) => {
@@ -98,13 +139,26 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
     return () => {
       clearInterval(interval);
+      clearInterval(notifInterval);
       if (socket) {
         socket.off('finance_update', fetchAdminStats);
+        socket.off('notification:new');
         socket.off('chat:ticket_update');
         socket.off('visitors:update');
       }
     };
-  }, [socket, fetchAdminStats]);
+  }, [socket, fetchAdminStats, fetchAdminNotifs]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setShowAdminNotifs(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navItems = [
     { icon: 'fa-solid fa-users', path: '/admin/clients', label: 'Clients' },
@@ -177,6 +231,61 @@ const AdminLayout = ({ children, onAdminLogout }) => {
               <span className="adm-stat-dot active" />
               <span>System Online</span>
             </div>
+
+            {/* Admin Notification Bell */}
+            <div className="adm-notif-wrapper" ref={notifRef}>
+              <div className="adm-notif-bell" onClick={() => setShowAdminNotifs(!showAdminNotifs)}>
+                <i className="fa-solid fa-bell" />
+                {adminNotifs.filter(n => !n.read).length > 0 && (
+                  <span className="adm-notif-badge">{adminNotifs.filter(n => !n.read).length > 99 ? '99+' : adminNotifs.filter(n => !n.read).length}</span>
+                )}
+              </div>
+
+              {showAdminNotifs && (
+                <div className="adm-notif-dropdown">
+                  <div className="adm-notif-header">
+                    <h4>Notifications</h4>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      {adminNotifs.some(n => !n.read) && (
+                        <button className="adm-notif-mark-all" onClick={markAllAdminNotifsRead}>Mark all read</button>
+                      )}
+                      <button className="adm-notif-close" onClick={() => setShowAdminNotifs(false)}><i className="fa-solid fa-xmark" /></button>
+                    </div>
+                  </div>
+                  <div className="adm-notif-body">
+                    {adminNotifs.length === 0 ? (
+                      <div className="adm-notif-empty">No notifications yet</div>
+                    ) : (
+                      adminNotifs.map(n => (
+                        <div key={n.id} className={`adm-notif-item ${!n.read ? 'unread' : ''}`} onClick={() => !n.read && markAdminNotifRead(n.id)}>
+                          <div className={`adm-notif-icon ${n.type}`}>
+                            <i className={
+                              n.type === 'trade_open' ? 'fa-solid fa-arrow-trend-up' :
+                              n.type === 'trade_close' ? 'fa-solid fa-arrow-trend-down' :
+                              n.type === 'deposit_approved' ? 'fa-solid fa-circle-check' :
+                              n.type === 'deposit_rejected' ? 'fa-solid fa-circle-xmark' :
+                              n.type === 'withdrawal_approved' ? 'fa-solid fa-circle-check' :
+                              n.type === 'withdrawal_rejected' ? 'fa-solid fa-circle-xmark' :
+                              n.type === 'kyc_verified' ? 'fa-solid fa-shield-check' :
+                              n.type === 'kyc_rejected' ? 'fa-solid fa-shield-xmark' :
+                              n.type === 'kyc_submitted' ? 'fa-solid fa-file-arrow-up' :
+                              'fa-solid fa-info'
+                            } />
+                          </div>
+                          <div className="adm-notif-content">
+                            {n.clientName && <span className="adm-notif-client">{n.clientName} ({n.clientId})</span>}
+                            <p>{n.message}</p>
+                            <span className="adm-notif-time">{new Date(n.date).toLocaleString()}</span>
+                          </div>
+                          {!n.read && <div className="adm-notif-unread-dot" />}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="adm-avatar">
               <i className="fa-solid fa-user-shield" />
               <span>Admin</span>
@@ -450,6 +559,73 @@ const AdminLayout = ({ children, onAdminLogout }) => {
         .adm-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
         .adm-btn-secondary { background: var(--bg-hover); color: var(--text-main); border-color: var(--border); }
         .adm-btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+        /* Admin Notification Bell & Dropdown */
+        .adm-notif-wrapper { position: relative; }
+        .adm-notif-bell {
+          cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center;
+          width: 36px; height: 36px; border-radius: 10px; background: var(--bg-hover);
+          border: 1px solid var(--border); transition: all 0.2s;
+        }
+        .adm-notif-bell:hover { background: rgba(255,255,255,0.08); }
+        .adm-notif-bell i { color: var(--text-dim); font-size: 14px; }
+        .adm-notif-badge {
+          position: absolute; top: -5px; right: -5px; background: var(--danger); color: white;
+          font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 10px;
+          border: 2px solid var(--bg-deep); min-width: 18px; text-align: center;
+        }
+        .adm-notif-dropdown {
+          position: absolute; top: 44px; right: 0; width: 380px; background: var(--bg-card);
+          border: 1px solid var(--border); border-radius: 16px;
+          box-shadow: 0 16px 48px rgba(0,0,0,0.3); z-index: 1000; overflow: hidden;
+          animation: adm-notif-in 0.2s ease;
+          backdrop-filter: blur(20px);
+        }
+        @keyframes adm-notif-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .adm-notif-header {
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 16px 20px; border-bottom: 1px solid var(--border);
+          background: rgba(15,23,42,0.8);
+        }
+        .adm-notif-header h4 { margin: 0; font-size: 14px; color: var(--text-main); font-weight: 700; }
+        .adm-notif-mark-all {
+          background: none; border: none; color: var(--accent); cursor: pointer;
+          font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;
+          transition: background 0.2s;
+        }
+        .adm-notif-mark-all:hover { background: rgba(255,77,94,0.1); }
+        .adm-notif-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 16px; }
+        .adm-notif-close:hover { color: var(--text-main); }
+        .adm-notif-body { max-height: 420px; overflow-y: auto; }
+        .adm-notif-body::-webkit-scrollbar { width: 4px; }
+        .adm-notif-body::-webkit-scrollbar-track { background: transparent; }
+        .adm-notif-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .adm-notif-empty { padding: 32px; text-align: center; color: var(--text-dim); font-size: 12px; }
+        .adm-notif-item {
+          display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border);
+          cursor: pointer; transition: background 0.2s; align-items: flex-start;
+        }
+        .adm-notif-item:hover { background: var(--bg-hover); }
+        .adm-notif-item.unread { background: rgba(255,77,94,0.03); }
+        .adm-notif-icon {
+          width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center;
+          justify-content: center; flex-shrink: 0; font-size: 13px;
+        }
+        .adm-notif-icon.trade_open { background: rgba(0,204,136,0.1); color: var(--success); }
+        .adm-notif-icon.trade_close { background: rgba(255,77,77,0.1); color: var(--danger); }
+        .adm-notif-icon.deposit_approved { background: rgba(0,204,136,0.1); color: var(--success); }
+        .adm-notif-icon.deposit_rejected { background: rgba(255,77,77,0.1); color: var(--danger); }
+        .adm-notif-icon.withdrawal_approved { background: rgba(0,204,136,0.1); color: var(--success); }
+        .adm-notif-icon.withdrawal_rejected { background: rgba(255,77,77,0.1); color: var(--danger); }
+        .adm-notif-icon.kyc_verified { background: rgba(0,204,136,0.1); color: var(--success); }
+        .adm-notif-icon.kyc_rejected { background: rgba(255,77,77,0.1); color: var(--danger); }
+        .adm-notif-icon.kyc_submitted { background: rgba(245,158,11,0.1); color: var(--warning); }
+        .adm-notif-icon.info { background: rgba(96,165,250,0.1); color: #60a5fa; }
+        .adm-notif-content { flex: 1; min-width: 0; }
+        .adm-notif-client { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.3px; display: block; margin-bottom: 2px; }
+        .adm-notif-content p { margin: 0; font-size: 12px; line-height: 1.4; color: var(--text-main); word-break: break-word; }
+        .adm-notif-time { font-size: 10px; color: var(--text-dim); margin-top: 4px; display: block; }
+        .adm-notif-unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
       `}</style>
 
     </div>
