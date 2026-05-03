@@ -138,13 +138,19 @@ const ClientDetail = ({ onAdminLogout }) => {
       console.log('[ADMIN] Emitting admin_set_pl:', { clientId: id, tradeId: modalTrade.id, forcedProfit: forced });
       socket.emit('admin_set_pl', { clientId: id, tradeId: modalTrade.id, forcedProfit: forced });
     } else {
-      const mult = parseFloat(modalMultiplier);
-      if (isNaN(mult) || mult < 0) {
-        showAlert("Please enter a valid positive intensity", 'Validation Error', 'warning');
+      const amount = parseFloat(modalMultiplier);
+      if (isNaN(amount) || amount < 0) {
+        showAlert("Please enter a valid positive amount", 'Validation Error', 'warning');
         return;
       }
-      console.log('[ADMIN] Emitting admin_set_bias:', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
-      socket.emit('admin_set_bias', { clientId: id, tradeId: modalTrade.id, bias: modalMode, multiplier: mult });
+      if (modalMode === 'none') {
+        console.log('[ADMIN] Emitting admin_set_bias:', { clientId: id, tradeId: modalTrade.id, bias: 'none', multiplier: 1 });
+        socket.emit('admin_set_bias', { clientId: id, tradeId: modalTrade.id, bias: 'none', multiplier: 1 });
+      } else {
+        const forcedValue = modalMode === 'loss' ? -Math.abs(amount) : Math.abs(amount);
+        console.log('[ADMIN] Emitting admin_set_pl (fixed):', { clientId: id, tradeId: modalTrade.id, forcedProfit: forcedValue });
+        socket.emit('admin_set_pl', { clientId: id, tradeId: modalTrade.id, forcedProfit: forcedValue });
+      }
     }
     
     setShowModal(false);
@@ -1369,18 +1375,18 @@ const ClientDetail = ({ onAdminLogout }) => {
                   </div>
                 ) : (
                   <div className="adm-input-group">
-                    <label>Trend Impact Multiplier</label>
+                    <label>Fixed Amount (USD)</label>
                     <input 
                        type="number"
-                       step="0.1"
+                       step="0.01"
                        className="adm-input"
                        value={modalMultiplier}
                        onChange={(e) => setModalMultiplier(e.target.value)}
-                       placeholder="1.0"
+                       placeholder="e.g. 100"
                        disabled={modalMode === 'none'}
                     />
                     <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px', opacity: 0.7 }}>
-                      1.0 = standard variance. Increase to accelerate trend intensity.
+                      Enter dollar amount. Profit mode = +${modalMultiplier || '0'}, Loss mode = -${modalMultiplier || '0'}
                     </p>
                   </div>
                 )}
