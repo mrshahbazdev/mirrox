@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 import { useModal } from '../context/ModalContext';
@@ -42,9 +42,11 @@ const Profile = () => {
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
   const [showConfirmPw, setShowConfirmPw] = useState(false);
+  const formInitialized = useRef(false);
 
   useEffect(() => {
-    if (currentClientExtended) {
+    if (currentClientExtended && !formInitialized.current) {
+      formInitialized.current = true;
       setForm({
         name: currentClientExtended.name || '',
         lastName: currentClientExtended.lastName || '',
