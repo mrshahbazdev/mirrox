@@ -178,7 +178,7 @@ const Finances = () => {
           <div className="premium-wallet-card-v3">
             <div className="card-top">
               <div className="balance-group">
-                <span className="label">Portfolio Balance</span>
+                <span className="label">Account Balance</span>
                 <h2 className="balance">${formatCurrency(tm.balance)}</h2>
               </div>
               <div className="wallet-chip">
