@@ -99,11 +99,41 @@ let admins = [];
 const configs = {};
 
 const defaultSymbols = [
-  { id: 'S001', name: 'Gold vs US Dollar', symbol: 'XAUUSD', price: '2315.42', spread: 50, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 2, category: 'Metals', iconClassName: 'fa-cubes-stacked', quoteCurrency: 'USD', swapRate: 0.02 },
-  { id: 'S002', name: 'Euro vs US Dollar', symbol: 'EURUSD', price: '1.09469', spread: 12, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-euro-sign', quoteCurrency: 'USD', swapRate: 0.01 },
-  { id: 'S003', name: 'Bitcoin vs US Dollar', symbol: 'BTCUSD', price: '69888.53', spread: 2500, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 50, commissionType: 'spread-only', precision: 2, category: 'Crypto', iconClassName: 'fa-bitcoin', quoteCurrency: 'USD', swapRate: 0.05 },
-  { id: 'S004', name: 'British Pound vs US Dollar', symbol: 'GBPUSD', price: '1.27374', spread: 14, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-sterling-sign', quoteCurrency: 'USD', swapRate: 0.01 },
-  { id: 'S005', name: 'Dow Jones Index', symbol: 'US30', price: '39124.50', spread: 200, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'USD', swapRate: 0.02 }
+  // Indices
+  { id: 'S001', name: 'S&P 500', symbol: 'US500', price: '5245.50', spread: 150, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S002', name: 'Dow Jones 30', symbol: 'US30', price: '39124.50', spread: 200, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S003', name: 'Nasdaq 100', symbol: 'US100', price: '18250.25', spread: 200, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S004', name: 'DAX (GER40)', symbol: 'GER40', price: '18450.10', spread: 180, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'EUR', swapRate: 0.02 },
+  { id: 'S005', name: 'FTSE 100 (UK100)', symbol: 'UK100', price: '7950.40', spread: 140, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'GBP', swapRate: 0.02 },
+  { id: 'S006', name: 'CAC 40 (FRA40)', symbol: 'FRA40', price: '8210.50', spread: 150, commission: 0.00, lotMin: 0.10, lotStep: 0.10, lotMax: 200, commissionType: 'spread-only', precision: 2, category: 'Indices', iconClassName: 'fa-chart-line', quoteCurrency: 'EUR', swapRate: 0.02 },
+
+  // Commodities
+  { id: 'S007', name: 'Gold vs US Dollar', symbol: 'XAUUSD', price: '2315.42', spread: 50, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 2, category: 'Commodities', iconClassName: 'fa-cubes-stacked', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S008', name: 'Silver vs US Dollar', symbol: 'XAGUSD', price: '29.15', spread: 30, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 3, category: 'Commodities', iconClassName: 'fa-cubes-stacked', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S009', name: 'Crude Oil WTI', symbol: 'XTIUSD', price: '78.45', spread: 40, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 2, category: 'Commodities', iconClassName: 'fa-oil-can', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S010', name: 'Brent Crude Oil', symbol: 'XBRUSD', price: '82.30', spread: 40, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 2, category: 'Commodities', iconClassName: 'fa-oil-can', quoteCurrency: 'USD', swapRate: 0.02 },
+  { id: 'S011', name: 'Natural Gas', symbol: 'XNGUSD', price: '2.185', spread: 30, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 100, commissionType: 'spread-only', precision: 3, category: 'Commodities', iconClassName: 'fa-fire-flame-simple', quoteCurrency: 'USD', swapRate: 0.02 },
+
+  // Forex Majors
+  { id: 'S012', name: 'Euro vs US Dollar', symbol: 'EURUSD', price: '1.09469', spread: 12, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-euro-sign', quoteCurrency: 'USD', swapRate: 0.01 },
+  { id: 'S013', name: 'US Dollar vs Japanese Yen', symbol: 'USDJPY', price: '151.240', spread: 9, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 3, category: 'Forex', iconClassName: 'fa-yen-sign', quoteCurrency: 'JPY', swapRate: 0.01 },
+  { id: 'S014', name: 'British Pound vs US Dollar', symbol: 'GBPUSD', price: '1.27374', spread: 14, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-sterling-sign', quoteCurrency: 'USD', swapRate: 0.01 },
+  { id: 'S015', name: 'US Dollar vs Swiss Franc', symbol: 'USDCHF', price: '0.90450', spread: 18, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-franc-sign', quoteCurrency: 'CHF', swapRate: 0.01 },
+  { id: 'S016', name: 'US Dollar vs Canadian Dollar', symbol: 'USDCAD', price: '1.35400', spread: 17, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-dollar-sign', quoteCurrency: 'CAD', swapRate: 0.01 },
+  { id: 'S017', name: 'Australian Dollar vs US Dollar', symbol: 'AUDUSD', price: '0.65450', spread: 16, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-dollar-sign', quoteCurrency: 'USD', swapRate: 0.01 },
+  { id: 'S018', name: 'New Zealand Dollar vs US Dollar', symbol: 'NZDUSD', price: '0.60100', spread: 19, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-dollar-sign', quoteCurrency: 'USD', swapRate: 0.01 },
+
+  // Forex Crosses
+  { id: 'S019', name: 'Euro vs British Pound', symbol: 'EURGBP', price: '0.85400', spread: 14, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-euro-sign', quoteCurrency: 'GBP', swapRate: 0.01 },
+  { id: 'S020', name: 'Euro vs Japanese Yen', symbol: 'EURJPY', price: '163.450', spread: 12, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 3, category: 'Forex', iconClassName: 'fa-euro-sign', quoteCurrency: 'JPY', swapRate: 0.01 },
+  { id: 'S021', name: 'British Pound vs Japanese Yen', symbol: 'GBPJPY', price: '191.200', spread: 18, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 3, category: 'Forex', iconClassName: 'fa-sterling-sign', quoteCurrency: 'JPY', swapRate: 0.01 },
+  { id: 'S022', name: 'Euro vs Australian Dollar', symbol: 'EURAUD', price: '1.64500', spread: 25, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-euro-sign', quoteCurrency: 'AUD', swapRate: 0.01 },
+  { id: 'S023', name: 'British Pound vs Canadian Dollar', symbol: 'GBPCAD', price: '1.72300', spread: 22, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 5, category: 'Forex', iconClassName: 'fa-sterling-sign', quoteCurrency: 'CAD', swapRate: 0.01 },
+  { id: 'S024', name: 'Swiss Franc vs Japanese Yen', symbol: 'CHFJPY', price: '168.200', spread: 15, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 3, category: 'Forex', iconClassName: 'fa-franc-sign', quoteCurrency: 'JPY', swapRate: 0.01 },
+  { id: 'S025', name: 'New Zealand Dollar vs Japanese Yen', symbol: 'NZDJPY', price: '91.050', spread: 18, commission: 3.50, lotMin: 0.01, lotStep: 0.01, lotMax: 500, commissionType: 'standard', precision: 3, category: 'Forex', iconClassName: 'fa-dollar-sign', quoteCurrency: 'JPY', swapRate: 0.01 },
+
+  // Crypto (existing)
+  { id: 'S026', name: 'Bitcoin vs US Dollar', symbol: 'BTCUSD', price: '69888.53', spread: 2500, commission: 0.00, lotMin: 0.01, lotStep: 0.01, lotMax: 50, commissionType: 'spread-only', precision: 2, category: 'Crypto', iconClassName: 'fa-bitcoin', quoteCurrency: 'USD', swapRate: 0.05 }
 ];
 
 let symbolsList = [];
