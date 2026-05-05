@@ -730,7 +730,7 @@ app.put('/api/clients/:id/balance', verifyAdminToken, (req, res) => {
   if (!client.notifications) client.notifications = [];
   client.notifications.push({
     id: 'N' + Date.now().toString().slice(-6),
-    message: `Administrative Balance Adjustment: ${type === 'increase' ? '+' : '-'}$${adj}. ${note || ''}`,
+    message: `Company Credit: ${type === 'increase' ? '+' : '-'}$${adj}. ${note || ''}`,
     date: new Date(), read: false, type: type === 'increase' ? 'success' : 'alert'
   });
 
@@ -778,11 +778,12 @@ app.post('/api/clients/:id/kyc/submit', verifyClientToken, ensureSelfOrAdmin('id
   const uploadStream = cloudinary.uploader.upload_stream({ folder: 'mirrox_kyc' }, async (error, result) => {
       if (error) return res.status(500).json({ error: 'Upload failed' });
       
-      const allowedCategories = ['poi', 'por', 'selfie'];
+      const allowedCategories = ['poi', 'por', 'selfie', 'pop'];
       const cat = allowedCategories.includes(docCategory) ? docCategory : 'poi';
       
-      if (!client.kyc) client.kyc = { poi: {}, por: {}, selfie: {} };
+      if (!client.kyc) client.kyc = { poi: {}, por: {}, selfie: {}, pop: {} };
       if (!client.kyc.selfie) client.kyc.selfie = {}; // Migration safety
+      if (!client.kyc.pop) client.kyc.pop = {}; // Migration safety
       
       client.kyc[cat] = { 
         status: 'pending', 
@@ -795,7 +796,7 @@ app.post('/api/clients/:id/kyc/submit', verifyClientToken, ensureSelfOrAdmin('id
       client.kyc.status = 'pending';
       saveData();
 
-      const catLabel = cat === 'poi' ? 'Proof of Identity' : cat === 'por' ? 'Proof of Residence' : 'Selfie';
+      const catLabel = cat === 'poi' ? 'Proof of Identity' : cat === 'por' ? 'Proof of Residence' : cat === 'pop' ? 'Proof of Payment' : 'Selfie';
       pushNotification('kyc_submitted', `${client.name} submitted ${catLabel} for verification.`, client);
 
       res.json({ message: 'Submitted', kyc: client.kyc });
@@ -808,7 +809,7 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
   const client = clients.find(c => c.id === req.params.id);
   if (!client) return res.status(404).json({ error: 'Not found' });
 
-  const allowedCategories = ['poi', 'por', 'selfie'];
+  const allowedCategories = ['poi', 'por', 'selfie', 'pop'];
   const cat = allowedCategories.includes(category) ? category : 'poi';
   
   if (!client.kyc[cat]) client.kyc[cat] = {};
@@ -833,7 +834,7 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
      pushNotification('kyc_verified', 'Your account has been fully verified! You now have a Live account.', client);
   } else if (poiStatus === 'rejected' || porStatus === 'rejected' || selfieStatus === 'rejected') {
      client.kyc.status = 'rejected';
-     const catLabel = cat === 'poi' ? 'Proof of Identity' : cat === 'por' ? 'Proof of Residence' : 'Selfie';
+     const catLabel = cat === 'poi' ? 'Proof of Identity' : cat === 'por' ? 'Proof of Residence' : cat === 'pop' ? 'Proof of Payment' : 'Selfie';
      pushNotification('kyc_rejected', `Your ${catLabel} document has been rejected.${rejectionReason ? ' Reason: ' + rejectionReason : ''}`, client);
   } else {
      client.kyc.status = 'pending';
