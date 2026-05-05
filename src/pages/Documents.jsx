@@ -249,6 +249,18 @@ const Documents = () => {
                 ]}
             />
 
+            <KYCBox 
+                title="Payment Proof" 
+                desc="First deposit payment receipt or screenshot." 
+                category="pop"
+                clientData={currentClientExtended}
+                options={[
+                    { value: 'bank_receipt', label: 'Bank Transfer Receipt' },
+                    { value: 'crypto_tx', label: 'Crypto Transaction Screenshot' },
+                    { value: 'payment_screenshot', label: 'Payment Screenshot' }
+                ]}
+            />
+
             {/* Mobile Guidelines */}
             <section className="pb-10">
                 <div className="m-kyc-guidelines">
@@ -345,6 +357,18 @@ const Documents = () => {
                 clientData={currentClientExtended}
                 options={[
                     { value: 'selfie_with_id', label: 'Selfie with ID Document' }
+                ]}
+            />
+
+            <KYCBox 
+                title="Proof of Payment" 
+                desc="Upload your first deposit payment receipt or transaction screenshot as proof of payment. This helps us verify your initial funding source." 
+                category="pop"
+                clientData={currentClientExtended}
+                options={[
+                    { value: 'bank_receipt', label: 'Bank Transfer Receipt' },
+                    { value: 'crypto_tx', label: 'Crypto Transaction Screenshot' },
+                    { value: 'payment_screenshot', label: 'Payment Screenshot' }
                 ]}
             />
         </div>
