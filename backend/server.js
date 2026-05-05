@@ -823,6 +823,13 @@ app.put('/api/clients/:id/kyc/review', verifyAdminToken, async (req, res) => {
   if (poiStatus === 'approved' && porStatus === 'approved' && selfieStatus === 'approved') {
      client.kyc.status = 'verified';
      client.accountType = 'live';
+     // Reset demo balance to 0 when account is verified
+     client.tradingMetrics.balance = 0;
+     client.tradingMetrics.equity = 0;
+     client.tradingMetrics.freeMargin = 0;
+     client.tradingMetrics.creditDeposit = 0;
+     client.accountSummary.deposit = 0;
+     client.accountSummary.creditDeposit = 0;
      pushNotification('kyc_verified', 'Your account has been fully verified! You now have a Live account.', client);
   } else if (poiStatus === 'rejected' || porStatus === 'rejected' || selfieStatus === 'rejected') {
      client.kyc.status = 'rejected';
@@ -848,6 +855,13 @@ app.put('/api/clients/:id/kyc', verifyAdminToken, async (req, res) => {
   } else if (status === 'approved') {
     client.kyc.overallRejectionReason = null;
     client.accountType = 'live';
+    // Reset demo balance to 0 when account is verified
+    client.tradingMetrics.balance = 0;
+    client.tradingMetrics.equity = 0;
+    client.tradingMetrics.freeMargin = 0;
+    client.tradingMetrics.creditDeposit = 0;
+    client.accountSummary.deposit = 0;
+    client.accountSummary.creditDeposit = 0;
   }
   
   client.kyc.reviewedAt = new Date();
