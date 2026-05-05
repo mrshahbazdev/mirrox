@@ -18,7 +18,7 @@ const Explore = () => {
   }, [prices]);
 
   // 2. Real-Time Sentiment Engine
-  const sentimentSymbols = ['XAUUSD', 'EURUSD', 'GBPUSD', 'BTCUSD', 'US30', 'XAGUSD'];
+  const sentimentSymbols = ['XAUUSD', 'EURUSD', 'GBPUSD', 'BTCUSDT', 'US30', 'XAGUSD', 'US500', 'ETHUSDT', 'NVDA', 'USDJPY'];
   const sentiment = useMemo(() => {
     return sentimentSymbols.map(symName => {
       let buyCount = 0;
@@ -51,7 +51,6 @@ const Explore = () => {
   const topMovers = useMemo(() => {
     return (prices || [])
       .sort(() => 0.5 - Math.random()) // Randomize for variety
-      .slice(0, 8)
       .map(p => {
         const cur = parseFloat(p.price);
         const high = (cur * (1 + Math.random() * 0.05)).toFixed(p.precision);
@@ -171,7 +170,7 @@ const Explore = () => {
                 <h3 className="text-[var(--text-main)]">Market <span className="text-[var(--accent)]">Movers</span></h3>
             </div>
             <div className="m-movers-list">
-                {topMovers.slice(0, 3).map(item => (
+                {topMovers.map(item => (
                   <div key={item.symbol} className={`m-mover-card ${item.upD ? 'positive' : 'negative'}`} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                       <div className="m-asset-info-row">
                           <div className="m-mover-icon" style={{ background: 'var(--accent-muted)', color: 'var(--accent)' }}>{item.icon}</div>
