@@ -36,14 +36,12 @@ const Verifications = ({ onAdminLogout }) => {
 
   const handleReview = async (clientId, action, category, reason = null) => {
     if (action === 'reject' && !reason) {
-      showPrompt(
+      const val = await showPrompt(
         `Enter reason for rejecting ${category.toUpperCase()}:`,
         `Reject ${category.toUpperCase()}`,
-        (val) => {
-          if (val) handleReview(clientId, action, category, val);
-        },
         "Reason for rejection..."
       );
+      if (val) handleReview(clientId, action, category, val);
       return;
     }
 
