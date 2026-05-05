@@ -244,7 +244,7 @@ module.exports = (io) => {
 
              const slTpClient = clients.find(c => c.id === clientId);
              const slTpProfitStr = (t.profit || 0) >= 0 ? `+$${(t.profit || 0).toFixed(2)}` : `-$${Math.abs(t.profit || 0).toFixed(2)}`;
-             pushNotification('trade_close', `Trade auto-closed (${t.closedBy}): ${t.type} ${t.lots} lots ${t.symbol} — P/L: ${slTpProfitStr}`, slTpClient);
+             pushNotification('trade_close', `${t.type} ${t.lots} lots ${t.symbol} — P/L: ${slTpProfitStr}`, slTpClient);
           }
         }
       });
