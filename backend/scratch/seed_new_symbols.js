@@ -35,7 +35,33 @@ const symbolsToSeed = [
   { symbol: 'EURAUD', name: 'Euro vs Australian Dollar', category: 'Forex', precision: 5, price: '1.64500', spread: 25 },
   { symbol: 'GBPCAD', name: 'British Pound vs Canadian Dollar', category: 'Forex', precision: 5, price: '1.72300', spread: 22 },
   { symbol: 'CHFJPY', name: 'Swiss Franc vs Japanese Yen', category: 'Forex', precision: 3, price: '168.200', spread: 15 },
-  { symbol: 'NZDJPY', name: 'New Zealand Dollar vs Japanese Yen', category: 'Forex', precision: 3, price: '91.050', spread: 18 }
+  { symbol: 'NZDJPY', name: 'New Zealand Dollar vs Japanese Yen', category: 'Forex', precision: 3, price: '91.050', spread: 18 },
+
+  // Crypto
+  { symbol: 'BTCUSDT', name: 'Bitcoin vs Tether', category: 'Crypto', precision: 2, price: '69888.53', spread: 2500 },
+  { symbol: 'ETHUSDT', name: 'Ethereum vs Tether', category: 'Crypto', precision: 2, price: '3450.20', spread: 800 },
+  { symbol: 'BNBUSDT', name: 'BNB vs Tether', category: 'Crypto', precision: 2, price: '585.40', spread: 200 },
+  { symbol: 'SOLUSDT', name: 'Solana vs Tether', category: 'Crypto', precision: 2, price: '142.80', spread: 150 },
+  { symbol: 'XRPUSDT', name: 'XRP vs Tether', category: 'Crypto', precision: 4, price: '0.5240', spread: 30 },
+  { symbol: 'ETHBTC', name: 'Ethereum vs Bitcoin', category: 'Crypto', precision: 5, price: '0.04935', spread: 50 },
+  { symbol: 'BNBBTC', name: 'BNB vs Bitcoin', category: 'Crypto', precision: 5, price: '0.00838', spread: 20 },
+  { symbol: 'SOLBTC', name: 'Solana vs Bitcoin', category: 'Crypto', precision: 5, price: '0.00204', spread: 15 },
+  { symbol: 'ADAUSDT', name: 'Cardano vs Tether', category: 'Crypto', precision: 4, price: '0.4520', spread: 25 },
+  { symbol: 'DOGEUSDT', name: 'Dogecoin vs Tether', category: 'Crypto', precision: 5, price: '0.1580', spread: 20 },
+  { symbol: 'AVAXUSDT', name: 'Avalanche vs Tether', category: 'Crypto', precision: 2, price: '35.80', spread: 100 },
+  { symbol: 'DOTUSDT', name: 'Polkadot vs Tether', category: 'Crypto', precision: 3, price: '7.250', spread: 50 },
+  { symbol: 'MATICUSDT', name: 'Polygon vs Tether', category: 'Crypto', precision: 4, price: '0.7850', spread: 30 },
+
+  // Stocks
+  { symbol: 'AAPL', name: 'Apple Inc.', category: 'Stocks', precision: 2, price: '178.50', spread: 20 },
+  { symbol: 'MSFT', name: 'Microsoft Corp.', category: 'Stocks', precision: 2, price: '415.80', spread: 25 },
+  { symbol: 'AMZN', name: 'Amazon.com Inc.', category: 'Stocks', precision: 2, price: '182.30', spread: 20 },
+  { symbol: 'TSLA', name: 'Tesla Inc.', category: 'Stocks', precision: 2, price: '175.40', spread: 30 },
+  { symbol: 'NVDA', name: 'NVIDIA Corp.', category: 'Stocks', precision: 2, price: '880.50', spread: 50 },
+  { symbol: 'NFLX', name: 'Netflix Inc.', category: 'Stocks', precision: 2, price: '628.20', spread: 40 },
+  { symbol: 'AMD', name: 'Advanced Micro Devices Inc.', category: 'Stocks', precision: 2, price: '162.40', spread: 25 },
+  { symbol: 'PLTR', name: 'Palantir Technologies Inc.', category: 'Stocks', precision: 2, price: '22.80', spread: 15 },
+  { symbol: 'COIN', name: 'Coinbase Global Inc.', category: 'Stocks', precision: 2, price: '245.60', spread: 35 }
 ];
 
 async function seed() {
