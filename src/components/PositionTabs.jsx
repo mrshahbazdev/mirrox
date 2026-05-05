@@ -367,16 +367,22 @@ const PositionTabs = () => {
                           <div className="text-xs text-[var(--text-main)] font-mono">{p?.price ? parseFloat(p.price).toFixed(p?.precision || 2) : '---'}</div>
                         </div>
                       )}
-                      {activeTab === 'open' && (
+                      {(activeTab === 'open' || activeTab === 'closed') && (
                         <div>
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Price</div>
-                          <div className="text-xs text-[var(--text-main)] font-mono">{(trade.takeProfit ? parseFloat(trade.takeProfit) : (trade.closePrice || 0)).toFixed(p?.precision || 2)}</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">{(trade.closePrice || (trade.takeProfit ? parseFloat(trade.takeProfit) : 0)).toFixed(p?.precision || 2)}</div>
                         </div>
                       )}
-                      {activeTab === 'open' && trade.openTime && (
+                      {(activeTab === 'open' || activeTab === 'closed') && trade.openTime && (
                         <div>
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Open Time</div>
                           <div className="text-xs text-[var(--text-main)] font-mono">{new Date(trade.openTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}<br />{new Date(trade.openTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+                        </div>
+                      )}
+                      {activeTab === 'closed' && trade.closeTime && (
+                        <div>
+                          <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-tight">Close Time</div>
+                          <div className="text-xs text-[var(--text-main)] font-mono">{new Date(trade.closeTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}<br />{new Date(trade.closeTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
                         </div>
                       )}
                     </div>
