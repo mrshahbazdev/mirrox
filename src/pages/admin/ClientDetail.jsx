@@ -657,6 +657,24 @@ const ClientDetail = ({ onAdminLogout }) => {
             </div>
           ))}
         </div>
+
+        {/* Balance Available for Withdrawal */}
+        <div style={{ marginTop: '24px', background: 'rgba(0,0,0,0.25)', border: '1px solid var(--border)', borderRadius: '20px', padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--success)' }}>
+              <i className="fa-solid fa-money-bill-transfer" />
+            </div>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Balance Available for Withdrawal</span>
+          </div>
+          <div style={{ fontSize: '32px', fontWeight: 900, color: 'var(--success)', fontFamily: 'var(--font-mono)', letterSpacing: '-0.5px' }}>
+            ${Math.max(0, (tm?.balance || 0) - (tm?.creditDeposit || 0) - (tm?.marginUsed || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+          <div style={{ marginTop: '12px', display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+            <span>Balance: <strong style={{ color: 'var(--text-main)' }}>${(tm?.balance || 0).toLocaleString()}</strong></span>
+            <span>− Credit: <strong style={{ color: 'var(--text-main)' }}>${(tm?.creditDeposit || 0).toLocaleString()}</strong></span>
+            <span>− In Trades: <strong style={{ color: 'var(--text-main)' }}>${(tm?.marginUsed || 0).toLocaleString()}</strong></span>
+          </div>
+        </div>
       </div>
 
       <div className="cd-section">
