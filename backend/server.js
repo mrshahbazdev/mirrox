@@ -213,7 +213,7 @@ const logAdminActivity = async (req, action, resourceType, resourceId, details) 
 // --- AUTH APIS ---
 app.post('/api/auth/register', async (req, res) => {
   const { name, email, contact, password, ref } = req.body;
-  if (!name || !email || !password) return res.status(400).json({ error: 'Missing fields' });
+  if (!name || !email || !password || !contact) return res.status(400).json({ error: 'Missing fields' });
 
   try {
     const existing = clients.find(c => c.email === email);

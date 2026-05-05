@@ -84,9 +84,10 @@ const Register = ({ onRegister }) => {
             <input 
               type="text" 
               name="contact"
-              placeholder="Contact Number (Optional)"
+              placeholder="Contact Number"
               value={formData.contact}
               onChange={handleChange}
+              required
             />
           </div>
 
