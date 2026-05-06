@@ -19,10 +19,19 @@ const categoryLabels = {
 
 const categories = ['Forex', 'Crypto', 'Stocks', 'Indices', 'Commodities'];
 
+// Ordered symbol lists per category (controls display order on Explore page)
+const categorySymbolOrder = {
+  'Forex': ['EURUSD', 'USDJPY', 'GBPUSD', 'USDCHF', 'USDCAD', 'AUDUSD', 'NZDUSD', 'EURGBP', 'EURJPY', 'GBPJPY', 'EURAUD', 'GBPCAD', 'CHFJPY', 'NZDJPY'],
+  'Crypto': ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT', 'ETHBTC', 'BNBBTC', 'SOLBTC', 'ADAUSDT', 'DOGEUSDT', 'AVAXUSDT', 'DOTUSDT', 'MATICUSDT'],
+  'Stocks': ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'NFLX', 'AMD', 'PLTR', 'COIN'],
+  'Indices': ['US500', 'US30', 'US100', 'GER40', 'UK100', 'FRA40'],
+  'Commodities': ['XAUUSD', 'XAGUSD', 'XTIUSD', 'XBRUSD', 'XNGUSD'],
+};
+
 const sentimentSymbolsByCategory = {
   'Forex': ['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'USDCAD'],
   'Crypto': ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT', 'ADAUSDT'],
-  'Stocks': ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'META'],
+  'Stocks': ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'NFLX'],
   'Indices': ['US500', 'US30', 'US100', 'GER40', 'UK100', 'FRA40'],
   'Commodities': ['XAUUSD', 'XAGUSD', 'XTIUSD', 'XBRUSD', 'XNGUSD'],
 };
@@ -38,6 +47,12 @@ const sentimentIcons = {
   'META': 'fa-meta', 'US100': 'fa-chart-line', 'GER40': 'fa-chart-line',
   'UK100': 'fa-chart-line', 'FRA40': 'fa-chart-line', 'DOGEUSDT': 'fa-dog',
   'XTIUSD': 'fa-oil-can', 'XBRUSD': 'fa-oil-can', 'XNGUSD': 'fa-fire-flame-simple',
+  'NZDUSD': 'fa-dollar-sign', 'EURGBP': 'fa-euro-sign', 'EURJPY': 'fa-euro-sign',
+  'GBPJPY': 'fa-sterling-sign', 'EURAUD': 'fa-euro-sign', 'GBPCAD': 'fa-sterling-sign',
+  'CHFJPY': 'fa-franc-sign', 'NZDJPY': 'fa-dollar-sign', 'ETHBTC': 'fa-ethereum',
+  'BNBBTC': 'fa-coins', 'SOLBTC': 'fa-coins', 'AVAXUSDT': 'fa-coins',
+  'DOTUSDT': 'fa-coins', 'MATICUSDT': 'fa-coins', 'NFLX': 'fa-film',
+  'AMD': 'fa-microchip', 'PLTR': 'fa-database', 'COIN': 'fa-coins',
 };
 
 const Explore = () => {
@@ -52,15 +67,24 @@ const Explore = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Filter prices based on active category
+  // Filter and order prices based on active category
   const filteredPrices = useMemo(() => {
     if (!prices) return [];
-    return prices.filter(p => p.category === activeCategory);
+    const catPrices = prices.filter(p => p.category === activeCategory);
+    const order = categorySymbolOrder[activeCategory];
+    if (!order) return catPrices;
+    const priceMap = {};
+    catPrices.forEach(p => { priceMap[p.symbol || p.name] = p; });
+    const ordered = order.map(sym => priceMap[sym]).filter(Boolean);
+    catPrices.forEach(p => {
+      if (!order.includes(p.symbol || p.name)) ordered.push(p);
+    });
+    return ordered;
   }, [prices, activeCategory]);
 
   // Category-filtered assets list with price/change data
   const categoryAssets = useMemo(() => {
-    return filteredPrices.slice(0, 10).map(p => ({
+    return filteredPrices.map(p => ({
       symbol: p.symbol || p.name,
       name: p.name,
       price: p.price,
