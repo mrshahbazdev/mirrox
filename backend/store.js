@@ -256,6 +256,14 @@ const initializeDB = async () => {
     if (sCount === 0) {
       console.log('Seeding MongoDB with default Symbols...');
       await SymbolModel.insertMany(defaultSymbols);
+    } else {
+      // Sync: add any missing default symbols to the database
+      const existingIds = new Set((await SymbolModel.find({}, 'id').lean()).map(s => s.id));
+      const missing = defaultSymbols.filter(s => !existingIds.has(s.id));
+      if (missing.length > 0) {
+        console.log(`🔄 Adding ${missing.length} missing default symbol(s) to MongoDB...`);
+        await SymbolModel.insertMany(missing);
+      }
     }
 
     const confCount = await Config.countDocuments();
