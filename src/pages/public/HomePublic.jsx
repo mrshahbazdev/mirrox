@@ -41,7 +41,7 @@ const HomePublic = () => {
                         <div style={{ position: 'absolute', inset: '-20px', background: 'radial-gradient(circle, var(--pub-red), transparent)', opacity: 0.1, filter: 'blur(60px)' }}></div>
                         <div style={{ position: 'relative', background: 'rgba(255,255,255,0.05)', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', padding: '12px', backdropFilter: 'blur(20px)' }}>
                              <img 
-                                src="https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=1400" 
+                                src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=1400" 
                                 alt="Bullvera Trading Interface" 
                                 style={{ width: '100%', height: 'auto', borderRadius: '24px', opacity: 0.95, display: 'block' }}
                              />

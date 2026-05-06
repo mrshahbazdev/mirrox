@@ -5,8 +5,8 @@ import { useModal } from '../context/ModalContext';
 import { 
     Wallet, PlusCircle, MinusCircle, History, Shield, 
     ArrowDownLeft, ArrowUpRight, Copy, CheckCircle2, 
-    CreditCard, Building2, Landmark, Smartphone, 
-    Zap, Headphones, Info, ExternalLink, RefreshCw,
+    CreditCard, Building2, Landmark,
+    Zap, Info, ExternalLink, RefreshCw,
     Lock, Key, Send, AlertCircle
 } from 'lucide-react';
 
@@ -551,25 +551,7 @@ const Finances = () => {
               </div>
             </div>
 
-            {/* SUPPORT CARD */}
-            <div className="fin-support-card">
-              <div className="fin-support-glow"></div>
-              <div className="fin-support-inner">
-                <div className="fin-support-icon">
-                  <Headphones size={24} />
-                </div>
-                <div>
-                  <h4 className="fin-support-title">Financial Desk</h4>
-                  <p className="fin-support-desc">
-                    Prioritized support for capital deployments and payout verification.
-                  </p>
-                </div>
-                <button className="fin-support-btn">
-                  <Smartphone size={14} />
-                  Connect With Specialist
-                </button>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

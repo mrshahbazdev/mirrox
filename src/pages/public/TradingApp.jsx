@@ -36,7 +36,7 @@ const TradingApp = () => {
         {
             title: "Launch & Trade",
             desc: "Follow the prompts to install the Bullvera app and begin your premium mobile trading experience.",
-            image: "https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=500"
+            image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=500"
         }
     ];
 
