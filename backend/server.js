@@ -689,7 +689,7 @@ app.delete('/api/symbols/:id', verifyAdminToken, (req, res) => {
 });
 
 // --- CLIENT APIS ---
-app.get('/api/clients', verifyAdminToken, (req, res) => res.json(clients));
+app.get('/api/clients', verifyAdminToken, (req, res) => res.json([...clients].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))));
 
 app.get('/api/clients/:id', verifyClientToken, ensureSelfOrAdmin('id'), (req, res) => {
   const client = clients.find(c => c.id === req.params.id);

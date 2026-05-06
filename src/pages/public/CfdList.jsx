@@ -172,7 +172,7 @@ const CfdList = () => {
                         <div style={{ position: 'relative' }}>
                              <div style={{ background: 'white', padding: '24px', borderRadius: '56px', boxShadow: '0 40px 100px rgba(0,0,0,0.08)', border: '1px solid #e2e8f0' }}>
                                  <img 
-                                    src="https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=1200" 
+                                    src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=1200" 
                                     style={{ width: '100%', borderRadius: '40px', display: 'block' }}
                                     alt="Elite Platform"
                                  />

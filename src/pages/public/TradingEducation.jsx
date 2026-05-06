@@ -24,7 +24,7 @@ const TradingEducation = () => {
             <section style={{ padding: '0 24px', marginTop: '-40px', position: 'relative', zIndex: 10 }}>
                 <div style={{ maxWidth: '1100px', margin: '0 auto', borderRadius: '48px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <img 
-                        src="https://images.unsplash.com/photo-1611974715853-268fd9f3906d?auto=format&fit=crop&q=80&w=1400" 
+                        src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=1400" 
                         alt="Trading Markets" 
                         style={{ width: '100%', height: 'auto', display: 'block' }}
                     />

@@ -289,7 +289,7 @@ const initializeDB = async () => {
     }
 
     // 2. Load into memory to preserve socket engine speed
-    const dbClients = await Client.find().lean();
+    const dbClients = await Client.find().sort({ createdAt: -1 }).lean();
     clients.length = 0; 
     clients.push(...dbClients);
     
