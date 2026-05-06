@@ -2,29 +2,29 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { useTrading } from '../context/TradingContext';
 
 const categoryIcons = {
-  'Trending': 'fa-fire',
   'Forex': 'fa-money-bill-transfer',
   'Crypto': 'fa-bitcoin-sign',
   'Stocks': 'fa-chart-line',
   'Indices': 'fa-landmark',
+  'Commodities': 'fa-cubes-stacked',
 };
 
 const categoryLabels = {
-  'Trending': 'Markets',
   'Forex': 'FX',
   'Crypto': 'Crypto',
   'Stocks': 'Stocks',
   'Indices': 'Indices',
+  'Commodities': 'Commodities',
 };
 
-const categories = ['Trending', 'Forex', 'Crypto', 'Stocks', 'Indices'];
+const categories = ['Forex', 'Crypto', 'Stocks', 'Indices', 'Commodities'];
 
 const sentimentSymbolsByCategory = {
-  'Trending': ['XAUUSD', 'EURUSD', 'GBPUSD', 'BTCUSDT', 'US30', 'XAGUSD', 'US500', 'ETHUSDT', 'NVDA', 'USDJPY'],
   'Forex': ['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'USDCAD'],
   'Crypto': ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT', 'ADAUSDT'],
   'Stocks': ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'META'],
   'Indices': ['US500', 'US30', 'US100', 'GER40', 'UK100', 'FRA40'],
+  'Commodities': ['XAUUSD', 'XAGUSD', 'XTIUSD', 'XBRUSD', 'XNGUSD'],
 };
 
 const sentimentIcons = {
@@ -37,13 +37,14 @@ const sentimentIcons = {
   'MSFT': 'fa-windows', 'AMZN': 'fa-cart-shopping', 'TSLA': 'fa-car',
   'META': 'fa-meta', 'US100': 'fa-chart-line', 'GER40': 'fa-chart-line',
   'UK100': 'fa-chart-line', 'FRA40': 'fa-chart-line', 'DOGEUSDT': 'fa-dog',
+  'XTIUSD': 'fa-oil-can', 'XBRUSD': 'fa-oil-can', 'XNGUSD': 'fa-fire-flame-simple',
 };
 
 const Explore = () => {
   const { prices, allTrades } = useTrading();
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const [activeCategory, setActiveCategory] = useState('Trending');
+  const [activeCategory, setActiveCategory] = useState('Forex');
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -54,7 +55,6 @@ const Explore = () => {
   // Filter prices based on active category
   const filteredPrices = useMemo(() => {
     if (!prices) return [];
-    if (activeCategory === 'Trending') return prices;
     return prices.filter(p => p.category === activeCategory);
   }, [prices, activeCategory]);
 
@@ -73,7 +73,7 @@ const Explore = () => {
   }, [filteredPrices]);
 
   const sentiment = useMemo(() => {
-    const syms = sentimentSymbolsByCategory[activeCategory] || sentimentSymbolsByCategory['Trending'];
+    const syms = sentimentSymbolsByCategory[activeCategory] || sentimentSymbolsByCategory['Forex'];
 
     return syms.map(symName => {
       let buyCount = 0;
@@ -161,7 +161,7 @@ const Explore = () => {
         <section className="py-2 px-4">
             <div className="m-section-header">
                 <h3 className="text-[var(--text-main)]">
-                  {activeCategory === 'Trending' ? 'Trending' : activeCategory} <span className="text-[var(--accent)]">{categoryLabels[activeCategory]}</span>
+                  <span className="text-[var(--accent)]">{categoryLabels[activeCategory]}</span>
                 </h3>
                 <i className="fa-solid fa-chevron-right text-[var(--text-dim)] text-xs"></i>
             </div>
@@ -308,7 +308,7 @@ const Explore = () => {
         <div className="explore-m-card glass" style={{ borderRadius: '16px', padding: '20px', border: '1px solid var(--border)', background: 'var(--bg-card)' }}>
           <div className="card-top" style={{ marginBottom: '20px' }}>
             <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-main)' }}>
-              {activeCategory === 'Trending' ? 'Trending in' : ''} <span style={{ color: 'var(--accent)' }}>{categoryLabels[activeCategory]}</span>
+              <span style={{ color: 'var(--accent)' }}>{categoryLabels[activeCategory]}</span>
             </h4>
           </div>
           {categoryAssets.length === 0 ? (
@@ -352,7 +352,7 @@ const Explore = () => {
         <div className="explore-m-card glass" style={{ borderRadius: '16px', padding: '20px', border: '1px solid var(--border)', background: 'var(--bg-card)' }}>
           <div className="card-top" style={{ marginBottom: '20px' }}>
             <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-main)' }}>
-              {activeCategory === 'Trending' ? 'Global' : activeCategory} Trader Sentiment
+              {activeCategory} Trader Sentiment
             </h4>
           </div>
           <div className="sentiment-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -378,7 +378,7 @@ const Explore = () => {
         <div className="explore-m-card glass" style={{ borderRadius: '16px', padding: '20px', border: '1px solid var(--border)', background: 'var(--bg-card)' }}>
           <div className="card-top" style={{ marginBottom: '20px' }}>
             <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-main)' }}>
-              {activeCategory === 'Trending' ? 'Market' : activeCategory} <span className="text-[var(--accent)]">Movers</span>
+              {activeCategory} <span className="text-[var(--accent)]">Movers</span>
             </h4>
           </div>
           <table className="m-table-detailed" style={{ width: '100%', borderCollapse: 'collapse' }}>
