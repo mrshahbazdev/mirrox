@@ -63,7 +63,9 @@ const allowedOrigins = [
   'https://mirrox.vercel.app',
   'https://mirrox-production.up.railway.app',
   'http://localhost:5173',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://www.bulvera.com/',
+  'https://bulvera.com/'
 ];
 
 app.use(cors({
