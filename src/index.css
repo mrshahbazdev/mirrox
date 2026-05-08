@@ -6078,23 +6078,10 @@ input[type="number"]::-webkit-outer-spin-button {
   gap: 8px;
 }
 
-.pub-logo-box {
-  width: 28px;
-  height: 28px;
-  background: var(--pub-red);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 800;
-  font-size: 12px;
-}
-
-.pub-logo-text {
-  font-weight: 900;
-  font-size: 20px;
-  letter-spacing: -1px;
+.pub-logo-img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
 }
 
 /* Nav Styles */

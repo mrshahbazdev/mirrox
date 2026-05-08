@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 
 const Header = ({ currentUser }) => {
   const { activeTrades, currentClientExtended, prices } = useTrading();
+  const navigate = useNavigate();
   const [showNotifs, setShowNotifs] = useState(false);
   
   // Use real-time synchronized data if available, fallback to static props
@@ -55,9 +56,8 @@ const Header = ({ currentUser }) => {
   return (
     <header className="header">
       <div className="header-left">
-        <div className="logo-group">
-          <i className="fa-solid fa-cube" style={{ color: 'var(--accent)', fontSize: '22px' }}></i>
-          <span className="Bulvera-logo" style={{ color: 'var(--text-main)' }}>Bulvera</span>
+        <div className="logo-group" onClick={() => navigate('/app/dashboard')} style={{ cursor: 'pointer' }}>
+          <img src="/logo.png" alt="Bulvera" style={{ height: '28px', objectFit: 'contain' }} />
         </div>
       </div>
 

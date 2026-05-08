@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useTrading } from '../context/TradingContext';
 
 const PublicLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const mainRef = useRef(null);
+    const { clientId } = useTrading();
+
+    const handleLogoClick = () => {
+        navigate(clientId ? '/app/dashboard' : '/');
+    };
 
     // Map open dropdowns by a key
     const [openDropdowns, setOpenDropdowns] = useState({
@@ -62,9 +68,8 @@ const PublicLayout = () => {
         <div className="pub-layout">
             {/* Mobile Header */}
             <header className="pub-mobile-header md:hidden">
-                <div className="logo-wrap" onClick={() => navigate('/')}>
-                    <img src="/logo.png" alt="Bulvera" style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'contain' }} />
-                    <span className="pub-logo-text">Bulvera</span>
+                <div className="logo-wrap" onClick={handleLogoClick}>
+                    <img src="/logo.png" alt="Bulvera" className="pub-logo-img" />
                 </div>
                 <button onClick={toggleSidebar} className="pub-menu-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,9 +83,8 @@ const PublicLayout = () => {
             <div className="flex">
                 {/* Fixed Left Sidebar */}
                 <aside className={`pub-sidebar ${sidebarOpen ? 'open' : ''}`}>
-                    <div className="pub-sidebar-logo hidden md:flex" onClick={() => navigate('/')}>
-                        <img src="/logo.png" alt="Bulvera" style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'contain' }} />
-                        <span className="pub-logo-text">Bulvera</span>
+                    <div className="pub-sidebar-logo hidden md:flex" onClick={handleLogoClick}>
+                        <img src="/logo.png" alt="Bulvera" className="pub-logo-img" />
                     </div>
 
                     <nav className="pub-nav">
