@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 import Layout from './components/Layout';
@@ -61,6 +61,22 @@ import GlobalModal from './components/GlobalModal';
 import LiveChat from './components/LiveChat';
 import VisitorTracker from './components/VisitorTracker';
 import { useTrading } from './context/TradingContext';
+
+// Reloads the page on every route change (skips initial load)
+const PageReloader = () => {
+  const location = useLocation();
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    window.location.reload();
+  }, [location.pathname]);
+
+  return null;
+};
 
 // Inner component that can use useLocation (must be inside BrowserRouter)
 const AppRoutes = ({ clientId, setClientId, currentClientExtended, isAdminLoggedIn, setIsAdminLoggedIn, maintenanceMode }) => {
@@ -255,6 +271,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <PageReloader />
       <VisitorTracker />
       <GlobalModal />
       <AppRoutes
