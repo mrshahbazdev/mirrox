@@ -16,7 +16,7 @@ const Sidebar = ({ currentUser, onLogout }) => {
   return (
     <aside className="dash-sidebar glass">
       <div className="sidebar-logo" onClick={() => navigate('/app/dashboard')} style={{ cursor: 'pointer' }}>
-        <img src="/logo.png" alt="Bulvera" style={{ width: '44px', height: '44px', objectFit: 'contain' }} />
+        <img src="/logo.png" alt="Bulvera" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
       </div>
       
       <nav className="sidebar-nav">
