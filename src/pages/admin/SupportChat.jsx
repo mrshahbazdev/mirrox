@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
-import AdminLayout from '../../components/admin/AdminLayout';
+
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -46,7 +47,8 @@ const QUICK_RESPONSES = [
   "Could you please provide more details?",
 ];
 
-export default function SupportChat({ onAdminLogout }) {
+export default function SupportChat() {
+  const location = useLocation();
   const [socket, setSocket] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -56,9 +58,9 @@ export default function SupportChat({ onAdminLogout }) {
   useEffect(() => {
     const socket = window.socket;
     if (socket) {
-      socket.emit('admin:presence', { page: window.location.pathname });
+      socket.emit('admin:presence', { page: location.pathname });
       socket.on('admin:presence_update', (list) => {
-        const others = list.filter(a => a.page === window.location.pathname && a.socketId !== socket.id);
+        const others = list.filter(a => a.page === location.pathname && a.socketId !== socket.id);
         setOtherPresence(others);
       });
     }
@@ -408,7 +410,7 @@ export default function SupportChat({ onAdminLogout }) {
   }, {});
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       <div className={`support-chat-layout ${selectedTicket ? 'has-open-ticket' : ''}`}>
       {/* LEFT — Ticket List */}
       <div className="support-inbox">
@@ -840,6 +842,6 @@ export default function SupportChat({ onAdminLogout }) {
         </div>
       )}
     </div>
-    </AdminLayout>
+    </>
   );
 }

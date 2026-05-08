@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
 import { useTrading } from '../../context/TradingContext';
 import { useModal } from '../../context/ModalContext';
 
@@ -13,7 +12,7 @@ const statusConfig = {
 
 const PAGE_SIZE = 8;
 
-const ClientsList = ({ onAdminLogout }) => {
+const ClientsList = () => {
   const navigate = useNavigate();
   const { allClients } = useTrading();
   const { showConfirm, showAlert } = useModal();
@@ -159,7 +158,7 @@ const ClientsList = ({ onAdminLogout }) => {
   };
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       {/* Toast */}
       {toast && (
         <div className={`adm-toast ${toast.type}`}>
@@ -724,7 +723,7 @@ const ClientsList = ({ onAdminLogout }) => {
         .adm-pg-btn.active { background: var(--brand-primary); border-color: var(--brand-primary); color: #fff; }
         .adm-pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 

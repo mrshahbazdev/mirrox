@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
 
-const StaffManager = ({ onAdminLogout }) => {
+
+const StaffManager = () => {
   const [admins, setAdmins] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -115,10 +115,10 @@ const StaffManager = ({ onAdminLogout }) => {
     } catch (err) { alert('Failed to update permissions'); }
   };
 
-  if (loading) return <AdminLayout onAdminLogout={onAdminLogout}><div className="adm-loader" style={{ textAlign: 'center', padding: '100px', color: 'var(--text-dim)', fontWeight: 700 }}>Deploying Command Center...</div></AdminLayout>;
+  if (loading) return <><div className="adm-loader" style={{ textAlign: 'center', padding: '100px', color: 'var(--text-dim)', fontWeight: 700 }}>Deploying Command Center...</div></>;
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       <div className="adm-page-header">
         <div>
           <h2 className="adm-page-title"><i className="fa-solid fa-tower-broadcast" /> Sovereign Command Center</h2>
@@ -339,7 +339,7 @@ const StaffManager = ({ onAdminLogout }) => {
         </div>
       )}
 
-    </AdminLayout>
+    </>
   );
 };
 

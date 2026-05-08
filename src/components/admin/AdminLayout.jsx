@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import { useTrading } from '../../context/TradingContext';
 
-const AdminLayout = ({ children, onAdminLogout }) => {
+const AdminLayout = ({ onAdminLogout }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { socket } = useTrading();
 
   const handleLogout = () => {
@@ -26,7 +27,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
     if (!socket) return;
 
     // Presence Sync
-    socket.emit('admin:presence', { page: window.location.pathname });
+    socket.emit('admin:presence', { page: location.pathname });
 
     // Global Alert Listener
     socket.on('admin:global_alert', (data) => {
@@ -47,7 +48,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
       socket.off('admin:global_alert');
       socket.off('admin:force_logout');
     };
-  }, [socket, window.location.pathname, onAdminLogout]);
+  }, [socket, location.pathname, onAdminLogout]);
 
   const fetchAdminStats = useCallback(async () => {
     try {
@@ -188,7 +189,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `adm-nav-item ${isActive || window.location.pathname.startsWith(item.path) ? 'active' : ''}`
+                `adm-nav-item ${isActive || location.pathname.startsWith(item.path) ? 'active' : ''}`
               }
               title={item.label}
             >
@@ -307,7 +308,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
 
       {/* Main Content Area */}
       <main className="adm-content">
-        {children}
+        <Outlet />
       </main>
 
       <style>{`

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
+
 import { useTrading } from '../../context/TradingContext';
 import { useModal } from '../../context/ModalContext';
 
@@ -19,7 +19,7 @@ const MiniBar = ({ value, max, color }) => (
   </div>
 );
 
-const Reports = ({ onAdminLogout }) => {
+const Reports = () => {
   const { socket } = useTrading();
   const { showAlert } = useModal();
   const [activeTab, setActiveTab] = useState('overview');
@@ -83,12 +83,12 @@ const Reports = ({ onAdminLogout }) => {
 
   if (loading) {
     return (
-      <AdminLayout onAdminLogout={onAdminLogout}>
+      <>
         <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-dim)' }}>
           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block', color: 'var(--brand-primary)' }} />
           <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>Compiling Reports...</p>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
@@ -154,7 +154,7 @@ const Reports = ({ onAdminLogout }) => {
   }));
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       {/* Page Header */}
       <div className="adm-page-header">
         <div>
@@ -557,7 +557,7 @@ const Reports = ({ onAdminLogout }) => {
         .cd-trade-status.open { background: rgba(255, 77, 94, 0.08); color: var(--brand-primary); }
         .cd-trade-status.closed { background: rgba(255,255,255,0.05); color: var(--text-dim); }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 

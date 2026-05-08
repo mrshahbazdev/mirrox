@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
+
 import { useModal } from '../../context/ModalContext';
 
-const Verifications = ({ onAdminLogout }) => {
+const Verifications = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
@@ -98,17 +98,17 @@ const Verifications = ({ onAdminLogout }) => {
 
   if (loading) {
     return (
-      <AdminLayout onAdminLogout={onAdminLogout}>
+      <>
         <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
           <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Loading KYC Queue...</p>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       {toast && (
         <div className={`adm-toast ${toast.type}`}>
           <i className={`fa-solid ${toast.type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}`} />
@@ -347,7 +347,7 @@ const Verifications = ({ onAdminLogout }) => {
         .kyc-pagination button:disabled { opacity: 0.35; cursor: not-allowed; }
         .page-indicator { color: var(--text-dim); font-size: 13px; font-weight: 700; }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 

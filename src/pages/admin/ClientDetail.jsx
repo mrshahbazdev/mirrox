@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
+
 import { useTrading } from '../../context/TradingContext';
 import { useModal } from '../../context/ModalContext';
 
@@ -13,9 +13,10 @@ const statusConfig = {
 
 const ITEMS_PER_PAGE = 5;
 
-const ClientDetail = ({ onAdminLogout }) => {
+const ClientDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { allTrades, prices, socket, allClients } = useTrading();
   const { showAlert, showConfirm, showPrompt } = useModal();
   
@@ -36,10 +37,10 @@ const ClientDetail = ({ onAdminLogout }) => {
   useEffect(() => {
     const socket = window.socket;
     if (socket) {
-      socket.emit('admin:presence', { page: window.location.pathname });
+      socket.emit('admin:presence', { page: location.pathname });
       socket.on('admin:presence_update', (list) => {
         // Filter to only show admins on THIS page, excluding self
-        const currentPath = window.location.pathname;
+        const currentPath = location.pathname;
         const others = list.filter(a => a.page === currentPath && a.socketId !== socket.id);
         setOtherAdmins(others);
       });
@@ -359,18 +360,18 @@ const ClientDetail = ({ onAdminLogout }) => {
 
   if (loading) {
     return (
-      <AdminLayout onAdminLogout={onAdminLogout}>
+      <>
         <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
           <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
           <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Loading Client Profile...</p>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
   if (!client) {
     return (
-      <AdminLayout onAdminLogout={onAdminLogout}>
+      <>
         <div style={{ textAlign: 'center', padding: '80px', color: '#64748b' }}>
           <i className="fa-solid fa-circle-exclamation" style={{ fontSize: 40, marginBottom: 16, display: 'block' }} />
           <p style={{ fontSize: 18, fontWeight: 700, color: '#e0e6ed' }}>Client not found</p>
@@ -378,7 +379,7 @@ const ClientDetail = ({ onAdminLogout }) => {
             ← Back to Clients
           </button>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
@@ -429,7 +430,7 @@ const ClientDetail = ({ onAdminLogout }) => {
   ];
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       <div className="client-detail-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <button className="back-btn" onClick={() => navigate('/admin/clients')} title="Return to Clients List">
@@ -1464,7 +1465,7 @@ const ClientDetail = ({ onAdminLogout }) => {
         </div>
       )}
 
-    </AdminLayout>
+    </>
   );
 };
 

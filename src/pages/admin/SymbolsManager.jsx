@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
+
 import { useModal } from '../../context/ModalContext';
 
 const categoryColors = {
@@ -10,7 +10,7 @@ const categoryColors = {
   Indices: { color: '#06b6d4', bg: 'rgba(6,182,212,0.08)' },
 };
 
-const SymbolsManager = ({ onAdminLogout }) => {
+const SymbolsManager = () => {
   const [symbols, setSymbols] = useState([]);
   const [loading, setLoading] = useState(true);
   const { showConfirm } = useModal();
@@ -124,17 +124,17 @@ const SymbolsManager = ({ onAdminLogout }) => {
 
   if (loading) {
      return (
-       <AdminLayout onAdminLogout={onAdminLogout}>
+       <>
          <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-dim)' }}>
            <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block', color: 'var(--brand-primary)' }} />
            <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>Loading Symbols Config...</p>
          </div>
-       </AdminLayout>
+       </>
      );
   }
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       {toast && (
         <div className="adm-toast success">
           <i className="fa-solid fa-circle-check" /> {toast}
@@ -486,7 +486,7 @@ const SymbolsManager = ({ onAdminLogout }) => {
         .cd-acc-label { font-size: 10px; color: var(--text-dim); font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
         .cd-acc-value { font-size: 16px; font-weight: 800; color: var(--text-main); font-family: 'Space Mono', monospace; }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 
