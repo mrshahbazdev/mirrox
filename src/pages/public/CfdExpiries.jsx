@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Calendar, Shield, Zap, Headphones, CheckCircle2, 
     ArrowRight, PlayCircle, BarChart, Globe, Layout, Monitor
@@ -12,7 +13,7 @@ const CfdExpiries = () => {
         { asset: "COFFEE", name: "US Coffee C", month: "MAR 2025", final: "2025-02-20" },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -66,7 +67,7 @@ const CfdExpiries = () => {
                 </div>
             </section>
 
-            {/* THE BULLVERA EDGE GRID */}
+            {/* THE BULVERA EDGE GRID */}
             <section style={{ background: '#f8fafc', padding: '160px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '100px' }}>

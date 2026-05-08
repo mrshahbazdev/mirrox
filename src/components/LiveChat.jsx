@@ -346,12 +346,12 @@ export default function LiveChat({ currentUser }) {
     return groups;
   }, {});
 
-  const supportName = systemConfig.support_name || 'Bullvera Support';
+  const supportName = systemConfig.support_name || 'Bulvera Support';
   const supportIcon = systemConfig.support_icon || 'fa-solid fa-headset';
 
   const downloadTranscript = () => {
     if (!messages.length) return;
-    const sName = systemConfig.support_name || 'Bullvera Support';
+    const sName = systemConfig.support_name || 'Bulvera Support';
     const text = messages.map(m => `[${formatTime(m.timestamp)}] ${m.senderRole === 'user' ? 'You' : sName}: ${m.text || (m.attachment ? '[Image Attachment]' : '')}`).join('\n');
     
     const header = `--- ${sName} Chat Transcript ---\nTicket ID: ${ticket?.id || 'N/A'}\nDate: ${new Date().toLocaleString()}\n---------------------------------------\n\n`;

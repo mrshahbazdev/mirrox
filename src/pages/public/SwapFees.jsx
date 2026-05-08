@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Info, Calculator, BarChart, TrendingUp, ArrowRight,
     Zap, Monitor, Globe, Shield, PlayCircle, Smartphone
@@ -34,7 +35,7 @@ const SwapFees = () => {
     };
 
     const currentData = swapData[activeTab] || swapData['forex'];
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -66,7 +67,7 @@ const SwapFees = () => {
                            Swap fees reflect the interest rate differential between currency components. They are credited or debited for positions maintained past the daily settlement time.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7' }}>
-                            At Bullvera, we deploy institutional-grade transparency. Monitor your rollover costs to optimize long-duration strategic exposure.
+                            At Bulvera, we deploy institutional-grade transparency. Monitor your rollover costs to optimize long-duration strategic exposure.
                         </p>
                     </div>
                 </section>
@@ -161,7 +162,7 @@ const SwapFees = () => {
 
             {/* FINAL CTA */}
             <section className="lp-cta-block" style={{ marginBottom: '160px' }}>
-                <h2>Ready to Execute? Start with Bullvera</h2>
+                <h2>Ready to Execute? Start with Bulvera</h2>
                 <div style={{ marginTop: '48px' }}>
                     <button className="lp-cta-white" onClick={() => navigate('/register')}>Activate Terminal</button>
                 </div>

@@ -171,7 +171,7 @@ const Finances = () => {
               Wallet
             </h1>
             <p className="fin-subtitle">
-              Institutional Asset Management &bull; Bullvera
+              Institutional Asset Management &bull; Bulvera
             </p>
           </div>
 

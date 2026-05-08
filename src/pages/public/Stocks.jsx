@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, Laptop, PlayCircle } from 'lucide-react';
 
 const Stocks = () => {
@@ -13,7 +14,7 @@ const Stocks = () => {
         { symbol: "NFLX", name: "Netflix Inc.", spread: "0.7", category: "Media" },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">

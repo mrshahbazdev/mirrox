@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Users, Briefcase, BarChart, Rocket, DollarSign, 
     Gift, Headphones, ShieldCheck, ArrowRight, UserPlus,
@@ -6,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const BecomeAPartner = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     const partnershipBenefits = [
         { icon: <ShieldCheck size={32} />, title: "Regulated Broker", desc: "Partner with a licensed and trusted global entity recognized for excellence." },
@@ -44,7 +45,7 @@ const BecomeAPartner = () => {
                         Partner with the <br/> <span style={{ color: 'var(--pub-red)' }}>Best in Trading</span>
                     </h1>
                     <p style={{ margin: '0 auto', fontSize: '20px', maxWidth: '750px', color: '#94a3b8', lineHeight: '1.6' }}>
-                        The Bullvera Affiliate Program offers a elite opportunity to expand your network, boost your revenue, and scale your financial goals.
+                        The Bulvera Affiliate Program offers a elite opportunity to expand your network, boost your revenue, and scale your financial goals.
                     </p>
                     <div style={{ marginTop: '48px' }}>
                         <button className="lp-btn-primary" style={{ padding: '24px 64px' }} onClick={() => navigate('/register')}>Join Program <UserPlus size={18} style={{ marginLeft: '12px' }}/></button>
@@ -56,7 +57,7 @@ const BecomeAPartner = () => {
                 {/* --- WHY PARTNER --- */}
                 <section>
                     <div className="lp-section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
-                        <h2 style={{ textTransform: 'uppercase' }}>Why Partner with <span style={{ color: 'var(--pub-red)' }}>Bullvera</span>?</h2>
+                        <h2 style={{ textTransform: 'uppercase' }}>Why Partner with <span style={{ color: 'var(--pub-red)' }}>Bulvera</span>?</h2>
                         <div className="accent-line" style={{ margin: '24px auto' }}></div>
                     </div>
                     <div className="lp-grid">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, Diamond, Globe } from 'lucide-react';
 
 const Metals = () => {
@@ -13,7 +14,7 @@ const Metals = () => {
         { symbol: "ZINC", name: "Zinc", spread: "1.0", category: "Industrial" },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">

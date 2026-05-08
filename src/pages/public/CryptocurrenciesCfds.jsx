@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, Coins, Globe, Cpu } from 'lucide-react';
 
 const CryptocurrenciesCfds = () => {
@@ -13,7 +14,7 @@ const CryptocurrenciesCfds = () => {
         { symbol: "DOTUSD", name: "Polkadot", spread: "0.1", category: "Altcoins" },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -44,7 +45,7 @@ const CryptocurrenciesCfds = () => {
                             Cryptocurrencies are decentralized financial instruments powered by blockchain technology. They represent a paradigm shift in global finance.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            With Bullvera, trade these assets as CFDs. Profit from volatility in Bitcoin, Ethereum, and Solana without the need for a crypto wallet or cold storage.
+                            With Bulvera, trade these assets as CFDs. Profit from volatility in Bitcoin, Ethereum, and Solana without the need for a crypto wallet or cold storage.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>Trade Now</button>
                     </div>

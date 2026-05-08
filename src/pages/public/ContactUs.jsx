@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Mail, MessageSquare, Phone, MapPin, Send, 
     Clock, Globe, Shield, ShieldCheck, Headphones,
@@ -6,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const ContactUs = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     const contactMethods = [
         {
@@ -25,7 +26,7 @@ const ContactUs = () => {
             icon: <Phone size={32} />,
             title: "Direct Access",
             desc: "Immediate voice priority for high-volume accounts.",
-            link: "+1 (800) BULLVERA"
+            link: "+1 (800) BULVERA"
         }
     ];
 

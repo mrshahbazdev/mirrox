@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, PlayCircle } from 'lucide-react';
 
 const Indices = () => {
@@ -13,7 +14,7 @@ const Indices = () => {
         { symbol: "ESP35", name: "Spain 35 (IBEX)", spread: "2.0", category: "Europe" },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -44,7 +45,7 @@ const Indices = () => {
                             Stock indices track the performance of a specific sector or a country's entire economy. They provide a high-level view of market health and stability.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            With Bullvera, trade global benchmarks like the S&P 500, DAX, and Nikkei with institutional-grade liquidity and no requotes.
+                            With Bulvera, trade global benchmarks like the S&P 500, DAX, and Nikkei with institutional-grade liquidity and no requotes.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>View Index List</button>
                     </div>

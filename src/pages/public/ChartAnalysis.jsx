@@ -1,8 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Lock, ArrowRight, Shield, Zap, BarChart3, TrendingUp } from 'lucide-react';
 
 const ChartAnalysis = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -39,7 +40,7 @@ const ChartAnalysis = () => {
             <section className="lp-cta-block" style={{ marginTop: '0' }}>
                 <h2 style={{ textAlign: 'center' }}>Ready to Unlock Full Potential?</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Join Bullvera Now</button>
+                    <button className="lp-cta-white" onClick={() => navigate('/register')}>Join Bulvera Now</button>
                 </div>
             </section>
         </div>

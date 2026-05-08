@@ -1,11 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     FileText, Download, Shield, ExternalLink,
     CheckCircle2, ArrowRight, Lock, Globe
 } from 'lucide-react';
 
 const Legal = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     const docs = [
         "CLIENT AGREEMENT", "PRIVACY POLICY", "BONUS TERMS", 
@@ -47,7 +48,7 @@ const Legal = () => {
 
             {/* --- FINAL CTA --- */}
             <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
+                <h2 style={{ textAlign: 'center' }}>Join Bulvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
                     <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
                 </div>

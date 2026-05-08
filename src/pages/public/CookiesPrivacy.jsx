@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Shield, Lock, Eye, FileText, CheckCircle2, 
     ArrowRight, Mail, Globe, Scale, ShieldCheck,
@@ -6,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const CookiesPrivacy = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -37,7 +38,7 @@ const CookiesPrivacy = () => {
                     </div>
                     <div style={{ color: '#475569', fontSize: '18px', lineHeight: '1.8', display: 'flex', flexDirection: 'column', gap: '32px' }}>
                         <p style={{ fontWeight: '500' }}>
-                           Capital Crest Ltd, operating under the trading name <span style={{ color: '#111', fontWeight: '900' }}>Bullvera</span>, is a limited liability entity registered under Comoros Union (Reg: HT00324037) and authorized by the Mwali International Services Authority.
+                           Capital Crest Ltd, operating under the trading name <span style={{ color: '#111', fontWeight: '900' }}>Bulvera</span>, is a limited liability entity registered under Comoros Union (Reg: HT00324037) and authorized by the Mwali International Services Authority.
                         </p>
                         <p>
                             We understand the critical importance of maintaining the confidentiality and privacy of personal information. This Policy defines the high-level protocols we employ to manage and protect the data assets entrusted to us by our institutional partners and individual clients.
@@ -123,7 +124,7 @@ const CookiesPrivacy = () => {
                     <h2 style={{ textTransform: 'uppercase' }}>Experience Secured <span style={{ color: 'var(--pub-red)' }}>Execution</span></h2>
                     <p style={{ marginTop: '24px', color: 'var(--pub-text-muted)', fontSize: '18px' }}>Join the global benchmark for institutional trading.</p>
                     <div style={{ marginTop: '64px' }}>
-                        <button className="lp-btn-primary" style={{ padding: '24px 80px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/register')}>Join Bullvera Today</button>
+                        <button className="lp-btn-primary" style={{ padding: '24px 80px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/register')}>Join Bulvera Today</button>
                     </div>
                 </div>
             </section>
@@ -131,7 +132,7 @@ const CookiesPrivacy = () => {
             <div style={{ textAlign: 'center', padding: '100px 24px' }}>
                  <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', fontWeight: '900', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.2em', lineHeight: '2', borderTop: '1px solid #f1f5f9', paddingTop: '48px' }}>
                     <Info size={14} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px', color: 'var(--pub-red)' }} />
-                    BULLVERA IS FULLY COMMITTED TO GLOBAL DATA PROTECTION STANDARDS. YOUR ASSETS ARE SECURED BY ELITE CRYPTOGRAPHIC PROTOCOLS.
+                    BULVERA IS FULLY COMMITTED TO GLOBAL DATA PROTECTION STANDARDS. YOUR ASSETS ARE SECURED BY ELITE CRYPTOGRAPHIC PROTOCOLS.
                 </p>
             </div>
         </div>

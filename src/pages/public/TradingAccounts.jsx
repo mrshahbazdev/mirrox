@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     CheckCircle2, ArrowRight, Shield, Zap, TrendingUp, 
     Globe, Wallet, BadgeCheck, Users, Headphones, Check
@@ -18,7 +19,7 @@ const TradingAccounts = () => {
     ];
 
     const accountNames = ["Classic", "Silver", "Gold", "Platinum", "VIP"];
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">

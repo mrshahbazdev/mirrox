@@ -223,7 +223,7 @@ const AdminLayout = ({ children, onAdminLogout }) => {
           <div className="adm-header-left">
             <div className="adm-header-title">
               <i className="fa-solid fa-shield-halved" style={{ color: '#FF4D5E' }} />
-              <span>Bullvera Admin Panel</span>
+              <span>Bulvera Admin Panel</span>
             </div>
           </div>
           <div className="adm-header-right">

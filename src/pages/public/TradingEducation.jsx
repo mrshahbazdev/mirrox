@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     BookOpen, CheckCircle2, ArrowRight,
     TrendingUp, BarChart2, Zap, Target,
@@ -6,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const TradingEducation = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -107,7 +108,7 @@ const TradingEducation = () => {
                            Without a clear destination, it’s impossible to plan your route. Setting realistic financial goals helps you remain disciplined during market volatility.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            At Bullvera, we provide the tools to track your progress and adjust your strategies dynamically as you grow.
+                            At Bulvera, we provide the tools to track your progress and adjust your strategies dynamically as you grow.
                         </p>
                         <button style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', border: 'none', color: 'var(--pub-red)', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer', fontSize: '13px' }} onClick={() => navigate('/register')}>
                             Start Goal Setting <ArrowRight size={18}/>
@@ -115,9 +116,9 @@ const TradingEducation = () => {
                     </div>
                 </section>
 
-                {/* SECTION 4: WHY BULLVERA */}
+                {/* SECTION 4: WHY BULVERA */}
                 <section style={{ display: 'flex', flexDirection: 'column', gap: '80px', textAlign: 'center' }}>
-                    <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', textTransform: 'uppercase' }}>Why Trade with <span style={{ color: 'var(--pub-red)' }}>Bullvera</span>?</h2>
+                    <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', color: '#111', lineHeight: '1.1', textTransform: 'uppercase' }}>Why Trade with <span style={{ color: 'var(--pub-red)' }}>Bulvera</span>?</h2>
                     <div className="lp-grid">
                          {[
                              { t: "Deep Liquidity", d: "Trade major pairs and commodities with razor-sharp execution." },
@@ -138,7 +139,7 @@ const TradingEducation = () => {
             <section className="lp-cta-block">
                 <h2>Ready to Start?</h2>
                 <div style={{ marginTop: '60px' }}>
-                    <button className="lp-btn-primary" style={{ padding: '20px 60px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/register')}>Join Bullvera Today</button>
+                    <button className="lp-btn-primary" style={{ padding: '20px 60px', background: 'white', color: 'var(--pub-red)' }} onClick={() => navigate('/register')}>Join Bulvera Today</button>
                 </div>
             </section>
         </div>

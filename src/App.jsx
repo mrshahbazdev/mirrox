@@ -55,6 +55,7 @@ import BecomeAPartner from './pages/public/BecomeAPartner';
 import Legal from './pages/public/Legal';
 import ComplaintInfo from './pages/public/ComplaintInfo';
 import CookiesPrivacy from './pages/public/CookiesPrivacy';
+import TermsAndConditions from './pages/public/TermsAndConditions';
 import GlobalModal from './components/GlobalModal';
 import LiveChat from './components/LiveChat';
 import VisitorTracker from './components/VisitorTracker';
@@ -113,7 +114,7 @@ function App() {
       <h1 style={{ fontSize: '32px', marginBottom: '16px', fontWeight: 800 }}>Platform Upgrading</h1>
       <p style={{ maxWidth: '500px', color: '#64748b', lineHeight: 1.6, fontSize: '16px' }}>
         We are currently performing scheduled maintenance to enhance your trading experience. 
-        Bullvera will be back online shortly. Thank you for your patience.
+        Bulvera will be back online shortly. Thank you for your patience.
       </p>
       <div style={{ marginTop: '40px', padding: '12px 24px', background: 'rgba(255, 77, 94, 0.1)', borderRadius: '12px', border: '1px solid rgba(255, 77, 94, 0.2)' }}>
          <span style={{ fontSize: '12px', letterSpacing: '1px', fontWeight: 700, color: '#FF4D5E' }}>ESTIMATED UPTIME: 15 MINUTES</span>
@@ -164,6 +165,7 @@ function App() {
           <Route path="/legal" element={<Legal />} />
           <Route path="/complaint-info" element={<ComplaintInfo />} />
           <Route path="/cookies-privacy" element={<CookiesPrivacy />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         </Route>
         <Route 
           path="/login" 

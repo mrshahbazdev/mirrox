@@ -28,7 +28,7 @@ const Welcome = () => {
       <nav className="landing-nav">
         <div className="nav-logo">
           <i className="fa-solid fa-gem"></i>
-          <span>Bullvera</span>
+          <span>Bulvera</span>
         </div>
         <div className="nav-actions">
           <button className="nav-btn-login" onClick={() => navigate('/login')}>Sign In</button>
@@ -59,7 +59,7 @@ const Welcome = () => {
             <span className="text-gradient">Powerful</span> Trading Engine.
           </h1>
           <p className="hero-subtitle">
-            Experience lightning-fast execution, deep liquidity, and institutional-grade analytical tools on Bullvera's award-winning trading platform.
+            Experience lightning-fast execution, deep liquidity, and institutional-grade analytical tools on Bulvera's award-winning trading platform.
           </p>
 
           <div className="hero-cta-group">
@@ -139,9 +139,9 @@ const Welcome = () => {
         <div className="footer-content">
           <div className="nav-logo" style={{ opacity: 0.5 }}>
             <i className="fa-solid fa-gem"></i>
-            <span>Bullvera</span>
+            <span>Bulvera</span>
           </div>
-          <p>© 2026 Bullvera Finance. Global Markets, Simplified.</p>
+          <p>© 2026 Bulvera Finance. Global Markets, Simplified.</p>
         </div>
       </footer>
 

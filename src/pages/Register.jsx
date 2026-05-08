@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useTrading } from '../context/TradingContext';
 
 const Register = ({ onRegister }) => {
@@ -40,7 +40,7 @@ const Register = ({ onRegister }) => {
       <div className="auth-card animate-fade">
         <div className="auth-logo-area">
           <i className="fa-solid fa-cube main-logo"></i>
-          <h1>Join Bullvera</h1>
+          <h1>Join Bulvera</h1>
           <p>Start your premium trading journey today.</p>
         </div>
         
@@ -106,7 +106,7 @@ const Register = ({ onRegister }) => {
           <div className="auth-utils">
             <label className="auth-checkbox-wrap">
               <input type="checkbox" required />
-              <span>I agree to the <a href="#">Terms & Conditions</a></span>
+              <span>I agree to the <Link to="/terms-and-conditions">Terms & Conditions</Link></span>
             </label>
           </div>
 
@@ -116,7 +116,7 @@ const Register = ({ onRegister }) => {
         </form>
 
         <p className="auth-footer-link">
-          Already have an account? <a href="/login">Sign In</a>
+          Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </div>
     </div>

@@ -57,7 +57,7 @@ const Header = ({ currentUser }) => {
       <div className="header-left">
         <div className="logo-group">
           <i className="fa-solid fa-cube" style={{ color: 'var(--accent)', fontSize: '22px' }}></i>
-          <span className="Bullvera-logo" style={{ color: 'var(--text-main)' }}>Bullvera</span>
+          <span className="Bulvera-logo" style={{ color: 'var(--text-main)' }}>Bulvera</span>
         </div>
       </div>
 
@@ -204,7 +204,7 @@ const Header = ({ currentUser }) => {
         @media (max-width: 768px) {
            .header-stats { gap: 8px; }
            .stat-pill { min-width: auto; }
-           .Bullvera-logo { display: none; }
+           .Bulvera-logo { display: none; }
         }
 
         @media (max-width: 600px) {
