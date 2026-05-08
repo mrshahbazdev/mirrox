@@ -57,7 +57,7 @@ const Header = ({ currentUser }) => {
     <header className="header">
       <div className="header-left">
         <div className="logo-group" onClick={() => navigate('/app/dashboard')} style={{ cursor: 'pointer' }}>
-          <img src="/logo.png" alt="Bulvera" style={{ height: '40px', objectFit: 'contain' }} />
+          <img src="/logo.png" alt="Bulvera" style={{ height: '60px', objectFit: 'contain' }} />
         </div>
       </div>
 
