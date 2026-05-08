@@ -1,7 +1,8 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ currentUser, onLogout }) => {
+  const navigate = useNavigate();
   const navItems = [
     { icon: 'fa-solid fa-chart-line', path: '/app/dashboard', label: 'Trading Accounts' },
     { icon: 'fa-solid fa-compass', path: '/app/explore', label: 'Explore Markets' },
@@ -13,8 +14,8 @@ const Sidebar = ({ currentUser, onLogout }) => {
 
   return (
     <aside className="dash-sidebar glass">
-      <div className="sidebar-logo">
-        <i className="fa-solid fa-cube"></i>
+      <div className="sidebar-logo" onClick={() => navigate('/app/dashboard')} style={{ cursor: 'pointer' }}>
+        <img src="/logo.png" alt="Bulvera" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
       </div>
       
       <nav className="sidebar-nav">
