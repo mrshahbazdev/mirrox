@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Shield, Zap, Headphones, ArrowRight, BookOpen, BarChart2, 
     Globe, Cpu, Clock, Smartphone, CheckCircle2, TrendingUp, 
@@ -13,7 +14,7 @@ const HomePublic = () => {
         { symbol: "US500", name: "S&P 500 Index", price: "5,123.32", change: "+1.22%", up: true },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -27,7 +28,7 @@ const HomePublic = () => {
                         Commodities and More!
                     </h1>
                     <p>
-                        Experience the gold standard of trading with Bullvera. 
+                        Experience the gold standard of trading with Bulvera. 
                         Professional tools, institutional liquidity, and ultra-fast execution.
                     </p>
                     <div className="lp-btn-group">
@@ -42,7 +43,7 @@ const HomePublic = () => {
                         <div style={{ position: 'relative', background: 'rgba(255,255,255,0.05)', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', padding: '12px', backdropFilter: 'blur(20px)' }}>
                              <img 
                                 src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=1400" 
-                                alt="Bullvera Trading Interface" 
+                                alt="Bulvera Trading Interface" 
                                 style={{ width: '100%', height: 'auto', borderRadius: '24px', opacity: 0.95, display: 'block' }}
                              />
                         </div>
@@ -73,7 +74,7 @@ const HomePublic = () => {
                         </div>
                         <h2 style={{ fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: '900', color: '#111', lineHeight: '1.1', marginBottom: '32px', textTransform: 'uppercase' }}>We Are All About Trading</h2>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '19px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            Experience an abundance of possibilities with Bullvera. Diversify your portfolio with access to over 160+ assets, including Forex, Commodities, Indices and Cryptocurrencies.
+                            Experience an abundance of possibilities with Bulvera. Diversify your portfolio with access to over 160+ assets, including Forex, Commodities, Indices and Cryptocurrencies.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>
                             Create Free Account
@@ -99,7 +100,7 @@ const HomePublic = () => {
                         <div style={{ background: 'white', borderRadius: '48px', padding: '24px', boxShadow: '0 60px 120px rgba(0,0,0,0.08)', border: '1px solid #f1f5f9', position: 'relative' }}>
                              <img 
                                 src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200" 
-                                alt="Bullvera Web Dashboard" 
+                                alt="Bulvera Web Dashboard" 
                                 style={{ width: '100%', borderRadius: '32px', display: 'block' }}
                              />
                         </div>
@@ -107,11 +108,11 @@ const HomePublic = () => {
                 </section>
             </div>
 
-            {/* --- BULLVERA EDGE --- */}
+            {/* --- BULVERA EDGE --- */}
             <section style={{ background: '#f8fafc', padding: '160px 24px', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                     <div className="lp-section-header">
-                        <h2>The Bullvera <span style={{ color: 'var(--pub-red)' }}>Edge</span></h2>
+                        <h2>The Bulvera <span style={{ color: 'var(--pub-red)' }}>Edge</span></h2>
                         <div className="accent-line"></div>
                     </div>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Plus, Minus, ArrowRight, UserPlus, Wallet, PlayCircle,
     Search, HelpCircle, MessageSquare, ShieldCheck, Zap
@@ -6,22 +7,22 @@ import {
 
 const FAQ_DATA = {
     "Account Details": [
-        { q: "How do I register for an account with Bullvera?", a: "To sign up with Bullvera, complete the simplified registration form with your institutional or personal details. Your identity is protected by 256-bit encryption throughout the process." },
-        { q: "What is the cost of opening an account with Bullvera?", a: "Account initialization with Bullvera is free of charge, providing immediate access to our global liquidity network." },
-        { q: "How do I verify My Bullvera trading account?", a: "To verify your account, submit a valid Government-issued ID and a Proof of Residence (utility bill or bank statement) via our secure document portal." },
+        { q: "How do I register for an account with Bulvera?", a: "To sign up with Bulvera, complete the simplified registration form with your institutional or personal details. Your identity is protected by 256-bit encryption throughout the process." },
+        { q: "What is the cost of opening an account with Bulvera?", a: "Account initialization with Bulvera is free of charge, providing immediate access to our global liquidity network." },
+        { q: "How do I verify My Bulvera trading account?", a: "To verify your account, submit a valid Government-issued ID and a Proof of Residence (utility bill or bank statement) via our secure document portal." },
         { q: "How can I log in to My account?", a: "Access the 'Login' gateway at the top right of the terminal and authenticate using your secure credentials." },
         { q: "When can I start trading?", a: "You can execute initial trades immediately following account verification and successful capitalization." }
     ],
     "Trading Accounts": [
-        { q: "What types of trading accounts does Bullvera offer?", a: "Bullvera offers five distinct account tiers—from Classic to VIP—tailored to various levels of market expertise and volume requirements." },
-        { q: "What is the maximum leverage available at Bullvera?", a: "We provide institutional-grade leverage of up to 1:400 across all verified account types." },
-        { q: "Does Bullvera offer a demo account?", a: "Yes, we provide an elite practice environment with a 100,000 USD virtual balance to refine institutional strategies." },
-        { q: "Is My personal information secure with Bullvera?", a: "Bullvera utilizes multi-layered security protocols, including SSL encryption and segregated data silos, to protect client integrity." }
+        { q: "What types of trading accounts does Bulvera offer?", a: "Bulvera offers five distinct account tiers—from Classic to VIP—tailored to various levels of market expertise and volume requirements." },
+        { q: "What is the maximum leverage available at Bulvera?", a: "We provide institutional-grade leverage of up to 1:400 across all verified account types." },
+        { q: "Does Bulvera offer a demo account?", a: "Yes, we provide an elite practice environment with a 100,000 USD virtual balance to refine institutional strategies." },
+        { q: "Is My personal information secure with Bulvera?", a: "Bulvera utilizes multi-layered security protocols, including SSL encryption and segregated data silos, to protect client integrity." }
     ],
     "Deposits": [
         { q: "What is the minimum deposit amount?", a: "The standard initialization deposit is 250 USD or currency equivalent." },
         { q: "How can I deposit funds into My account?", a: "Capitalization is available via global credit/debit networks, institutional wire transfers, and verified e-gateways." },
-        { q: "Does Bullvera charge any deposit fees?", a: "Bullvera does not apply capitalization fees. Please note that external payment providers may apply independent processing margins." }
+        { q: "Does Bulvera charge any deposit fees?", a: "Bulvera does not apply capitalization fees. Please note that external payment providers may apply independent processing margins." }
     ],
     "Withdrawals": [
         { q: "How do I request a withdrawal?", a: "Initiate a disbursement request via the 'Financial Operations' section of your secure terminal." },
@@ -33,13 +34,13 @@ const FAQ_DATA = {
         { q: "Is there an inactivity fee?", a: "A nominal maintenance fee of 10 USD is applied to accounts that remain dormant without active trades for over 30 days." }
     ],
     "Legal & Compliance": [
-        { q: "Is Bullvera a regulated broker?", a: "Yes, Bullvera is regulated by the Mwali International Services Authority (MISA). License: BFX2024064." },
+        { q: "Is Bulvera a regulated broker?", a: "Yes, Bulvera is regulated by the Mwali International Services Authority (MISA). License: BFX2024064." },
         { q: "Are My funds protected?", a: "Client capital is held in strictly segregated institutional accounts, ensuring total fund sovereignty." },
-        { q: "What is the minimum age to trade with Bullvera?", a: "All account holders must be 18 years of age or older to satisfy global compliance standards." }
+        { q: "What is the minimum age to trade with Bulvera?", a: "All account holders must be 18 years of age or older to satisfy global compliance standards." }
     ],
     "Trading": [
-        { q: "Is negative balance protection provided?", a: "Yes, institutional-grade negative balance protection is a standard feature on all Bullvera accounts." },
-        { q: "Can I trade on weekends?", a: "While traditional markets close, Cryptocurrency execution remains available 24/7 on the Bullvera terminal." },
+        { q: "Is negative balance protection provided?", a: "Yes, institutional-grade negative balance protection is a standard feature on all Bulvera accounts." },
+        { q: "Can I trade on weekends?", a: "While traditional markets close, Cryptocurrency execution remains available 24/7 on the Bulvera terminal." },
         { q: "What is a pip?", a: "A pip (Percentage in Point) is the standardized unit of price movement in financial asset evaluation." }
     ],
     "General": [
@@ -51,7 +52,7 @@ const FAQ_DATA = {
 const Faq = () => {
     const [activeTab, setActiveTab] = useState("Account Details");
     const [openIndex, setOpenIndex] = useState(0);
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -62,7 +63,7 @@ const Faq = () => {
                         <HelpCircle size={14} style={{ color: 'var(--pub-red)' }} /> Knowledge Repository
                     </div>
                     <h1 style={{ fontSize: 'clamp(48px, 9vw, 90px)', lineHeight: '0.9', marginBottom: '32px' }}>
-                        Bullvera <span style={{ color: 'var(--pub-red)' }}>Help Center</span>
+                        Bulvera <span style={{ color: 'var(--pub-red)' }}>Help Center</span>
                     </h1>
                     <p style={{ margin: '0 auto', fontSize: '20px', maxWidth: '750px', color: '#94a3b8', lineHeight: '1.6' }}>
                         The centralized nexus for all institutional inquiries and platform expertise.

@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Lock, ArrowRight, Globe, Shield, Zap, PlayCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const EconomicCalendar = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
     return (
         <div className="lp-wrapper">
             
@@ -45,7 +47,7 @@ const EconomicCalendar = () => {
 
              <footer style={{ textAlign: 'center', padding: '0 24px 80px 24px' }}>
                 <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '10px', color: '#94a3b8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', lineHeight: '1.8' }}>
-                    NOTICE: THE ECONOMIC CALENDAR IS PROVIDED FOR INFORMATIONAL PURPOSES ONLY. BULLVERA IS NOT RESPONSIBLE FOR ANY TRADING LOSSES.
+                    NOTICE: THE ECONOMIC CALENDAR IS PROVIDED FOR INFORMATIONAL PURPOSES ONLY. BULVERA IS NOT RESPONSIBLE FOR ANY TRADING LOSSES.
                 </p>
             </footer>
         </div>

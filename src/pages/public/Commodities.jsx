@@ -1,5 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, Globe, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Commodities = () => {
     const commodityPairs = [
@@ -13,7 +15,7 @@ const Commodities = () => {
         { symbol: "SUGAR", name: "Sugar", spread: "0.05", category: "Agriculture" },
     ];
 
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -44,7 +46,7 @@ const Commodities = () => {
                             Commodities—energies, metals, and agricultural products—are the lifeblood of the global economy. They offer unique hedging opportunities against inflation.
                         </p>
                         <p style={{ color: 'var(--pub-text-muted)', fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-                            With Bullvera, speculated on price movements without physical storage. Trade oil, gold, and gas with premium conditions.
+                            With Bulvera, speculated on price movements without physical storage. Trade oil, gold, and gas with premium conditions.
                         </p>
                         <button className="lp-btn-primary" onClick={() => navigate('/register')}>See All Markets</button>
                     </div>

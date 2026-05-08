@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Calendar, Globe, Shield, Zap, ArrowRight,
     Search, Filter, Info, Clock, CheckCircle2
@@ -17,7 +18,7 @@ const MarketHolidays = () => {
     ];
 
     const holidayDates = ["Jan 01", "Apr 18", "Apr 21", "May 01", "Dec 25", "Dec 26"];
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
 
     return (
         <div className="lp-wrapper">
@@ -91,7 +92,7 @@ const MarketHolidays = () => {
                              <h4 style={{ fontSize: '14px', fontWeight: '900', color: 'white', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>Institutional Protocol</h4>
                              <p style={{ fontSize: '18px', color: '#94a3b8', lineHeight: '1.7', fontWeight: '500' }}>
                                 Market liquidity and execution spreads are subject to volatility during holiday cycles. 
-                                Bullvera provides these schedules as benchmark data; however, regional settlement conditions may fluctuate. 
+                                Bulvera provides these schedules as benchmark data; however, regional settlement conditions may fluctuate. 
                                 Verify real-time terminal hours for precise operational planning.
                              </p>
                         </div>

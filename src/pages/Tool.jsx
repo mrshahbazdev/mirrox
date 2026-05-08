@@ -59,7 +59,7 @@ export default function Tool() {
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('bull_studio_api_key') || '');
   const [brand, setBrand] = useState(() => {
     const saved = localStorage.getItem('bull_studio_brand');
-    return saved ? JSON.parse(saved) : { name: 'Bullvera Finance', logo: '', primary: '#FF4D5E', font: 'Outfit' };
+    return saved ? JSON.parse(saved) : { name: 'Bulvera Finance', logo: '', primary: '#FF4D5E', font: 'Outfit' };
   });
   
   const [showSettings, setShowSettings] = useState(false);
@@ -202,7 +202,7 @@ export default function Tool() {
           <div>
             <div className="flex items-center gap-3">
               <span className="text-[var(--text-main)] font-black tracking-tighter text-2xl uppercase italic leading-none">STUDIO</span>
-              <span className="px-2 py-0.5 bg-[#FF4D5E]/10 rounded-md text-[9px] font-black text-[#FF4D5E] border border-[#FF4D5E]/10 uppercase tracking-widest">Bullvera Creative</span>
+              <span className="px-2 py-0.5 bg-[#FF4D5E]/10 rounded-md text-[9px] font-black text-[#FF4D5E] border border-[#FF4D5E]/10 uppercase tracking-widest">Bulvera Creative</span>
             </div>
             {brand.name && <p className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest mt-1 opacity-80">Syncing with {brand.name}</p>}
           </div>
@@ -375,7 +375,7 @@ export default function Tool() {
                     <div className="space-y-5">
                        <div>
                          <Label>Brand Identity Name</Label>
-                         <input type="text" value={brand.name} onChange={e=>setBrand({...brand, name: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-[var(--text-main)] outline-none" placeholder="E.g. Bullvera Finance" />
+                         <input type="text" value={brand.name} onChange={e=>setBrand({...brand, name: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-[var(--text-main)] outline-none" placeholder="E.g. Bulvera Finance" />
                        </div>
                        <div className="grid grid-cols-2 gap-4">
                          <div>

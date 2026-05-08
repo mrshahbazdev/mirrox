@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Smartphone, ShieldCheck, Zap, 
     TrendingUp, BarChart2, CheckCircle2,
@@ -6,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const TradingApp = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
     const steps = [
         {
             title: "Visit Firebase Distribution",
@@ -30,12 +31,12 @@ const TradingApp = () => {
         },
         {
             title: "Download Tester",
-            desc: "Download the App Tester and use the Firebase Distribution platform to get the Bullvera trading app.",
+            desc: "Download the App Tester and use the Firebase Distribution platform to get the Bulvera trading app.",
             image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=500"
         },
         {
             title: "Launch & Trade",
-            desc: "Follow the prompts to install the Bullvera app and begin your premium mobile trading experience.",
+            desc: "Follow the prompts to install the Bulvera app and begin your premium mobile trading experience.",
             image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=500"
         }
     ];
@@ -45,8 +46,8 @@ const TradingApp = () => {
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero" style={{ padding: '120px 24px' }}>
                 <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>Bullvera <span style={{ color: 'var(--pub-red)' }}>Mobile</span></h1>
-                    <p style={{ fontSize: '20px', marginTop: '24px' }}>Step-by-step guide to installing the Bullvera Firebase experience on your device.</p>
+                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>Bulvera <span style={{ color: 'var(--pub-red)' }}>Mobile</span></h1>
+                    <p style={{ fontSize: '20px', marginTop: '24px' }}>Step-by-step guide to installing the Bulvera Firebase experience on your device.</p>
                 </div>
             </section>
 

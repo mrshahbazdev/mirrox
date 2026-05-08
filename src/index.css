@@ -1812,7 +1812,7 @@ body {
     height: 110px;
   }
 }
-/* Bullvera Master Redesign - Explorer & AssetInfo */
+/* Bulvera Master Redesign - Explorer & AssetInfo */
 .explore-container.redesign {
   grid-column: 1 / -1; 
   padding: 32px;
@@ -6032,7 +6032,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* =========================================
-   PUBLIC SITE UI SYSTEM (BULLVERA)
+   PUBLIC SITE UI SYSTEM (BULVERA)
    ========================================= */
 
 :root {
@@ -6571,7 +6571,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .lp-hero h1 {
   font-size: clamp(40px, 8vw, 90px);
   font-weight: 900;
-  color: white;
+  color: #111;
   line-height: 1.1;
   margin-bottom: 32px;
   letter-spacing: -2px;
@@ -6585,7 +6585,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .lp-hero p {
   font-size: clamp(16px, 2vw, 20px);
-  color: #94a3b8;
+  color: #475569;
   max-width: 700px;
   margin: 0 auto 48px;
   line-height: 1.6;

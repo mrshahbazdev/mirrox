@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Search, ArrowRight, BookOpen, Globe,
     Shield, Zap, PlayCircle, Smartphone
 } from 'lucide-react';
 
 const Glossary = () => {
-    const navigate = (path) => { window.location.href = path; };
+    const navigate = useNavigate();
     const [activeLetter, setActiveLetter] = useState('A');
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -30,7 +31,7 @@ const Glossary = () => {
             {/* --- HERO SECTION --- */}
             <section className="pub-content-hero">
                 <div className="relative z-10 max-w-4xl mx-auto text-center">
-                    <h1>Bullvera <span style={{ color: 'var(--pub-red)' }}>Glossary</span></h1>
+                    <h1>Bulvera <span style={{ color: 'var(--pub-red)' }}>Glossary</span></h1>
                     <p style={{ margin: '0 auto', maxWidth: '800px' }}>
                         Master the language of the financial markets with precision definitions.
                     </p>
@@ -103,7 +104,7 @@ const Glossary = () => {
 
             {/* --- FINAL CTA --- */}
             <section className="lp-cta-block">
-                <h2 style={{ textAlign: 'center' }}>Join Bullvera and Start Trading</h2>
+                <h2 style={{ textAlign: 'center' }}>Join Bulvera and Start Trading</h2>
                 <div style={{ marginTop: '40px', textAlign: 'center' }}>
                     <button className="lp-cta-white" onClick={() => navigate('/register')}>Start Now</button>
                 </div>

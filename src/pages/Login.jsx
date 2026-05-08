@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useTrading } from '../context/TradingContext';
 import { useModal } from '../context/ModalContext';
 
@@ -75,7 +76,7 @@ const Login = ({ onLogin }) => {
       <div className="auth-card animate-fade">
         <div className="auth-logo-area">
           <i className="fa-solid fa-cube main-logo"></i>
-          <h1>Bullvera</h1>
+          <h1>Bulvera</h1>
           <p>{resetMode ? 'Recover your account.' : 'The Future of Trade, Simplified.'}</p>
         </div>
         
@@ -181,17 +182,8 @@ const Login = ({ onLogin }) => {
           </form>
         )}
 
-        <div className="auth-social">
-          <span className="auth-divider">Or continue with</span>
-          <div className="auth-social-btns">
-            <button className="auth-soc-btn"><i className="fa-brands fa-google"></i></button>
-            <button className="auth-soc-btn"><i className="fa-brands fa-apple"></i></button>
-            <button className="auth-soc-btn"><i className="fa-brands fa-facebook-f"></i></button>
-          </div>
-        </div>
-
         <p className="auth-footer-link">
-          New to Bullvera? <a href="/register">Create account</a>
+          New to Bulvera? <Link to="/register">Create account</Link>
         </p>
       </div>
     </div>

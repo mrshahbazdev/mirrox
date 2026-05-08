@@ -32,7 +32,7 @@ const PublicLayout = () => {
         if (['/education', '/economic-calendar', '/trading-central', '/chart-analysis', '/glossary', '/trading-education', '/risk-management-tools'].includes(path)) setOpenDropdowns(p => ({...p, tools: true}));
         if (['/faq', '/contact-us'].includes(path)) setOpenDropdowns(p => ({...p, support: true}));
         if (['/about-us', '/become-a-partner'].includes(path)) setOpenDropdowns(p => ({...p, company: true}));
-        if (['/legal', '/complaint-info', '/cookies-privacy'].includes(path)) setOpenDropdowns(p => ({...p, legal: true}));
+        if (['/legal', '/complaint-info', '/cookies-privacy', '/terms-and-conditions'].includes(path)) setOpenDropdowns(p => ({...p, legal: true}));
         
         // Close mobile sidebar on navigation
         if (sidebarOpen) {
@@ -49,8 +49,8 @@ const PublicLayout = () => {
             {/* Mobile Header */}
             <header className="pub-mobile-header md:hidden">
                 <div className="logo-wrap" onClick={() => navigate('/')}>
-                    <div className="pub-logo-box">BV</div>
-                    <span className="pub-logo-text">BULLVERA</span>
+                    <img src="/logo.png" alt="Bulvera" style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'contain' }} />
+                    <span className="pub-logo-text">Bulvera</span>
                 </div>
                 <button onClick={toggleSidebar} className="pub-menu-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,8 +65,8 @@ const PublicLayout = () => {
                 {/* Fixed Left Sidebar */}
                 <aside className={`pub-sidebar ${sidebarOpen ? 'open' : ''}`}>
                     <div className="pub-sidebar-logo hidden md:flex" onClick={() => navigate('/')}>
-                        <div className="pub-logo-box">BV</div>
-                        <span className="pub-logo-text">BULLVERA</span>
+                        <img src="/logo.png" alt="Bulvera" style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'contain' }} />
+                        <span className="pub-logo-text">Bulvera</span>
                     </div>
 
                     <nav className="pub-nav">
@@ -167,6 +167,7 @@ const PublicLayout = () => {
                                 <NavLink to="/legal" className={getNavLinkClass}>Legal</NavLink>
                                 <NavLink to="/complaint-info" className={getNavLinkClass}>Complaint Info</NavLink>
                                 <NavLink to="/cookies-privacy" className={getNavLinkClass}>Cookies & Privacy</NavLink>
+                                <NavLink to="/terms-and-conditions" className={getNavLinkClass}>Terms & Conditions</NavLink>
                             </div>
                         </div>
                     </nav>
@@ -193,7 +194,7 @@ const PublicLayout = () => {
                         <div className="pub-footer-container">
                             <div className="risk-warning">
                                 <h5>Risk Warning</h5>
-                                Trading financial instruments involves significant risk. You should ensure you fully understand the risks and seek advice if necessary. Bullvera Group © 2026.
+                                Trading financial instruments involves significant risk. You should ensure you fully understand the risks and seek advice if necessary. Bulvera Group © 2026.
                             </div>
                         </div>
                     </footer>

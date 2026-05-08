@@ -172,7 +172,7 @@ const Settings = ({ onAdminLogout }) => {
                   className="setting-input"
                   value={configs.support_name || ''} 
                   onChange={(e) => handleChange('support_name', e.target.value)}
-                  placeholder="Bullvera Intelligence"
+                  placeholder="Bulvera Intelligence"
                 />
               </div>
               <div className="setting-card adm-card">

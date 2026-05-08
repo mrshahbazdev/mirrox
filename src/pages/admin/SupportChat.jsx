@@ -319,7 +319,7 @@ export default function SupportChat({ onAdminLogout }) {
 
   const downloadTranscript = () => {
     if (!messages.length || !selectedTicket) return;
-    const sName = systemConfig.support_name || 'Bullvera Support';
+    const sName = systemConfig.support_name || 'Bulvera Support';
     const content = messages.map(m => {
        const time = formatTime(m.timestamp);
        const sender = m.senderRole === 'admin' ? 'You' : (m.senderName || 'Client');
