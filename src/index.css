@@ -4630,6 +4630,159 @@ input[type="number"]::-webkit-outer-spin-button {
 .fin-right-col { display: flex; flex-direction: column; gap: 24px; }
 
 /* =========================================
+   FINANCES - Mobile Responsive
+   ========================================= */
+
+@media (max-width: 480px) {
+  .fin-container { padding: 12px; }
+
+  .fin-header { gap: 16px; margin-bottom: 20px; }
+  .fin-title { font-size: 1.5rem; gap: 10px; }
+  .fin-title-bar { height: 28px; }
+  .fin-subtitle { font-size: 9px; margin-left: 14px; letter-spacing: 0.1em; }
+
+  .premium-wallet-card-v3 { padding: 20px; gap: 20px; border-radius: 1.5rem; }
+  .premium-wallet-card-v3 .balance-group .balance { font-size: 24px; }
+  .premium-wallet-card-v3 .wallet-chip { width: 40px; height: 40px; border-radius: 12px; }
+  .premium-wallet-card-v3 .wallet-chip svg { width: 18px; height: 18px; }
+  .premium-wallet-card-v3 .card-bottom { padding-top: 16px; }
+  .premium-wallet-card-v3 .account-info .value { font-size: 12px; }
+
+  .fin-tabs { padding: 4px; border-radius: 12px; }
+  .fin-tab-btn { padding: 10px 6px; font-size: 10px; gap: 4px; border-radius: 8px; letter-spacing: 0.05em; }
+  .fin-tab-btn svg { width: 14px; height: 14px; }
+
+  .fin-form-card { padding: 16px; border-radius: 1.25rem; margin-top: 16px !important; }
+  .fin-form-card__inner { gap: 16px; }
+
+  .fin-section-header { gap: 12px; padding-bottom: 16px; margin-bottom: 20px; }
+  .fin-section-icon { width: 40px; height: 40px; border-radius: 10px; }
+  .fin-section-icon svg { width: 20px; height: 20px; }
+  .fin-section-title { font-size: 1rem; }
+  .fin-section-subtitle { font-size: 9px; }
+
+  .fin-form-grid { gap: 24px; }
+  .fin-form-section { gap: 20px; }
+  .fin-form-group { gap: 12px; }
+  .fin-form-label { font-size: 9px; margin-bottom: 8px; letter-spacing: 0.1em; }
+
+  .fin-method-grid { grid-template-columns: 1fr; gap: 10px; }
+  .fin-method-btn { padding: 14px; border-radius: 14px; }
+  .fin-method-icon { width: 32px; height: 32px; border-radius: 8px; margin-bottom: 10px; }
+  .fin-method-name { font-size: 11px; }
+
+  .fin-amount-input { padding: 14px 14px 14px 36px; font-size: 1.125rem; border-radius: 12px; }
+  .fin-amount-symbol { left: 14px; font-size: 1rem; }
+
+  .fin-quick-amounts { flex-wrap: wrap; gap: 6px; }
+  .fin-quick-btn { padding: 6px 12px; font-size: 9px; border-radius: 8px; }
+
+  .fin-instructions { padding: 16px; border-radius: 14px; }
+  .fin-instructions-title { font-size: 9px; gap: 8px; margin-bottom: 16px; }
+  .fin-wallet-address-row { padding: 10px; border-radius: 10px; gap: 8px; }
+  .fin-wallet-address { font-size: 10px; }
+  .fin-copy-btn { width: 32px; height: 32px; border-radius: 8px; }
+  .fin-warning-text { font-size: 9px; margin-top: 14px; }
+
+  .fin-bank-row { padding: 10px; border-radius: 8px; font-size: 10px; }
+  .fin-iban-value { padding: 10px; border-radius: 10px; font-size: 10px; }
+
+  .fin-proof-group { margin-top: 24px; gap: 10px; }
+  .fin-proof-input { padding: 14px; font-size: 12px; border-radius: 12px; }
+
+  .fin-submit-btn { padding: 16px; border-radius: 14px; font-size: 0.875rem; gap: 10px; margin-top: 24px; }
+  .fin-submit-btn svg { width: 18px; height: 18px; }
+
+  .fin-withdraw-section { padding: 16px 0; gap: 24px; }
+  .fin-withdraw-header { gap: 16px; }
+  .fin-withdraw-icon { width: 64px; height: 64px; border-radius: 1.25rem; }
+  .fin-withdraw-icon svg { width: 28px; height: 28px; }
+  .fin-withdraw-title { font-size: 1.25rem; }
+  .fin-withdraw-subtitle { font-size: 9px; letter-spacing: 0.15em; }
+  .fin-withdraw-form { padding: 20px; border-radius: 1.25rem; gap: 24px; }
+  .fin-withdraw-badge { padding: 6px 16px; }
+  .fin-withdraw-badge span { font-size: 8px; }
+  .fin-withdraw-amount-input { font-size: 1.25rem; padding: 16px; border-radius: 12px; }
+  .fin-withdraw-amount-symbol { font-size: 1.125rem; left: 16px; }
+  .fin-withdraw-btn { padding: 14px; border-radius: 12px; font-size: 0.875rem; gap: 10px; }
+
+  .fin-pin-input { width: 160px; font-size: 1.5rem; padding: 14px; border-radius: 12px; letter-spacing: 0.4em; }
+
+  .fin-history-header { gap: 16px; padding-bottom: 20px; margin-bottom: 20px; }
+  .fin-export-btn { padding: 10px 16px; font-size: 9px; border-radius: 8px; }
+
+  .fin-tx-row { padding: 14px; border-radius: 14px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .fin-tx-left { gap: 12px; }
+  .fin-tx-icon { width: 40px; height: 40px; border-radius: 10px; }
+  .fin-tx-icon svg { width: 16px; height: 16px; }
+  .fin-tx-status-dot { width: 12px; height: 12px; }
+  .fin-tx-type { font-size: 0.875rem; }
+  .fin-tx-date { font-size: 9px; }
+  .fin-tx-right { width: 100%; justify-content: space-between; gap: 12px; }
+  .fin-tx-amount { font-size: 1.125rem; }
+  .fin-tx-action-btn { width: 36px; height: 36px; opacity: 1; border-radius: 8px; }
+
+  .fin-empty-state { padding: 48px 0; }
+  .fin-empty-state svg { width: 48px; height: 48px; }
+  .fin-empty-state p { font-size: 0.875rem; letter-spacing: 0.2em; }
+
+  .fin-metrics-card { padding: 16px; border-radius: 16px; }
+  .fin-metrics-header { gap: 12px; margin-bottom: 16px; }
+  .fin-metrics-header-icon { width: 32px; height: 32px; border-radius: 8px; }
+  .fin-metric-row { padding: 10px; border-radius: 10px; }
+  .fin-metric-value { font-size: 12px; }
+
+  .fin-modal-card { padding: 24px; border-radius: 1.25rem; }
+  .fin-modal-header { margin-bottom: 24px; gap: 16px; }
+  .fin-modal-icon { width: 56px; height: 56px; border-radius: 1rem; }
+  .fin-modal-icon svg { width: 24px; height: 24px; }
+  .fin-modal-title { font-size: 1.25rem; }
+  .fin-modal-form { gap: 20px; }
+  .fin-modal-pin-input { font-size: 1.5rem; padding: 16px; letter-spacing: 0.5em; }
+  .fin-modal-submit { padding: 16px; border-radius: 1rem; }
+
+  .fin-right-col { gap: 16px; }
+  .fin-main-grid { gap: 20px; }
+}
+
+@media (max-width: 768px) and (min-width: 481px) {
+  .fin-container { padding: 16px; }
+
+  .fin-title { font-size: 1.75rem; }
+
+  .fin-form-card { padding: 24px; border-radius: 1.5rem; margin-top: 20px !important; }
+
+  .fin-section-header { padding-bottom: 20px; margin-bottom: 28px; }
+  .fin-section-icon { width: 44px; height: 44px; }
+  .fin-section-title { font-size: 1.125rem; }
+
+  .fin-method-grid { grid-template-columns: 1fr; gap: 12px; }
+  .fin-method-btn { padding: 18px; }
+
+  .fin-amount-input { font-size: 1.25rem; padding: 16px 16px 16px 40px; }
+
+  .fin-instructions { padding: 20px; }
+
+  .fin-submit-btn { padding: 18px; font-size: 1rem; margin-top: 32px; }
+
+  .fin-withdraw-form { padding: 28px; }
+  .fin-withdraw-title { font-size: 1.5rem; }
+  .fin-withdraw-icon { width: 72px; height: 72px; }
+
+  .fin-tx-row { padding: 16px; border-radius: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .fin-tx-left { gap: 16px; }
+  .fin-tx-icon { width: 44px; height: 44px; }
+  .fin-tx-right { width: 100%; justify-content: space-between; }
+  .fin-tx-amount { font-size: 1.25rem; }
+  .fin-tx-action-btn { opacity: 1; }
+
+  .fin-modal-card { padding: 32px; }
+  .fin-modal-title { font-size: 1.5rem; }
+
+  .fin-proof-group { margin-top: 32px; }
+}
+
+/* =========================================
    DASHBOARD - Mobile Equity Card
    ========================================= */
 
