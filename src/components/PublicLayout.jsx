@@ -205,9 +205,7 @@ const PublicLayout = () => {
 
                 {/* Main Content Area */}
                 <main className="pub-main flex-1" ref={mainRef}>
-                    <div key={location.pathname} className="pub-page-transition">
-                        <Outlet />
-                    </div>
+                    <Outlet />
 
                     {/* Default Footer */}
                     <footer className="pub-footer">
