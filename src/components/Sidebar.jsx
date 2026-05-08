@@ -1,8 +1,9 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ currentUser, onLogout }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const navItems = [
     { icon: 'fa-solid fa-chart-line', path: '/app/dashboard', label: 'Trading Accounts' },
     { icon: 'fa-solid fa-compass', path: '/app/explore', label: 'Explore Markets' },
@@ -23,7 +24,7 @@ const Sidebar = ({ currentUser, onLogout }) => {
           <NavLink 
             key={index}
             to={item.path} 
-            className={({ isActive }) => `nav-item ${isActive || window.location.pathname.startsWith(item.path) ? 'active' : ''}`}
+            className={({ isActive }) => `nav-item ${isActive || location.pathname.startsWith(item.path) ? 'active' : ''}`}
             data-tooltip={item.label}
           >
             <div className="active-indicator-bar" />

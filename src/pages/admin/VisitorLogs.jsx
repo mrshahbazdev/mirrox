@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useTrading } from '../../context/TradingContext';
-import AdminLayout from '../../components/admin/AdminLayout';
 
-const VisitorLogs = ({ onAdminLogout }) => {
+const VisitorLogs = () => {
+  const navigate = useNavigate();
   const { socket } = useTrading();
   const [visitors, setVisitors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
     try {
       const token = localStorage.getItem('bullvera_admin_token');
       if (!token) {
-          onAdminLogout();
+          navigate('/admin/login');
           return;
       }
       
@@ -28,11 +29,11 @@ const VisitorLogs = ({ onAdminLogout }) => {
       setVisitors(res.data);
     } catch (err) {
       console.error('Failed to fetch visitors', err);
-      if (err.response?.status === 401) onAdminLogout();
+      if (err.response?.status === 401) navigate('/admin/login');
     } finally {
       setLoading(false);
     }
-  }, [apiUrl, onAdminLogout]);
+  }, [apiUrl, navigate]);
 
   useEffect(() => {
     fetchVisitors();
@@ -150,7 +151,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
   };
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       <div className="visitor-logs-page">
         <div className="adm-page-header">
             <div>
@@ -500,7 +501,7 @@ const VisitorLogs = ({ onAdminLogout }) => {
           }
         `}</style>
       </div>
-    </AdminLayout>
+    </>
   );
 };
 

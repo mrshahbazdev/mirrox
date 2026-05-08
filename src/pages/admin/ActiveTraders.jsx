@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import AdminLayout from '../../components/admin/AdminLayout';
 
-const ActiveTraders = ({ onAdminLogout }) => {
+
+const ActiveTraders = () => {
   const [data, setData] = useState({ count: 0, clients: [] });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -28,17 +28,17 @@ const ActiveTraders = ({ onAdminLogout }) => {
 
   if (loading) {
      return (
-       <AdminLayout onAdminLogout={onAdminLogout}>
+       <>
          <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-dim)' }}>
            <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 40, marginBottom: 16, display: 'block', color: 'var(--brand-primary)' }} />
            <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>Scanning Market Risks...</p>
          </div>
-       </AdminLayout>
+       </>
      );
   }
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       <div className="adm-page-header">
         <div>
           <h2 className="adm-page-title">
@@ -196,7 +196,7 @@ const ActiveTraders = ({ onAdminLogout }) => {
         .adm-act-btn.view { background: rgba(255, 77, 94, 0.1); color: var(--brand-primary); border-color: rgba(255, 77, 94, 0.2); }
         .adm-act-btn.view:hover { background: var(--brand-primary); color: #fff; }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 

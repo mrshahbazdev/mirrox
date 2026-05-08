@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
 
-const Admin2FA = ({ onAdminLogout }) => {
+
+const Admin2FA = () => {
   const [setupData, setSetupData] = useState(null);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -76,7 +76,7 @@ const Admin2FA = ({ onAdminLogout }) => {
   };
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       <div className="adm-page-header">
         <div>
           <h2 className="adm-page-title"><i className="fa-solid fa-shield-halved" /> Security Architecture</h2>
@@ -102,7 +102,7 @@ const Admin2FA = ({ onAdminLogout }) => {
              <h3>Protection Matrix Active</h3>
              <p>Your administrative terminal is currently protected by a Sovereign-grade cryptographic layer. Access is strictly governed by time-based token validation.</p>
              <div className="success-controls">
-                <button className="setup-secondary-btn" onClick={() => window.location.reload()}>Sync Status</button>
+                <button className="setup-secondary-btn" onClick={() => { setConfig(null); setSuccess(false); setSetupData(null); const fetchStatus = async () => { try { const res = await axios.get(`${API}/api/admins/me`, authHeader); setConfig(res.data); if (res.data.twoFactorEnabled) setSuccess(true); } catch(err) { console.error('Failed to sync status', err); } }; fetchStatus(); }}>Sync Status</button>
                 <button className="setup-danger-btn" onClick={handleDisable} disabled={loading}>
                    {loading ? <i className="fa-solid fa-circle-notch fa-spin" /> : 'Revoke Protection'}
                 </button>
@@ -219,7 +219,7 @@ const Admin2FA = ({ onAdminLogout }) => {
 
         .error-text { color: var(--danger); font-size: 13px; font-weight: 700; margin-bottom: 16px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 

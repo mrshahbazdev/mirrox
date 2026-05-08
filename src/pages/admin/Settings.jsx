@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminLayout from '../../components/admin/AdminLayout';
 
-const Settings = ({ onAdminLogout }) => {
+
+const Settings = () => {
   const [configs, setConfigs] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -51,17 +51,17 @@ const Settings = ({ onAdminLogout }) => {
 
   if (loading) {
     return (
-      <AdminLayout onAdminLogout={onAdminLogout}>
+      <>
         <div style={{ color: 'var(--text-dim)', textAlign: 'center', padding: '100px', fontWeight: 600 }}>
           <i className="fa-solid fa-gear fa-spin" style={{ fontSize: '32px', marginBottom: '16px', color: 'var(--brand-primary)' }}></i>
           <p>Synchronizing System Core...</p>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
   return (
-    <AdminLayout onAdminLogout={onAdminLogout}>
+    <>
       {/* Toast */}
       {toast && (
         <div className={`adm-toast ${toast.type}`}>
@@ -463,7 +463,7 @@ const Settings = ({ onAdminLogout }) => {
 
         @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
       `}</style>
-    </AdminLayout>
+    </>
   );
 };
 

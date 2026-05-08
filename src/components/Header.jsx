@@ -63,7 +63,7 @@ const Header = ({ currentUser }) => {
 
       <div className="header-center">
         <nav className="header-nav">
-          <NavLink to="/dashboard" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
+          <NavLink to="/app/dashboard" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
             Trade
           </NavLink>
           <NavLink to="/app/analytics" className={({ isActive }) => `header-tab ${isActive ? 'active' : ''}`}>
