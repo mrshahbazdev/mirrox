@@ -137,7 +137,6 @@ const Profile = () => {
 
   const tabs = [
     { id: 'personal', label: 'Personal' },
-    { id: 'settings', label: 'Settings' },
     { id: 'password', label: 'Password' }
   ];
 
