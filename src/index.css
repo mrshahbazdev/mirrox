@@ -6211,15 +6211,6 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow-y: auto;
 }
 
-/* Smooth page transition on route change */
-.pub-page-transition {
-  animation: pubPageFadeIn 0.25s ease-out;
-}
-
-@keyframes pubPageFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 /* Public Footer */
 .pub-footer {
