@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, Coins, Globe, Cpu } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const CryptocurrenciesCfds = () => {
     const cryptoData = [

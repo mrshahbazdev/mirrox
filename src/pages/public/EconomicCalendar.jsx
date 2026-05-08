@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, ArrowRight, Globe, Shield, Zap, PlayCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const EconomicCalendar = () => {
     const navigate = useNavigate();

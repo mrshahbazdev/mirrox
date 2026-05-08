@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart2, ShieldCheck, Zap, Laptop, PlayCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const Stocks = () => {
     const stockData = [
