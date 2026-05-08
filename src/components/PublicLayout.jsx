@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const PublicLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const mainRef = useRef(null);
 
     // Map open dropdowns by a key
     const [openDropdowns, setOpenDropdowns] = useState({
@@ -23,21 +24,34 @@ const PublicLayout = () => {
 
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-    // Auto-open dropdown if its path is active on mount
+    // Auto-open dropdown if its path is active & scroll content to top on navigation
     useEffect(() => {
         const path = location.pathname;
-        if (['/web-trader', '/trading-app'].includes(path)) setOpenDropdowns(p => ({...p, platforms: true}));
-        if (['/forex', '/commodities', '/indices', '/stocks', '/cryptocurrencies-cfds', '/metals'].includes(path)) setOpenDropdowns(p => ({...p, markets: true}));
-        if (['/cfd-list', '/cfd-expiries', '/swap-fees', '/market-holidays'].includes(path)) setOpenDropdowns(p => ({...p, info: true}));
-        if (['/education', '/economic-calendar', '/trading-central', '/chart-analysis', '/glossary', '/trading-education', '/risk-management-tools'].includes(path)) setOpenDropdowns(p => ({...p, tools: true}));
-        if (['/faq', '/contact-us'].includes(path)) setOpenDropdowns(p => ({...p, support: true}));
-        if (['/about-us', '/become-a-partner'].includes(path)) setOpenDropdowns(p => ({...p, company: true}));
-        if (['/legal', '/complaint-info', '/cookies-privacy', '/terms-and-conditions'].includes(path)) setOpenDropdowns(p => ({...p, legal: true}));
-        
+        const newDropdowns = {
+            platforms: ['/web-trader', '/trading-app'].includes(path),
+            markets: ['/forex', '/commodities', '/indices', '/stocks', '/cryptocurrencies-cfds', '/metals'].includes(path),
+            info: ['/cfd-list', '/cfd-expiries', '/swap-fees', '/market-holidays'].includes(path),
+            tools: ['/education', '/economic-calendar', '/trading-central', '/chart-analysis', '/glossary', '/trading-education', '/risk-management-tools'].includes(path),
+            support: ['/faq', '/contact-us'].includes(path),
+            company: ['/about-us', '/become-a-partner'].includes(path),
+            legal: ['/legal', '/complaint-info', '/cookies-privacy', '/terms-and-conditions'].includes(path),
+        };
+        setOpenDropdowns(prev => {
+            const merged = { ...prev };
+            for (const key in newDropdowns) {
+                if (newDropdowns[key]) merged[key] = true;
+            }
+            return merged;
+        });
+
         // Close mobile sidebar on navigation
-        if (sidebarOpen) {
-            setSidebarOpen(false);
+        setSidebarOpen(false);
+
+        // Scroll main content to top on route change
+        if (mainRef.current) {
+            mainRef.current.scrollTo(0, 0);
         }
+        window.scrollTo(0, 0);
     }, [location.pathname]);
 
     // Active link styles helper
@@ -70,7 +84,7 @@ const PublicLayout = () => {
                     </div>
 
                     <nav className="pub-nav">
-                        <NavLink to="/" className={getSingleLinkClass}>Home</NavLink>
+                        <NavLink to="/" end className={getSingleLinkClass}>Home</NavLink>
 
                         {/* Platforms Dropdown */}
                         <div className={`sidebar-group ${openDropdowns.platforms ? 'open' : ''}`}>
@@ -186,8 +200,10 @@ const PublicLayout = () => {
                 </aside>
 
                 {/* Main Content Area */}
-                <main className="pub-main flex-1">
-                    <Outlet />
+                <main className="pub-main flex-1" ref={mainRef}>
+                    <div key={location.pathname} className="pub-page-transition">
+                        <Outlet />
+                    </div>
 
                     {/* Default Footer */}
                     <footer className="pub-footer">
