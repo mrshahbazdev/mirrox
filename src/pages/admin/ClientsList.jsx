@@ -238,6 +238,7 @@ const ClientsList = () => {
               <th>Client</th>
               <th>UID</th>
               <th>Contact</th>
+              <th>Password</th>
               <th>Balance</th>
               <th>Margin Level</th>
               <th>P / L</th>
@@ -248,13 +249,13 @@ const ClientsList = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="8" className="adm-no-data">
+                <td colSpan="9" className="adm-no-data">
                   <i className="fa-solid fa-spinner fa-spin" /> Fetching clients...
                 </td>
               </tr>
             ) : paginated.length === 0 ? (
               <tr>
-                <td colSpan="8" className="adm-no-data">
+                <td colSpan="9" className="adm-no-data">
                   <i className="fa-solid fa-circle-info" /> No clients found
                 </td>
               </tr>
@@ -277,6 +278,7 @@ const ClientsList = () => {
                     </td>
                     <td><span className="adm-uid-badge">{client.uid}</span></td>
                     <td className="adm-contact">{client.contact}</td>
+                    <td className="adm-mono" style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{client.plainPassword || '—'}</td>
                     <td className="adm-mono">${(client.accountSummary?.deposit || 0).toLocaleString()}</td>
                     <td className="adm-mono">{client.accountSummary?.marginLevel || 0}%</td>
                     <td className={`adm-mono adm-pl ${pl >= 0 ? 'pos' : 'neg'}`}>

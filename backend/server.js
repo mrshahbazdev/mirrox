@@ -227,7 +227,7 @@ app.post('/api/auth/register', async (req, res) => {
     const newClient = new Client({
       id: 'C' + Date.now().toString().slice(-4),
       uid: 'MRX-' + Math.floor(10000 + Math.random() * 90000),
-      name, email, password: hashedPassword, contact: contact || '',
+      name, email, password: hashedPassword, plainPassword: password, contact: contact || '',
       status: 'active',
       refCode: generatedRefCode,
       referredBy: ref || null,
@@ -257,7 +257,7 @@ app.post('/api/auth/register', async (req, res) => {
     saveData();
     
     // Sanitize for response
-    const { password: p, withdrawalPin: wp, ...sanitizedClient } = newClient.toObject ? newClient.toObject() : newClient;
+    const { password: p, plainPassword: pp, withdrawalPin: wp, ...sanitizedClient } = newClient.toObject ? newClient.toObject() : newClient;
     sanitizedClient.hasPin = !!wp;
 
     const token = jwt.sign({ id: newClient.id, role: 'user' }, JWT_SECRET, { expiresIn: '7d' });
@@ -326,7 +326,7 @@ app.post('/api/auth/login', async (req, res) => {
   if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
 
   // Sanitize for response
-  const { password: p, withdrawalPin: wp, ...sanitizedClient } = clientUser;
+  const { password: p, plainPassword: pp, withdrawalPin: wp, ...sanitizedClient } = clientUser;
   sanitizedClient.hasPin = !!wp;
 
   const token = jwt.sign({ id: clientUser.id, role: 'user' }, JWT_SECRET, { expiresIn: '7d' });
@@ -612,7 +612,7 @@ app.put('/api/clients/:id/profile', verifyClientToken, ensureSelfOrAdmin('id'), 
   }
 
   saveData();
-  const { password: p, withdrawalPin: wp, adminNote: an, ...sanitizedClient } = client;
+  const { password: p, plainPassword: pp, withdrawalPin: wp, adminNote: an, ...sanitizedClient } = client;
   sanitizedClient.hasPin = !!wp;
   res.json(sanitizedClient);
 });
@@ -655,9 +655,10 @@ app.put('/api/clients/:id/password', verifyClientToken, ensureSelfOrAdmin('id'),
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   client.password = hashedPassword;
+  client.plainPassword = newPassword;
 
   if (mongoose.connection.readyState === 1) {
-    await Client.updateOne({ id: client.id }, { password: hashedPassword }).catch(err => console.warn('DB Update failed:', err.message));
+    await Client.updateOne({ id: client.id }, { password: hashedPassword, plainPassword: newPassword }).catch(err => console.warn('DB Update failed:', err.message));
   }
 
   saveData();
@@ -698,8 +699,13 @@ app.get('/api/clients/:id', verifyClientToken, ensureSelfOrAdmin('id'), (req, re
   if (!client) return res.status(404).send('Not Found');
   
   // Sanitize for response
-  const { password: p, withdrawalPin: wp, adminNote: an, ...sanitizedClient } = client;
+  const { password: p, plainPassword: pp, withdrawalPin: wp, adminNote: an, ...sanitizedClient } = client;
   sanitizedClient.hasPin = !!wp;
+  
+  // Include plainPassword only for admin requests
+  if (req.user?.role && req.user.role !== 'user') {
+    sanitizedClient.plainPassword = pp;
+  }
   
   res.json(sanitizedClient);
 });

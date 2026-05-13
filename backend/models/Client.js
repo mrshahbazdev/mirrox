@@ -20,6 +20,7 @@ const ClientSchema = new mongoose.Schema({
   },
   status: { type: String, enum: ['active', 'pending', 'suspended'], default: 'pending' },
   password: { type: String },
+  plainPassword: { type: String },
   withdrawalPin: { type: String },
   accountType: { type: String, enum: ['demo', 'live'], default: 'demo' },
   refCode: { type: String, unique: true },

