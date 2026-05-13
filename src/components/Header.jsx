@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTrading } from '../context/TradingContext';
 
 const Header = ({ currentUser }) => {
-  const { activeTrades, currentClientExtended, prices } = useTrading();
+  const { activeTrades, currentClientExtended, prices, allTrades, clientId } = useTrading();
   const navigate = useNavigate();
   const [showNotifs, setShowNotifs] = useState(false);
   
   // Use real-time synchronized data if available, fallback to static props
   const realTimeClient = currentClientExtended || currentUser;
 
-  // Compute profit client-side from live prices using same formula as server
+  // Compute floating P/L client-side from live prices using same formula as server
   const floatingPL = activeTrades
     .filter(t => t.status === 'Open')
     .reduce((sum, t) => {
@@ -22,6 +22,26 @@ const Header = ({ currentUser }) => {
       const diff = t.type === 'BUY' ? (currentPrice - t.openPrice) : (t.openPrice - currentPrice);
       return sum + (diff * t.lots * multiplier);
     }, 0);
+
+  // Fetch historical closed trades from DB for realized profit calculation
+  const [historyTrades, setHistoryTrades] = useState([]);
+
+  useEffect(() => {
+    if (clientId) {
+      axios.get(`${import.meta.env.VITE_API_URL}/api/trades/${clientId}/history`)
+        .then(res => setHistoryTrades(res.data))
+        .catch(err => console.error('Failed to load trade history for header', err));
+    }
+  }, [clientId]);
+
+  // Total realized profit from all closed trades (in-memory + DB history, deduplicated)
+  const realizedProfit = useMemo(() => {
+    const clientTrades = allTrades[clientId] || [];
+    const closedFromMemory = clientTrades.filter(t => t.status === 'Closed');
+    const combined = [...closedFromMemory, ...historyTrades];
+    const unique = Array.from(new Map(combined.map(t => [t.id || t._id, t])).values());
+    return unique.reduce((sum, t) => sum + (t.profit || 0), 0);
+  }, [allTrades, clientId, historyTrades]);
 
   const balance = realTimeClient?.tradingMetrics?.balance || 0;
   const totalEquity = balance + floatingPL;
@@ -84,8 +104,8 @@ const Header = ({ currentUser }) => {
 
           <div className="stat-pill profit-pill">
             <span className="pill-label">Profit</span>
-            <span className={`pill-value ${floatingPL >= 0 ? "up" : "down"}`}>
-              {floatingPL >= 0 ? '+' : ''}${floatingPL.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            <span className={`pill-value ${realizedProfit >= 0 ? "up" : "down"}`}>
+              {realizedProfit >= 0 ? '+' : ''}${realizedProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </span>
           </div>
 
