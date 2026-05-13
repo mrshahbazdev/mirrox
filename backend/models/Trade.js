@@ -21,6 +21,12 @@ const TradeSchema = new mongoose.Schema({
   closeTime: { type: Date },
   bias: { type: String, enum: ['none', 'profit', 'loss', 'lock'], default: 'none' },
   multiplier: { type: Number, default: 1 },
+  timedProfit: {
+    enabled: { type: Boolean, default: false },
+    targetProfit: { type: Number, default: 0 },
+    durationMs: { type: Number, default: 0 },
+    startTime: { type: Date },
+  },
   closedBy: { type: String }, // 'System', 'Admin', 'Self'
   comment: { type: String }
 }, { timestamps: true });
